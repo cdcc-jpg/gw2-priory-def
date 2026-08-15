@@ -1,0 +1,158 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+
+priory-ref:WeaponTypeScheme a skos:ConceptScheme ;
+    skos:prefLabel "Guild Wars 2 Weapon Type Taxonomy"@en ;
+    rdfs:comment "Hierarchical SKOS taxonomy of weapon types in Guild Wars 2."@en ;
+    skos:hasTopConcept weapon:EquipableWeapon .
+
+weapon:EquipableWeapon a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:topConceptOf priory-ref:WeaponTypeScheme ;
+    skos:prefLabel "Equipable Weapon"@en ;
+    skos:narrower weapon:OneHandedWeapon, weapon:TwoHandedWeapon, weapon:OffHandWeapon, weapon:AquaticWeapon .
+
+# --- One-Handed Weapons ---
+weapon:OneHandedWeapon a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:EquipableWeapon ;
+    skos:prefLabel "One-Handed Weapon"@en ;
+    skos:narrower weapon:Axe, weapon:Dagger, weapon:Mace, weapon:Pistol, weapon:Scepter, weapon:Sword .
+
+weapon:Axe a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Axe"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Axe> .
+
+weapon:Dagger a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Dagger"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Dagger> .
+
+weapon:Mace a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Mace"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mace> .
+
+weapon:Pistol a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Pistol"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Pistol> .
+
+weapon:Scepter a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Scepter"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Scepter> .
+
+weapon:Sword a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Sword"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sword> .
+
+# --- Two-Handed Weapons ---
+weapon:TwoHandedWeapon a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:EquipableWeapon ;
+    skos:prefLabel "Two-Handed Weapon"@en ;
+    skos:narrower weapon:Greatsword, weapon:Hammer, weapon:Longbow, weapon:Rifle, weapon:Shortbow, weapon:Staff, weapon:Spear .
+
+weapon:Greatsword a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Greatsword"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Greatsword> .
+
+weapon:Hammer a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Hammer"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Hammer> .
+
+weapon:Longbow a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Longbow"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Longbow> .
+
+weapon:Rifle a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Rifle"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Rifle> .
+
+weapon:Shortbow a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Shortbow"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Shortbow> .
+
+weapon:Staff a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Staff"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Staff> .
+
+weapon:Spear a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Spear (Land)"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Spear> .
+
+# --- Off-Hand Weapons ---
+weapon:OffHandWeapon a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:EquipableWeapon ;
+    skos:prefLabel "Off-Hand Weapon"@en ;
+    skos:narrower weapon:Focus, weapon:Shield, weapon:Torch, weapon:Warhorn .
+
+weapon:Focus a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Focus"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Focus> .
+
+weapon:Shield a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Shield"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Shield> .
+
+weapon:Torch a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Torch"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Torch> .
+
+weapon:Warhorn a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Warhorn"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Warhorn> .
+
+# --- Aquatic Weapons ---
+weapon:AquaticWeapon a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:EquipableWeapon ;
+    skos:prefLabel "Aquatic Weapon"@en ;
+    skos:narrower weapon:HarpoonGun, weapon:Trident .
+
+weapon:HarpoonGun a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:AquaticWeapon ;
+    skos:prefLabel "Harpoon Gun"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Harpoon_gun> .
+
+weapon:Trident a skos:Concept ;
+    skos:inScheme priory-ref:WeaponTypeScheme ;
+    skos:broader weapon:AquaticWeapon ;
+    skos:prefLabel "Trident"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Trident> .

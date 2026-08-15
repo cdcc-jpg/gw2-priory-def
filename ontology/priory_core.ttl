@@ -1,0 +1,267 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+
+<https://priory.gw2/def/> a owl:Ontology ;
+    rdfs:label "Priory Core Ontology for Guild Wars 2"@en ;
+    rdfs:comment "OWL 2 DL ontology modeling Guild Wars 2 item dependencies, crafting recipes, acquisition pathways, and spatial waypoints."@en ;
+    owl:versionInfo "0.3.0" .
+
+# ==============================================================================
+# Classes (TBox)
+# ==============================================================================
+
+priory:Item a owl:Class ;
+    rdfs:label "Game Item"@en ;
+    rdfs:comment "An item or resource that exists within Guild Wars 2."@en .
+
+priory:EquipableItem a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Equipable Item"@en .
+
+priory:Weapon a owl:Class ;
+    rdfs:subClassOf priory:EquipableItem ;
+    rdfs:label "Weapon"@en .
+
+priory:LegendaryItem a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Legendary Item"@en .
+
+priory:LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:Weapon, priory:LegendaryItem ;
+    rdfs:label "Legendary Weapon"@en .
+
+priory:PrecursorWeapon a owl:Class ;
+    rdfs:subClassOf priory:Weapon ;
+    rdfs:label "Precursor Weapon"@en ;
+    rdfs:comment "The base Exotic or Ascended weapon required to forge a Legendary Weapon."@en .
+
+# --- Upgrade Components ---
+
+priory:UpgradeComponent a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Upgrade Component"@en ;
+    rdfs:comment "An upgrade item slotted into weapons, armor, or trinkets."@en .
+
+priory:Sigil a owl:Class ;
+    rdfs:subClassOf priory:UpgradeComponent ;
+    rdfs:label "Sigil"@en .
+
+priory:LegendarySigil a owl:Class ;
+    rdfs:subClassOf priory:Sigil, priory:LegendaryItem ;
+    rdfs:label "Legendary Sigil"@en ;
+    rdfs:comment "A legendary upgrade component usable across all weapons in the Legendary Armory."@en .
+
+priory:Rune a owl:Class ;
+    rdfs:subClassOf priory:UpgradeComponent ;
+    rdfs:label "Rune"@en .
+
+priory:LegendaryRune a owl:Class ;
+    rdfs:subClassOf priory:Rune, priory:LegendaryItem ;
+    rdfs:label "Legendary Rune"@en .
+
+# --- Materials, Gifts, Currencies ---
+
+priory:CraftingMaterial a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Crafting Material"@en .
+
+priory:GiftItem a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Gift Component"@en ;
+    rdfs:comment "Intermediate gift components used in high-level Mystic Forge and legendary recipes."@en .
+
+priory:Currency a owl:Class ;
+    rdfs:label "Game Currency"@en ;
+    rdfs:comment "Account-wide wallet currency, map currency, or barter token."@en .
+
+# --- Recipe & Acquisition Classes ---
+
+priory:Recipe a owl:Class ;
+    rdfs:label "Recipe"@en ;
+    rdfs:comment "A transformation process taking ingredient inputs to produce an item output."@en .
+
+priory:DisciplineRecipe a owl:Class ;
+    rdfs:subClassOf priory:Recipe ;
+    rdfs:label "Discipline Crafting Recipe"@en ;
+    rdfs:comment "A deterministic recipe executed at a crafting station requiring a specific discipline."@en .
+
+priory:MysticForgeRecipe a owl:Class ;
+    rdfs:subClassOf priory:Recipe ;
+    rdfs:label "Mystic Forge Recipe"@en ;
+    rdfs:comment "A recipe executed in the Mystic Forge using up to 4 ingredients."@en .
+
+priory:IngredientRequirement a owl:Class ;
+    rdfs:label "Ingredient Requirement"@en ;
+    rdfs:comment "Reified N-ary relation specifying a required item or currency and its exact quantity."@en .
+
+priory:AcquisitionPath a owl:Class ;
+    rdfs:label "Acquisition Pathway"@en ;
+    rdfs:comment "A method by which a player can obtain an item or currency."@en .
+
+priory:CraftingPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Crafting Acquisition"@en .
+
+priory:VendorExchangePath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Vendor Exchange"@en .
+
+priory:TradingPostPurchasePath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Trading Post Purchase"@en .
+
+priory:AchievementCollectionPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Achievement Collection Journey"@en .
+
+priory:RewardTrackPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "WvW/PvP Reward Track"@en .
+
+priory:TimeGate a owl:Class ;
+    rdfs:label "Time Gate & Cooldown Constraint"@en ;
+    rdfs:comment "Limits the frequency or quantity of crafting/purchasing per unit time."@en .
+
+# ==============================================================================
+# Object Properties
+# ==============================================================================
+
+priory:producesItem a owl:ObjectProperty ;
+    rdfs:domain priory:Recipe ;
+    rdfs:range priory:Item ;
+    rdfs:label "produces item"@en .
+
+priory:producedBy a owl:ObjectProperty ;
+    owl:inverseOf priory:producesItem ;
+    rdfs:domain priory:Item ;
+    rdfs:range priory:Recipe ;
+    rdfs:label "produced by"@en .
+
+priory:hasIngredientRequirement a owl:ObjectProperty ;
+    rdfs:domain priory:Recipe ;
+    rdfs:range priory:IngredientRequirement ;
+    rdfs:label "has ingredient requirement"@en .
+
+priory:requiresItem a owl:ObjectProperty ;
+    rdfs:domain priory:IngredientRequirement ;
+    rdfs:range priory:Item ;
+    rdfs:label "requires item"@en .
+
+priory:requiresCurrency a owl:ObjectProperty ;
+    rdfs:range priory:Currency ;
+    rdfs:label "requires currency"@en .
+
+priory:requiresIngredient a owl:ObjectProperty ;
+    rdfs:domain priory:Recipe ;
+    rdfs:range priory:Item ;
+    rdfs:label "requires ingredient (RDF-star compatible)"@en .
+
+priory:acquiredVia a owl:ObjectProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range priory:AcquisitionPath ;
+    rdfs:label "acquired via"@en .
+
+priory:hasSubstituteSource a owl:ObjectProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range priory:AcquisitionPath ;
+    rdfs:label "has alternative acquisition source"@en .
+
+priory:requiresDiscipline a owl:ObjectProperty ;
+    rdfs:domain priory:DisciplineRecipe ;
+    rdfs:range skos:Concept ;
+    rdfs:label "requires discipline"@en .
+
+priory:hasRarity a owl:ObjectProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has rarity"@en .
+
+priory:hasWeaponType a owl:ObjectProperty ;
+    rdfs:domain priory:Weapon ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has weapon type"@en .
+
+priory:hasUpgradeType a owl:ObjectProperty ;
+    rdfs:domain priory:UpgradeComponent ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has upgrade type"@en .
+
+priory:hasGameMode a owl:ObjectProperty ;
+    rdfs:domain priory:AcquisitionPath ;
+    rdfs:range skos:Concept ;
+    rdfs:label "associated game mode"@en .
+
+priory:hasTimeGate a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:Recipe priory:AcquisitionPath priory:Item) ] ;
+    rdfs:range priory:TimeGate ;
+    rdfs:label "has time gate"@en .
+
+# ==============================================================================
+# Datatype Properties (Including Spatial & Waypoint Navigation)
+# ==============================================================================
+
+priory:gw2Id a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:Item priory:Recipe priory:Currency) ] ;
+    rdfs:range xsd:integer ;
+    rdfs:label "GW2 Official API ID"@en .
+
+priory:chatCode a owl:DatatypeProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:string ;
+    rdfs:label "In-game Chat Link Code"@en .
+
+priory:requiredQuantity a owl:DatatypeProperty ;
+    rdfs:range xsd:integer ;
+    rdfs:label "required quantity"@en .
+
+priory:quantity a owl:DatatypeProperty ;
+    rdfs:label "quantity (RDF-star annotation property)"@en ;
+    rdfs:range xsd:integer .
+
+priory:outputQuantity a owl:DatatypeProperty ;
+    rdfs:domain priory:Recipe ;
+    rdfs:range xsd:integer ;
+    rdfs:label "output quantity"@en .
+
+priory:requiresRating a owl:DatatypeProperty ;
+    rdfs:domain priory:DisciplineRecipe ;
+    rdfs:range xsd:integer ;
+    rdfs:label "required discipline rating (0-500)"@en .
+
+priory:isAccountBound a owl:DatatypeProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is account bound"@en .
+
+priory:expectedYieldRate a owl:DatatypeProperty ;
+    rdfs:domain priory:MysticForgeRecipe ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "expected yield probability rate"@en .
+
+# --- Spatial & Navigation Properties ---
+
+priory:vendorNPC a owl:DatatypeProperty ;
+    rdfs:domain priory:VendorExchangePath ;
+    rdfs:range xsd:string ;
+    rdfs:label "Vendor NPC Name"@en .
+
+priory:zoneName a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
+    rdfs:range xsd:string ;
+    rdfs:label "Map / Zone Name"@en .
+
+priory:waypointName a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
+    rdfs:range xsd:string ;
+    rdfs:label "Nearest Waypoint Name"@en .
+
+priory:nearestWaypoint a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
+    rdfs:range xsd:string ;
+    rdfs:label "Nearest In-Game Waypoint Chat Code"@en .

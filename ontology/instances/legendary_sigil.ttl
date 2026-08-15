@@ -1,0 +1,131 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix upgrade: <https://priory.gw2/ref/upgrade/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+
+# ==============================================================================
+# Legendary Sigil (Equipment Upgrade Component)
+# ==============================================================================
+
+item:91505 a priory:LegendarySigil ;
+    rdfs:label "Legendary Sigil"@en ;
+    priory:gw2Id 91505 ;
+    priory:chatCode "[&AgF5YwEA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasUpgradeType upgrade:Sigil ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_legendary_sigil ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Legendary_Sigil> .
+
+recipe:forge_legendary_sigil a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Legendary Sigil"@en ;
+    priory:producesItem item:91505 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:91508 ; # Gift of Sigils
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:89276 ; # Gift of Craftsmanship (Provisioner Tokens)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19675 ; # Mystic Clover
+        priory:requiredQuantity 77
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:89140 ; # Pile of Lucent Crystal
+        priory:requiredQuantity 250
+    ] .
+
+# --- Component 1: Gift of Sigils ---
+item:91508 a priory:GiftItem ;
+    rdfs:label "Gift of Sigils"@en ;
+    priory:gw2Id 91508 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_gift_of_sigils ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Sigils> .
+
+recipe:craft_gift_of_sigils a priory:DisciplineRecipe ;
+    rdfs:label "Craft Gift of Sigils"@en ;
+    priory:producesItem item:91508 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresRating 500 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:89271 ; # Lucent Mote
+        priory:requiredQuantity 100
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24305 ; # Charged Lodestone
+        priory:requiredQuantity 100
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24315 ; # Onyx Lodestone
+        priory:requiredQuantity 100
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24320 ; # Destroyer Lodestone
+        priory:requiredQuantity 100
+    ] .
+
+# --- Component 2: Gift of Craftsmanship (with Spatial & Navigation Data) ---
+item:89276 a priory:GiftItem ;
+    rdfs:label "Gift of Craftsmanship"@en ;
+    priory:gw2Id 89276 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:ProvisionerToken ;
+        priory:requiredQuantity 50 ;
+        priory:vendorNPC "Faction Provisioner"@en ;
+        priory:zoneName "Black Citadel"@en ;
+        priory:waypointName "Junker's Waypoint"@en ;
+        priory:nearestWaypoint "[&BKgDAAA=]" ;
+        priory:hasTimeGate [ a priory:TimeGate ; rdfs:label "Daily item barter limits across Faction Provisioners"@en ]
+    ] ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Craftsmanship> .
+
+# --- Intermediate Materials & Lodestones ---
+item:89140 a priory:CraftingMaterial ;
+    rdfs:label "Pile of Lucent Crystal"@en ;
+    priory:gw2Id 89140 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+item:89271 a priory:CraftingMaterial ;
+    rdfs:label "Lucent Mote"@en ;
+    priory:gw2Id 89271 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:24305 a priory:CraftingMaterial ;
+    rdfs:label "Charged Lodestone"@en ;
+    priory:gw2Id 24305 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:24315 a priory:CraftingMaterial ;
+    rdfs:label "Onyx Lodestone"@en ;
+    priory:gw2Id 24315 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:24320 a priory:CraftingMaterial ;
+    rdfs:label "Destroyer Lodestone"@en ;
+    priory:gw2Id 24320 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .

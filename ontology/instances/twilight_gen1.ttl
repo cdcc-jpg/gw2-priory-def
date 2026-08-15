@@ -1,0 +1,301 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+
+# ==============================================================================
+# Twilight (Generation 1 Legendary Greatsword)
+# ==============================================================================
+
+item:30699 a priory:LegendaryWeapon ;
+    rdfs:label "Twilight"@en ;
+    priory:gw2Id 30699 ;
+    priory:chatCode "[&AgErZgAA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_twilight ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Twilight> .
+
+recipe:forge_twilight a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Twilight"@en ;
+    priory:producesItem item:30699 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:29185 ; # Dusk
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19626 ; # Gift of Fortune
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19627 ; # Gift of Mastery
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19658 ; # Gift of Twilight
+        priory:requiredQuantity 1
+    ] .
+
+# --- Component 1: Dusk (Precursor) ---
+item:29185 a priory:PrecursorWeapon ;
+    rdfs:label "Dusk"@en ;
+    priory:gw2Id 29185 ;
+    priory:chatCode "[&AgEpZgAA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound false ;
+    priory:hasSubstituteSource [ a priory:TradingPostPurchasePath ] ,
+                               [ a priory:AchievementCollectionPath ] ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Dusk> .
+
+# --- Component 2: Gift of Fortune ---
+item:19626 a priory:GiftItem ;
+    rdfs:label "Gift of Fortune"@en ;
+    priory:gw2Id 19626 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_fortune ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Fortune> .
+
+recipe:forge_gift_of_fortune a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Fortune"@en ;
+    priory:producesItem item:19626 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19675 ; # Mystic Clover
+        priory:requiredQuantity 77
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19721 ; # Glob of Ectoplasm
+        priory:requiredQuantity 250
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19628 ; # Gift of Magic
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19629 ; # Gift of Might
+        priory:requiredQuantity 1
+    ] .
+
+# --- Component 3: Gift of Mastery ---
+item:19627 a priory:GiftItem ;
+    rdfs:label "Gift of Mastery"@en ;
+    priory:gw2Id 19627 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_mastery ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Mastery> .
+
+recipe:forge_gift_of_mastery a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Mastery"@en ;
+    priory:producesItem item:19627 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19674 ; # Bloodstone Shard
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19925 ; # Obsidian Shard
+        priory:requiredQuantity 250
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19677 ; # Gift of Exploration
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19678 ; # Gift of Battle
+        priory:requiredQuantity 1
+    ] .
+
+# --- Component 4: Gift of Twilight ---
+item:19658 a priory:GiftItem ;
+    rdfs:label "Gift of Twilight"@en ;
+    priory:gw2Id 19658 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_twilight ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Twilight> .
+
+recipe:forge_gift_of_twilight a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Twilight"@en ;
+    priory:producesItem item:19658 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19641 ; # Gift of Metal
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19640 ; # Gift of Darkness
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:18845 ; # Icy Runestone
+        priory:requiredQuantity 100
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24562 ; # Superior Sigil of Force
+        priory:requiredQuantity 1
+    ] .
+
+# --- Sub-ingredients, T6 Gifts, and Vendor Currencies (with Spatial Waypoints) ---
+
+item:19675 a priory:CraftingMaterial ;
+    rdfs:label "Mystic Clover"@en ;
+    priory:gw2Id 19675 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:hasSubstituteSource [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:AstralAcclaim ;
+        priory:requiredQuantity 6 ;
+        rdfs:label "Wizard's Vault Astral Rewards"@en
+    ] , [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:FractalRelic ;
+        priory:requiredQuantity 150 ;
+        priory:vendorNPC "BUY-2046"@en ;
+        priory:zoneName "Mistlock Sanctuary / Fractals of the Mists"@en ;
+        priory:hasTimeGate [ a priory:TimeGate ; rdfs:label "2 per day"@en ]
+    ] , [
+        a priory:RewardTrackPath ;
+        priory:hasGameMode gamemode:WvWRewardTrack ;
+        rdfs:label "WvW Non-Repeatable Reward Tracks"@en
+    ] .
+
+item:19674 a priory:CraftingMaterial ;
+    rdfs:label "Bloodstone Shard"@en ;
+    priory:gw2Id 19674 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:SpiritShard ;
+        priory:requiredQuantity 200 ;
+        priory:vendorNPC "Miyani (Mystic Forge)"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:waypointName "Trader's Forum Waypoint"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]"
+    ] .
+
+item:18845 a priory:CraftingMaterial ;
+    rdfs:label "Icy Runestone"@en ;
+    priory:gw2Id 18845 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 10000 ; # 1 gold = 10000 copper
+        priory:vendorNPC "Rojan the Penitent"@en ;
+        priory:zoneName "Frostgorge Sound"@en ;
+        priory:waypointName "Earthshake Waypoint"@en ;
+        priory:nearestWaypoint "[&BHsBAAA=]"
+    ] .
+
+item:19925 a priory:CraftingMaterial ;
+    rdfs:label "Obsidian Shard"@en ;
+    priory:gw2Id 19925 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:Karma ;
+        priory:requiredQuantity 2100 ;
+        priory:vendorNPC "Tactician Deathspark"@en ;
+        priory:zoneName "Straits of Devastation"@en ;
+        priory:waypointName "Glorious Victory Waypoint"@en ;
+        priory:nearestWaypoint "[&BO4CAAA=]"
+    ] .
+
+item:19677 a priory:GiftItem ;
+    rdfs:label "Gift of Exploration"@en ;
+    priory:gw2Id 19677 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:AchievementCollectionPath ;
+        priory:hasGameMode gamemode:MapCompletion ;
+        rdfs:label "100% Core Tyria Map Completion"@en
+    ] .
+
+item:19678 a priory:GiftItem ;
+    rdfs:label "Gift of Battle"@en ;
+    priory:gw2Id 19678 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:RewardTrackPath ;
+        priory:hasGameMode gamemode:WvWRewardTrack ;
+        rdfs:label "Gift of Battle WvW Reward Track"@en
+    ] .
+
+# --- Crafting Recipes for T6 / Discipline Gifts ---
+
+item:19641 a priory:GiftItem ;
+    rdfs:label "Gift of Metal"@en ;
+    priory:gw2Id 19641 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_gift_of_metal .
+
+recipe:craft_gift_of_metal a priory:DisciplineRecipe ;
+    rdfs:label "Craft Gift of Metal"@en ;
+    priory:producesItem item:19641 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresRating 400 .
+
+item:19640 a priory:GiftItem ;
+    rdfs:label "Gift of Darkness"@en ;
+    priory:gw2Id 19640 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_gift_of_darkness .
+
+recipe:craft_gift_of_darkness a priory:DisciplineRecipe ;
+    rdfs:label "Craft Gift of Darkness"@en ;
+    priory:producesItem item:19640 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Armorsmith ;
+    priory:requiresRating 400 .
+
+item:19628 a priory:GiftItem ;
+    rdfs:label "Gift of Magic"@en ;
+    priory:gw2Id 19628 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
+item:19629 a priory:GiftItem ;
+    rdfs:label "Gift of Might"@en ;
+    priory:gw2Id 19629 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
+item:19721 a priory:CraftingMaterial ;
+    rdfs:label "Glob of Ectoplasm"@en ;
+    priory:gw2Id 19721 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:24562 a priory:CraftingMaterial ;
+    rdfs:label "Superior Sigil of Force"@en ;
+    priory:gw2Id 24562 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound false .

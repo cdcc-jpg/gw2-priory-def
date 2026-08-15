@@ -1,0 +1,38 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix upgrade: <https://priory.gw2/ref/upgrade/> .
+
+priory-ref:UpgradeTypeScheme a skos:ConceptScheme ;
+    skos:prefLabel "Guild Wars 2 Upgrade Component Scheme"@en ;
+    rdfs:comment "Controlled vocabulary of equipment upgrade components in Guild Wars 2 (Sigils, Runes, Infusions, Enrichments)."@en ;
+    skos:hasTopConcept upgrade:Sigil, upgrade:Rune, upgrade:Infusion, upgrade:Enrichment .
+
+upgrade:Sigil a skos:Concept ;
+    skos:inScheme priory-ref:UpgradeTypeScheme ;
+    skos:topConceptOf priory-ref:UpgradeTypeScheme ;
+    skos:prefLabel "Sigil"@en ;
+    rdfs:comment "Weapon upgrade component granting passive or on-trigger combat effects."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sigil> .
+
+upgrade:Rune a skos:Concept ;
+    skos:inScheme priory-ref:UpgradeTypeScheme ;
+    skos:topConceptOf priory-ref:UpgradeTypeScheme ;
+    skos:prefLabel "Rune"@en ;
+    rdfs:comment "Armor upgrade component granting set stat bonuses."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Rune> .
+
+upgrade:Infusion a skos:Concept ;
+    skos:inScheme priory-ref:UpgradeTypeScheme ;
+    skos:topConceptOf priory-ref:UpgradeTypeScheme ;
+    skos:prefLabel "Infusion"@en ;
+    rdfs:comment "Agony resistance and stat infusion for Ascended and Legendary equipment."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Infusion> .
+
+upgrade:Enrichment a skos:Concept ;
+    skos:inScheme priory-ref:UpgradeTypeScheme ;
+    skos:topConceptOf priory-ref:UpgradeTypeScheme ;
+    skos:prefLabel "Enrichment"@en ;
+    rdfs:comment "Utility enrichment for Ascended and Legendary amulets (Karma bonus, Magic Find, XP)."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Enrichment> .

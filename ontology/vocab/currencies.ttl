@@ -1,0 +1,95 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+priory-ref:CurrencyScheme a skos:ConceptScheme ;
+    skos:prefLabel "Guild Wars 2 Currency & Token Scheme"@en ;
+    rdfs:comment "Controlled vocabulary of account currencies, dungeon tokens, and map exchange tokens in Guild Wars 2."@en ;
+    skos:hasTopConcept currency:Coin, currency:Karma, currency:SpiritShard, currency:Laurel,
+                       currency:AstralAcclaim, currency:TalesOfDungeonDelving, currency:FractalRelic,
+                       currency:WvWSkirmishClaimTicket, currency:MagnetiteShard, currency:ProphetShard,
+                       currency:ProvisionerToken .
+
+currency:Coin a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Coin (Gold/Silver/Copper)"@en ;
+    skos:notation "1"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Coin> .
+
+currency:Karma a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Karma"@en ;
+    skos:notation "2"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Karma> .
+
+currency:Laurel a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Laurel"@en ;
+    skos:notation "3"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Laurel> .
+
+currency:SpiritShard a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Spirit Shard"@en ;
+    skos:notation "23"^^xsd:integer ;
+    rdfs:comment "Account currency used for Mystic Forge promotions and Bloodstone Shard purchases."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Spirit_Shard> .
+
+currency:AstralAcclaim a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Astral Acclaim"@en ;
+    skos:notation "70"^^xsd:integer ;
+    rdfs:comment "Wizard's Vault currency for purchasing Legendary Starter Kits, Clovers, and Gold."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Astral_Acclaim> .
+
+currency:TalesOfDungeonDelving a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Tales of Dungeon Delving"@en ;
+    skos:notation "68"^^xsd:integer ;
+    rdfs:comment "Unified dungeon currency replacing legacy dungeon tokens; required for Gen 1 Legendary Gifts."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Tales_of_Dungeon_Delving> .
+
+currency:FractalRelic a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Fractal Relic"@en ;
+    skos:notation "7"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Fractal_Relic> .
+
+currency:WvWSkirmishClaimTicket a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "WvW Skirmish Claim Ticket"@en ;
+    skos:notation "45"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/WvW_Skirmish_Claim_Ticket> .
+
+currency:MagnetiteShard a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Magnetite Shard"@en ;
+    skos:notation "28"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Magnetite_Shard> .
+
+currency:ProphetShard a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Green Prophet Shard"@en ;
+    skos:notation "59"^^xsd:integer ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Green_Prophet_Shard> .
+
+currency:ProvisionerToken a skos:Concept ;
+    skos:inScheme priory-ref:CurrencyScheme ;
+    skos:topConceptOf priory-ref:CurrencyScheme ;
+    skos:prefLabel "Provisioner Token"@en ;
+    skos:notation "35"^^xsd:integer ;
+    rdfs:comment "Faction Provisioner token obtained from daily item trades across Tyria and Heart of Thorns; required for Gift of Craftsmanship."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Provisioner_Token> .

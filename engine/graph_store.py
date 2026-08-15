@@ -1,0 +1,134 @@
+"""Priory Graph Store.
+
+Manages the RDF Knowledge Graph, loads OWL schemas, SKOS reference vocabularies,
+and instance graphs, and provides SPARQL query interfaces for recipe trees and acquisition options.
+"""
+
+from __future__ import annotations
+import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+import rdflib
+from rdflib import Graph, Literal, Namespace, URIRef
+from rdflib.plugins.sparql import prepareQuery
+
+PRIORY = Namespace("https://priory.gw2/def/")
+PRIORY_REF = Namespace("https://priory.gw2/ref/")
+ITEM = Namespace("https://priory.gw2/id/item/")
+RECIPE = Namespace("https://priory.gw2/id/recipe/")
+WEAPON = Namespace("https://priory.gw2/ref/weapon/")
+RARITY = Namespace("https://priory.gw2/ref/rarity/")
+DISCIPLINE = Namespace("https://priory.gw2/ref/discipline/")
+GAMEMODE = Namespace("https://priory.gw2/ref/gamemode/")
+CURRENCY = Namespace("https://priory.gw2/ref/currency/")
+
+DEFAULT_NAMESPACES = {
+    "priory": PRIORY,
+    "priory-ref": PRIORY_REF,
+    "item": ITEM,
+    "recipe": RECIPE,
+    "weapon": WEAPON,
+    "rarity": RARITY,
+    "discipline": DISCIPLINE,
+    "gamemode": GAMEMODE,
+    "currency": CURRENCY,
+    "skos": rdflib.SKOS,
+    "rdfs": rdflib.RDFS,
+    "owl": rdflib.OWL,
+    "rdf": rdflib.RDF,
+}
+
+
+class PrioryGraphStore:
+    """In-memory RDF Graph Store powered by RDFLib with SPARQL 1.1 support."""
+
+    def __init__(self, ref_repo_path: Optional[Path] = None, def_repo_path: Optional[Path] = None):
+        self.graph = Graph()
+        self.ref_repo_path = ref_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-ref")
+        self.def_repo_path = def_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-def")
+        self._loaded = False
+
+        self._bind_namespaces()
+
+    def _bind_namespaces(self) -> None:
+        for prefix, ns in DEFAULT_NAMESPACES.items():
+            self.graph.bind(prefix, ns)
+
+    def load_all(self) -> int:
+        """Loads all schemas, reference vocabularies, and instances into the graph once."""
+        if self._loaded:
+            return len(self.graph)
+
+        total_triples_before = len(self.graph)
+
+        # 1. Load Reference Vocabularies (from local ontology/vocab/ or ref_repo_path/vocab/)
+        local_vocab_dir = self.def_repo_path / "ontology" / "vocab"
+        if local_vocab_dir.exists():
+            for ttl_file in local_vocab_dir.glob("*.ttl"):
+                self.graph.parse(ttl_file, format="turtle")
+        elif self.ref_repo_path.exists():
+            for ttl_file in (self.ref_repo_path / "vocab").glob("*.ttl"):
+                self.graph.parse(ttl_file, format="turtle")
+
+        # 2. Load Core Ontology Schema
+        core_ontology = self.def_repo_path / "ontology" / "priory_core.ttl"
+        if core_ontology.exists():
+            self.graph.parse(core_ontology, format="turtle")
+
+        # 3. Load Instances
+        instances_dir = self.def_repo_path / "ontology" / "instances"
+        if instances_dir.exists():
+            for ttl_file in instances_dir.glob("*.ttl"):
+                self.graph.parse(ttl_file, format="turtle")
+
+        self._loaded = True
+        return len(self.graph) - total_triples_before
+
+    def query(self, sparql_str: str, init_bindings: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+        """Executes a SPARQL query against the graph and returns list of dict results."""
+        q = prepareQuery(sparql_str, initNs=DEFAULT_NAMESPACES)
+        results = self.graph.query(q, initBindings=init_bindings or {})
+        
+        output = []
+        for row in results:
+            row_dict = {}
+            for var in results.vars:
+                val = row[var]
+                if isinstance(val, Literal):
+                    row_dict[str(var)] = val.toPython()
+                elif isinstance(val, URIRef):
+                    row_dict[str(var)] = str(val)
+                else:
+                    row_dict[str(var)] = val
+            output.append(row_dict)
+        return output
+
+    def get_item_by_id(self, gw2_id: int) -> Optional[Dict[str, Any]]:
+        """Retrieves item metadata by GW2 API ID."""
+        sparql = """
+        SELECT DISTINCT ?item ?label ?rarity ?chatCode ?isAccountBound WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  rdfs:label ?label .
+            OPTIONAL { ?item priory:hasRarity ?rarity }
+            OPTIONAL { ?item priory:chatCode ?chatCode }
+            OPTIONAL { ?item priory:isAccountBound ?isAccountBound }
+        } LIMIT 1
+        """
+        res = self.query(sparql, init_bindings={"gw2Id": Literal(gw2_id)})
+        return res[0] if res else None
+
+    def get_direct_recipe_ingredients(self, item_id: int) -> List[Dict[str, Any]]:
+        """Retrieves direct ingredient requirements for an item's primary recipe."""
+        sparql = """
+        SELECT DISTINCT ?recipe ?recipeLabel ?ingredientId ?ingredientLabel ?quantity WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  priory:producedBy ?recipe .
+            ?recipe priory:hasIngredientRequirement ?req .
+            OPTIONAL { ?recipe rdfs:label ?recipeLabel }
+            ?req priory:requiresItem ?ingredient ;
+                 priory:requiredQuantity ?quantity .
+            ?ingredient priory:gw2Id ?ingredientId ;
+                        rdfs:label ?ingredientLabel .
+        }
+        """
+        return self.query(sparql, init_bindings={"gw2Id": Literal(item_id)})
