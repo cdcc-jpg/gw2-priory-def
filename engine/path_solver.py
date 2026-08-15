@@ -113,7 +113,7 @@ class PathSolver:
                     source_name="Wizard's Vault (Astral Acclaim)",
                     clovers_obtainable=clovers_from_vault,
                     estimated_gold_cost=0.0,
-                    required_currencies={"Astral Acclaim": clovers_from_vault * 6},
+                    required_currencies={"Astral Acclaim": clovers_from_vault * 60},
                     time_gate_note="Seasonal limit (20 clovers per refresh)",
                     recommended=True
                 ))

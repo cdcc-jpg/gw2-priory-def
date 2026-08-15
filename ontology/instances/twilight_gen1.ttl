@@ -164,7 +164,7 @@ item:19675 a priory:CraftingMaterial ;
     priory:hasSubstituteSource [
         a priory:VendorExchangePath ;
         priory:requiresCurrency currency:AstralAcclaim ;
-        priory:requiredQuantity 6 ;
+        priory:requiredQuantity 60 ;
         rdfs:label "Wizard's Vault Astral Rewards"@en
     ] , [
         a priory:VendorExchangePath ;
