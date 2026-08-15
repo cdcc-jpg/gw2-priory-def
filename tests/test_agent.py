@@ -47,25 +47,33 @@ class TestAgentPipeline(unittest.TestCase):
         self.assertEqual(resolved_goal.resolved_item_id, 91505)
         self.assertEqual(resolved_goal.target_quantity, 2)
 
-        # Player owns 54 Clovers (needs 154) and 440 Provisioner Tokens in wallet (needs 100)
+        # Player owns 20 Clovers (needs 30 * 2 = 60) and 440 Provisioner Tokens in wallet (needs 100)
         player_account = AccountState(
-            materials={19675: 54},
+            materials={19675: 20},
             wallet={35: 440} # 440 Provisioner Tokens owned!
         )
         diff_engine = AccountDiffEngine(self.store)
         report = diff_engine.compute_diff(91505, player_account, target_quantity=2)
 
-        # 154 needed - 54 owned = 100 missing Clovers
-        self.assertEqual(report.summary_missing_materials["Mystic Clover"], 100)
-        # 250 * 2 = 500 Lucent Crystals
-        self.assertEqual(report.summary_missing_materials["Pile of Lucent Crystal"], 500)
+        # 60 needed - 20 owned = 40 missing Clovers
+        self.assertEqual(report.summary_missing_materials["Mystic Clover"], 40)
+        # 10 * 75 * 2 = 1500 Lucent Crystals
+        self.assertEqual(report.summary_missing_materials["Pile of Lucent Crystal"], 1500)
+        # 75 * 2 = 150 of each symbol
+        self.assertEqual(report.summary_missing_materials["Symbol of Control"], 150)
         # Gift of Craftsmanship is satisfied because wallet has 440 tokens (needs 100)
         self.assertNotIn("Gift of Craftsmanship", report.summary_missing_materials)
+
+        # Full pipeline test
+        guide = self.orchestrator.run_pipeline(prompt, player_account)
+        # No daily provisioner task should be in the checklist
+        provisioner_tasks = [s for s in guide.session_checklist if "Provisioner Barter Run" in s.title]
+        self.assertEqual(len(provisioner_tasks), 0)
 
     def test_multi_turn_chat_session_with_vault_exhaustion(self):
         """Verifies multi-turn chat session where player notes Wizard's Vault is already completed."""
         player_account = AccountState(
-            materials={19675: 50}, # 50 Clovers owned (needs 154)
+            materials={19675: 20}, # 20 Clovers owned (needs 60)
             wallet={35: 440}       # 440 Provisioner tokens owned (needs 100)
         )
         session = self.orchestrator.create_session(account_state=player_account)

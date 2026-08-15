@@ -60,11 +60,35 @@ class GuideGenerator:
             for d in diff_report.missing_disciplines
         ]
 
-        # Calculate readiness score
+        # Case 1: Fully Satisfied (e.g. 4 Sigils owned in Legendary Armory or bags)
+        if diff_report.is_fully_satisfied:
+            return PersonalizedGuide(
+                goal_name=goal.resolved_item_name,
+                target_quantity=target_qty,
+                chat_code=goal.chat_code,
+                readiness_percentage=100,
+                executive_summary=f"🎉 **Goal Completed:** You already have all **{goal_display}** in your Legendary Armory / account inventory!",
+                strategic_recommendations=[
+                    f"🏆 **100% Unlocked:** You have fulfilled all {target_qty} required instances on your account. Zero additional materials or crafting steps are needed!"
+                ],
+                session_checklist=[
+                    ActionStep(
+                        step_number=1,
+                        title="Equip from Legendary Armory",
+                        estimated_time_minutes=1,
+                        game_mode="Account",
+                        description=f"Open your Hero Panel (H) -> Equipment tab -> click any weapon upgrade slot to equip your {goal_display} across all characters for free.",
+                        chat_code=goal.chat_code
+                    )
+                ],
+                missing_materials_summary={},
+                missing_disciplines_summary=[],
+                motivational_tip="🌟 **Priory Tip:** Legendary Sigils can be customized with any stat/sigil effect instantly and for free at any time out of combat!"
+            )
+
+        # Case 2: Partially missing materials
         total_items_needed = sum(missing_mats.values())
         readiness = 0 if total_items_needed > 1000 else max(5, 100 - (total_items_needed // 15))
-        if diff_report.is_fully_satisfied:
-            readiness = 100
 
         # Strategic analysis based on intent & constraints
         recommendations = []
@@ -191,7 +215,7 @@ class GuideGenerator:
 
         # Step 5: Material Farming / Gold Generation
         remaining_time = max(20, intent.time_budget_minutes - allocated_time)
-        meta_waypoint = "[&BF8HAAA=]" # Silverwastes Camp Resolve
+        meta_waypoint = "[&BF8HAAA=]"
         checklist.append(ActionStep(
             step_number=step_num,
             title="Gather Materials & Farm Meta Events",

@@ -1,7 +1,7 @@
 """Dynamic Overlay & Account Delta Engine for Project Priory.
 
 Calculates the exact mathematical difference between a player's live account snapshot
-(materials, bank, inventory, wallet, masteries, crafting levels) and a target item's dependency graph.
+(materials, bank, inventory, wallet, legendary armory, masteries, crafting levels) and a target item's dependency graph.
 """
 
 from __future__ import annotations
@@ -18,15 +18,17 @@ class AccountState(BaseModel):
     bank: Dict[int, int] = Field(default_factory=dict, description="Bank storage: item_id -> count")
     inventory: Dict[int, int] = Field(default_factory=dict, description="Character inventories: item_id -> count")
     wallet: Dict[int, int] = Field(default_factory=dict, description="Wallet: currency_id -> count")
+    legendary_armory: Dict[int, int] = Field(default_factory=dict, description="Legendary Armory: item_id -> count")
     disciplines: Dict[str, int] = Field(default_factory=dict, description="Discipline -> max rating level")
     unlocked_recipes: List[int] = Field(default_factory=list, description="List of unlocked recipe IDs")
 
     def total_item_count(self, item_id: int) -> int:
-        """Returns aggregate count of an item across materials, bank, and inventories."""
+        """Returns aggregate count of an item across materials, bank, inventories, and legendary armory."""
         return (
             self.materials.get(item_id, 0) +
             self.bank.get(item_id, 0) +
-            self.inventory.get(item_id, 0)
+            self.inventory.get(item_id, 0) +
+            self.legendary_armory.get(item_id, 0)
         )
 
     def total_currency_count(self, currency_id: int) -> int:

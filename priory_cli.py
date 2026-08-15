@@ -6,7 +6,7 @@ Run:
     python3 priory_cli.py
 
     # Or one-shot query:
-    python3 priory_cli.py "I want to craft 2 legendary sigils"
+    python3 priory_cli.py "I want to craft 4 legendary sigils"
 """
 
 import os
@@ -78,25 +78,29 @@ async def main():
 
     if gw2_key and gw2_key.strip():
         print(f"[+] GW2 API Key Detected: {gw2_key[:6]}...{gw2_key[-4:]} 🔑")
-        print("    Fetching live player materials, bank, wallet, and characters from ArenaNet API...")
+        print("    Fetching live player materials, bank, wallet, legendary armory, and characters...")
         try:
             player_account = await api_client.fetch_account_snapshot()
-            print("    ✅ Live account snapshot successfully retrieved!")
+            armory_count = len(player_account.legendary_armory)
+            mat_count = len(player_account.materials)
+            print(f"    ✅ Live account snapshot successfully retrieved! ({mat_count} materials, {armory_count} armory legendaries)")
         except Exception as e:
             print(f"    ⚠️ Failed to fetch live account: {e}. Falling back to default account snapshot.")
             player_account = AccountState(
                 materials={19675: 50, 19721: 180},
                 bank={29185: 1},
                 wallet={35: 440},
+                legendary_armory={91505: 4},
                 disciplines={"weaponsmith": 500}
             )
     else:
         print("[ℹ️] No GW2_API_KEY set in .env. Using default test account snapshot:")
-        print("    • Dusk Precursor in Bank ✅ | 50/77 Clovers | 440 Provisioner Tokens | Weaponsmith 500 ✅")
+        print("    • 4 Legendary Sigils in Armory ✅ | Dusk in Bank ✅ | 440 Provisioner Tokens | Weaponsmith 500 ✅")
         player_account = AccountState(
             materials={19675: 50, 19721: 180},
             bank={29185: 1},
             wallet={35: 440},
+            legendary_armory={91505: 4},
             disciplines={"weaponsmith": 500}
         )
 
@@ -119,7 +123,7 @@ async def main():
         print("\n💬 [Interactive Chat Mode Active] Type your question, follow-up, or 'exit' to quit.\n")
         
         # Initial greeting prompt
-        first_prompt = "I'm looking into crafting 2 legendary sigils. I already bought the clovers from the wizard vault. I have 90 mins."
+        first_prompt = "I want to craft 4 legendary sigils."
         print(f"User > {first_prompt}")
         guide = session.send_message(first_prompt, live_tp_prices)
         print_guide(guide)

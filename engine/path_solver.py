@@ -50,11 +50,18 @@ class PathSolver:
         19641: 35.0,   # Gift of Metal (Ingots)
         19640: 30.0,   # Gift of Darkness (Dungeon tokens + Darksteel)
         89140: 0.05,   # Pile of Lucent Crystal
-        89271: 0.005,  # Lucent Mote
-        24305: 0.80,   # Charged Lodestone
-        24315: 0.50,   # Onyx Lodestone
-        24320: 0.40,   # Destroyer Lodestone
-        91508: 120.0,  # Gift of Sigils (Crafting cost)
+        89175: 1.20,   # Mystic Mote
+        89258: 0.35,   # Symbol of Control
+        89182: 0.35,   # Symbol of Enhancement
+        89216: 0.35,   # Symbol of Pain
+        19725: 0.30,   # Vicious Claw
+        19734: 0.30,   # Armored Scale
+        19723: 0.25,   # Ancient Bone
+        19728: 0.25,   # Vicious Fang
+        19748: 0.45,   # Powerful Blood
+        19745: 0.30,   # Potent Venom Sac
+        19746: 0.35,   # Elaborate Totem
+        19732: 0.20,   # Crystalline Dust
     }
 
     def __init__(self, graph_store: PrioryGraphStore):
@@ -154,9 +161,17 @@ class PathSolver:
         total_gold += missing.get("Gift of Metal", 0) * prices.get(19641, 35.0)
         total_gold += missing.get("Gift of Darkness", 0) * prices.get(19640, 30.0)
         total_gold += missing.get("Pile of Lucent Crystal", 0) * prices.get(89140, 0.05)
-        total_gold += missing.get("Charged Lodestone", 0) * prices.get(24305, 0.80)
-        total_gold += missing.get("Onyx Lodestone", 0) * prices.get(24315, 0.50)
-        total_gold += missing.get("Destroyer Lodestone", 0) * prices.get(24320, 0.40)
+        total_gold += missing.get("Symbol of Control", 0) * prices.get(89258, 0.35)
+        total_gold += missing.get("Symbol of Enhancement", 0) * prices.get(89182, 0.35)
+        total_gold += missing.get("Symbol of Pain", 0) * prices.get(89216, 0.35)
+        total_gold += missing.get("Vicious Claw", 0) * prices.get(19725, 0.30)
+        total_gold += missing.get("Armored Scale", 0) * prices.get(19734, 0.30)
+        total_gold += missing.get("Ancient Bone", 0) * prices.get(19723, 0.25)
+        total_gold += missing.get("Vicious Fang", 0) * prices.get(19728, 0.25)
+        total_gold += missing.get("Powerful Blood", 0) * prices.get(19748, 0.45)
+        total_gold += missing.get("Potent Venom Sac", 0) * prices.get(19745, 0.30)
+        total_gold += missing.get("Elaborate Totem", 0) * prices.get(19746, 0.35)
+        total_gold += missing.get("Crystalline Dust", 0) * prices.get(19732, 0.20)
 
         # 4. Identify Non-Negotiable Bottlenecks
         bottlenecks = []
