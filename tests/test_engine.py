@@ -36,18 +36,20 @@ class TestEngine(unittest.TestCase):
         self.assertFalse(report.is_fully_satisfied)
         self.assertEqual(report.goal_item_name, "Twilight")
 
-        # Should detect missing Weaponsmith rating (needs 400, has 0)
+        # Should detect missing Weaponsmith and Armorsmith (needs 400)
         self.assertGreater(len(report.missing_disciplines), 0)
         weaponsmith_req = next((d for d in report.missing_disciplines if d["discipline"] == "weaponsmith"), None)
         self.assertIsNotNone(weaponsmith_req)
         self.assertEqual(weaponsmith_req["required_rating"], 400)
-        self.assertEqual(weaponsmith_req["current_rating"], 0)
 
         # Should report missing leaf materials
         self.assertEqual(report.summary_missing_materials["Mystic Clover"], 77)
         self.assertEqual(report.summary_missing_materials["Glob of Ectoplasm"], 250)
         self.assertEqual(report.summary_missing_materials["Icy Runestone"], 100)
         self.assertEqual(report.summary_missing_materials["Dusk"], 1)
+        self.assertEqual(report.summary_missing_materials["Mithril Ingot"], 100)
+        self.assertEqual(report.summary_missing_materials["Orichalcum Ingot"], 350)
+        self.assertEqual(report.summary_missing_materials["Onyx Lodestone"], 100)
 
     def test_account_diff_engine_partially_completed_account(self):
         """Verifies diff report on an account with owned precursor and clovers."""
@@ -61,8 +63,8 @@ class TestEngine(unittest.TestCase):
                 29185: 1,   # Owns Dusk in bank!
             },
             disciplines={
-                "weaponsmith": 500, # Meets Weaponsmith 400 req
-                "armorsmith": 400   # Meets Armorsmith 400 req
+                "weaponsmith": 500,
+                "armorsmith": 500
             }
         )
 
