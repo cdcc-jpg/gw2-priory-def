@@ -176,7 +176,18 @@ class GW2ApiClient:
             except Exception:
                 pass
 
-            # 5. Characters (for inventory and crafting disciplines)
+            # 5. Shared Inventory Slots
+            try:
+                shared_resp = await client.get(f"{self.BASE_URL}/account/inventory")
+                if shared_resp.status_code == 200:
+                    shared_data = shared_resp.json()
+                    for s_item in shared_data:
+                        if s_item and s_item.get("id"):
+                            inventory[s_item["id"]] = inventory.get(s_item["id"], 0) + s_item.get("count", 1)
+            except Exception:
+                pass
+
+            # 6. Characters (for bag inventories and crafting disciplines)
             try:
                 char_resp = await client.get(f"{self.BASE_URL}/characters", params={"page": 0})
                 if char_resp.status_code == 200:

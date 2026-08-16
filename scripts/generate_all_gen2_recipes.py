@@ -100,10 +100,79 @@ def generate_gen2_graph() -> rdflib.Graph:
         g.add((req, PRIORY.requiredQuantity, Literal(100, datatype=XSD.integer)))
 
     # Gift of Maguuma Mastery (78370)
-    g.add((ITEM["78370"], RDF.type, PRIORY.GiftItem))
-    g.add((ITEM["78370"], RDFS.label, Literal("Gift of Maguuma Mastery", lang="en")))
-    g.add((ITEM["78370"], PRIORY.gw2Id, Literal(78370, datatype=XSD.integer)))
-    g.add((ITEM["78370"], PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
+    g_mag = ITEM["78370"]
+    g.add((g_mag, RDF.type, PRIORY.GiftItem))
+    g.add((g_mag, RDF.type, OWL.NamedIndividual))
+    g.add((g_mag, RDFS.label, Literal("Gift of Maguuma Mastery", lang="en")))
+    g.add((g_mag, PRIORY.gw2Id, Literal(78370, datatype=XSD.integer)))
+    g.add((g_mag, PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
+    g.add((g_mag, PRIORY.producedBy, RECIPE["forge_maguuma_mastery"]))
+
+    f_mag = RECIPE["forge_maguuma_mastery"]
+    g.add((f_mag, RDF.type, PRIORY.MysticForgeRecipe))
+    g.add((f_mag, RDFS.label, Literal("Forge Gift of Maguuma Mastery", lang="en")))
+    g.add((f_mag, PRIORY.producesItem, g_mag))
+    g.add((f_mag, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
+
+    # 4 Maguuma Gifts: Fleet (73537), Tarir (71943), Chak (74677), Insights (75919)
+    for g_part_id, g_part_name in [
+        (73537, "Gift of the Fleet"),
+        (71943, "Gift of Tarir"),
+        (74677, "Gift of the Chak"),
+        (75919, "Gift of Insights"),
+    ]:
+        p_uri = ITEM[str(g_part_id)]
+        g.add((p_uri, RDF.type, PRIORY.GiftItem))
+        g.add((p_uri, RDFS.label, Literal(g_part_name, lang="en")))
+        g.add((p_uri, PRIORY.gw2Id, Literal(g_part_id, datatype=XSD.integer)))
+        g.add((p_uri, PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
+
+        req = RECIPE[f"req_mag_{g_part_id}"]
+        g.add((f_mag, PRIORY.hasIngredientRequirement, req))
+        g.add((req, RDF.type, PRIORY.IngredientRequirement))
+        g.add((req, PRIORY.requiresItem, p_uri))
+        g.add((req, PRIORY.requiredQuantity, Literal(1, datatype=XSD.integer)))
+
+    # Gift of Insights (75919) Recipe: 250 Crystalline Ore (46682) + Bloodstone Dust (46731) + Dragonite (46733) + Empyreal (46735)
+    g.add((ITEM["75919"], PRIORY.producedBy, RECIPE["forge_gift_of_insights"]))
+    f_ins = RECIPE["forge_gift_of_insights"]
+    g.add((f_ins, RDF.type, PRIORY.MysticForgeRecipe))
+    g.add((f_ins, RDFS.label, Literal("Forge Gift of Insights", lang="en")))
+    g.add((f_ins, PRIORY.producesItem, ITEM["75919"]))
+    g.add((f_ins, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
+
+    for in_id, in_name, qty in [
+        (46682, "Crystalline Ore", 250),
+        (46731, "Pile of Bloodstone Dust", 200),
+        (46733, "Dragonite Ore", 200),
+        (46735, "Empyreal Fragment", 200)
+    ]:
+        in_uri = ITEM[str(in_id)]
+        g.add((in_uri, RDF.type, PRIORY.CraftingMaterial))
+        g.add((in_uri, RDFS.label, Literal(in_name, lang="en")))
+        g.add((in_uri, PRIORY.gw2Id, Literal(in_id, datatype=XSD.integer)))
+
+        req = RECIPE[f"req_ins_{in_id}"]
+        g.add((f_ins, PRIORY.hasIngredientRequirement, req))
+        g.add((req, RDF.type, PRIORY.IngredientRequirement))
+        g.add((req, PRIORY.requiresItem, in_uri))
+        g.add((req, PRIORY.requiredQuantity, Literal(qty, datatype=XSD.integer)))
+
+    # Shard of the Dark Arts (86120) for Ars Goetia / The Binding of Ipos
+    g.add((ITEM["86120"], RDF.type, PRIORY.CraftingMaterial))
+    g.add((ITEM["86120"], RDFS.label, Literal("Shard of the Dark Arts", lang="en")))
+    g.add((ITEM["86120"], PRIORY.gw2Id, Literal(86120, datatype=XSD.integer)))
+    g.add((ITEM["86676"], PRIORY.producedBy, RECIPE["craft_ars_goetia"]))
+    
+    f_ag = RECIPE["craft_ars_goetia"]
+    g.add((f_ag, RDF.type, PRIORY.DisciplineRecipe))
+    g.add((f_ag, RDFS.label, Literal("Craft Ars Goetia", lang="en")))
+    g.add((f_ag, PRIORY.producesItem, ITEM["86676"]))
+    req_sda = RECIPE["req_ars_dark_arts"]
+    g.add((f_ag, PRIORY.hasIngredientRequirement, req_sda))
+    g.add((req_sda, RDF.type, PRIORY.IngredientRequirement))
+    g.add((req_sda, PRIORY.requiresItem, ITEM["86120"]))
+    g.add((req_sda, PRIORY.requiredQuantity, Literal(100, datatype=XSD.integer)))
 
     # Amalgamated Gemstone (68063)
     g.add((ITEM["68063"], RDF.type, PRIORY.CraftingMaterial))

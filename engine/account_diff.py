@@ -6,7 +6,7 @@ and the recursive ingredient requirements of any item in the Knowledge Graph.
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 from rdflib import Literal, URIRef
 from engine.graph_store import PrioryGraphStore
 
@@ -94,8 +94,12 @@ class AccountDiffEngine:
 
         missing_disciplines = self._evaluate_discipline_requirements(used_recipes, account)
 
-        total_req_items = max(1, sum(summary_missing.values()) + root_node.owned_quantity)
-        readiness = max(0.0, min(100.0, (1.0 - (sum(summary_missing.values()) / total_req_items)) * 100.0))
+        # Calculate exact tree units owned vs needed across all branches
+        total_owned_units, total_needed_units = self._calculate_tree_units(root_node)
+        if root_node.is_satisfied:
+            readiness = 100.0
+        else:
+            readiness = max(0.0, min(100.0, (total_owned_units / max(1, total_needed_units)) * 100.0))
 
         is_fully_satisfied = (
             root_node.is_satisfied or 
@@ -113,6 +117,25 @@ class AccountDiffEngine:
             summary_missing_currencies=missing_currencies,
             missing_disciplines=missing_disciplines
         )
+
+    def _calculate_tree_units(self, node: ItemRequirementNode) -> Tuple[int, int]:
+        """Recursively calculates (owned_credited_units, total_required_units) across DAG nodes."""
+        if not node.sub_requirements:
+            needed = node.required_quantity
+            owned = min(needed, node.owned_quantity) if not node.is_satisfied else needed
+            return (owned, needed)
+
+        if node.is_satisfied:
+            return (node.required_quantity, node.required_quantity)
+
+        total_owned = 0
+        total_needed = 0
+        for child in node.sub_requirements:
+            c_owned, c_needed = self._calculate_tree_units(child)
+            total_owned += c_owned
+            total_needed += c_needed
+
+        return (total_owned, max(1, total_needed))
 
     def is_unpackable_from_account(self, item_id: int, account: AccountState) -> Optional[str]:
         """Checks if an item can be obtained from an owned container (e.g. Starter Kit in bank)."""

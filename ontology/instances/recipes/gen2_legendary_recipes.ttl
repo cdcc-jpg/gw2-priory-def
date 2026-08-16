@@ -8,6 +8,22 @@
 @prefix weapon: <https://priory.gw2/ref/weapon/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+item:46682 a priory:CraftingMaterial ;
+    rdfs:label "Crystalline Ore"@en ;
+    priory:gw2Id 46682 .
+
+item:46731 a priory:CraftingMaterial ;
+    rdfs:label "Pile of Bloodstone Dust"@en ;
+    priory:gw2Id 46731 .
+
+item:46733 a priory:CraftingMaterial ;
+    rdfs:label "Dragonite Ore"@en ;
+    priory:gw2Id 46733 .
+
+item:46735 a priory:CraftingMaterial ;
+    rdfs:label "Empyreal Fragment"@en ;
+    priory:gw2Id 46735 .
+
 item:71383 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
     rdfs:label "Nevermore"@en ;
@@ -27,6 +43,21 @@ item:71384 a owl:NamedIndividual,
     priory:gw2Id 71384 ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true .
+
+item:71943 a priory:GiftItem ;
+    rdfs:label "Gift of Tarir"@en ;
+    priory:gw2Id 71943 ;
+    priory:isAccountBound true .
+
+item:73537 a priory:GiftItem ;
+    rdfs:label "Gift of the Fleet"@en ;
+    priory:gw2Id 73537 ;
+    priory:isAccountBound true .
+
+item:74677 a priory:GiftItem ;
+    rdfs:label "Gift of the Chak"@en ;
+    priory:gw2Id 74677 ;
     priory:isAccountBound true .
 
 item:75207 a owl:NamedIndividual,
@@ -176,6 +207,10 @@ item:82792 a owl:NamedIndividual,
     priory:hasWeaponType weapon:Hammer ;
     priory:isAccountBound true .
 
+item:86120 a priory:CraftingMaterial ;
+    rdfs:label "Shard of the Dark Arts"@en ;
+    priory:gw2Id 86120 .
+
 item:86303 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
     rdfs:label "The HMS Divinity"@en ;
@@ -209,14 +244,6 @@ item:86675 a owl:NamedIndividual,
     priory:hasWeaponType weapon:Focus ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_the_binding_of_ipos .
-
-item:86676 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Ars Goetia"@en ;
-    priory:gw2Id 86676 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Focus ;
-    priory:isAccountBound true .
 
 item:87687 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -323,6 +350,11 @@ item:91877 a owl:NamedIndividual,
     priory:hasWeaponType weapon:Warhorn ;
     priory:isAccountBound true .
 
+recipe:craft_ars_goetia a priory:DisciplineRecipe ;
+    rdfs:label "Craft Ars Goetia"@en ;
+    priory:hasIngredientRequirement recipe:req_ars_dark_arts ;
+    priory:producesItem item:86676 .
+
 recipe:forge_astralaria a priory:MysticForgeRecipe ;
     rdfs:label "Forge Astralaria"@en ;
     priory:hasIngredientRequirement recipe:req_astralaria_maguuma,
@@ -417,6 +449,15 @@ recipe:forge_exordium_gift a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:producesItem item:90550 .
 
+recipe:forge_gift_of_insights a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Insights"@en ;
+    priory:hasIngredientRequirement recipe:req_ins_46682,
+        recipe:req_ins_46731,
+        recipe:req_ins_46733,
+        recipe:req_ins_46735 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:75919 .
+
 recipe:forge_hope a priory:MysticForgeRecipe ;
     rdfs:label "Forge HOPE"@en ;
     priory:hasIngredientRequirement recipe:req_hope_maguuma,
@@ -432,6 +473,15 @@ recipe:forge_hope_gift a priory:MysticForgeRecipe ;
         recipe:req_hope_icy ;
     priory:outputQuantity 1 ;
     priory:producesItem item:75206 .
+
+recipe:forge_maguuma_mastery a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Maguuma Mastery"@en ;
+    priory:hasIngredientRequirement recipe:req_mag_71943,
+        recipe:req_mag_73537,
+        recipe:req_mag_74677,
+        recipe:req_mag_75919 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:78370 .
 
 recipe:forge_mystic_tribute a priory:MysticForgeRecipe ;
     rdfs:label "Forge Mystic Tribute"@en ;
@@ -585,6 +635,10 @@ recipe:forge_xiuquatl_gift a priory:MysticForgeRecipe ;
         recipe:req_xiuquatl_icy ;
     priory:outputQuantity 1 ;
     priory:producesItem item:88954 .
+
+recipe:req_ars_dark_arts a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:86120 .
 
 recipe:req_astralaria_gem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
@@ -761,6 +815,38 @@ recipe:req_hope_trib a priory:IngredientRequirement ;
 recipe:req_hope_wgift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:75206 .
+
+recipe:req_ins_46682 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:46682 .
+
+recipe:req_ins_46731 a priory:IngredientRequirement ;
+    priory:requiredQuantity 200 ;
+    priory:requiresItem item:46731 .
+
+recipe:req_ins_46733 a priory:IngredientRequirement ;
+    priory:requiredQuantity 200 ;
+    priory:requiresItem item:46733 .
+
+recipe:req_ins_46735 a priory:IngredientRequirement ;
+    priory:requiredQuantity 200 ;
+    priory:requiresItem item:46735 .
+
+recipe:req_mag_71943 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:71943 .
+
+recipe:req_mag_73537 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:73537 .
+
+recipe:req_mag_74677 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:74677 .
+
+recipe:req_mag_75919 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:75919 .
 
 recipe:req_nevermore_gem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
@@ -1006,6 +1092,12 @@ item:75206 a owl:NamedIndividual,
     priory:gw2Id 75206 ;
     priory:producedBy recipe:forge_hope_gift .
 
+item:75919 a priory:GiftItem ;
+    rdfs:label "Gift of Insights"@en ;
+    priory:gw2Id 75919 ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_insights .
+
 item:76157 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of Astralaria"@en ;
@@ -1064,6 +1156,15 @@ item:86674 a owl:NamedIndividual,
     priory:gw2Id 86674 ;
     priory:producedBy recipe:forge_the_binding_of_ipos_gift .
 
+item:86676 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Ars Goetia"@en ;
+    priory:gw2Id 86676 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Focus ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_ars_goetia .
+
 item:87686 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of the Claw of the Khan-Ur"@en ;
@@ -1098,10 +1199,12 @@ item:68063 a priory:CraftingMaterial ;
     rdfs:label "Amalgamated Gemstone"@en ;
     priory:gw2Id 68063 .
 
-item:78370 a priory:GiftItem ;
+item:78370 a owl:NamedIndividual,
+        priory:GiftItem ;
     rdfs:label "Gift of Maguuma Mastery"@en ;
     priory:gw2Id 78370 ;
-    priory:isAccountBound true .
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_maguuma_mastery .
 
 item:79667 a owl:NamedIndividual,
         priory:GiftItem ;
