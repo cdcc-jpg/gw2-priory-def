@@ -46,7 +46,7 @@ recipe:forge_twilight a priory:MysticForgeRecipe ;
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19658 ; # Gift of Twilight
+        priory:requiresItem item:19648 ; # Gift of Twilight
         priory:requiredQuantity 1
     ] .
 
@@ -193,11 +193,11 @@ recipe:forge_gift_of_mastery a priory:MysticForgeRecipe ;
     ] .
 
 # ------------------------------------------------------------------------------
-# 4. Gift of Twilight (GW2 ID: 19658)
+# 4. Gift of Twilight (GW2 ID: 19648)
 # ------------------------------------------------------------------------------
-item:19658 a priory:GiftItem ;
+item:19648 a priory:GiftItem ;
     rdfs:label "Gift of Twilight"@en ;
-    priory:gw2Id 19658 ;
+    priory:gw2Id 19648 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_gift_of_twilight ;
@@ -205,19 +205,19 @@ item:19658 a priory:GiftItem ;
 
 recipe:forge_gift_of_twilight a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of Twilight"@en ;
-    priory:producesItem item:19658 ;
+    priory:producesItem item:19648 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19641 ; # Gift of Metal (Weaponsmith 400)
+        priory:requiresItem item:19621 ; # Gift of Metal (Weaponsmith 400)
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19640 ; # Gift of Darkness (Armorsmith 400)
+        priory:requiresItem item:19631 ; # Gift of Darkness (Armorsmith 400)
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:18845 ; # 100 Icy Runestones (100 gold)
+        priory:requiresItem item:19676 ; # 100 Icy Runestones (100 gold)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
@@ -225,10 +225,10 @@ recipe:forge_gift_of_twilight a priory:MysticForgeRecipe ;
         priory:requiredQuantity 1
     ] .
 
-# --- Gift of Metal (GW2 ID: 19641) - Weaponsmith 400 ---
-item:19641 a priory:GiftItem ;
+# --- Gift of Metal (GW2 ID: 19621) - Weaponsmith 400 ---
+item:19621 a priory:GiftItem ;
     rdfs:label "Gift of Metal"@en ;
-    priory:gw2Id 19641 ;
+    priory:gw2Id 19621 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_gift_of_metal ;
@@ -236,7 +236,7 @@ item:19641 a priory:GiftItem ;
 
 recipe:craft_gift_of_metal a priory:DisciplineRecipe ;
     rdfs:label "Craft Gift of Metal"@en ;
-    priory:producesItem item:19641 ;
+    priory:producesItem item:19621 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Weaponsmith ;
     priory:requiresRating 400 ;
@@ -258,10 +258,10 @@ recipe:craft_gift_of_metal a priory:DisciplineRecipe ;
         priory:requiredQuantity 100
     ] .
 
-# --- Gift of Darkness (GW2 ID: 19640) - Armorsmith 400 ---
-item:19640 a priory:GiftItem ;
+# --- Gift of Darkness (GW2 ID: 19631) - Armorsmith 400 ---
+item:19631 a priory:GiftItem ;
     rdfs:label "Gift of Darkness"@en ;
-    priory:gw2Id 19640 ;
+    priory:gw2Id 19631 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_gift_of_darkness ;
@@ -269,17 +269,13 @@ item:19640 a priory:GiftItem ;
 
 recipe:craft_gift_of_darkness a priory:DisciplineRecipe ;
     rdfs:label "Craft Gift of Darkness"@en ;
-    priory:producesItem item:19640 ;
+    priory:producesItem item:19631 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Armorsmith ;
     priory:requiresRating 400 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19624 ; # Gift of Ascalon (500 Tales of Dungeon Delving)
-        priory:requiredQuantity 1
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:24315 ; # 100 Onyx Lodestone
+        priory:requiresItem item:24310 ; # 100 Onyx Lodestone
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
@@ -287,8 +283,12 @@ recipe:craft_gift_of_darkness a priory:DisciplineRecipe ;
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19681 ; # 100 Darksteel Ingot
-        priory:requiredQuantity 100
+        priory:requiresItem item:19732 ; # 250 Hardened Leather Section
+        priory:requiredQuantity 250
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19745 ; # 250 Ascalonian Tears (or Gift of Ascalon)
+        priory:requiredQuantity 250
     ] .
 
 # --- Gift of Ascalon (GW2 ID: 19624) ---
@@ -350,9 +350,9 @@ item:19674 a priory:CraftingMaterial ;
         priory:nearestWaypoint "[&BBAEAAA=]"
     ] .
 
-item:18845 a priory:CraftingMaterial ;
+item:19676 a priory:CraftingMaterial ;
     rdfs:label "Icy Runestone"@en ;
-    priory:gw2Id 18845 ;
+    priory:gw2Id 19676 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound true ;
     priory:acquiredVia [
@@ -412,7 +412,7 @@ item:19684 a priory:CraftingMaterial ; rdfs:label "Mithril Ingot"@en ; priory:gw
 item:19685 a priory:CraftingMaterial ; rdfs:label "Orichalcum Ingot"@en ; priory:gw2Id 19685 ; priory:hasRarity rarity:Basic ; priory:isAccountBound false .
 item:19686 a priory:CraftingMaterial ; rdfs:label "Platinum Ingot"@en ; priory:gw2Id 19686 ; priory:hasRarity rarity:Basic ; priory:isAccountBound false .
 item:19681 a priory:CraftingMaterial ; rdfs:label "Darksteel Ingot"@en ; priory:gw2Id 19681 ; priory:hasRarity rarity:Basic ; priory:isAccountBound false .
-item:24315 a priory:CraftingMaterial ; rdfs:label "Onyx Lodestone"@en ; priory:gw2Id 24315 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24310 a priory:CraftingMaterial ; rdfs:label "Onyx Lodestone"@en ; priory:gw2Id 24310 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 
 # T6 Fine Crafting Materials
 item:19748 a priory:CraftingMaterial ; rdfs:label "Powerful Blood"@en ; priory:gw2Id 19748 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .

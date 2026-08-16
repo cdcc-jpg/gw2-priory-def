@@ -98,17 +98,30 @@ class AccountRanker:
         legendaries = self.get_all_legendaries_in_graph()
         rankings: List[LegendaryRankingItem] = []
 
-        # Filter by generation or category if requested
+        # Filter by generation, expansion, or category if requested
         if filter_query:
             fq = filter_query.lower().strip()
-            # Normalize generation terms
             norm_terms = [fq]
-            if "gen 2" in fq or "generation 2" in fq or "gen two" in fq:
-                norm_terms.extend(["gen 2", "generation 2", "gen two"])
-            elif "gen 1" in fq or "generation 1" in fq or "gen one" in fq:
+            if any(t in fq for t in ["gen 1", "generation 1", "gen one", "core"]):
                 norm_terms.extend(["gen 1", "generation 1", "gen one"])
-            elif "gen 3" in fq or "generation 3" in fq or "gen three" in fq or "aurene" in fq:
-                norm_terms.extend(["gen 3", "generation 3", "gen three", "aurene"])
+            elif any(t in fq for t in ["gen 2", "generation 2", "gen two", "heart of thorns", "hot"]):
+                norm_terms.extend(["gen 2", "generation 2", "gen two", "hot", "maguuma"])
+            elif any(t in fq for t in ["gen 3", "generation 3", "gen three", "aurene", "end of dragons", "eod"]):
+                norm_terms.extend(["gen 3", "generation 3", "gen three", "aurene", "dragon"])
+            elif any(t in fq for t in ["soto", "secrets of the obscure", "obsidian"]):
+                norm_terms.extend(["soto", "secrets of the obscure", "obsidian", "open world"])
+            elif any(t in fq for t in ["janthir", "janthir wilds", "jw", "spear"]):
+                norm_terms.extend(["janthir", "klobjarne", "spear"])
+            elif any(t in fq for t in ["envoy", "raid", "insights"]):
+                norm_terms.extend(["envoy", "raid", "insights"])
+            elif "armor" in fq:
+                norm_terms.extend(["armor", "helm", "pauldrons", "breastplate", "gauntlets", "tassets", "greaves", "mask", "shoulderguards", "jerkin", "vambraces", "leggings", "boots", "hood", "mantle", "vestments", "gloves", "pants", "shoes"])
+            elif any(t in fq for t in ["trinket", "ring", "accessory", "amulet"]):
+                norm_terms.extend(["aurora", "vision", "coalescence", "conflux", "transcendence", "regalia", "accessory", "ring", "amulet", "trinket"])
+            elif any(t in fq for t in ["backpack", "back"]):
+                norm_terms.extend(["ad infinitum", "the ascension", "warbringer", "backpack"])
+            elif any(t in fq for t in ["upgrade", "sigil", "rune", "relic"]):
+                norm_terms.extend(["sigil", "rune", "relic", "upgrade"])
 
             filtered_legs = []
             for leg in legendaries:

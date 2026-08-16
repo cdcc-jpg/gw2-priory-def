@@ -46,9 +46,18 @@ class PrioryChatSession:
             "closest", "which legendary", "what legendary", "rank all", "what should i craft", "what to craft", "leaderboard", "rank"
         ])
 
-        # Check for generation or category filter
+        # Check for generation, expansion, or category filter
         filter_query = None
-        for gen_term in ["gen 1", "generation 1", "gen one", "gen 2", "generation 2", "gen two", "gen 3", "generation 3", "gen three", "aurene", "armor", "trinket", "sigil", "rune", "relic"]:
+        facet_terms = [
+            "gen 1", "generation 1", "gen one", "core",
+            "gen 2", "generation 2", "gen two", "heart of thorns", "hot",
+            "gen 3", "generation 3", "gen three", "aurene", "end of dragons", "eod",
+            "soto", "secrets of the obscure", "obsidian",
+            "janthir", "janthir wilds", "jw", "spear",
+            "envoy", "raid", "armor", "trinket", "ring", "accessory", "amulet",
+            "backpack", "back", "sigil", "rune", "relic", "upgrade"
+        ]
+        for gen_term in facet_terms:
             if gen_term in prompt_lower:
                 filter_query = gen_term
                 break

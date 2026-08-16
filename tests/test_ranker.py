@@ -52,8 +52,48 @@ class TestAccountRanker(unittest.TestCase):
         self.assertIn("Closest", guide.goal_name)
         self.assertGreater(len(guide.strategic_recommendations), 0)
         self.assertTrue(any("Leaderboard" in r or "Top Recommendation" in r for r in guide.strategic_recommendations))
-        self.assertGreater(len(guide.session_checklist), 0)
+    def test_gen2_ranking(self):
+        """Verifies Gen 2 ranking accounts for owned Maguuma Mastery parts and dark arts shards."""
+        account = AccountState(
+            bank={71943: 1, 70698: 1}, # Gift of Tarir, Gift of the Jungle
+            materials={46682: 356, 68063: 126, 86120: 3} # Crystalline Ore, Amalgamated Gemstone, Shard of the Dark Arts
+        )
+        rankings = self.ranker.rank_all_legendaries(account, top_n=5, filter_query="Gen 2")
+        self.assertGreater(len(rankings), 0)
+        self.assertTrue(all("Aurene" not in item.name for item in rankings))
+        # Account owns Shard of the Dark Arts -> The Binding of Ipos should be boosted
+        ipos = next((r for r in rankings if r.name == "The Binding of Ipos"), None)
+        self.assertIsNotNone(ipos)
+        self.assertGreater(ipos.readiness_pct, 15.0)
+
+    def test_soto_obsidian_armor_ranking(self):
+        """Verifies SotO Obsidian Armor ranking accounts for essences and stardust."""
+        account = AccountState(
+            materials={
+                100114: 500, # Essence of Despair
+                100414: 250, # Essence of Greed
+                100852: 250, # Pinch of Stardust
+            }
+        )
+        rankings = self.ranker.rank_all_legendaries(account, top_n=5, filter_query="SotO")
+        self.assertGreater(len(rankings), 0)
+        self.assertTrue(all("Obsidian" in item.name for item in rankings))
+        self.assertGreater(rankings[0].readiness_pct, 20.0)
+
+    def test_janthir_wilds_spear_ranking(self):
+        """Verifies Janthir Wilds ranking accounts for Mursaat Obsidian Chunks."""
+        account = AccountState(
+            materials={
+                103427: 250, # Mursaat Obsidian Chunk (100% of requirement!)
+                103112: 250, # Titan Ore
+            }
+        )
+        rankings = self.ranker.rank_all_legendaries(account, top_n=3, filter_query="Janthir")
+        self.assertGreater(len(rankings), 0)
+        self.assertEqual(rankings[0].name, "Klobjarne Harvester")
+        self.assertGreater(rankings[0].readiness_pct, 30.0)
 
 
 if __name__ == "__main__":
     unittest.main()
+

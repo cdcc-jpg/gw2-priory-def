@@ -19,7 +19,7 @@ item:101123 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividua
     priory:hasRarity rarity:Exotic ;
     priory:hasItemType itemtype:Container ;
     priory:isAccountBound true ;
-    priory:unpacksInto item:29166, item:19642, item:29168, item:19643, item:29173, item:19648, item:29170, item:19645, item:19672, item:19673 ;
+    priory:unpacksInto item:29166, item:19650, item:29168, item:19651, item:29173, item:19661, item:29170, item:19652 ;
     rdfs:comment "Contains a choice between The Moot, Quip, The Predator, or Meteorlogicus Starter Kits."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Legendary_Weapon_Starter_Kit%E2%80%94Set_2> .
 

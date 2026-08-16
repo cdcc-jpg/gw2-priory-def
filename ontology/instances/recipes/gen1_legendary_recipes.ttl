@@ -8,138 +8,75 @@
 @prefix weapon: <https://priory.gw2/ref/weapon/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-item:19636 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Frostfang"@en ;
-    priory:gw2Id 19636 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19681 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Darksteel Ingot"@en ;
+    priory:gw2Id 19681 .
 
-item:19637 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Incinerator"@en ;
-    priory:gw2Id 19637 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19684 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Mithril Ingot"@en ;
+    priory:gw2Id 19684 .
 
-item:19641 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Bolt"@en ;
-    priory:gw2Id 19641 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19686 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Platinum Ingot"@en ;
+    priory:gw2Id 19686 .
 
-item:19642 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of The Moot"@en ;
-    priory:gw2Id 19642 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19712 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Elder Wood Plank"@en ;
+    priory:gw2Id 19712 .
 
-item:19643 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Quip"@en ;
-    priory:gw2Id 19643 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19714 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Ancient Wood Plank"@en ;
+    priory:gw2Id 19714 .
 
-item:19645 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Weather"@en ;
-    priory:gw2Id 19645 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19732 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Hardened Leather Section"@en ;
+    priory:gw2Id 19732 .
 
-item:19646 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Kudzu"@en ;
-    priory:gw2Id 19646 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19745 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Gossamer Scrap"@en ;
+    priory:gw2Id 19745 .
 
-item:19647 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of The Juggernaut"@en ;
-    priory:gw2Id 19647 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:19748 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Silk Scrap"@en ;
+    priory:gw2Id 19748 .
 
-item:19648 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of The Predator"@en ;
-    priory:gw2Id 19648 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:24310 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Onyx Lodestone"@en ;
+    priory:gw2Id 24310 .
 
-item:19649 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of The Bifrost"@en ;
-    priory:gw2Id 19649 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:24315 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Charged Lodestone"@en ;
+    priory:gw2Id 24315 .
 
-item:19650 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of The Dreamer"@en ;
-    priory:gw2Id 19650 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:24320 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Glacial Lodestone"@en ;
+    priory:gw2Id 24320 .
 
-item:19652 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of History"@en ;
-    priory:gw2Id 19652 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:24325 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Destroyer Lodestone"@en ;
+    priory:gw2Id 24325 .
 
-item:19653 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Music"@en ;
-    priory:gw2Id 19653 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:24330 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Crystal Lodestone"@en ;
+    priory:gw2Id 24330 .
 
-item:19654 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Rodgort"@en ;
-    priory:gw2Id 19654 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
-
-item:19656 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Howler"@en ;
-    priory:gw2Id 19656 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
-
-item:19657 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Sunrise"@en ;
-    priory:gw2Id 19657 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
-
-item:19659 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Water"@en ;
-    priory:gw2Id 19659 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
-
-item:19660 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of Souls"@en ;
-    priory:gw2Id 19660 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
-
-item:19661 a owl:NamedIndividual,
-        priory:GiftItem ;
-    rdfs:label "Gift of the Deep"@en ;
-    priory:gw2Id 19661 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true .
+item:24340 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Corrupted Lodestone"@en ;
+    priory:gw2Id 24340 .
 
 item:29165 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
@@ -299,7 +236,6 @@ item:30684 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Axe"@en,
         "Gen One Axe"@en,
         "Generation 1 Axe"@en,
-        "Legendary Axe"@en,
         "The Legendary Axe"@en ;
     priory:gw2Id 30684 ;
     priory:hasRarity rarity:Legendary ;
@@ -313,7 +249,6 @@ item:30685 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Longbow"@en,
         "Gen One Longbow"@en,
         "Generation 1 Longbow"@en,
-        "Legendary Longbow"@en,
         "The Legendary Longbow"@en ;
     priory:gw2Id 30685 ;
     priory:hasRarity rarity:Legendary ;
@@ -327,7 +262,6 @@ item:30686 a owl:NamedIndividual,
     skos:altLabel "Gen 1 ShortBow"@en,
         "Gen One ShortBow"@en,
         "Generation 1 ShortBow"@en,
-        "Legendary ShortBow"@en,
         "The Legendary ShortBow"@en ;
     priory:gw2Id 30686 ;
     priory:hasRarity rarity:Legendary ;
@@ -341,7 +275,6 @@ item:30687 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Dagger"@en,
         "Gen One Dagger"@en,
         "Generation 1 Dagger"@en,
-        "Legendary Dagger"@en,
         "The Legendary Dagger"@en ;
     priory:gw2Id 30687 ;
     priory:hasRarity rarity:Legendary ;
@@ -355,7 +288,6 @@ item:30688 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Focus"@en,
         "Gen One Focus"@en,
         "Generation 1 Focus"@en,
-        "Legendary Focus"@en,
         "The Legendary Focus"@en ;
     priory:gw2Id 30688 ;
     priory:hasRarity rarity:Legendary ;
@@ -369,7 +301,6 @@ item:30690 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Hammer"@en,
         "Gen One Hammer"@en,
         "Generation 1 Hammer"@en,
-        "Legendary Hammer"@en,
         "The Legendary Hammer"@en ;
     priory:gw2Id 30690 ;
     priory:hasRarity rarity:Legendary ;
@@ -383,7 +314,6 @@ item:30691 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Spear"@en,
         "Gen One Spear"@en,
         "Generation 1 Spear"@en,
-        "Legendary Spear"@en,
         "The Legendary Spear"@en ;
     priory:gw2Id 30691 ;
     priory:hasRarity rarity:Legendary ;
@@ -397,7 +327,6 @@ item:30692 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Mace"@en,
         "Gen One Mace"@en,
         "Generation 1 Mace"@en,
-        "Legendary Mace"@en,
         "The Legendary Mace"@en ;
     priory:gw2Id 30692 ;
     priory:hasRarity rarity:Legendary ;
@@ -411,7 +340,6 @@ item:30693 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Pistol"@en,
         "Gen One Pistol"@en,
         "Generation 1 Pistol"@en,
-        "Legendary Pistol"@en,
         "The Legendary Pistol"@en ;
     priory:gw2Id 30693 ;
     priory:hasRarity rarity:Legendary ;
@@ -425,7 +353,6 @@ item:30694 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Rifle"@en,
         "Gen One Rifle"@en,
         "Generation 1 Rifle"@en,
-        "Legendary Rifle"@en,
         "The Legendary Rifle"@en ;
     priory:gw2Id 30694 ;
     priory:hasRarity rarity:Legendary ;
@@ -439,7 +366,6 @@ item:30695 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Scepter"@en,
         "Gen One Scepter"@en,
         "Generation 1 Scepter"@en,
-        "Legendary Scepter"@en,
         "The Legendary Scepter"@en ;
     priory:gw2Id 30695 ;
     priory:hasRarity rarity:Legendary ;
@@ -453,7 +379,6 @@ item:30696 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Shield"@en,
         "Gen One Shield"@en,
         "Generation 1 Shield"@en,
-        "Legendary Shield"@en,
         "The Legendary Shield"@en ;
     priory:gw2Id 30696 ;
     priory:hasRarity rarity:Legendary ;
@@ -467,7 +392,6 @@ item:30697 a owl:NamedIndividual,
     skos:altLabel "Gen 1 HarpoonGun"@en,
         "Gen One HarpoonGun"@en,
         "Generation 1 HarpoonGun"@en,
-        "Legendary HarpoonGun"@en,
         "The Legendary HarpoonGun"@en ;
     priory:gw2Id 30697 ;
     priory:hasRarity rarity:Legendary ;
@@ -481,7 +405,6 @@ item:30698 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Staff"@en,
         "Gen One Staff"@en,
         "Generation 1 Staff"@en,
-        "Legendary Staff"@en,
         "The Legendary Staff"@en ;
     priory:gw2Id 30698 ;
     priory:hasRarity rarity:Legendary ;
@@ -495,7 +418,6 @@ item:30699 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Sword"@en,
         "Gen One Sword"@en,
         "Generation 1 Sword"@en,
-        "Legendary Sword"@en,
         "The Legendary Sword"@en ;
     priory:gw2Id 30699 ;
     priory:hasRarity rarity:Legendary ;
@@ -509,7 +431,6 @@ item:30700 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Torch"@en,
         "Gen One Torch"@en,
         "Generation 1 Torch"@en,
-        "Legendary Torch"@en,
         "The Legendary Torch"@en ;
     priory:gw2Id 30700 ;
     priory:hasRarity rarity:Legendary ;
@@ -523,7 +444,6 @@ item:30701 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Trident"@en,
         "Gen One Trident"@en,
         "Generation 1 Trident"@en,
-        "Legendary Trident"@en,
         "The Legendary Trident"@en ;
     priory:gw2Id 30701 ;
     priory:hasRarity rarity:Legendary ;
@@ -537,7 +457,6 @@ item:30702 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Warhorn"@en,
         "Gen One Warhorn"@en,
         "Generation 1 Warhorn"@en,
-        "Legendary Warhorn"@en,
         "The Legendary Warhorn"@en ;
     priory:gw2Id 30702 ;
     priory:hasRarity rarity:Legendary ;
@@ -551,7 +470,6 @@ item:30703 a owl:NamedIndividual,
     skos:altLabel "Gen 1 Greatsword"@en,
         "Gen One Greatsword"@en,
         "Generation 1 Greatsword"@en,
-        "Legendary Greatsword"@en,
         "The Legendary Greatsword"@en ;
     priory:gw2Id 30703 ;
     priory:hasRarity rarity:Legendary ;
@@ -569,6 +487,13 @@ recipe:forge_bolt a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30699 .
 
+recipe:forge_bolt_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Bolt"@en ;
+    priory:hasIngredientRequirement recipe:req_bolt_g_icy,
+        recipe:req_bolt_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19655 .
+
 recipe:forge_frenzy a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge Frenzy"@en ;
@@ -578,6 +503,13 @@ recipe:forge_frenzy a owl:NamedIndividual,
         recipe:req_frenzy_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30697 .
+
+recipe:forge_frenzy_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Frenzy"@en ;
+    priory:hasIngredientRequirement recipe:req_frenzy_g_icy,
+        recipe:req_frenzy_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19659 .
 
 recipe:forge_frostfang a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -589,6 +521,13 @@ recipe:forge_frostfang a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30684 .
 
+recipe:forge_frostfang_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Frostfang"@en ;
+    priory:hasIngredientRequirement recipe:req_frostfang_g_icy,
+        recipe:req_frostfang_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19625 .
+
 recipe:forge_howler a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge Howler"@en ;
@@ -598,6 +537,13 @@ recipe:forge_howler a owl:NamedIndividual,
         recipe:req_howler_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30702 .
+
+recipe:forge_howler_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Howler"@en ;
+    priory:hasIngredientRequirement recipe:req_howler_g_icy,
+        recipe:req_howler_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19662 .
 
 recipe:forge_incinerator a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -609,6 +555,13 @@ recipe:forge_incinerator a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30687 .
 
+recipe:forge_incinerator_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Incinerator"@en ;
+    priory:hasIngredientRequirement recipe:req_incinerator_g_icy,
+        recipe:req_incinerator_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19645 .
+
 recipe:forge_kamohoalii_kotaki a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge Kamohoali'i Kotaki"@en ;
@@ -618,6 +571,13 @@ recipe:forge_kamohoalii_kotaki a owl:NamedIndividual,
         recipe:req_kamohoalii_kotaki_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30691 .
+
+recipe:forge_kamohoalii_kotaki_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Kamohoali'i Kotaki"@en ;
+    priory:hasIngredientRequirement recipe:req_kamohoalii_kotaki_g_icy,
+        recipe:req_kamohoalii_kotaki_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19657 .
 
 recipe:forge_kraitkin a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -629,6 +589,13 @@ recipe:forge_kraitkin a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30701 .
 
+recipe:forge_kraitkin_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Kraitkin"@en ;
+    priory:hasIngredientRequirement recipe:req_kraitkin_g_icy,
+        recipe:req_kraitkin_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19658 .
+
 recipe:forge_kudzu a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge Kudzu"@en ;
@@ -638,6 +605,13 @@ recipe:forge_kudzu a owl:NamedIndividual,
         recipe:req_kudzu_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30685 .
+
+recipe:forge_kudzu_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Kudzu"@en ;
+    priory:hasIngredientRequirement recipe:req_kudzu_g_icy,
+        recipe:req_kudzu_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19644 .
 
 recipe:forge_meteorlogicus a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -649,6 +623,13 @@ recipe:forge_meteorlogicus a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30695 .
 
+recipe:forge_meteorlogicus_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Meteorlogicus"@en ;
+    priory:hasIngredientRequirement recipe:req_meteorlogicus_g_icy,
+        recipe:req_meteorlogicus_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19652 .
+
 recipe:forge_quip a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge Quip"@en ;
@@ -658,6 +639,13 @@ recipe:forge_quip a owl:NamedIndividual,
         recipe:req_quip_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30693 .
+
+recipe:forge_quip_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Quip"@en ;
+    priory:hasIngredientRequirement recipe:req_quip_g_icy,
+        recipe:req_quip_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19651 .
 
 recipe:forge_rodgort a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -669,6 +657,13 @@ recipe:forge_rodgort a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30700 .
 
+recipe:forge_rodgort_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Rodgort"@en ;
+    priory:hasIngredientRequirement recipe:req_rodgort_g_icy,
+        recipe:req_rodgort_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19656 .
+
 recipe:forge_sunrise a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge Sunrise"@en ;
@@ -678,6 +673,13 @@ recipe:forge_sunrise a owl:NamedIndividual,
         recipe:req_sunrise_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30703 .
+
+recipe:forge_sunrise_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Sunrise"@en ;
+    priory:hasIngredientRequirement recipe:req_sunrise_g_icy,
+        recipe:req_sunrise_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19647 .
 
 recipe:forge_the_bifrost a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -689,6 +691,13 @@ recipe:forge_the_bifrost a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30698 .
 
+recipe:forge_the_bifrost_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Bifrost"@en ;
+    priory:hasIngredientRequirement recipe:req_the_bifrost_g_icy,
+        recipe:req_the_bifrost_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19654 .
+
 recipe:forge_the_dreamer a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge The Dreamer"@en ;
@@ -698,6 +707,13 @@ recipe:forge_the_dreamer a owl:NamedIndividual,
         recipe:req_the_dreamer_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30686 .
+
+recipe:forge_the_dreamer_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Dreamer"@en ;
+    priory:hasIngredientRequirement recipe:req_the_dreamer_g_icy,
+        recipe:req_the_dreamer_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19660 .
 
 recipe:forge_the_flameseeker_prophecies a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -709,6 +725,13 @@ recipe:forge_the_flameseeker_prophecies a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30696 .
 
+recipe:forge_the_flameseeker_prophecies_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Flameseeker Prophecies"@en ;
+    priory:hasIngredientRequirement recipe:req_the_flameseeker_prophecies_g_icy,
+        recipe:req_the_flameseeker_prophecies_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19653 .
+
 recipe:forge_the_juggernaut a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge The Juggernaut"@en ;
@@ -718,6 +741,13 @@ recipe:forge_the_juggernaut a owl:NamedIndividual,
         recipe:req_the_juggernaut_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30690 .
+
+recipe:forge_the_juggernaut_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Juggernaut"@en ;
+    priory:hasIngredientRequirement recipe:req_the_juggernaut_g_icy,
+        recipe:req_the_juggernaut_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19649 .
 
 recipe:forge_the_minstrel a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -729,6 +759,13 @@ recipe:forge_the_minstrel a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30688 .
 
+recipe:forge_the_minstrel_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Minstrel"@en ;
+    priory:hasIngredientRequirement recipe:req_the_minstrel_g_icy,
+        recipe:req_the_minstrel_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19646 .
+
 recipe:forge_the_moot a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
     rdfs:label "Forge The Moot"@en ;
@@ -738,6 +775,13 @@ recipe:forge_the_moot a owl:NamedIndividual,
         recipe:req_the_moot_precursor ;
     priory:outputQuantity 1 ;
     priory:producesItem item:30692 .
+
+recipe:forge_the_moot_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Moot"@en ;
+    priory:hasIngredientRequirement recipe:req_the_moot_g_icy,
+        recipe:req_the_moot_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19650 .
 
 recipe:forge_the_predator a owl:NamedIndividual,
         priory:MysticForgeRecipe ;
@@ -749,13 +793,28 @@ recipe:forge_the_predator a owl:NamedIndividual,
     priory:outputQuantity 1 ;
     priory:producesItem item:30694 .
 
+recipe:forge_the_predator_gift a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of The Predator"@en ;
+    priory:hasIngredientRequirement recipe:req_the_predator_g_icy,
+        recipe:req_the_predator_g_ori ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:19661 .
+
 recipe:req_bolt_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_bolt_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_bolt_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_bolt_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19641 .
+    priory:requiresItem item:19655 .
 
 recipe:req_bolt_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -768,6 +827,14 @@ recipe:req_bolt_precursor a priory:IngredientRequirement ;
 recipe:req_frenzy_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
+
+recipe:req_frenzy_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_frenzy_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
 
 recipe:req_frenzy_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -785,9 +852,17 @@ recipe:req_frostfang_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_frostfang_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_frostfang_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_frostfang_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19636 .
+    priory:requiresItem item:19625 .
 
 recipe:req_frostfang_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -801,9 +876,17 @@ recipe:req_howler_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_howler_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_howler_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_howler_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19656 .
+    priory:requiresItem item:19662 .
 
 recipe:req_howler_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -817,9 +900,17 @@ recipe:req_incinerator_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_incinerator_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_incinerator_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_incinerator_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19637 .
+    priory:requiresItem item:19645 .
 
 recipe:req_incinerator_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -833,9 +924,17 @@ recipe:req_kamohoalii_kotaki_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_kamohoalii_kotaki_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_kamohoalii_kotaki_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_kamohoalii_kotaki_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19661 .
+    priory:requiresItem item:19657 .
 
 recipe:req_kamohoalii_kotaki_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -849,9 +948,17 @@ recipe:req_kraitkin_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_kraitkin_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_kraitkin_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_kraitkin_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19660 .
+    priory:requiresItem item:19658 .
 
 recipe:req_kraitkin_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -865,9 +972,17 @@ recipe:req_kudzu_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_kudzu_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_kudzu_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_kudzu_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19646 .
+    priory:requiresItem item:19644 .
 
 recipe:req_kudzu_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -881,9 +996,17 @@ recipe:req_meteorlogicus_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_meteorlogicus_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_meteorlogicus_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_meteorlogicus_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19645 .
+    priory:requiresItem item:19652 .
 
 recipe:req_meteorlogicus_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -897,9 +1020,17 @@ recipe:req_quip_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_quip_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_quip_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_quip_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19643 .
+    priory:requiresItem item:19651 .
 
 recipe:req_quip_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -913,9 +1044,17 @@ recipe:req_rodgort_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_rodgort_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_rodgort_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_rodgort_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19654 .
+    priory:requiresItem item:19656 .
 
 recipe:req_rodgort_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -929,9 +1068,17 @@ recipe:req_sunrise_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_sunrise_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_sunrise_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_sunrise_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19657 .
+    priory:requiresItem item:19647 .
 
 recipe:req_sunrise_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -945,9 +1092,17 @@ recipe:req_the_bifrost_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_bifrost_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_bifrost_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_bifrost_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19649 .
+    priory:requiresItem item:19654 .
 
 recipe:req_the_bifrost_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -961,9 +1116,17 @@ recipe:req_the_dreamer_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_dreamer_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_dreamer_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_dreamer_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19650 .
+    priory:requiresItem item:19660 .
 
 recipe:req_the_dreamer_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -977,9 +1140,17 @@ recipe:req_the_flameseeker_prophecies_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_flameseeker_prophecies_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_flameseeker_prophecies_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_flameseeker_prophecies_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19652 .
+    priory:requiresItem item:19653 .
 
 recipe:req_the_flameseeker_prophecies_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -993,9 +1164,17 @@ recipe:req_the_juggernaut_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_juggernaut_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_juggernaut_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_juggernaut_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19647 .
+    priory:requiresItem item:19649 .
 
 recipe:req_the_juggernaut_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1009,9 +1188,17 @@ recipe:req_the_minstrel_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_minstrel_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_minstrel_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_minstrel_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19653 .
+    priory:requiresItem item:19646 .
 
 recipe:req_the_minstrel_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1025,9 +1212,17 @@ recipe:req_the_moot_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_moot_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_moot_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_moot_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19642 .
+    priory:requiresItem item:19650 .
 
 recipe:req_the_moot_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1041,9 +1236,17 @@ recipe:req_the_predator_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:19627 .
 
+recipe:req_the_predator_g_icy a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:19676 .
+
+recipe:req_the_predator_g_ori a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19685 .
+
 recipe:req_the_predator_gift a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19648 .
+    priory:requiresItem item:19661 .
 
 recipe:req_the_predator_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1052,4 +1255,166 @@ recipe:req_the_predator_mastery a priory:IngredientRequirement ;
 recipe:req_the_predator_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:29173 .
+
+item:19625 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Frostfang"@en ;
+    priory:gw2Id 19625 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_frostfang_gift .
+
+item:19644 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Kudzu"@en ;
+    priory:gw2Id 19644 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_kudzu_gift .
+
+item:19645 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Incinerator"@en ;
+    priory:gw2Id 19645 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_incinerator_gift .
+
+item:19646 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Minstrel"@en ;
+    priory:gw2Id 19646 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_minstrel_gift .
+
+item:19647 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Sunrise"@en ;
+    priory:gw2Id 19647 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_sunrise_gift .
+
+item:19649 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Juggernaut"@en ;
+    priory:gw2Id 19649 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_juggernaut_gift .
+
+item:19650 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Moot"@en ;
+    priory:gw2Id 19650 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_moot_gift .
+
+item:19651 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Quip"@en ;
+    priory:gw2Id 19651 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_quip_gift .
+
+item:19652 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Meteorlogicus"@en ;
+    priory:gw2Id 19652 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_meteorlogicus_gift .
+
+item:19653 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Flameseeker Prophecies"@en ;
+    priory:gw2Id 19653 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_flameseeker_prophecies_gift .
+
+item:19654 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Bifrost"@en ;
+    priory:gw2Id 19654 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_bifrost_gift .
+
+item:19655 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Bolt"@en ;
+    priory:gw2Id 19655 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_bolt_gift .
+
+item:19656 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Rodgort"@en ;
+    priory:gw2Id 19656 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_rodgort_gift .
+
+item:19657 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Kamohoali'i Kotaki"@en ;
+    priory:gw2Id 19657 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_kamohoalii_kotaki_gift .
+
+item:19658 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Kraitkin"@en ;
+    priory:gw2Id 19658 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_kraitkin_gift .
+
+item:19659 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Frenzy"@en ;
+    priory:gw2Id 19659 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_frenzy_gift .
+
+item:19660 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Dreamer"@en ;
+    priory:gw2Id 19660 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_dreamer_gift .
+
+item:19661 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of The Predator"@en ;
+    priory:gw2Id 19661 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_predator_gift .
+
+item:19662 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Howler"@en ;
+    priory:gw2Id 19662 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_howler_gift .
+
+item:19676 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Icy Runestone"@en ;
+    priory:gw2Id 19676 .
+
+item:19685 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Orichalcum Ingot"@en ;
+    priory:gw2Id 19685 .
 

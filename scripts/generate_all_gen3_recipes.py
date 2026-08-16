@@ -1,5 +1,6 @@
-"""Generates complete OWL/RDF instance graphs for all 16 Generation 3 (Aurene) Legendary Weapons,
-their precursors, weapon gifts, and shared components (Gift of Aurene, Gift of Dragon Empire).
+"""Generates complete, leaf-level OWL/RDF instance graphs for all 16 Generation 3 (Aurene) Legendary Weapons,
+their Dragon precursor crafting recipes, weapon gifts, Gift of Aurene, Gift of the Dragon Empire,
+and Gift of Jade Mastery.
 """
 
 from pathlib import Path
@@ -42,8 +43,7 @@ def generate_gen3_graph() -> rdflib.Graph:
     g.bind("weapon", WEAPON)
     g.bind("skos", SKOS)
 
-    # 1. Shared Gen 3 Sub-components
-    # Gift of Aurene (95797)
+    # 1. Gift of Aurene (95797)
     g_aurene = ITEM["95797"]
     g.add((g_aurene, RDF.type, PRIORY.GiftItem))
     g.add((g_aurene, RDFS.label, Literal("Gift of Aurene", lang="en")))
@@ -56,7 +56,6 @@ def generate_gen3_graph() -> rdflib.Graph:
     g.add((f_ga, PRIORY.producesItem, g_aurene))
     g.add((f_ga, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
 
-    # 77 Clovers (19675), 250 Ectos (19721), 250 Memories of Aurene (96074), 1 Gift of Condensed Magic (79659)
     for ing_id, qty in [(19675, 77), (19721, 250), (96074, 250), (79659, 1)]:
         req = RECIPE[f"req_ga_{ing_id}"]
         g.add((f_ga, PRIORY.hasIngredientRequirement, req))
@@ -69,7 +68,7 @@ def generate_gen3_graph() -> rdflib.Graph:
     g.add((ITEM["96074"], RDFS.label, Literal("Memory of Aurene", lang="en")))
     g.add((ITEM["96074"], PRIORY.gw2Id, Literal(96074, datatype=XSD.integer)))
 
-    # Gift of the Dragon Empire (97330)
+    # 2. Gift of the Dragon Empire (97330)
     g_empire = ITEM["97330"]
     g.add((g_empire, RDF.type, PRIORY.GiftItem))
     g.add((g_empire, RDFS.label, Literal("Gift of the Dragon Empire", lang="en")))
@@ -82,7 +81,6 @@ def generate_gen3_graph() -> rdflib.Graph:
     g.add((f_de, PRIORY.producesItem, g_empire))
     g.add((f_de, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
 
-    # 100 Jade Runestones (96556), 200 Pure Jade (96347), 100 Antique Summoning Stones (96978)
     for ing_id, qty in [(96556, 100), (96347, 200), (96978, 100)]:
         req = RECIPE[f"req_de_{ing_id}"]
         g.add((f_de, PRIORY.hasIngredientRequirement, req))
@@ -90,29 +88,57 @@ def generate_gen3_graph() -> rdflib.Graph:
         g.add((req, PRIORY.requiresItem, ITEM[str(ing_id)]))
         g.add((req, PRIORY.requiredQuantity, Literal(qty, datatype=XSD.integer)))
 
-    # Antique Summoning Stone (96978)
     g.add((ITEM["96978"], RDF.type, PRIORY.CraftingMaterial))
     g.add((ITEM["96978"], RDFS.label, Literal("Antique Summoning Stone", lang="en")))
     g.add((ITEM["96978"], PRIORY.gw2Id, Literal(96978, datatype=XSD.integer)))
 
-    # Jade Runestone (96556)
     g.add((ITEM["96556"], RDF.type, PRIORY.CraftingMaterial))
     g.add((ITEM["96556"], RDFS.label, Literal("Jade Runestone", lang="en")))
     g.add((ITEM["96556"], PRIORY.gw2Id, Literal(96556, datatype=XSD.integer)))
 
-    # Gift of Jade Mastery (97034)
+    g.add((ITEM["96347"], RDF.type, PRIORY.CraftingMaterial))
+    g.add((ITEM["96347"], RDFS.label, Literal("Pure Jade Chunk", lang="en")))
+    g.add((ITEM["96347"], PRIORY.gw2Id, Literal(96347, datatype=XSD.integer)))
+
+    # 3. Gift of Jade Mastery (97034)
     g.add((ITEM["97034"], RDF.type, PRIORY.GiftItem))
     g.add((ITEM["97034"], RDFS.label, Literal("Gift of Jade Mastery", lang="en")))
     g.add((ITEM["97034"], PRIORY.gw2Id, Literal(97034, datatype=XSD.integer)))
     g.add((ITEM["97034"], PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
+    g.add((ITEM["97034"], PRIORY.producedBy, RECIPE["forge_gift_of_jade_mastery"]))
 
-    # 2. Build 16 Gen 3 Aurene Weapon individuals and recipe DAGs
+    f_jm = RECIPE["forge_gift_of_jade_mastery"]
+    g.add((f_jm, RDF.type, PRIORY.MysticForgeRecipe))
+    g.add((f_jm, RDFS.label, Literal("Forge Gift of Jade Mastery", lang="en")))
+    g.add((f_jm, PRIORY.producesItem, ITEM["97034"]))
+    g.add((f_jm, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
+
+    # 4 Jade Region Gifts: Gift of Cantha (96803), Gift of the Siege Turtle (96804), Gift of the Jade Fleet (96805), Gift of Seitung Province (96806)
+    for j_id, j_name in [
+        (96803, "Gift of Cantha"),
+        (96804, "Gift of the Siege Turtle"),
+        (96805, "Gift of the Jade Fleet"),
+        (96806, "Gift of Seitung Province"),
+    ]:
+        j_uri = ITEM[str(j_id)]
+        g.add((j_uri, RDF.type, PRIORY.GiftItem))
+        g.add((j_uri, RDFS.label, Literal(j_name, lang="en")))
+        g.add((j_uri, PRIORY.gw2Id, Literal(j_id, datatype=XSD.integer)))
+
+        req = RECIPE[f"req_jm_{j_id}"]
+        g.add((f_jm, PRIORY.hasIngredientRequirement, req))
+        g.add((req, RDF.type, PRIORY.IngredientRequirement))
+        g.add((req, PRIORY.requiresItem, j_uri))
+        g.add((req, PRIORY.requiredQuantity, Literal(1, datatype=XSD.integer)))
+
+    # 4. Weapons and Precursors
     for w_id, w_name, w_type, p_id, p_name, g_id, g_name in GEN3_WEAPONS:
         clean_name = w_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
         w_uri = ITEM[str(w_id)]
         p_uri = ITEM[str(p_id)]
         g_uri = ITEM[str(g_id)]
         forge_w_uri = RECIPE[f"forge_{clean_name}"]
+        craft_p_uri = RECIPE[f"craft_{clean_name}_precursor"]
 
         # Weapon Individual
         g.add((w_uri, RDF.type, PRIORY.LegendaryWeapon))
@@ -139,6 +165,19 @@ def generate_gen3_graph() -> rdflib.Graph:
         g.add((p_uri, PRIORY.hasRarity, RARITY.Ascended))
         g.add((p_uri, PRIORY.hasWeaponType, WEAPON[w_type]))
         g.add((p_uri, PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
+        g.add((p_uri, PRIORY.producedBy, craft_p_uri))
+
+        # Precursor Craft Recipe: 10 Hydrocatalytic Reagents (97312) + 250 Memories of Aurene (96074) + 1 Blessing (97099) + 5 Deldrimor (19685)
+        g.add((craft_p_uri, RDF.type, PRIORY.DisciplineRecipe))
+        g.add((craft_p_uri, RDFS.label, Literal(f"Craft {p_name}", lang="en")))
+        g.add((craft_p_uri, PRIORY.producesItem, p_uri))
+        g.add((craft_p_uri, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
+
+        req_p_mem = RECIPE[f"req_{clean_name}_p_mem"]
+        g.add((craft_p_uri, PRIORY.hasIngredientRequirement, req_p_mem))
+        g.add((req_p_mem, RDF.type, PRIORY.IngredientRequirement))
+        g.add((req_p_mem, PRIORY.requiresItem, ITEM["96074"])) # Memories of Aurene
+        g.add((req_p_mem, PRIORY.requiredQuantity, Literal(250, datatype=XSD.integer)))
 
         # 4 Forge Requirements: Precursor + Gift of Aurene (95797) + Gift of the Dragon Empire (97330) + Gift of Jade Mastery (97034)
         g.add((forge_w_uri, RDF.type, PRIORY.MysticForgeRecipe))

@@ -1,0 +1,1787 @@
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix slot: <https://priory.gw2/ref/slot/> .
+@prefix weight: <https://priory.gw2/ref/armor-weight/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+item:100862 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Static Charge"@en ;
+    priory:gw2Id 100862 .
+
+item:100912 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Clotted Scream"@en ;
+    priory:gw2Id 100912 .
+
+item:104331 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Curious Mursaat Ruin Shard"@en ;
+    priory:gw2Id 104331 .
+
+item:88770 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Legendary Divination"@en ;
+    priory:gw2Id 88770 .
+
+item:89537 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Branded Mass"@en ;
+    priory:gw2Id 89537 .
+
+item:90783 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Mistborn Mote"@en ;
+    priory:gw2Id 90783 .
+
+item:101001 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Helm"@en ;
+    skos:altLabel "Obsidian Heavy Helm"@en,
+        "Open World Heavy Helm"@en,
+        "SotO Heavy Helm"@en ;
+    priory:gw2Id 101001 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_helm .
+
+item:101002 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Pauldrons"@en ;
+    skos:altLabel "Obsidian Heavy Shoulders"@en,
+        "Open World Heavy Shoulders"@en,
+        "SotO Heavy Shoulders"@en ;
+    priory:gw2Id 101002 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_pauldrons .
+
+item:101003 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Breastplate"@en ;
+    skos:altLabel "Obsidian Heavy Chest"@en,
+        "Open World Heavy Chest"@en,
+        "SotO Heavy Chest"@en ;
+    priory:gw2Id 101003 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_breastplate .
+
+item:101004 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Gauntlets"@en ;
+    skos:altLabel "Obsidian Heavy Gloves"@en,
+        "Open World Heavy Gloves"@en,
+        "SotO Heavy Gloves"@en ;
+    priory:gw2Id 101004 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_gauntlets .
+
+item:101005 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Tassets"@en ;
+    skos:altLabel "Obsidian Heavy Legs"@en,
+        "Open World Heavy Legs"@en,
+        "SotO Heavy Legs"@en ;
+    priory:gw2Id 101005 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_tassets .
+
+item:101006 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Greaves"@en ;
+    skos:altLabel "Obsidian Heavy Boots"@en,
+        "Open World Heavy Boots"@en,
+        "SotO Heavy Boots"@en ;
+    priory:gw2Id 101006 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_greaves .
+
+item:101007 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Mask"@en ;
+    skos:altLabel "Obsidian Medium Helm"@en,
+        "Open World Medium Helm"@en,
+        "SotO Medium Helm"@en ;
+    priory:gw2Id 101007 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_mask .
+
+item:101008 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Shoulderguards"@en ;
+    skos:altLabel "Obsidian Medium Shoulders"@en,
+        "Open World Medium Shoulders"@en,
+        "SotO Medium Shoulders"@en ;
+    priory:gw2Id 101008 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_shoulderguards .
+
+item:101009 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Jerkin"@en ;
+    skos:altLabel "Obsidian Medium Chest"@en,
+        "Open World Medium Chest"@en,
+        "SotO Medium Chest"@en ;
+    priory:gw2Id 101009 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_jerkin .
+
+item:101010 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Vambraces"@en ;
+    skos:altLabel "Obsidian Medium Gloves"@en,
+        "Open World Medium Gloves"@en,
+        "SotO Medium Gloves"@en ;
+    priory:gw2Id 101010 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_vambraces .
+
+item:101011 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Leggings"@en ;
+    skos:altLabel "Obsidian Medium Legs"@en,
+        "Open World Medium Legs"@en,
+        "SotO Medium Legs"@en ;
+    priory:gw2Id 101011 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_leggings .
+
+item:101012 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Boots"@en ;
+    skos:altLabel "Obsidian Medium Boots"@en,
+        "Open World Medium Boots"@en,
+        "SotO Medium Boots"@en ;
+    priory:gw2Id 101012 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_boots .
+
+item:101013 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Hood"@en ;
+    skos:altLabel "Obsidian Light Helm"@en,
+        "Open World Light Helm"@en,
+        "SotO Light Helm"@en ;
+    priory:gw2Id 101013 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_hood .
+
+item:101014 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Mantle"@en ;
+    skos:altLabel "Obsidian Light Shoulders"@en,
+        "Open World Light Shoulders"@en,
+        "SotO Light Shoulders"@en ;
+    priory:gw2Id 101014 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_mantle .
+
+item:101015 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Vestments"@en ;
+    skos:altLabel "Obsidian Light Chest"@en,
+        "Open World Light Chest"@en,
+        "SotO Light Chest"@en ;
+    priory:gw2Id 101015 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_vestments .
+
+item:101016 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Gloves"@en ;
+    skos:altLabel "Obsidian Light Gloves"@en,
+        "Open World Light Gloves"@en,
+        "SotO Light Gloves"@en ;
+    priory:gw2Id 101016 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_gloves .
+
+item:101017 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Pants"@en ;
+    skos:altLabel "Obsidian Light Legs"@en,
+        "Open World Light Legs"@en,
+        "SotO Light Legs"@en ;
+    priory:gw2Id 101017 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_pants .
+
+item:101018 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Obsidian Shoes"@en ;
+    skos:altLabel "Obsidian Light Boots"@en,
+        "Open World Light Boots"@en,
+        "SotO Light Boots"@en ;
+    priory:gw2Id 101018 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_obsidian_shoes .
+
+item:101582 a owl:NamedIndividual,
+        priory:LegendaryUpgrade ;
+    rdfs:label "Legendary Relic"@en ;
+    priory:gw2Id 101582 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_legendary_relic .
+
+item:103112 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Titan Ore"@en ;
+    priory:gw2Id 103112 .
+
+item:103125 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Lowland Pine Timber"@en ;
+    priory:gw2Id 103125 .
+
+item:103427 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Mursaat Obsidian Chunk"@en ;
+    priory:gw2Id 103427 .
+
+item:103460 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Klobjarne Harvester"@en ;
+    skos:altLabel "Janthir Spear"@en,
+        "Klobjarne"@en,
+        "Legendary Land Spear"@en ;
+    priory:gw2Id 103460 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_klobjarne_harvester .
+
+item:77474 a owl:NamedIndividual,
+        priory:LegendaryBackpack ;
+    rdfs:label "Ad Infinitum"@en ;
+    priory:gw2Id 77474 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_ad_infinitum .
+
+item:78430 a owl:NamedIndividual,
+        priory:LegendaryBackpack ;
+    rdfs:label "The Ascension"@en ;
+    priory:gw2Id 78430 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_ascension .
+
+item:79280 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Petrified Wood"@en ;
+    priory:gw2Id 79280 .
+
+item:79401 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Bloodstone Ruby"@en ;
+    priory:gw2Id 79401 .
+
+item:79899 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Fresh Winterberry"@en ;
+    priory:gw2Id 79899 .
+
+item:80131 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Vestments"@en ;
+    skos:altLabel "Envoy Light Chest"@en,
+        "Legendary Light Chest"@en,
+        "Raid Light Chest"@en ;
+    priory:gw2Id 80131 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_vestments .
+
+item:80190 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Shoulderguards"@en ;
+    skos:altLabel "Envoy Medium Shoulders"@en,
+        "Legendary Medium Shoulders"@en,
+        "Raid Medium Shoulders"@en ;
+    priory:gw2Id 80190 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_shoulderguards .
+
+item:80196 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Pants"@en ;
+    skos:altLabel "Envoy Light Legs"@en,
+        "Legendary Light Legs"@en,
+        "Raid Light Legs"@en ;
+    priory:gw2Id 80196 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_pants .
+
+item:80200 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Hood"@en ;
+    skos:altLabel "Envoy Light Helm"@en,
+        "Legendary Light Helm"@en,
+        "Raid Light Helm"@en ;
+    priory:gw2Id 80200 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_hood .
+
+item:80248 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Greaves"@en ;
+    skos:altLabel "Envoy Heavy Boots"@en,
+        "Legendary Heavy Boots"@en,
+        "Raid Heavy Boots"@en ;
+    priory:gw2Id 80248 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_greaves .
+
+item:80252 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Vambraces"@en ;
+    skos:altLabel "Envoy Medium Gloves"@en,
+        "Legendary Medium Gloves"@en,
+        "Raid Medium Gloves"@en ;
+    priory:gw2Id 80252 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_vambraces .
+
+item:80258 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Breastplate"@en ;
+    skos:altLabel "Envoy Heavy Chest"@en,
+        "Legendary Heavy Chest"@en,
+        "Raid Heavy Chest"@en ;
+    priory:gw2Id 80258 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_breastplate .
+
+item:80277 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Jerkin"@en ;
+    skos:altLabel "Envoy Medium Chest"@en,
+        "Legendary Medium Chest"@en,
+        "Raid Medium Chest"@en ;
+    priory:gw2Id 80277 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_jerkin .
+
+item:80281 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Leggings"@en ;
+    skos:altLabel "Envoy Medium Legs"@en,
+        "Legendary Medium Legs"@en,
+        "Raid Medium Legs"@en ;
+    priory:gw2Id 80281 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_leggings .
+
+item:80296 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Mask"@en ;
+    skos:altLabel "Envoy Medium Helm"@en,
+        "Legendary Medium Helm"@en,
+        "Raid Medium Helm"@en ;
+    priory:gw2Id 80296 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_mask .
+
+item:80332 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Jade Shard"@en ;
+    priory:gw2Id 80332 .
+
+item:80356 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Mantle"@en ;
+    skos:altLabel "Envoy Light Shoulders"@en,
+        "Legendary Light Shoulders"@en,
+        "Raid Light Shoulders"@en ;
+    priory:gw2Id 80356 ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_mantle .
+
+item:80384 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Helm"@en ;
+    skos:altLabel "Envoy Heavy Helm"@en,
+        "Legendary Heavy Helm"@en,
+        "Raid Heavy Helm"@en ;
+    priory:gw2Id 80384 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_helm .
+
+item:80435 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Pauldrons"@en ;
+    skos:altLabel "Envoy Heavy Shoulders"@en,
+        "Legendary Heavy Shoulders"@en,
+        "Raid Heavy Shoulders"@en ;
+    priory:gw2Id 80435 ;
+    priory:hasArmorWeight weight:Heavy ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_pauldrons .
+
+item:80557 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Boots"@en ;
+    skos:altLabel "Envoy Medium Boots"@en,
+        "Legendary Medium Boots"@en,
+        "Raid Medium Boots"@en ;
+    priory:gw2Id 80557 ;
+    priory:hasArmorWeight weight:Medium ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_boots .
+
+item:81908 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Aurora"@en ;
+    priory:gw2Id 81908 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurora .
+
+item:86069 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Kralkatite Ore"@en ;
+    priory:gw2Id 86069 .
+
+item:86977 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Difluorite Crystal"@en ;
+    priory:gw2Id 86977 .
+
+item:87645 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Inscribed Shard"@en ;
+    priory:gw2Id 87645 .
+
+item:88955 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Lump of Mistonium"@en ;
+    priory:gw2Id 88955 .
+
+item:91048 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Coalescence"@en ;
+    priory:gw2Id 91048 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_coalescence .
+
+item:91234 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Vision"@en ;
+    priory:gw2Id 91234 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_vision .
+
+item:91536 a owl:NamedIndividual,
+        priory:LegendaryUpgrade ;
+    rdfs:label "Legendary Rune"@en ;
+    priory:gw2Id 91536 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_legendary_rune .
+
+item:92946 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Transcendence"@en ;
+    priory:gw2Id 92946 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_transcendence .
+
+item:92991 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Conflux"@en ;
+    priory:gw2Id 92991 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_conflux .
+
+item:95380 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Prismatic Champion's Regalia"@en ;
+    priory:gw2Id 95380 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_prismatic_champions_regalia .
+
+recipe:forge_ad_infinitum a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Ad Infinitum"@en ;
+    priory:hasIngredientRequirement recipe:req_ad_infinitum_19675,
+        recipe:req_ad_infinitum_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:77474 .
+
+recipe:forge_aurora a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurora"@en ;
+    priory:hasIngredientRequirement recipe:req_aurora_19675,
+        recipe:req_aurora_79280,
+        recipe:req_aurora_79401,
+        recipe:req_aurora_79899,
+        recipe:req_aurora_80332 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:81908 .
+
+recipe:forge_coalescence a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Coalescence"@en ;
+    priory:hasIngredientRequirement recipe:req_coalescence_19675,
+        recipe:req_coalescence_19721,
+        recipe:req_coalescence_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91048 .
+
+recipe:forge_conflux a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Conflux"@en ;
+    priory:hasIngredientRequirement recipe:req_conflux_19675,
+        recipe:req_conflux_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:92991 .
+
+recipe:forge_klobjarne_harvester a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Klobjarne Harvester"@en ;
+    priory:hasIngredientRequirement recipe:req_klobjarne_103112,
+        recipe:req_klobjarne_103125,
+        recipe:req_klobjarne_103427,
+        recipe:req_klobjarne_19675 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:103460 .
+
+recipe:forge_legendary_relic a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Legendary Relic"@en ;
+    priory:hasIngredientRequirement recipe:req_legendary_relic_19675,
+        recipe:req_legendary_relic_19721,
+        recipe:req_legendary_relic_43775 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101582 .
+
+recipe:forge_legendary_rune a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Legendary Rune"@en ;
+    priory:hasIngredientRequirement recipe:req_legendary_rune_19675,
+        recipe:req_legendary_rune_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91536 .
+
+recipe:forge_obsidian_boots a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Boots"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_boots_100114,
+        recipe:req_obsidian_boots_100414,
+        recipe:req_obsidian_boots_100429,
+        recipe:req_obsidian_boots_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101012 .
+
+recipe:forge_obsidian_breastplate a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Breastplate"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_breastplate_100114,
+        recipe:req_obsidian_breastplate_100414,
+        recipe:req_obsidian_breastplate_100429,
+        recipe:req_obsidian_breastplate_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101003 .
+
+recipe:forge_obsidian_gauntlets a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Gauntlets"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_gauntlets_100114,
+        recipe:req_obsidian_gauntlets_100414,
+        recipe:req_obsidian_gauntlets_100429,
+        recipe:req_obsidian_gauntlets_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101004 .
+
+recipe:forge_obsidian_gloves a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Gloves"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_gloves_100114,
+        recipe:req_obsidian_gloves_100414,
+        recipe:req_obsidian_gloves_100429,
+        recipe:req_obsidian_gloves_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101016 .
+
+recipe:forge_obsidian_greaves a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Greaves"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_greaves_100114,
+        recipe:req_obsidian_greaves_100414,
+        recipe:req_obsidian_greaves_100429,
+        recipe:req_obsidian_greaves_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101006 .
+
+recipe:forge_obsidian_helm a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Helm"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_helm_100114,
+        recipe:req_obsidian_helm_100414,
+        recipe:req_obsidian_helm_100429,
+        recipe:req_obsidian_helm_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101001 .
+
+recipe:forge_obsidian_hood a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Hood"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_hood_100114,
+        recipe:req_obsidian_hood_100414,
+        recipe:req_obsidian_hood_100429,
+        recipe:req_obsidian_hood_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101013 .
+
+recipe:forge_obsidian_jerkin a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Jerkin"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_jerkin_100114,
+        recipe:req_obsidian_jerkin_100414,
+        recipe:req_obsidian_jerkin_100429,
+        recipe:req_obsidian_jerkin_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101009 .
+
+recipe:forge_obsidian_leggings a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Leggings"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_leggings_100114,
+        recipe:req_obsidian_leggings_100414,
+        recipe:req_obsidian_leggings_100429,
+        recipe:req_obsidian_leggings_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101011 .
+
+recipe:forge_obsidian_mantle a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Mantle"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_mantle_100114,
+        recipe:req_obsidian_mantle_100414,
+        recipe:req_obsidian_mantle_100429,
+        recipe:req_obsidian_mantle_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101014 .
+
+recipe:forge_obsidian_mask a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Mask"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_mask_100114,
+        recipe:req_obsidian_mask_100414,
+        recipe:req_obsidian_mask_100429,
+        recipe:req_obsidian_mask_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101007 .
+
+recipe:forge_obsidian_pants a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Pants"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_pants_100114,
+        recipe:req_obsidian_pants_100414,
+        recipe:req_obsidian_pants_100429,
+        recipe:req_obsidian_pants_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101017 .
+
+recipe:forge_obsidian_pauldrons a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Pauldrons"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_pauldrons_100114,
+        recipe:req_obsidian_pauldrons_100414,
+        recipe:req_obsidian_pauldrons_100429,
+        recipe:req_obsidian_pauldrons_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101002 .
+
+recipe:forge_obsidian_shoes a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Shoes"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_shoes_100114,
+        recipe:req_obsidian_shoes_100414,
+        recipe:req_obsidian_shoes_100429,
+        recipe:req_obsidian_shoes_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101018 .
+
+recipe:forge_obsidian_shoulderguards a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Shoulderguards"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_shoulderguards_100114,
+        recipe:req_obsidian_shoulderguards_100414,
+        recipe:req_obsidian_shoulderguards_100429,
+        recipe:req_obsidian_shoulderguards_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101008 .
+
+recipe:forge_obsidian_tassets a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Tassets"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_tassets_100114,
+        recipe:req_obsidian_tassets_100414,
+        recipe:req_obsidian_tassets_100429,
+        recipe:req_obsidian_tassets_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101005 .
+
+recipe:forge_obsidian_vambraces a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Vambraces"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_vambraces_100114,
+        recipe:req_obsidian_vambraces_100414,
+        recipe:req_obsidian_vambraces_100429,
+        recipe:req_obsidian_vambraces_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101010 .
+
+recipe:forge_obsidian_vestments a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Obsidian Vestments"@en ;
+    priory:hasIngredientRequirement recipe:req_obsidian_vestments_100114,
+        recipe:req_obsidian_vestments_100414,
+        recipe:req_obsidian_vestments_100429,
+        recipe:req_obsidian_vestments_100852 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101015 .
+
+recipe:forge_perfected_envoy_boots a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Boots"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_boots_19675,
+        recipe:req_perfected_envoy_boots_19721,
+        recipe:req_perfected_envoy_boots_43775,
+        recipe:req_perfected_envoy_boots_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80557 .
+
+recipe:forge_perfected_envoy_breastplate a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Breastplate"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_breastplate_19675,
+        recipe:req_perfected_envoy_breastplate_19721,
+        recipe:req_perfected_envoy_breastplate_43775,
+        recipe:req_perfected_envoy_breastplate_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80258 .
+
+recipe:forge_perfected_envoy_gauntlets a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Gauntlets"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_gauntlets_19675,
+        recipe:req_perfected_envoy_gauntlets_19721,
+        recipe:req_perfected_envoy_gauntlets_43775,
+        recipe:req_perfected_envoy_gauntlets_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80145 .
+
+recipe:forge_perfected_envoy_gloves a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Gloves"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_gloves_19675,
+        recipe:req_perfected_envoy_gloves_19721,
+        recipe:req_perfected_envoy_gloves_43775,
+        recipe:req_perfected_envoy_gloves_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80145 .
+
+recipe:forge_perfected_envoy_greaves a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Greaves"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_greaves_19675,
+        recipe:req_perfected_envoy_greaves_19721,
+        recipe:req_perfected_envoy_greaves_43775,
+        recipe:req_perfected_envoy_greaves_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80248 .
+
+recipe:forge_perfected_envoy_helm a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Helm"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_helm_19675,
+        recipe:req_perfected_envoy_helm_19721,
+        recipe:req_perfected_envoy_helm_43775,
+        recipe:req_perfected_envoy_helm_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80384 .
+
+recipe:forge_perfected_envoy_hood a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Hood"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_hood_19675,
+        recipe:req_perfected_envoy_hood_19721,
+        recipe:req_perfected_envoy_hood_43775,
+        recipe:req_perfected_envoy_hood_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80200 .
+
+recipe:forge_perfected_envoy_jerkin a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Jerkin"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_jerkin_19675,
+        recipe:req_perfected_envoy_jerkin_19721,
+        recipe:req_perfected_envoy_jerkin_43775,
+        recipe:req_perfected_envoy_jerkin_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80277 .
+
+recipe:forge_perfected_envoy_leggings a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Leggings"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_leggings_19675,
+        recipe:req_perfected_envoy_leggings_19721,
+        recipe:req_perfected_envoy_leggings_43775,
+        recipe:req_perfected_envoy_leggings_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80281 .
+
+recipe:forge_perfected_envoy_mantle a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Mantle"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_mantle_19675,
+        recipe:req_perfected_envoy_mantle_19721,
+        recipe:req_perfected_envoy_mantle_43775,
+        recipe:req_perfected_envoy_mantle_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80356 .
+
+recipe:forge_perfected_envoy_mask a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Mask"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_mask_19675,
+        recipe:req_perfected_envoy_mask_19721,
+        recipe:req_perfected_envoy_mask_43775,
+        recipe:req_perfected_envoy_mask_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80296 .
+
+recipe:forge_perfected_envoy_pants a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Pants"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_pants_19675,
+        recipe:req_perfected_envoy_pants_19721,
+        recipe:req_perfected_envoy_pants_43775,
+        recipe:req_perfected_envoy_pants_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80196 .
+
+recipe:forge_perfected_envoy_pauldrons a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Pauldrons"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_pauldrons_19675,
+        recipe:req_perfected_envoy_pauldrons_19721,
+        recipe:req_perfected_envoy_pauldrons_43775,
+        recipe:req_perfected_envoy_pauldrons_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80435 .
+
+recipe:forge_perfected_envoy_shoes a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Shoes"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_shoes_19675,
+        recipe:req_perfected_envoy_shoes_19721,
+        recipe:req_perfected_envoy_shoes_43775,
+        recipe:req_perfected_envoy_shoes_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80161 .
+
+recipe:forge_perfected_envoy_shoulderguards a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Shoulderguards"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_shoulderguards_19675,
+        recipe:req_perfected_envoy_shoulderguards_19721,
+        recipe:req_perfected_envoy_shoulderguards_43775,
+        recipe:req_perfected_envoy_shoulderguards_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80190 .
+
+recipe:forge_perfected_envoy_tassets a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Tassets"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_tassets_19675,
+        recipe:req_perfected_envoy_tassets_19721,
+        recipe:req_perfected_envoy_tassets_43775,
+        recipe:req_perfected_envoy_tassets_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80161 .
+
+recipe:forge_perfected_envoy_vambraces a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Vambraces"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_vambraces_19675,
+        recipe:req_perfected_envoy_vambraces_19721,
+        recipe:req_perfected_envoy_vambraces_43775,
+        recipe:req_perfected_envoy_vambraces_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80252 .
+
+recipe:forge_perfected_envoy_vestments a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Perfected Envoy Vestments"@en ;
+    priory:hasIngredientRequirement recipe:req_perfected_envoy_vestments_19675,
+        recipe:req_perfected_envoy_vestments_19721,
+        recipe:req_perfected_envoy_vestments_43775,
+        recipe:req_perfected_envoy_vestments_77700 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:80131 .
+
+recipe:forge_prismatic_champions_regalia a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Prismatic Champion's Regalia"@en ;
+    priory:hasIngredientRequirement recipe:req_prismatic_champions_regalia_19675,
+        recipe:req_prismatic_champions_regalia_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:95380 .
+
+recipe:forge_the_ascension a priory:MysticForgeRecipe ;
+    rdfs:label "Forge The Ascension"@en ;
+    priory:hasIngredientRequirement recipe:req_the_ascension_19675,
+        recipe:req_the_ascension_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:78430 .
+
+recipe:forge_transcendence a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Transcendence"@en ;
+    priory:hasIngredientRequirement recipe:req_transcendence_19675,
+        recipe:req_transcendence_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:92946 .
+
+recipe:forge_vision a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Vision"@en ;
+    priory:hasIngredientRequirement recipe:req_vision_19675,
+        recipe:req_vision_86069,
+        recipe:req_vision_86977,
+        recipe:req_vision_87645,
+        recipe:req_vision_88955 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91234 .
+
+recipe:req_ad_infinitum_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_ad_infinitum_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_aurora_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_aurora_79280 a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79280 .
+
+recipe:req_aurora_79401 a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79401 .
+
+recipe:req_aurora_79899 a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79899 .
+
+recipe:req_aurora_80332 a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:80332 .
+
+recipe:req_coalescence_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_coalescence_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_coalescence_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 150 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_conflux_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_conflux_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_klobjarne_103112 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:103112 .
+
+recipe:req_klobjarne_103125 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:103125 .
+
+recipe:req_klobjarne_103427 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:103427 .
+
+recipe:req_klobjarne_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_legendary_relic_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_legendary_relic_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_legendary_relic_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_legendary_rune_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_legendary_rune_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_obsidian_boots_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_boots_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_boots_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_boots_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_breastplate_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_breastplate_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_breastplate_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_breastplate_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_gauntlets_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_gauntlets_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_gauntlets_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_gauntlets_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_gloves_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_gloves_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_gloves_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_gloves_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_greaves_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_greaves_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_greaves_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_greaves_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_helm_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_helm_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_helm_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_helm_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_hood_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_hood_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_hood_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_hood_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_jerkin_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_jerkin_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_jerkin_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_jerkin_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_leggings_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_leggings_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_leggings_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_leggings_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_mantle_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_mantle_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_mantle_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_mantle_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_mask_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_mask_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_mask_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_mask_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_pants_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_pants_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_pants_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_pants_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_pauldrons_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_pauldrons_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_pauldrons_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_pauldrons_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_shoes_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_shoes_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_shoes_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_shoes_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_shoulderguards_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_shoulderguards_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_shoulderguards_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_shoulderguards_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_tassets_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_tassets_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_tassets_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_tassets_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_vambraces_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_vambraces_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_vambraces_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_vambraces_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_obsidian_vestments_100114 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100114 .
+
+recipe:req_obsidian_vestments_100414 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100414 .
+
+recipe:req_obsidian_vestments_100429 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100429 .
+
+recipe:req_obsidian_vestments_100852 a priory:IngredientRequirement ;
+    priory:requiredQuantity 500 ;
+    priory:requiresItem item:100852 .
+
+recipe:req_perfected_envoy_boots_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_boots_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_boots_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_boots_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_breastplate_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_breastplate_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_breastplate_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_breastplate_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_gauntlets_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_gauntlets_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_gauntlets_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_gauntlets_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_gloves_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_gloves_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_gloves_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_gloves_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_greaves_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_greaves_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_greaves_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_greaves_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_helm_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_helm_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_helm_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_helm_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_hood_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_hood_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_hood_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_hood_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_jerkin_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_jerkin_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_jerkin_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_jerkin_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_leggings_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_leggings_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_leggings_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_leggings_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_mantle_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_mantle_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_mantle_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_mantle_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_mask_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_mask_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_mask_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_mask_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_pants_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_pants_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_pants_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_pants_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_pauldrons_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_pauldrons_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_pauldrons_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_pauldrons_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_shoes_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_shoes_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_shoes_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_shoes_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_shoulderguards_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_shoulderguards_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_shoulderguards_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_shoulderguards_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_tassets_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_tassets_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_tassets_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_tassets_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_vambraces_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_vambraces_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_vambraces_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_vambraces_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_perfected_envoy_vestments_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_perfected_envoy_vestments_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 50 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_perfected_envoy_vestments_43775 a priory:IngredientRequirement ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:43775 .
+
+recipe:req_perfected_envoy_vestments_77700 a priory:IngredientRequirement ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:77700 .
+
+recipe:req_prismatic_champions_regalia_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_prismatic_champions_regalia_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_the_ascension_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_the_ascension_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_transcendence_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_transcendence_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_vision_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_vision_86069 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:86069 .
+
+recipe:req_vision_86977 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:86977 .
+
+recipe:req_vision_87645 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:87645 .
+
+recipe:req_vision_88955 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:88955 .
+
+item:80145 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Gauntlets"@en,
+        "Perfected Envoy Gloves"@en ;
+    skos:altLabel "Envoy Heavy Gloves"@en,
+        "Envoy Light Gloves"@en,
+        "Legendary Heavy Gloves"@en,
+        "Legendary Light Gloves"@en,
+        "Raid Heavy Gloves"@en,
+        "Raid Light Gloves"@en ;
+    priory:gw2Id 80145 ;
+    priory:hasArmorWeight weight:Heavy,
+        weight:Light ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_gauntlets,
+        recipe:forge_perfected_envoy_gloves .
+
+item:80161 a owl:NamedIndividual,
+        priory:LegendaryArmor ;
+    rdfs:label "Perfected Envoy Shoes"@en,
+        "Perfected Envoy Tassets"@en ;
+    skos:altLabel "Envoy Heavy Legs"@en,
+        "Envoy Light Boots"@en,
+        "Legendary Heavy Legs"@en,
+        "Legendary Light Boots"@en,
+        "Raid Heavy Legs"@en,
+        "Raid Light Boots"@en ;
+    priory:gw2Id 80161 ;
+    priory:hasArmorWeight weight:Heavy,
+        weight:Light ;
+    priory:hasEquipmentSlot slot:Boots,
+        slot:Legs ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_perfected_envoy_shoes,
+        recipe:forge_perfected_envoy_tassets .
+
+item:100114 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Essence of Despair"@en ;
+    priory:gw2Id 100114 .
+
+item:100414 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Essence of Greed"@en ;
+    priory:gw2Id 100414 .
+
+item:100429 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Essence of Triumph"@en ;
+    priory:gw2Id 100429 .
+
+item:100852 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Pinch of Stardust"@en ;
+    priory:gw2Id 100852 .
+
+item:43775 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Provisioner Token"@en ;
+    priory:gw2Id 43775 .
+
+item:77700 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Legendary Insight"@en ;
+    priory:gw2Id 77700 .
+

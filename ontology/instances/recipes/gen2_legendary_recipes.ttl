@@ -8,6 +8,10 @@
 @prefix weapon: <https://priory.gw2/ref/weapon/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+item:19663 a priory:CraftingMaterial ;
+    rdfs:label "Bloodstone Shard"@en ;
+    priory:gw2Id 19663 .
+
 item:46682 a priory:CraftingMaterial ;
     rdfs:label "Crystalline Ore"@en ;
     priory:gw2Id 46682 .
@@ -37,13 +41,10 @@ item:71383 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_nevermore .
 
-item:71384 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "The Raven Staff"@en ;
-    priory:gw2Id 71384 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Staff ;
-    priory:isAccountBound true .
+item:71385 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Nevermore Research"@en ;
+    priory:gw2Id 71385 .
 
 item:71943 a priory:GiftItem ;
     rdfs:label "Gift of Tarir"@en ;
@@ -73,13 +74,10 @@ item:75207 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_hope .
 
-item:75208 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Prototype"@en ;
-    priory:gw2Id 75208 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Pistol ;
-    priory:isAccountBound true .
+item:75209 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "HOPE Research"@en ;
+    priory:gw2Id 75209 .
 
 item:76158 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -94,13 +92,10 @@ item:76158 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_astralaria .
 
-item:76159 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "The Mechanism"@en ;
-    priory:gw2Id 76159 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Axe ;
-    priory:isAccountBound true .
+item:76160 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Astralaria Research"@en ;
+    priory:gw2Id 76160 .
 
 item:78052 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -115,13 +110,10 @@ item:78052 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_chuka_and_champawat .
 
-item:78053 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Tigris"@en ;
-    priory:gw2Id 78053 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:ShortBow ;
-    priory:isAccountBound true .
+item:78054 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Tiger Training"@en ;
+    priory:gw2Id 78054 .
 
 item:79562 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -136,13 +128,10 @@ item:79562 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_shooshadoo .
 
-item:79563 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Friendship"@en ;
-    priory:gw2Id 79563 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Shield ;
-    priory:isAccountBound true .
+item:79564 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of Friendship"@en ;
+    priory:gw2Id 79564 .
 
 item:79802 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -157,13 +146,10 @@ item:79802 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_eureka .
 
-item:79803 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Endeavor"@en ;
-    priory:gw2Id 79803 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Mace ;
-    priory:isAccountBound true .
+item:79804 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of Endeavor"@en ;
+    priory:gw2Id 79804 .
 
 item:81206 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -178,13 +164,10 @@ item:81206 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_the_shining_blade .
 
-item:81207 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Save the Queen"@en ;
-    priory:gw2Id 81207 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Sword ;
-    priory:isAccountBound true .
+item:81208 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Crown"@en ;
+    priory:gw2Id 81208 .
 
 item:82791 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -199,15 +182,32 @@ item:82791 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_sharur .
 
-item:82792 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "The Call"@en ;
-    priory:gw2Id 82792 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Hammer ;
-    priory:isAccountBound true .
+item:82793 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Call"@en ;
+    priory:gw2Id 82793 .
 
-item:86120 a priory:CraftingMaterial ;
+item:84024 a priory:CraftingMaterial ;
+    rdfs:label "Gift of the Rider"@en ;
+    priory:gw2Id 84024 .
+
+item:84088 a priory:CraftingMaterial ;
+    rdfs:label "Gift of the Desert"@en ;
+    priory:gw2Id 84088 .
+
+item:84310 a priory:CraftingMaterial ;
+    rdfs:label "Funerary Incense"@en ;
+    priory:gw2Id 84310 .
+
+item:84438 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Desert Mastery"@en ;
+    priory:gw2Id 84438 ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_desert_mastery .
+
+item:86120 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
     rdfs:label "Shard of the Dark Arts"@en ;
     priory:gw2Id 86120 .
 
@@ -224,13 +224,10 @@ item:86303 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_the_hms_divinity .
 
-item:86304 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "The Ambition"@en ;
-    priory:gw2Id 86304 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Rifle ;
-    priory:isAccountBound true .
+item:86305 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Ambition"@en ;
+    priory:gw2Id 86305 .
 
 item:86675 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -258,13 +255,10 @@ item:87687 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_claw_of_the_khan_ur .
 
-item:87688 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Touch of the Khan-Ur"@en ;
-    priory:gw2Id 87688 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Dagger ;
-    priory:isAccountBound true .
+item:87689 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Khan-Ur"@en ;
+    priory:gw2Id 87689 .
 
 item:88955 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -279,13 +273,10 @@ item:88955 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_xiuquatl .
 
-item:88956 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Tlehco"@en ;
-    priory:gw2Id 88956 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Scepter ;
-    priory:isAccountBound true .
+item:88957 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Feathered Serpent"@en ;
+    priory:gw2Id 88957 .
 
 item:89854 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -300,13 +291,10 @@ item:89854 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_pharus .
 
-item:89855 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Spero"@en ;
-    priory:gw2Id 89855 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Longbow ;
-    priory:isAccountBound true .
+item:89856 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Brightest Light"@en ;
+    priory:gw2Id 89856 .
 
 item:90551 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -321,13 +309,10 @@ item:90551 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_exordium .
 
-item:90552 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Epitaph"@en ;
-    priory:gw2Id 90552 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Greatsword ;
-    priory:isAccountBound true .
+item:90553 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Resolution"@en ;
+    priory:gw2Id 90553 .
 
 item:91876 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -342,18 +327,100 @@ item:91876 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_verdarach .
 
-item:91877 a owl:NamedIndividual,
-        priory:PrecursorWeapon ;
-    rdfs:label "Call to Arms"@en ;
-    priory:gw2Id 91877 ;
-    priory:hasRarity rarity:Ascended ;
-    priory:hasWeaponType weapon:Warhorn ;
-    priory:isAccountBound true .
+item:91878 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Shard of the Voice"@en ;
+    priory:gw2Id 91878 .
 
-recipe:craft_ars_goetia a priory:DisciplineRecipe ;
+recipe:craft_astralaria_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft The Mechanism"@en ;
+    priory:hasIngredientRequirement recipe:req_astralaria_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:76159 .
+
+recipe:craft_chuka_and_champawat_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Tigris"@en ;
+    priory:hasIngredientRequirement recipe:req_chuka_and_champawat_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:78053 .
+
+recipe:craft_claw_of_the_khan_ur_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Touch of the Khan-Ur"@en ;
+    priory:hasIngredientRequirement recipe:req_claw_of_the_khan_ur_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:87688 .
+
+recipe:craft_eureka_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Endeavor"@en ;
+    priory:hasIngredientRequirement recipe:req_eureka_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:79803 .
+
+recipe:craft_exordium_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Epitaph"@en ;
+    priory:hasIngredientRequirement recipe:req_exordium_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:90552 .
+
+recipe:craft_hope_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Prototype"@en ;
+    priory:hasIngredientRequirement recipe:req_hope_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:75208 .
+
+recipe:craft_nevermore_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft The Raven Staff"@en ;
+    priory:hasIngredientRequirement recipe:req_nevermore_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:71384 .
+
+recipe:craft_pharus_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Spero"@en ;
+    priory:hasIngredientRequirement recipe:req_pharus_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:89855 .
+
+recipe:craft_sharur_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft The Call"@en ;
+    priory:hasIngredientRequirement recipe:req_sharur_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:82792 .
+
+recipe:craft_shooshadoo_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Friendship"@en ;
+    priory:hasIngredientRequirement recipe:req_shooshadoo_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:79563 .
+
+recipe:craft_the_binding_of_ipos_precursor a priory:DisciplineRecipe ;
     rdfs:label "Craft Ars Goetia"@en ;
-    priory:hasIngredientRequirement recipe:req_ars_dark_arts ;
+    priory:hasIngredientRequirement recipe:req_the_binding_of_ipos_p_shard ;
+    priory:outputQuantity 1 ;
     priory:producesItem item:86676 .
+
+recipe:craft_the_hms_divinity_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft The Ambition"@en ;
+    priory:hasIngredientRequirement recipe:req_the_hms_divinity_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:86304 .
+
+recipe:craft_the_shining_blade_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Save the Queen"@en ;
+    priory:hasIngredientRequirement recipe:req_the_shining_blade_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:81207 .
+
+recipe:craft_verdarach_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Call to Arms"@en ;
+    priory:hasIngredientRequirement recipe:req_verdarach_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91877 .
+
+recipe:craft_xiuquatl_precursor a priory:DisciplineRecipe ;
+    rdfs:label "Craft Tlehco"@en ;
+    priory:hasIngredientRequirement recipe:req_xiuquatl_p_shard ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:88956 .
 
 recipe:forge_astralaria a priory:MysticForgeRecipe ;
     rdfs:label "Forge Astralaria"@en ;
@@ -416,6 +483,15 @@ recipe:forge_condensed_might a priory:MysticForgeRecipe ;
         recipe:req_cmi_24288,
         recipe:req_cmi_24351 ;
     priory:producesItem item:79658 .
+
+recipe:forge_desert_mastery a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Desert Mastery"@en ;
+    priory:hasIngredientRequirement recipe:req_des_19663,
+        recipe:req_des_84024,
+        recipe:req_des_84088,
+        recipe:req_des_84310 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:84438 .
 
 recipe:forge_eureka a priory:MysticForgeRecipe ;
     rdfs:label "Forge Eureka"@en ;
@@ -636,10 +712,6 @@ recipe:forge_xiuquatl_gift a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:producesItem item:88954 .
 
-recipe:req_ars_dark_arts a priory:IngredientRequirement ;
-    priory:requiredQuantity 100 ;
-    priory:requiresItem item:86120 .
-
 recipe:req_astralaria_gem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
     priory:requiresItem item:68063 .
@@ -651,6 +723,10 @@ recipe:req_astralaria_icy a priory:IngredientRequirement ;
 recipe:req_astralaria_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_astralaria_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:76160 .
 
 recipe:req_astralaria_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -676,6 +752,10 @@ recipe:req_chuka_and_champawat_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_chuka_and_champawat_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:78054 .
+
 recipe:req_chuka_and_champawat_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78053 .
@@ -699,6 +779,10 @@ recipe:req_claw_of_the_khan_ur_icy a priory:IngredientRequirement ;
 recipe:req_claw_of_the_khan_ur_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_claw_of_the_khan_ur_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:87689 .
 
 recipe:req_claw_of_the_khan_ur_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -744,6 +828,22 @@ recipe:req_cmi_24351 a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
     priory:requiresItem item:24351 .
 
+recipe:req_des_19663 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:19663 .
+
+recipe:req_des_84024 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:84024 .
+
+recipe:req_des_84088 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:84088 .
+
+recipe:req_des_84310 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:84310 .
+
 recipe:req_eureka_gem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
     priory:requiresItem item:68063 .
@@ -755,6 +855,10 @@ recipe:req_eureka_icy a priory:IngredientRequirement ;
 recipe:req_eureka_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_eureka_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79804 .
 
 recipe:req_eureka_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -780,6 +884,10 @@ recipe:req_exordium_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_exordium_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:90553 .
+
 recipe:req_exordium_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:90552 .
@@ -803,6 +911,10 @@ recipe:req_hope_icy a priory:IngredientRequirement ;
 recipe:req_hope_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_hope_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:75209 .
 
 recipe:req_hope_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -860,6 +972,10 @@ recipe:req_nevermore_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_nevermore_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:71385 .
+
 recipe:req_nevermore_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:71384 .
@@ -883,6 +999,10 @@ recipe:req_pharus_icy a priory:IngredientRequirement ;
 recipe:req_pharus_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_pharus_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:89856 .
 
 recipe:req_pharus_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -908,6 +1028,10 @@ recipe:req_sharur_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_sharur_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:82793 .
+
 recipe:req_sharur_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:82792 .
@@ -931,6 +1055,10 @@ recipe:req_shooshadoo_icy a priory:IngredientRequirement ;
 recipe:req_shooshadoo_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_shooshadoo_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79564 .
 
 recipe:req_shooshadoo_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -956,6 +1084,10 @@ recipe:req_the_binding_of_ipos_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_the_binding_of_ipos_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:86120 .
+
 recipe:req_the_binding_of_ipos_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:86676 .
@@ -980,6 +1112,10 @@ recipe:req_the_hms_divinity_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_the_hms_divinity_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:86305 .
+
 recipe:req_the_hms_divinity_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:86304 .
@@ -1003,6 +1139,10 @@ recipe:req_the_shining_blade_icy a priory:IngredientRequirement ;
 recipe:req_the_shining_blade_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
+
+recipe:req_the_shining_blade_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:81208 .
 
 recipe:req_the_shining_blade_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1044,6 +1184,10 @@ recipe:req_verdarach_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_verdarach_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:91878 .
+
 recipe:req_verdarach_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:91877 .
@@ -1068,6 +1212,10 @@ recipe:req_xiuquatl_maguuma a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:78370 .
 
+recipe:req_xiuquatl_p_shard a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:88957 .
+
 recipe:req_xiuquatl_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:88956 .
@@ -1086,11 +1234,29 @@ item:71382 a owl:NamedIndividual,
     priory:gw2Id 71382 ;
     priory:producedBy recipe:forge_nevermore_gift .
 
+item:71384 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Raven Staff"@en ;
+    priory:gw2Id 71384 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_nevermore_precursor .
+
 item:75206 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of HOPE"@en ;
     priory:gw2Id 75206 ;
     priory:producedBy recipe:forge_hope_gift .
+
+item:75208 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Prototype"@en ;
+    priory:gw2Id 75208 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Pistol ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_hope_precursor .
 
 item:75919 a priory:GiftItem ;
     rdfs:label "Gift of Insights"@en ;
@@ -1104,17 +1270,44 @@ item:76157 a owl:NamedIndividual,
     priory:gw2Id 76157 ;
     priory:producedBy recipe:forge_astralaria_gift .
 
+item:76159 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Mechanism"@en ;
+    priory:gw2Id 76159 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_astralaria_precursor .
+
 item:78051 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of Chuka and Champawat"@en ;
     priory:gw2Id 78051 ;
     priory:producedBy recipe:forge_chuka_and_champawat_gift .
 
+item:78053 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Tigris"@en ;
+    priory:gw2Id 78053 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:ShortBow ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_chuka_and_champawat_precursor .
+
 item:79561 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of Shooshadoo"@en ;
     priory:gw2Id 79561 ;
     priory:producedBy recipe:forge_shooshadoo_gift .
+
+item:79563 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Friendship"@en ;
+    priory:gw2Id 79563 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Shield ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_shooshadoo_precursor .
 
 item:79658 a priory:GiftItem ;
     rdfs:label "Gift of Condensed Might"@en ;
@@ -1132,11 +1325,29 @@ item:79801 a owl:NamedIndividual,
     priory:gw2Id 79801 ;
     priory:producedBy recipe:forge_eureka_gift .
 
+item:79803 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Endeavor"@en ;
+    priory:gw2Id 79803 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Mace ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_eureka_precursor .
+
 item:81205 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of the Shining Blade"@en ;
     priory:gw2Id 81205 ;
     priory:producedBy recipe:forge_the_shining_blade_gift .
+
+item:81207 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Save the Queen"@en ;
+    priory:gw2Id 81207 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Sword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_the_shining_blade_precursor .
 
 item:82790 a owl:NamedIndividual,
         priory:GiftItem ;
@@ -1144,11 +1355,29 @@ item:82790 a owl:NamedIndividual,
     priory:gw2Id 82790 ;
     priory:producedBy recipe:forge_sharur_gift .
 
+item:82792 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Call"@en ;
+    priory:gw2Id 82792 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Hammer ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_sharur_precursor .
+
 item:86302 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of the HMS Divinity"@en ;
     priory:gw2Id 86302 ;
     priory:producedBy recipe:forge_the_hms_divinity_gift .
+
+item:86304 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Ambition"@en ;
+    priory:gw2Id 86304 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Rifle ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_the_hms_divinity_precursor .
 
 item:86674 a owl:NamedIndividual,
         priory:GiftItem ;
@@ -1163,7 +1392,7 @@ item:86676 a owl:NamedIndividual,
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Focus ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:craft_ars_goetia .
+    priory:producedBy recipe:craft_the_binding_of_ipos_precursor .
 
 item:87686 a owl:NamedIndividual,
         priory:GiftItem ;
@@ -1171,11 +1400,29 @@ item:87686 a owl:NamedIndividual,
     priory:gw2Id 87686 ;
     priory:producedBy recipe:forge_claw_of_the_khan_ur_gift .
 
+item:87688 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Touch of the Khan-Ur"@en ;
+    priory:gw2Id 87688 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Dagger ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_claw_of_the_khan_ur_precursor .
+
 item:88954 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of Xiuquatl"@en ;
     priory:gw2Id 88954 ;
     priory:producedBy recipe:forge_xiuquatl_gift .
+
+item:88956 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Tlehco"@en ;
+    priory:gw2Id 88956 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Scepter ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_xiuquatl_precursor .
 
 item:89853 a owl:NamedIndividual,
         priory:GiftItem ;
@@ -1183,11 +1430,29 @@ item:89853 a owl:NamedIndividual,
     priory:gw2Id 89853 ;
     priory:producedBy recipe:forge_pharus_gift .
 
+item:89855 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Spero"@en ;
+    priory:gw2Id 89855 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Longbow ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_pharus_precursor .
+
 item:90550 a owl:NamedIndividual,
         priory:GiftItem ;
     rdfs:label "Gift of Exordium"@en ;
     priory:gw2Id 90550 ;
     priory:producedBy recipe:forge_exordium_gift .
+
+item:90552 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Epitaph"@en ;
+    priory:gw2Id 90552 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_exordium_precursor .
 
 item:91875 a owl:NamedIndividual,
         priory:GiftItem ;
@@ -1195,9 +1460,14 @@ item:91875 a owl:NamedIndividual,
     priory:gw2Id 91875 ;
     priory:producedBy recipe:forge_verdarach_gift .
 
-item:68063 a priory:CraftingMaterial ;
-    rdfs:label "Amalgamated Gemstone"@en ;
-    priory:gw2Id 68063 .
+item:91877 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Call to Arms"@en ;
+    priory:gw2Id 91877 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Warhorn ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_verdarach_precursor .
 
 item:78370 a owl:NamedIndividual,
         priory:GiftItem ;
