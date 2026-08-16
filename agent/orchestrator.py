@@ -42,9 +42,13 @@ class PrioryChatSession:
         """Processes a follow-up user prompt with multi-turn session awareness."""
         # Check if this is a ranking / recommendation query
         prompt_lower = user_prompt.lower()
-        is_ranking_query = any(k in prompt_lower for k in [
-            "closest", "which legendary", "what legendary", "rank all", "what should i craft", "what to craft", "leaderboard", "rank"
-        ])
+        ranking_triggers = [
+            "closest", "which legendary", "what legendary", "rank all", "what should i craft",
+            "what to craft", "leaderboard", "rank", "how far", "how close", "where am i",
+            "what can i craft", "can i craft", "next legendary", "best legendary", "recommend",
+            "suggest", "progress towards", "progress on"
+        ]
+        is_ranking_query = any(k in prompt_lower for k in ranking_triggers)
 
         # Check for generation, expansion, or category filter
         filter_query = None
@@ -62,6 +66,12 @@ class PrioryChatSession:
                 filter_query = gen_term
                 break
 
+        # Format history context
+        context_str = None
+        if self.history:
+            context_str = "\n".join([f"{h['role']}: {h['content']}" for h in self.history[-4:]])
+
+        # If keyword matched ranking, evaluate ranker immediately
         if is_ranking_query:
             rankings = self.orchestrator.ranker.rank_all_legendaries(
                 account=self.account_state,
@@ -74,11 +84,6 @@ class PrioryChatSession:
             self.history.append({"role": "assistant", "content": guide.executive_summary})
             return guide
 
-        # Format history context
-        context_str = None
-        if self.history:
-            context_str = "\n".join([f"{h['role']}: {h['content']}" for h in self.history[-4:]])
-
         # 1. Top LLM parses intent with previous goal memory
         resolved_goal: ResolvedGoal = self.orchestrator.intent_parser.parse_intent(
             user_prompt=user_prompt,
@@ -86,6 +91,22 @@ class PrioryChatSession:
             conversation_context=context_str
         )
         self.last_goal = resolved_goal
+
+        # If Top LLM classified this as a comparative ranking query, route to ranker
+        if resolved_goal.intent.is_ranking_query or (
+            resolved_goal.resolved_item_name == "Twilight" and any(k in resolved_goal.intent.goal_item_query.lower() for k in ["gen", "generation", "legendary", "armor", "weapon", "trinket"])
+        ):
+            active_filter = filter_query or resolved_goal.intent.filter_category or resolved_goal.intent.goal_item_query
+            rankings = self.orchestrator.ranker.rank_all_legendaries(
+                account=self.account_state,
+                tp_prices=live_tp_prices,
+                top_n=5,
+                filter_query=active_filter
+            )
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(rankings, user_prompt)
+            self.history.append({"role": "user", "content": user_prompt})
+            self.history.append({"role": "assistant", "content": guide.executive_summary})
+            return guide
 
         # 2. Deterministic Account Delta
         diff_report = self.orchestrator.diff_engine.compute_diff(

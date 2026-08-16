@@ -13,7 +13,9 @@ from engine.semantic_query import SemanticQueryService
 
 class PlayerGoalIntent(BaseModel):
     """Structured intent and constraint parameters extracted from natural language."""
-    goal_item_query: str = Field(description="The primary item, weapon, or sigil the player wishes to craft or obtain.")
+    goal_item_query: str = Field(description="The primary item, weapon, sigil, or broad category/generation the player wishes to evaluate, craft, or obtain.")
+    is_ranking_query: bool = Field(default=False, description="Set to True if the player is asking which item they are closest to, how far/close they are from a category/generation, seeking recommendations, or requesting a ranking/leaderboard.")
+    filter_category: Optional[str] = Field(default=None, description="Generation, expansion, or category filter if specified (e.g. 'Gen 1', 'Gen 2', 'Gen 3', 'SotO', 'Janthir', 'Armor', 'Trinket', 'Upgrade').")
     target_quantity: int = Field(default=1, description="The desired number of items (e.g. 1, 2, 4).")
     time_budget_minutes: int = Field(default=120, description="Available playtime in minutes.")
     excluded_game_modes: List[str] = Field(default_factory=list, description="Game modes to avoid (e.g. WvW, PvP, Raids).")
@@ -38,7 +40,8 @@ class IntentParser:
     SYSTEM_PROMPT = (
         "You are an expert Guild Wars 2 goal analysis agent. "
         "Extract the player's primary crafting or acquisition goal, desired quantity (e.g. 1 or 2), time availability, "
-        "game mode preferences/exclusions, budget, and any completed/exhausted sources (e.g. 'WizardVault' if they already bought vault clovers) from their message."
+        "game mode preferences/exclusions, budget, and any completed/exhausted sources (e.g. 'WizardVault' if they already bought vault clovers) from their message. "
+        "If the user asks a comparative question (e.g. 'closest', 'how far am I', 'what can I craft', 'which generation 3 legendary'), set is_ranking_query=True and identify the filter_category."
     )
 
     def __init__(self, semantic_query_service: SemanticQueryService, llm_client: Optional[BaseLLMClient] = None):
