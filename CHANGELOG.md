@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **8th Acquisition Archetype (`ContainerUnpackPath`):** Added container unpacking ontology modeling in [`ontology/priory_core.ttl`](./ontology/priory_core.ttl) (`priory:ContainerItem`, `priory:ChoiceChest`, `priory:unpacksInto`, `priory:fromContainer`, `priory:grantsItem`) to dynamically resolve Wizard's Vault Starter Kits and choice containers from user bank storage.
+- **Shared Base Components Graph:** Created [`ontology/instances/shared/legendary_base_components.ttl`](./ontology/instances/shared/legendary_base_components.ttl) with formal RDF acquisition pathways for *Gift of Mastery*, *Gift of Exploration*, *Gift of Battle*, *Bloodstone Shard*, *Obsidian Shard*, and *Mystic Clover*.
+- **Generation SKOS `altLabel`s:** Automated extraction and enrichment of generation taxonomies across all 56 legendary weapons in [`ingestion/smw_client.py`](./ingestion/smw_client.py) to seamlessly resolve colloquial queries (e.g., *"gen one mace"* -> *The Moot*).
+
+### Changed
+- **Zero-Hardcoding Refactor of `PathSolver`:** Completely eliminated static price dictionaries and hardcoded string bottleneck lookups from [`engine/path_solver.py`](./engine/path_solver.py). All vendor coordinates, NPCs, currencies, and journey constraints are now queried 100% dynamically from RDF graph triples.
+- **Canonical ID Alignment:** Corrected inverted GW2 IDs for *Gift of Mastery* (`19626`) and *Gift of Fortune* (`19627`) in [`ontology/instances/twilight_gen1.ttl`](./ontology/instances/twilight_gen1.ttl) to adhere strictly to official ArenaNet API entity definitions.
 - **Phase 1 Bulk Catalog Ingestion:** Successfully crawled and ingested **all 56 official Legendary items** (Weapons, Armor, Trinkets, Backpacks, Sigils, Runes, and Relics) into partitioned instance graph [`ontology/instances/legendaries/all_legendary_items.ttl`](./ontology/instances/legendaries/all_legendary_items.ttl) with 100% SHACL validation pass.
 - **Reference Taxonomies Expansion in `gw2-priory-ref`:**
   - Added [`vocab/armor_weights.ttl`](file:///Users/clementd/Documents/GitHub/gw2-priory-ref/vocab/armor_weights.ttl) defining `HeavyArmor`, `MediumArmor`, and `LightArmor` with SKOS concepts and definitions.

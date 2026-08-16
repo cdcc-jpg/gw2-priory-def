@@ -1,0 +1,110 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+# ==============================================================================
+# Shared Legendary Base Components & Acquisition Pathways
+# ==============================================================================
+
+# --- Gift of Mastery (ID: 19626) ---
+item:19626 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Mastery"@en ;
+    priory:gw2Id 19626 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    skos:definition "Mastery component for Generation 1 legendary weapons requiring World Completion, WvW, and Obsidian/Bloodstone shards."@en .
+
+# --- Gift of Exploration (ID: 19677) ---
+item:19677 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Exploration"@en ;
+    priory:gw2Id 19677 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia item:path_world_completion ;
+    skos:definition "Requires 100% Core Tyria Map Completion (Cannot be bought with gold)."@en .
+
+item:path_world_completion a priory:AchievementCollectionPath, owl:NamedIndividual ;
+    rdfs:label "Core Tyria World Completion"@en ;
+    skos:definition "Earned by achieving 100% map exploration across all Core Tyria zones."@en .
+
+# --- Gift of Battle (ID: 19678) ---
+item:19678 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Battle"@en ;
+    priory:gw2Id 19678 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia item:path_gift_of_battle_track ;
+    skos:definition "Requires completing the WvW Gift of Battle Reward Track (~4-8 hours of World vs. World)."@en .
+
+item:path_gift_of_battle_track a priory:RewardTrackPath, owl:NamedIndividual ;
+    rdfs:label "WvW Gift of Battle Reward Track"@en ;
+    skos:definition "Earned by progressing and completing the WvW Gift of Battle track."@en .
+
+# --- Bloodstone Shard (ID: 19663) ---
+item:19663 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bloodstone Shard"@en ;
+    priory:gw2Id 19663 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:acquiredVia item:path_bloodstone_miyani ;
+    skos:definition "Requires 200 Spirit Shards from Miyani at the Mystic Forge in Lion's Arch."@en .
+
+item:path_bloodstone_miyani a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Purchase Bloodstone Shard from Miyani"@en ;
+    priory:vendorNPC "Miyani" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:waypointName "Sanctum Harbor Waypoint" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresCurrency currency:SpiritShard ;
+    priory:requiredQuantity 200 .
+
+# --- Obsidian Shard (ID: 19925) ---
+item:19925 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Obsidian Shard"@en ;
+    priory:gw2Id 19925 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:acquiredVia item:path_obsidian_karma ;
+    skos:definition "Purchased with Karma in Orr (Cathedral of Glorious Victory) or Silverwastes bandit chests."@en .
+
+item:path_obsidian_karma a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Purchase Obsidian Shard with Karma in Orr"@en ;
+    priory:vendorNPC "Tactician Deathstrider" ;
+    priory:zoneName "Straits of Devastation" ;
+    priory:nearestWaypoint "[&BO8CAAA=]" ;
+    priory:requiresCurrency currency:Karma ;
+    priory:requiredQuantity 2100 .
+
+# --- Mystic Clover (ID: 19675) ---
+item:19675 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mystic Clover"@en ;
+    priory:gw2Id 19675 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia item:exchange_clover_vault , item:exchange_clover_fractals , item:forge_clovers ;
+    skos:definition "Account-bound material obtained from Wizard's Vault, Fractal vendors, or Mystic Forge gambling."@en .
+
+item:exchange_clover_vault a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Wizard's Vault (Astral Acclaim)"@en ;
+    priory:requiresCurrency currency:AstralAcclaim ;
+    priory:requiredQuantity 60 ;
+    skos:definition "Purchase directly from Wizard's Vault with Astral Acclaim (cheapest guaranteed route)."@en .
+
+item:exchange_clover_fractals a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Fractal Relic Vendor (BUY-2046)"@en ;
+    priory:vendorNPC "BUY-2046" ;
+    priory:zoneName "Mistlock Sanctuary / Fractals of the Mists" ;
+    priory:nearestWaypoint "[&BAwDAAA=]" ;
+    priory:requiresCurrency currency:FractalRelic ;
+    priory:requiredQuantity 150 ;
+    skos:definition "Daily time-gated purchase (2 per day) from Mistlock Sanctuary / Fractal lobby vendor."@en .
+
+item:forge_clovers a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Clover Promotion"@en ;
+    skos:definition "Gambling recipe combining Ectoplasm, Mystic Coins, Obsidian Shards, and Philosopher's Stones (~31.6% yield)."@en .
