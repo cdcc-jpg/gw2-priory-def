@@ -6,6 +6,17 @@ By combining formal Semantic Web standards (**OWL 2 DL**, **SKOS**, **SHACL**, *
 
 ---
 
+## 📚 Complete Technical Documentation Suite
+
+For exhaustive technical breakdowns, data dictionaries, and sequence traces, see the [`docs/`](./docs/) directory:
+
+* [🏛️ **System Architecture Overview**](./docs/architecture_overview.md) — The Neuro-Symbolic Sandwich, component topology, and execution model.
+* [🔍 **The Three Semantic Layers Deep Dive**](./docs/semantic_layers_deep_dive.md) — Exhaustive analysis of `ref` (SKOS), `def` (OWL/SHACL/ABox), and the Triple Store graph engine with comprehensive Mermaid diagrams.
+* [⚡ **End-to-End Data Flow & Reasoning Trace**](./docs/data_flow_and_reasoning.md) — Step-by-step trace of a live query with concrete JSON payloads and sequence diagrams.
+* [📖 **Ontology & Vocabulary Reference Guide**](./docs/ontology_and_vocab_reference.md) — Formal catalog of all OWL Classes, Properties, SKOS Concept Schemes, and SHACL Shapes.
+
+---
+
 ## 🏛️ Core Vision & Architecture
 
 ```
@@ -37,6 +48,12 @@ By combining formal Semantic Web standards (**OWL 2 DL**, **SKOS**, **SHACL**, *
       │                     │  Account Graph Delta & Pathfinding     │                  │
       │                     │  (Prunes owned items, resolves routes) │                  │
       │                     └───────────────────┬────────────────────┘                  │
+      │                                         │                                       │
+      │                                         ▼                                       │
+      │                     ┌────────────────────────────────────────┐                  │
+      │                     │   Spatial & Waypoint Navigation Engine │                  │
+      │                     │   (Injects NPCs, zones & [&ChatCodes]) │                  │
+      │                     └───────────────────┬────────────────────┘                  │
       └─────────────────────────────────────────┼───────────────────────────────────────┘
                                                 │ Verified Deterministic Plan
                                                 ▼
@@ -56,30 +73,41 @@ By combining formal Semantic Web standards (**OWL 2 DL**, **SKOS**, **SHACL**, *
 | Component | Standard | Purpose in Project Priory |
 | :--- | :--- | :--- |
 | **TBox (Ontology Schema)** | **OWL 2 DL** | Defines formal relations, classes (`Item`, `LegendaryWeapon`, `Recipe`, `AcquisitionPath`, `TimeGate`), object properties (`requiresIngredient`, `hasSubstituteSource`), cardinalities, and logical axioms. |
-| **Controlled Vocabularies** | **SKOS** | Hierarchical concept schemes (`skos:ConceptScheme`, `skos:broader`) for game taxonomies: Item Rarities, Disciplines, Weapon Types, Game Modes, Expansions. |
-| **ABox (Instance Data)** | **RDF / OWL Individuals** | Specific game items (e.g. *Twilight*, *Dusk*, *Mystic Clover*), recipe nodes, vendor exchanges, and live player inventory triples. |
-| **Validation Layer** | **SHACL** | Validates ingested data integrity (ensures recipe counts are non-zero, prerequisites are linked, IDs are consistent). |
-| **Query & Path Engine** | **SPARQL & NetworkX** | Executes graph pattern matching and topological/DAG traversal for dependency trees. |
+| **Controlled Vocabularies** | **SKOS** | Hierarchical concept schemes (`skos:ConceptScheme`, `skos:broader`, `skos:notation`) for game taxonomies: Item Rarities, Disciplines, Weapon Types, Currencies, Game Modes. |
+| **ABox (Instance Data)** | **RDF / OWL Individuals** | Specific game items (e.g. *Twilight*, *Dusk*, *Legendary Sigil*), recipe DAG nodes, vendor exchanges, and live player inventory triples. |
+| **Integrity & Constraints** | **W3C SHACL** | Enforces closed-world validation shapes before merging triples into the graph (e.g. discipline rating bounds, mandatory labels, output cardinalities). |
+| **Dynamic Delta Engine** | **SPARQL 1.1 + Python Math** | Computes the recursive inventory difference ($N \ge 1$ multiplier), resolves wallet currencies, and detects the **Legendary Armory**. |
 
 ---
 
-## 🚀 Scope: Legendary Weapon Crafting (MVP)
+## 🚀 Quick Start: Running the Interactive Copilot
 
-The initial focus is the complete dependency and acquisition graph for **Legendary Weapons** (starting with Generation 1 weapons like *Twilight*, *Sunrise*, and *Bolt*), covering:
-1. **Precursor Acquisition:** Crafting collection journey vs. Trading Post purchase vs. drop probability.
-2. **Mystic Tribute / Gift of Fortune:** T6 material conversion, Mystic Clover sources (Mystic Forge, WvW reward tracks, Wizard's Vault, Fractal vendors).
-3. **Gift of Mastery:** World Map Completion, WvW *Gift of Battle*, Spirit Shards, Karma / Obsidian Shards.
-4. **Specific Weapon Gifts:** Dungeon currencies / *Tales of Dungeon Delving*, crafting discipline prerequisites (Weaponsmith 400/500, etc.).
+### 1. Prerequisites & Environment
+Ensure Python 3.10+ is installed. Clone both repositories:
+```bash
+git clone https://github.com/cdcc-jpg/gw2-priory-def.git
+git clone https://github.com/cdcc-jpg/gw2-priory-ref.git
+```
 
----
+Set up your `.env` file (see `.env.example`):
+```bash
+GW2_API_KEY="YOUR-ARENANET-API-KEY"
+GEMINI_API_KEY="YOUR-GOOGLE-GEMINI-KEY"
+```
 
-## 🛠️ Technology Stack
+### 2. Run the Live Interactive CLI
+```bash
+# Interactive multi-turn conversation mode:
+python3 priory_cli.py
 
-* **Language:** Python 3.11+
-* **Semantic Web & Graph:** `rdflib`, `pyoxigraph` (embedded high-performance SPARQL engine), `pyshacl`, `owlrl`
-* **Graph Algorithms & DAGs:** `networkx`
-* **API & Ingestion:** `httpx` (async client for GW2 REST API & MediaWiki API), `pydantic`
-* **AI & LLM Orchestration:** `google-genai` / LiteLLM / Instructor with structured JSON outputs.
+# Or one-shot query:
+python3 priory_cli.py "I want to craft 2 legendary sigils tonight. I have 90 mins."
+```
+
+### 3. Run the Automated Test Suite
+```bash
+python3 -m unittest discover tests
+```
 
 ---
 
@@ -87,22 +115,34 @@ The initial focus is the complete dependency and acquisition graph for **Legenda
 
 ```
 gw2-priory-def/
-├── ontology/                 # OWL schemas, SKOS vocabularies, SHACL shapes
-│   ├── priory_core.ttl       # OWL 2 DL Core schema
-│   ├── priory_skos.ttl       # SKOS taxonomies & concept schemes
-│   └── priory_shacl.ttl      # SHACL validation shapes
-├── ingestion/                # Ingestion pipelines for GW2 API & Wiki SMW
-│   ├── gw2_api.py            # Official REST API client
-│   └── smw_client.py         # GW2 Wiki Semantic MediaWiki scraper/parser
-├── engine/                   # Symbolic engine, triple store, graph solver
-│   ├── graph_store.py        # Oxigraph / RDFLib SPARQL graph store
-│   ├── account_diff.py       # Player inventory/progress delta engine
-│   └── path_solver.py        # Multi-criteria optimization & DAG traversal
-├── agent/                    # Neuro-symbolic LLM orchestration
-│   ├── intent_parser.py      # Top LLM: natural language -> structured query
-│   └── guide_generator.py    # Bottom LLM: deterministic plan -> user guide
-├── tests/                    # Unit and integration tests
-├── AGENTS.md                 # Agent and contribution rules
-├── CHANGELOG.md              # Project changelog
-└── README.md                 # Project documentation
+├── docs/                        # Complete technical documentation suite
+│   ├── README.md                # Documentation Table of Contents
+│   ├── architecture_overview.md # Neuro-Symbolic Sandwich & component topology
+│   ├── semantic_layers_deep_dive.md # Detailed ref, def & Triple Store deep dive
+│   ├── data_flow_and_reasoning.md   # Step-by-step query lifecycle trace
+│   └── ontology_and_vocab_reference.md # Complete data dictionary
+├── ontology/                    # OWL 2 DL Schemas, SHACL Shapes & Instances
+│   ├── priory_core.ttl          # Core OWL 2 DL schema (TBox)
+│   ├── priory_shacl.ttl         # SHACL validation shapes
+│   ├── instances/               # Verified RDF item instance graphs (ABox)
+│   │   ├── twilight_gen1.ttl    # Twilight Gen 1 Legendary Greatsword DAG
+│   │   └── legendary_sigil.ttl  # Legendary Sigil Mystic Forge DAG
+│   └── vocab/                   # Local copy of SKOS taxonomies (from gw2-priory-ref)
+├── engine/                      # Graph Store & Deterministic Reasoning
+│   ├── graph_store.py           # In-memory RDF graph store loader
+│   ├── semantic_query.py        # SPARQL 1.1 query & concept resolution service
+│   ├── account_diff.py          # Dynamic overlay & inventory delta math
+│   └── path_solver.py           # Multi-criteria optimization & knapsack scheduler
+├── agent/                       # Neuro-Symbolic AI Agent Layer
+│   ├── llm_client.py            # Plug-and-play LLM client (Gemini, Ollama, Mock)
+│   ├── intent_parser.py         # Top LLM: Natural Language intent parsing
+│   ├── guide_generator.py       # Bottom LLM: Grounded guide synthesis & waypoints
+│   └── orchestrator.py          # Central Sandwich orchestrator & multi-turn session
+├── ingestion/                   # Data Ingestion Bridges
+│   ├── gw2_api.py               # Official ArenaNet REST API Client (v2)
+│   └── smw_client.py            # Complete 7-archetype Semantic MediaWiki crawler
+├── tests/                       # Automated Unit Test Suites (14 tests)
+├── priory_cli.py                # Interactive CLI runner
+├── CHANGELOG.md                 # Project version changelog
+└── README.md                    # Project overview
 ```
