@@ -34,6 +34,10 @@ class AccountState:
         """Returns total owned amount of a wallet currency by its API ID."""
         return self.wallet.get(currency_id, 0)
 
+    def has_legendary_unlocked(self, item_id: int) -> bool:
+        """Returns True if the item is unlocked in the Legendary Armory."""
+        return self.legendary_armory.get(item_id, 0) > 0
+
 
 @dataclass
 class ItemRequirementNode:
@@ -110,6 +114,23 @@ class AccountDiffEngine:
             missing_disciplines=missing_disciplines
         )
 
+    def is_unpackable_from_account(self, item_id: int, account: AccountState) -> Optional[str]:
+        """Checks if an item can be obtained from an owned container (e.g. Starter Kit in bank)."""
+        container_query = """
+        SELECT ?containerId ?containerLabel WHERE {
+            ?container priory:unpacksInto ?item ;
+                       priory:gw2Id ?containerId .
+            ?item priory:gw2Id ?gw2Id .
+            OPTIONAL { ?container rdfs:label ?containerLabel }
+        }
+        """
+        c_res = self.store.query(container_query, init_bindings={"gw2Id": Literal(item_id)})
+        for c_row in c_res:
+            c_id = int(c_row["containerId"])
+            if account.total_item_count(c_id) > 0:
+                return c_row.get("containerLabel", "Choice Chest in Bank")
+        return None
+
     def _resolve_node(
         self,
         item_id: int,
@@ -147,23 +168,12 @@ class AccountDiffEngine:
             branch_visited.add(item_id)
 
             # Check 0: Container Unpack Path (e.g. Starter Kit in Bank or Inventory)
-            container_query = """
-            SELECT ?containerId ?containerLabel WHERE {
-                ?container priory:unpacksInto ?item ;
-                           priory:gw2Id ?containerId .
-                ?item priory:gw2Id ?gw2Id .
-                OPTIONAL { ?container rdfs:label ?containerLabel }
-            }
-            """
-            c_res = self.store.query(container_query, init_bindings={"gw2Id": Literal(item_id)})
-            for c_row in c_res:
-                c_id = int(c_row["containerId"])
-                if account.total_item_count(c_id) > 0:
-                    c_label = c_row.get("containerLabel", "Starter Kit")
-                    node.is_satisfied = True
-                    node.missing_quantity = 0
-                    node.label = f"{label} (Unpackable from {c_label})"
-                    return node
+            container_name = self.is_unpackable_from_account(item_id, account)
+            if container_name:
+                node.is_satisfied = True
+                node.missing_quantity = 0
+                node.label = f"{label} (Unpackable from {container_name})"
+                return node
 
             # Check 1: Direct crafting recipes producing this item
             rec_query = """

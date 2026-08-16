@@ -129,7 +129,7 @@ class GeminiLLMClient(BaseLLMClient):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY must be provided or set in environment.")
-        self.model = model or os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        self.model = model or os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
         self.fallback = RuleBasedMockLLMClient()
 
         from google import genai
@@ -150,7 +150,8 @@ class GeminiLLMClient(BaseLLMClient):
                 config=config,
             )
             return schema.model_validate_json(response.text)
-        except Exception:
+        except Exception as e:
+            print(f"[Gemini API Warning] Structured generation error: {e}")
             return self.fallback.generate_structured(prompt, system_prompt, schema)
 
     def generate_text(self, prompt: str, system_prompt: str) -> str:
@@ -166,7 +167,8 @@ class GeminiLLMClient(BaseLLMClient):
                 config=config,
             )
             return response.text or ""
-        except Exception:
+        except Exception as e:
+            print(f"[Gemini API Warning] Text generation error: {e}")
             return self.fallback.generate_text(prompt, system_prompt)
 
 

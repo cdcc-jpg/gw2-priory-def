@@ -12,16 +12,17 @@ Glues together:
 from __future__ import annotations
 from typing import Optional, Dict, List, Any
 from engine.graph_store import PrioryGraphStore
-from engine.account_diff import AccountDiffEngine, AccountState
-from engine.semantic_query import SemanticQueryService
+from engine.account_diff import AccountDiffEngine, AccountState, AccountDiffReport
 from engine.path_solver import PathSolver, OptimalCraftingPlan
+from engine.semantic_query import SemanticQueryService
+from engine.account_ranker import AccountRanker
 from agent.llm_client import BaseLLMClient, get_default_llm_client
 from agent.intent_parser import IntentParser, ResolvedGoal
 from agent.guide_generator import GuideGenerator, PersonalizedGuide
 
 
 class PrioryChatSession:
-    """An interactive multi-turn conversation session with persistent player state."""
+    """Stateful multi-turn conversation session."""
 
     def __init__(
         self,
@@ -39,6 +40,22 @@ class PrioryChatSession:
         live_tp_prices: Optional[Dict[int, float]] = None
     ) -> PersonalizedGuide:
         """Processes a follow-up user prompt with multi-turn session awareness."""
+        # Check if this is a ranking / recommendation query
+        prompt_lower = user_prompt.lower()
+        is_ranking_query = any(k in prompt_lower for k in [
+            "closest", "which legendary", "what legendary", "rank all", "what should i craft", "what to craft", "leaderboard", "rank"
+        ])
+        if is_ranking_query:
+            rankings = self.orchestrator.ranker.rank_all_legendaries(
+                account=self.account_state,
+                tp_prices=live_tp_prices,
+                top_n=5
+            )
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(rankings, user_prompt)
+            self.history.append({"role": "user", "content": user_prompt})
+            self.history.append({"role": "assistant", "content": guide.executive_summary})
+            return guide
+
         # Format history context
         context_str = None
         if self.history:
@@ -99,6 +116,7 @@ class PrioryAgentOrchestrator:
 
         self.semantic_service = SemanticQueryService(self.store)
         self.diff_engine = AccountDiffEngine(self.store)
+        self.ranker = AccountRanker(self.store, self.diff_engine)
         self.solver = PathSolver(self.store)
         self.llm = llm_client or get_default_llm_client()
 

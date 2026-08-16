@@ -264,3 +264,102 @@ class GuideGenerator:
             missing_disciplines_summary=missing_discs,
             motivational_tip=tip
         )
+
+    def generate_ranking_guide(
+        self,
+        rankings: List[Any],
+        user_prompt: str
+    ) -> PersonalizedGuide:
+        """Generates a ranked comparative guide for 'Which legendary am I closest to?' queries."""
+        if not rankings:
+            return PersonalizedGuide(
+                goal_name="Closest Legendary Assessment",
+                target_quantity=1,
+                chat_code=None,
+                readiness_percentage=0,
+                executive_summary="No unowned legendary items found in the Knowledge Graph.",
+                strategic_recommendations=["All tracked legendaries are already unlocked in your Legendary Armory!"],
+                session_checklist=[],
+                missing_materials_summary={},
+                missing_disciplines_summary=[],
+                motivational_tip="🌟 **Priory Tip:** You are a master of Tyrian legendary crafting!"
+            )
+
+        top_choice = rankings[0]
+        readiness = int(top_choice.readiness_pct)
+
+        recs = [
+            f"🏆 **Top Recommendation:** **{top_choice.name}** ({top_choice.subtype or 'Weapon'}) is your #1 closest legendary!"
+        ]
+
+        if top_choice.starter_kit_eligible:
+            recs.append(
+                f"🎁 **Bank Starter Kit Match:** You own **Legendary Weapon Starter Kit—Set 2** in your Bank! "
+                f"Selecting **{top_choice.name}** immediately gives you its Precursor and Gift for **0 gold**."
+            )
+
+        # Leaderboard items
+        recs.append("📊 **Closest Legendaries Leaderboard:**")
+        for i, item in enumerate(rankings[:5], 1):
+            kit_tag = " [🎁 Bank Kit Ready]" if item.starter_kit_eligible else ""
+            recs.append(
+                f"   **#{i} {item.name}** ({item.subtype or 'Item'}): **{item.readiness_pct}% Ready** "
+                f"| Est. Cost: ~{item.estimated_remaining_gold}g{kit_tag}"
+            )
+
+        checklist = []
+        step_num = 1
+
+        if top_choice.starter_kit_eligible:
+            checklist.append(ActionStep(
+                step_number=step_num,
+                title="Claim Precursor from Bank Starter Kit",
+                estimated_time_minutes=2,
+                game_mode="Account",
+                description=f"Withdraw 'Legendary Weapon Starter Kit—Set 2' from your Bank and choose the '{top_choice.name} Kit' for 0 gold.",
+                chat_code=None
+            ))
+            step_num += 1
+
+        checklist.append(ActionStep(
+            step_number=step_num,
+            title="Complete Daily Wizard's Vault Tasks",
+            estimated_time_minutes=20,
+            game_mode="OpenWorld",
+            description="Claim Astral Acclaim and purchase remaining Mystic Clovers directly from the Vault.",
+            chat_code=None
+        ))
+        step_num += 1
+
+        meta_waypoint = "[&BF8HAAA=]"
+        checklist.append(ActionStep(
+            step_number=step_num,
+            title="Gather Missing Materials in Silverwastes",
+            estimated_time_minutes=98,
+            game_mode="OpenWorld",
+            description=f"Teleport to Camp Resolve {meta_waypoint} to farm missing T6 fine trophies and gold.",
+            chat_code=meta_waypoint
+        ))
+
+        summary = (
+            f"Based on your live account snapshot (including your materials and bank starter kits), "
+            f"you are closest to crafting **{top_choice.name}** ({readiness}% ready, ~{top_choice.estimated_remaining_gold}g remaining)!"
+        )
+
+        tip = (
+            f"💡 **Priory Tip:** Crafting {top_choice.name} with your Bank Starter Kit saves you ~200g in precursor costs!"
+        )
+
+        return PersonalizedGuide(
+            goal_name=f"Closest: {top_choice.name}",
+            target_quantity=1,
+            chat_code=top_choice.chat_code,
+            readiness_percentage=readiness,
+            executive_summary=summary,
+            strategic_recommendations=recs,
+            session_checklist=checklist,
+            missing_materials_summary={mat.split("x ")[1]: int(mat.split("x ")[0]) for mat in top_choice.top_missing_items if "x " in mat},
+            missing_disciplines_summary=[],
+            motivational_tip=tip
+        )
+

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Account-Wide Legendary Ranker (`engine/account_ranker.py`):** Added deterministic ranking engine that evaluates all known Legendary items in the Knowledge Graph against a player's live account snapshot (materials, bank slots, and choice chests) to answer *"Which legendary am I closest to crafting?"*.
+- **Closest Legendary Leaderboard Guide Generation:** Enhanced [`agent/guide_generator.py`](./agent/guide_generator.py) with `generate_ranking_guide` to synthesize comparative leaderboards with estimated remaining gold costs and Bank Starter Kit detection.
 - **8th Acquisition Archetype (`ContainerUnpackPath`):** Added container unpacking ontology modeling in [`ontology/priory_core.ttl`](./ontology/priory_core.ttl) (`priory:ContainerItem`, `priory:ChoiceChest`, `priory:unpacksInto`, `priory:fromContainer`, `priory:grantsItem`) to dynamically resolve Wizard's Vault Starter Kits and choice containers from user bank storage.
 - **Shared Base Components Graph:** Created [`ontology/instances/shared/legendary_base_components.ttl`](./ontology/instances/shared/legendary_base_components.ttl) with formal RDF acquisition pathways for *Gift of Mastery*, *Gift of Exploration*, *Gift of Battle*, *Bloodstone Shard*, *Obsidian Shard*, and *Mystic Clover*.
 - **Generation SKOS `altLabel`s:** Automated extraction and enrichment of generation taxonomies across all 56 legendary weapons in [`ingestion/smw_client.py`](./ingestion/smw_client.py) to seamlessly resolve colloquial queries (e.g., *"gen one mace"* -> *The Moot*).
