@@ -6,11 +6,12 @@
 @prefix priory-ref: <https://priory.gw2/ref/> .
 
 # ==============================================================================
-# SHACL Shapes for Priory Core
+# SHACL Shapes for Priory Core (7 Acquisition Archetypes)
 # ==============================================================================
 
 priory:ItemShape a sh:NodeShape ;
-    sh:targetClass priory:Item, priory:LegendaryWeapon, priory:PrecursorWeapon, priory:CraftingMaterial, priory:GiftItem ;
+    sh:targetClass priory:Item, priory:LegendaryWeapon, priory:PrecursorWeapon,
+                   priory:CraftingMaterial, priory:GiftItem, priory:LegendarySigil, priory:LegendaryRune ;
     sh:property [
         sh:path rdfs:label ;
         sh:minCount 1 ;
@@ -78,4 +79,20 @@ priory:DisciplineRecipeShape a sh:NodeShape ;
         sh:minInclusive 0 ;
         sh:maxInclusive 500 ;
         sh:message "requiresRating must be an integer between 0 and 500." ;
+    ] .
+
+priory:VendorExchangePathShape a sh:NodeShape ;
+    sh:targetClass priory:VendorExchangePath ;
+    sh:property [
+        sh:path priory:requiresCurrency ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "VendorExchangePath must specify a required currency." ;
+    ] ;
+    sh:property [
+        sh:path priory:requiredQuantity ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:message "Vendor exchange requiredQuantity must be a positive integer." ;
     ] .
