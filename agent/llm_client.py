@@ -42,8 +42,20 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         p_lower = prompt.lower()
 
         # Extract item name
+        # Extract goal item dynamically from natural language prompt
         goal_item = "Twilight"
-        if "sigil" in p_lower or "upgrades" in p_lower:
+        verb_match = re.search(r"(?:craft|make|forge|get|buy|obtain|build|target)\s+(?:a\s+|an\s+|the\s+)?(?:\d+\s+)?([A-Za-z0-9'\s]+?)(?:\s+in|\s+with|\s+and|\s+for|\s+from|[.?!,;]|$)", prompt, re.IGNORECASE)
+        if verb_match:
+            candidate = verb_match.group(1).strip()
+            candidate = re.sub(r"\b(tonight|today|now|please|asap|soon)\b", "", candidate, flags=re.I).strip()
+            if candidate:
+                if "sigil" in candidate.lower():
+                    goal_item = "Legendary Sigil" if "legendary" in candidate.lower() or "legendary" in p_lower else "Sigil"
+                elif "rune" in candidate.lower():
+                    goal_item = "Legendary Rune" if "legendary" in candidate.lower() or "legendary" in p_lower else "Rune"
+                else:
+                    goal_item = candidate
+        elif "sigil" in p_lower or "upgrades" in p_lower:
             goal_item = "Legendary Sigil"
         elif "dusk" in p_lower:
             goal_item = "Dusk"

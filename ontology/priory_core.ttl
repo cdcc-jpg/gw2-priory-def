@@ -3,43 +3,102 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix armor: <https://priory.gw2/ref/armor/> .
+@prefix slot: <https://priory.gw2/ref/slot/> .
+@prefix itemtype: <https://priory.gw2/ref/itemtype/> .
 
 <https://priory.gw2/def/> a owl:Ontology ;
-    rdfs:label "Priory Core Ontology for Guild Wars 2"@en ;
-    rdfs:comment "OWL 2 DL ontology modeling Guild Wars 2 item dependencies, crafting recipes, acquisition pathways, and spatial waypoints."@en ;
-    owl:versionInfo "0.3.0" .
+    rdfs:label "Project Priory Core Ontology"@en ;
+    rdfs:comment "Formal OWL 2 DL ontology defining Guild Wars 2 items, recipes, equipment, acquisition pathways, and spatial waypoints."@en ;
+    owl:versionInfo "0.2.0" .
 
 # ==============================================================================
-# Classes (TBox)
+# Class Hierarchy (TBox)
 # ==============================================================================
+
+# --- Base Entity & Item Taxonomy ---
+
+priory:Entity a owl:Class ;
+    rdfs:label "Game Entity"@en ;
+    rdfs:comment "Root abstract class for all entities in Guild Wars 2."@en .
 
 priory:Item a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
     rdfs:label "Game Item"@en ;
-    rdfs:comment "An item or resource that exists within Guild Wars 2."@en .
+    rdfs:comment "An item or resource that can exist in an account inventory, bank, or legendary armory."@en .
 
 priory:EquipableItem a owl:Class ;
     rdfs:subClassOf priory:Item ;
-    rdfs:label "Equipable Item"@en .
-
-priory:Weapon a owl:Class ;
-    rdfs:subClassOf priory:EquipableItem ;
-    rdfs:label "Weapon"@en .
+    rdfs:label "Equipable Item"@en ;
+    rdfs:comment "An item that can be equipped onto a character equipment tab."@en .
 
 priory:LegendaryItem a owl:Class ;
     rdfs:subClassOf priory:Item ;
-    rdfs:label "Legendary Item"@en .
+    rdfs:label "Legendary Item"@en ;
+    rdfs:comment "An account-wide prestige item bound to the Legendary Armory."@en .
+
+# --- Weapons ---
+
+priory:Weapon a owl:Class ;
+    rdfs:subClassOf priory:EquipableItem ;
+    rdfs:label "Weapon"@en ;
+    rdfs:comment "A combat weapon equipable in main-hand, off-hand, two-hand, or aquatic slots."@en .
 
 priory:LegendaryWeapon a owl:Class ;
     rdfs:subClassOf priory:Weapon, priory:LegendaryItem ;
-    rdfs:label "Legendary Weapon"@en .
+    rdfs:label "Legendary Weapon"@en ;
+    rdfs:comment "Generation 1, 2, or 3 Legendary Weapons."@en .
 
 priory:PrecursorWeapon a owl:Class ;
     rdfs:subClassOf priory:Weapon ;
     rdfs:label "Precursor Weapon"@en ;
     rdfs:comment "The base Exotic or Ascended weapon required to forge a Legendary Weapon."@en .
+
+# --- Armor & Equipment ---
+
+priory:Armor a owl:Class ;
+    rdfs:subClassOf priory:EquipableItem ;
+    rdfs:label "Armor Piece"@en ;
+    rdfs:comment "Wearable armor piece classified by weight (Heavy, Medium, Light) and slot (Helm, Chest, etc.)."@en .
+
+priory:LegendaryArmor a owl:Class ;
+    rdfs:subClassOf priory:Armor, priory:LegendaryItem ;
+    rdfs:label "Legendary Armor"@en ;
+    rdfs:comment "Prestige Legendary Armor sets (Envoy Raid Armor, Obsidian Open World Armor, Mistforged WvW/PvP Armor)."@en .
+
+priory:PrecursorArmor a owl:Class ;
+    rdfs:subClassOf priory:Armor ;
+    rdfs:label "Precursor Armor"@en ;
+    rdfs:comment "Refined Envoy Armor or precursor armor pieces required to forge Legendary Armor."@en .
+
+# --- Trinkets & Back Items ---
+
+priory:Trinket a owl:Class ;
+    rdfs:subClassOf priory:EquipableItem ;
+    rdfs:label "Trinket / Jewelry"@en ;
+    rdfs:comment "Amulets, Rings, and Accessories equipable in jewelry slots."@en .
+
+priory:LegendaryTrinket a owl:Class ;
+    rdfs:subClassOf priory:Trinket, priory:LegendaryItem ;
+    rdfs:label "Legendary Trinket"@en ;
+    rdfs:comment "Legendary jewelry items (Aurora, Vision, Coalescence, Conflux, Transcendence, Prismatic Champion's Regalia)."@en .
+
+priory:BackpackItem a owl:Class ;
+    rdfs:subClassOf priory:EquipableItem ;
+    rdfs:label "Back Item / Backpack"@en ;
+    rdfs:comment "Equipment slotted into the back slot."@en .
+
+priory:LegendaryBackpack a owl:Class ;
+    rdfs:subClassOf priory:BackpackItem, priory:LegendaryItem ;
+    rdfs:label "Legendary Back Item"@en ;
+    rdfs:comment "Legendary back pieces (Ad Infinitum, The Ascension, Warbringer)."@en .
 
 # --- Upgrade Components ---
 
@@ -64,6 +123,15 @@ priory:Rune a owl:Class ;
 priory:LegendaryRune a owl:Class ;
     rdfs:subClassOf priory:Rune, priory:LegendaryItem ;
     rdfs:label "Legendary Rune"@en .
+
+priory:Relic a owl:Class ;
+    rdfs:subClassOf priory:UpgradeComponent ;
+    rdfs:label "Relic"@en ;
+    rdfs:comment "Build-defining combat upgrade slotted into the Relic slot."@en .
+
+priory:LegendaryRelic a owl:Class ;
+    rdfs:subClassOf priory:Relic, priory:LegendaryItem ;
+    rdfs:label "Legendary Relic"@en .
 
 # --- Materials, Gifts, Currencies ---
 
@@ -148,7 +216,7 @@ priory:TimeGate a owl:Class ;
     rdfs:comment "Limits the frequency or quantity of crafting/purchasing per unit time."@en .
 
 # ==============================================================================
-# Object Properties
+# Object Properties (Verbs / Verb Phrases)
 # ==============================================================================
 
 priory:producesItem a owl:ObjectProperty ;
@@ -175,7 +243,7 @@ priory:requiresItem a owl:ObjectProperty ;
     rdfs:label "requires item"@en .
 
 priory:requiresCurrency a owl:ObjectProperty ;
-    rdfs:range priory:Currency ;
+    rdfs:range skos:Concept ;
     rdfs:label "requires currency"@en .
 
 priory:requiresIngredient a owl:ObjectProperty ;
@@ -208,6 +276,21 @@ priory:hasWeaponType a owl:ObjectProperty ;
     rdfs:range skos:Concept ;
     rdfs:label "has weapon type"@en .
 
+priory:hasArmorWeight a owl:ObjectProperty ;
+    rdfs:domain priory:Armor ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has armor weight"@en .
+
+priory:hasEquipmentSlot a owl:ObjectProperty ;
+    rdfs:domain priory:EquipableItem ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has equipment slot"@en .
+
+priory:hasItemType a owl:ObjectProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has item type"@en .
+
 priory:hasUpgradeType a owl:ObjectProperty ;
     rdfs:domain priory:UpgradeComponent ;
     rdfs:range skos:Concept ;
@@ -224,13 +307,18 @@ priory:hasTimeGate a owl:ObjectProperty ;
     rdfs:label "has time gate"@en .
 
 # ==============================================================================
-# Datatype Properties (Including Spatial & Waypoint Navigation)
+# Datatype Properties (Noun Phrases / Booleans)
 # ==============================================================================
 
 priory:gw2Id a owl:DatatypeProperty ;
     rdfs:domain [ a owl:Class ; owl:unionOf (priory:Item priory:Recipe priory:Currency) ] ;
     rdfs:range xsd:integer ;
-    rdfs:label "GW2 Official API ID"@en .
+    rdfs:label "GW2 Official API Item ID"@en .
+
+priory:gw2RecipeId a owl:DatatypeProperty ;
+    rdfs:domain priory:Recipe ;
+    rdfs:range xsd:integer ;
+    rdfs:label "GW2 Official API Recipe ID"@en .
 
 priory:chatCode a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
@@ -241,19 +329,19 @@ priory:requiredQuantity a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
     rdfs:label "required quantity"@en .
 
-priory:quantity a owl:DatatypeProperty ;
-    rdfs:label "quantity (RDF-star annotation property)"@en ;
-    rdfs:range xsd:integer .
-
 priory:outputQuantity a owl:DatatypeProperty ;
     rdfs:domain priory:Recipe ;
     rdfs:range xsd:integer ;
     rdfs:label "output quantity"@en .
 
-priory:requiresRating a owl:DatatypeProperty ;
+priory:requiredRating a owl:DatatypeProperty ;
     rdfs:domain priory:DisciplineRecipe ;
     rdfs:range xsd:integer ;
     rdfs:label "required discipline rating (0-500)"@en .
+
+priory:requiresRating a owl:DatatypeProperty ;
+    rdfs:subPropertyOf priory:requiredRating ;
+    rdfs:label "required discipline rating (legacy alias)"@en .
 
 priory:maxRating a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
@@ -270,7 +358,7 @@ priory:expectedYieldRate a owl:DatatypeProperty ;
     rdfs:range xsd:decimal ;
     rdfs:label "expected yield probability rate"@en .
 
-# --- Spatial & Navigation Properties ---
+# --- Spatial & Waypoint Navigation Properties ---
 
 priory:vendorNPC a owl:DatatypeProperty ;
     rdfs:domain priory:VendorExchangePath ;
@@ -283,9 +371,9 @@ priory:zoneName a owl:DatatypeProperty ;
     rdfs:label "Map / Zone Name"@en .
 
 priory:waypointName a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
+    rdfs:domain priory:VendorExchangePath ;
     rdfs:range xsd:string ;
-    rdfs:label "Nearest Waypoint Name"@en .
+    rdfs:label "Waypoint Name"@en .
 
 priory:nearestWaypoint a owl:DatatypeProperty ;
     rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;

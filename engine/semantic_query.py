@@ -40,7 +40,9 @@ class SemanticQueryService:
         self,
         broad_weapon_type: Optional[str] = None,
         rarity_tier: Optional[str] = None,
-        discipline: Optional[str] = None
+        discipline: Optional[str] = None,
+        armor_weight: Optional[str] = None,
+        equipment_slot: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         """Queries items using SKOS taxonomy hierarchies (taxonomic subsumption)."""
         filters = []
@@ -59,15 +61,27 @@ class SemanticQueryService:
                 ?item priory:producedBy ?recipe .
                 ?recipe priory:requiresDiscipline discipline:{discipline} .
             """)
+        if armor_weight:
+            filters.append(f"""
+                ?item priory:hasArmorWeight ?aw .
+                FILTER (?aw = armor:{armor_weight} || EXISTS {{ ?aw skos:broader+ armor:{armor_weight} }})
+            """)
+        if equipment_slot:
+            filters.append(f"""
+                ?item priory:hasEquipmentSlot ?es .
+                FILTER (?es = slot:{equipment_slot} || EXISTS {{ ?es skos:broader+ slot:{equipment_slot} }})
+            """)
 
         filter_clause = "\n".join(filters)
 
         sparql = f"""
-        SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?weaponType ?rarity WHERE {{
+        SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?weaponType ?rarity ?armorWeight ?equipmentSlot WHERE {{
             ?item priory:gw2Id ?gw2Id ;
                   rdfs:label ?label .
             OPTIONAL {{ ?item priory:chatCode ?chatCode }}
             OPTIONAL {{ ?item priory:hasWeaponType ?weaponType }}
+            OPTIONAL {{ ?item priory:hasArmorWeight ?armorWeight }}
+            OPTIONAL {{ ?item priory:hasEquipmentSlot ?equipmentSlot }}
             OPTIONAL {{ ?item priory:hasRarity ?rarity }}
             {filter_clause}
         }}
@@ -215,6 +229,23 @@ class SemanticQueryService:
         items = self.store.query(item_query, init_bindings={"pattern": Literal(clean_search)})
         if items:
             return items
+
+        # 3b. Plural stemming fallback (e.g. "sigils" -> "sigil", "axes" -> "axe")
+        stemmed = None
+        if clean_search.endswith("ies"):
+            stemmed = clean_search[:-3] + "y"
+        elif clean_search.endswith("es"):
+            stemmed = clean_search[:-2]
+        elif clean_search.endswith("s"):
+            stemmed = clean_search[:-1]
+
+        if stemmed:
+            stem_res = self.store.query(exact_query, init_bindings={"targetLabel": Literal(stemmed)})
+            if stem_res:
+                return stem_res
+            stem_items = self.store.query(item_query, init_bindings={"pattern": Literal(stemmed)})
+            if stem_items:
+                return stem_items
 
         # 4. Fallback to any entity with matching label
         label_query = """

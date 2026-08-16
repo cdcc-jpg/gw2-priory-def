@@ -79,6 +79,17 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(report.summary_missing_materials["Glob of Ectoplasm"], 50) # 250 - 200 = 50
         self.assertNotIn("Dusk", report.summary_missing_materials) # Dusk is owned!
 
+    def test_multi_discipline_preference_selection(self):
+        """Verifies that an account with Weaponsmith 500 automatically chooses Weaponsmith recipe."""
+        engine = AccountDiffEngine(self.store)
+        account = AccountState(
+            disciplines={"weaponsmith": 500}
+        )
+        report = engine.compute_diff(91505, account, target_quantity=1) # Legendary Sigil (needs Mystic Motes)
+        # Account has Weaponsmith 500, which satisfies Mystic Motes (requires 75)
+        mote_disc_missing = [d for d in report.missing_disciplines if d["discipline"] in ["artificer", "huntsman"]]
+        self.assertEqual(len(mote_disc_missing), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

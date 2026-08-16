@@ -1,0 +1,508 @@
+@prefix ns1: <https://priory.gw2/def/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://priory.gw2/id/item/103815> a ns1:LegendaryWeapon ;
+    rdfs:label "Klobjarne Geirr"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Klobjarne_Geirr> ;
+    ns1:gw2Id 103815 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Spear> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/105653> a ns1:LegendaryWeapon ;
+    rdfs:label "Ancora Pax"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Ancora_Pax> ;
+    ns1:gw2Id 105653 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/106273> a ns1:LegendaryWeapon ;
+    rdfs:label "Ancora Bellum"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Ancora_Bellum> ;
+    ns1:gw2Id 106273 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Spear> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30684> a ns1:LegendaryWeapon ;
+    rdfs:label "Frostfang"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Frostfang> ;
+    ns1:gw2Id 30684 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Axe> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Axe> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30685> a ns1:LegendaryWeapon ;
+    rdfs:label "Kudzu"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Kudzu> ;
+    ns1:gw2Id 30685 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Longbow> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Longbow> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30686> a ns1:LegendaryWeapon ;
+    rdfs:label "The Dreamer"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Dreamer> ;
+    ns1:gw2Id 30686 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/ShortBow> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/ShortBow> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30687> a ns1:LegendaryWeapon ;
+    rdfs:label "Incinerator"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Incinerator> ;
+    ns1:gw2Id 30687 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Dagger> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Dagger> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30688> a ns1:LegendaryWeapon ;
+    rdfs:label "The Minstrel"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Minstrel> ;
+    ns1:gw2Id 30688 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Focus> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Focus> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30689> a ns1:LegendaryWeapon ;
+    rdfs:label "Eternity"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Eternity> ;
+    ns1:gw2Id 30689 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30690> a ns1:LegendaryWeapon ;
+    rdfs:label "The Juggernaut"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Juggernaut> ;
+    ns1:gw2Id 30690 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Hammer> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Hammer> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30691> a ns1:LegendaryWeapon ;
+    rdfs:label "Kamohoali'i Kotaki"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Kamohoali'i_Kotaki> ;
+    ns1:gw2Id 30691 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Spear> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30692> a ns1:LegendaryWeapon ;
+    rdfs:label "The Moot"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Moot> ;
+    ns1:gw2Id 30692 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Mace> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Mace> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30693> a ns1:LegendaryWeapon ;
+    rdfs:label "Quip"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Quip> ;
+    ns1:gw2Id 30693 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Pistol> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Pistol> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30694> a ns1:LegendaryWeapon ;
+    rdfs:label "The Predator"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Predator> ;
+    ns1:gw2Id 30694 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Rifle> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Rifle> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30695> a ns1:LegendaryWeapon ;
+    rdfs:label "Meteorlogicus"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Meteorlogicus> ;
+    ns1:gw2Id 30695 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Scepter> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30696> a ns1:LegendaryWeapon ;
+    rdfs:label "The Flameseeker Prophecies"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Flameseeker_Prophecies> ;
+    ns1:gw2Id 30696 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Shield> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Shield> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30697> a ns1:LegendaryWeapon ;
+    rdfs:label "Frenzy"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Frenzy> ;
+    ns1:gw2Id 30697 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/HarpoonGun> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/HarpoonGun> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30698> a ns1:LegendaryWeapon ;
+    rdfs:label "The Bifrost"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Bifrost> ;
+    ns1:gw2Id 30698 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30699> a ns1:LegendaryWeapon ;
+    rdfs:label "Bolt"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Bolt> ;
+    ns1:gw2Id 30699 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Sword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Sword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30700> a ns1:LegendaryWeapon ;
+    rdfs:label "Rodgort"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Rodgort> ;
+    ns1:gw2Id 30700 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Torch> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Torch> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30701> a ns1:LegendaryWeapon ;
+    rdfs:label "Kraitkin"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Kraitkin> ;
+    ns1:gw2Id 30701 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Trident> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Trident> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30702> a ns1:LegendaryWeapon ;
+    rdfs:label "Howler"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Howler> ;
+    ns1:gw2Id 30702 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Warhorn> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Warhorn> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30703> a ns1:LegendaryWeapon ;
+    rdfs:label "Sunrise"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sunrise> ;
+    ns1:gw2Id 30703 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/30704> a ns1:LegendaryWeapon ;
+    rdfs:label "Twilight"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Twilight> ;
+    ns1:gw2Id 30704 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/71383> a ns1:LegendaryWeapon ;
+    rdfs:label "Nevermore"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Nevermore> ;
+    ns1:gw2Id 71383 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/72713> a ns1:LegendaryWeapon ;
+    rdfs:label "HOPE"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/HOPE> ;
+    ns1:gw2Id 72713 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Pistol> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Pistol> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/76158> a ns1:LegendaryWeapon ;
+    rdfs:label "Astralaria"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Astralaria> ;
+    ns1:gw2Id 76158 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Axe> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Axe> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/78556> a ns1:LegendaryWeapon ;
+    rdfs:label "Chuka and Champawat"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Chuka_and_Champawat> ;
+    ns1:gw2Id 78556 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/ShortBow> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/ShortBow> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/79562> a ns1:LegendaryWeapon ;
+    rdfs:label "Eureka"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Eureka> ;
+    ns1:gw2Id 79562 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Mace> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Mace> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/79802> a ns1:LegendaryWeapon ;
+    rdfs:label "Shooshadoo"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Shooshadoo> ;
+    ns1:gw2Id 79802 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Shield> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Shield> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/80488> a ns1:LegendaryWeapon ;
+    rdfs:label "The HMS Divinity"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_HMS_Divinity> ;
+    ns1:gw2Id 80488 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Rifle> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Rifle> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/81206> a ns1:LegendaryWeapon ;
+    rdfs:label "Flames of War"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Flames_of_War> ;
+    ns1:gw2Id 81206 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Torch> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Torch> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/81839> a ns1:LegendaryWeapon ;
+    rdfs:label "Sharur"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sharur> ;
+    ns1:gw2Id 81839 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Hammer> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Hammer> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/81957> a ns1:LegendaryWeapon ;
+    rdfs:label "The Shining Blade"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Shining_Blade> ;
+    ns1:gw2Id 81957 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Sword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Sword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/86098> a ns1:LegendaryWeapon ;
+    rdfs:label "The Binding of Ipos"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Binding_of_Ipos> ;
+    ns1:gw2Id 86098 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Focus> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Focus> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/87109> a ns1:LegendaryWeapon ;
+    rdfs:label "Claw of the Khan-Ur"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Claw_of_the_Khan-Ur> ;
+    ns1:gw2Id 87109 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Dagger> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Dagger> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/87687> a ns1:LegendaryWeapon ;
+    rdfs:label "Verdarach"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Verdarach> ;
+    ns1:gw2Id 87687 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Warhorn> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Warhorn> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/88576> a ns1:LegendaryWeapon ;
+    rdfs:label "Xiuquatl"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Xiuquatl> ;
+    ns1:gw2Id 88576 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Scepter> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/89854> a ns1:LegendaryWeapon ;
+    rdfs:label "Pharus"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Pharus> ;
+    ns1:gw2Id 89854 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Longbow> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Longbow> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/90551> a ns1:LegendaryWeapon ;
+    rdfs:label "Exordium"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Exordium> ;
+    ns1:gw2Id 90551 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/95612> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Tail"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Tail> ;
+    ns1:gw2Id 95612 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Mace> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Mace> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/95675> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Fang"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Fang> ;
+    ns1:gw2Id 95675 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Sword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Sword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/95684> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Weight"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Weight> ;
+    ns1:gw2Id 95684 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Hammer> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Hammer> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/95808> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Argument"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Argument> ;
+    ns1:gw2Id 95808 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Pistol> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Pistol> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/96028> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Scale"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Scale> ;
+    ns1:gw2Id 96028 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Shield> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Shield> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/96203> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Claw"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Claw> ;
+    ns1:gw2Id 96203 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Dagger> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Dagger> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/96221> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Wisdom"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Wisdom> ;
+    ns1:gw2Id 96221 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Scepter> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/96356> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Bite"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Bite> ;
+    ns1:gw2Id 96356 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/96652> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Insight"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Insight> ;
+    ns1:gw2Id 96652 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/96937> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Rending"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Rending> ;
+    ns1:gw2Id 96937 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Axe> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Axe> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/97077> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Wing"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Wing> ;
+    ns1:gw2Id 97077 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/ShortBow> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/ShortBow> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/97099> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Breath"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Breath> ;
+    ns1:gw2Id 97099 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Torch> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Torch> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/97165> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Gaze"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Gaze> ;
+    ns1:gw2Id 97165 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Focus> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Focus> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/97377> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Persuasion"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Persuasion> ;
+    ns1:gw2Id 97377 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Rifle> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Rifle> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/97590> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Flight"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Flight> ;
+    ns1:gw2Id 97590 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Longbow> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Longbow> ;
+    ns1:isAccountBound true .
+
+<https://priory.gw2/id/item/97783> a ns1:LegendaryWeapon ;
+    rdfs:label "Aurene's Voice"@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Voice> ;
+    ns1:gw2Id 97783 ;
+    ns1:hasItemType <https://priory.gw2/ref/itemtype/Warhorn> ;
+    ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    ns1:hasWeaponType <https://priory.gw2/ref/weapon/Warhorn> ;
+    ns1:isAccountBound true .
+

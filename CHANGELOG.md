@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Phase 1 Bulk Catalog Ingestion:** Successfully crawled and ingested **all 56 official Legendary items** (Weapons, Armor, Trinkets, Backpacks, Sigils, Runes, and Relics) into partitioned instance graph [`ontology/instances/legendaries/all_legendary_items.ttl`](./ontology/instances/legendaries/all_legendary_items.ttl) with 100% SHACL validation pass.
+- **Reference Taxonomies Expansion in `gw2-priory-ref`:**
+  - Added [`vocab/armor_weights.ttl`](file:///Users/clementd/Documents/GitHub/gw2-priory-ref/vocab/armor_weights.ttl) defining `HeavyArmor`, `MediumArmor`, and `LightArmor` with SKOS concepts and definitions.
+  - Added [`vocab/equipment_slots.ttl`](file:///Users/clementd/Documents/GitHub/gw2-priory-ref/vocab/equipment_slots.ttl) classifying all 16 armor and jewelry equipment slots.
+  - Added [`vocab/item_types.ttl`](file:///Users/clementd/Documents/GitHub/gw2-priory-ref/vocab/item_types.ttl) mapping top-level ArenaNet API item type schemas.
+- **Automated Catalog Ingestion CLI Runner:** Created [`scripts/ingest_catalog.py`](./scripts/ingest_catalog.py) to harvest, transform, and validate game entities from Semantic MediaWiki and the official REST API.
+- **High-Speed 200-Item Chunking Client:** Enhanced [`ingestion/gw2_api.py`](./ingestion/gw2_api.py) with bulk batch chunking and local disk caching.
+- **Polymorphic Multi-Discipline Recipe Selection:** Enhanced [`engine/account_diff.py`](./engine/account_diff.py) to dynamically prioritize recipe paths matching the player's active high-level crafting disciplines.
+- **Schema & Naming Standardization:** Standardized `priory:requiredRating` across [`ontology/priory_core.ttl`](./ontology/priory_core.ttl) and [`ontology/priory_shacl.ttl`](./ontology/priory_shacl.ttl), and added equipment classes (`priory:Armor`, `priory:LegendaryArmor`, `priory:Trinket`, `priory:LegendaryTrinket`, `priory:LegendaryRelic`).
 - Created complete technical documentation suite in [`docs/`](./docs/):
   - [`docs/README.md`](./docs/README.md): Documentation table of contents.
   - [`docs/architecture_overview.md`](./docs/architecture_overview.md): Comprehensive Neuro-Symbolic Sandwich architecture, topology, and comparison matrix.

@@ -11,7 +11,8 @@
 
 priory:ItemShape a sh:NodeShape ;
     sh:targetClass priory:Item, priory:LegendaryWeapon, priory:PrecursorWeapon,
-                   priory:CraftingMaterial, priory:GiftItem, priory:LegendarySigil, priory:LegendaryRune ;
+                   priory:CraftingMaterial, priory:GiftItem, priory:LegendarySigil, priory:LegendaryRune,
+                   priory:Armor, priory:LegendaryArmor, priory:Trinket, priory:LegendaryTrinket ;
     sh:property [
         sh:path rdfs:label ;
         sh:minCount 1 ;
@@ -72,13 +73,13 @@ priory:DisciplineRecipeShape a sh:NodeShape ;
         sh:message "DisciplineRecipe must specify a crafting discipline." ;
     ] ;
     sh:property [
-        sh:path priory:requiresRating ;
+        sh:path [ sh:alternativePath ( priory:requiredRating priory:requiresRating ) ] ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:integer ;
         sh:minInclusive 0 ;
         sh:maxInclusive 500 ;
-        sh:message "requiresRating must be an integer between 0 and 500." ;
+        sh:message "requiredRating must be an integer between 0 and 500." ;
     ] .
 
 priory:VendorExchangePathShape a sh:NodeShape ;

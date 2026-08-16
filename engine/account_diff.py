@@ -1,29 +1,28 @@
-"""Dynamic Overlay & Account Delta Engine for Project Priory.
+"""Account Diff Engine.
 
-Calculates the exact mathematical difference between a player's live account snapshot
-(materials, bank, inventory, wallet, legendary armory, masteries, crafting levels) and a target item's dependency graph.
+Calculates the deterministic difference between a player's live account state
+and the recursive ingredient requirements of any item in the Knowledge Graph.
 """
 
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set
-from pydantic import BaseModel, Field
-from rdflib import URIRef, Literal
+from rdflib import Literal, URIRef
 from engine.graph_store import PrioryGraphStore
 
 
-class AccountState(BaseModel):
-    """Snapshot of a player's live account state fetched from GW2 REST API."""
-    materials: Dict[int, int] = Field(default_factory=dict, description="Material storage: item_id -> count")
-    bank: Dict[int, int] = Field(default_factory=dict, description="Bank storage: item_id -> count")
-    inventory: Dict[int, int] = Field(default_factory=dict, description="Character inventories: item_id -> count")
-    wallet: Dict[int, int] = Field(default_factory=dict, description="Wallet: currency_id -> count")
-    legendary_armory: Dict[int, int] = Field(default_factory=dict, description="Legendary Armory: item_id -> count")
-    disciplines: Dict[str, int] = Field(default_factory=dict, description="Discipline -> max rating level")
-    unlocked_recipes: List[int] = Field(default_factory=list, description="List of unlocked recipe IDs")
+@dataclass
+class AccountState:
+    """Represents a player's live account snapshot from the GW2 API."""
+    materials: Dict[int, int] = field(default_factory=dict)
+    bank: Dict[int, int] = field(default_factory=dict)
+    inventory: Dict[int, int] = field(default_factory=dict)
+    wallet: Dict[int, int] = field(default_factory=dict)
+    legendary_armory: Dict[int, int] = field(default_factory=dict)
+    disciplines: Dict[str, int] = field(default_factory=dict)
 
     def total_item_count(self, item_id: int) -> int:
-        """Returns aggregate count of an item across materials, bank, inventories, and legendary armory."""
+        """Aggregates an item's count across materials, bank, bags, and legendary armory."""
         return (
             self.materials.get(item_id, 0) +
             self.bank.get(item_id, 0) +
@@ -32,90 +31,83 @@ class AccountState(BaseModel):
         )
 
     def total_currency_count(self, currency_id: int) -> int:
-        """Returns aggregate count of a currency in wallet (plus any legacy physical token items)."""
-        count = self.wallet.get(currency_id, 0)
-        if currency_id == 35:
-            count += self.total_item_count(78172)
-        return count
+        """Returns total owned amount of a wallet currency by its API ID."""
+        return self.wallet.get(currency_id, 0)
 
 
-class ItemRequirementNode(BaseModel):
-    """A node in the resolved requirement graph."""
+@dataclass
+class ItemRequirementNode:
+    """A node in the recursive recipe dependency tree."""
     item_id: int
     label: str
     required_quantity: int
     owned_quantity: int
     missing_quantity: int
     is_satisfied: bool
-    is_account_bound: bool = True
-    sub_requirements: List[ItemRequirementNode] = Field(default_factory=list)
+    is_account_bound: bool = False
+    sub_requirements: List[ItemRequirementNode] = field(default_factory=list)
 
 
-class AccountDiffReport(BaseModel):
-    """Complete diff report for a goal item against a player's account."""
+@dataclass
+class AccountDiffReport:
+    """Final calculated diff report for a target crafting goal."""
     goal_item_id: int
     goal_item_name: str
-    target_quantity: int = 1
+    target_quantity: int
+    overall_readiness_pct: float
     is_fully_satisfied: bool
     root_node: ItemRequirementNode
-    missing_disciplines: List[Dict[str, Any]] = Field(default_factory=list)
-    missing_currencies: Dict[str, int] = Field(default_factory=dict)
-    summary_missing_materials: Dict[str, int] = Field(default_factory=dict)
+    summary_missing_materials: Dict[str, int] = field(default_factory=dict)
+    summary_missing_currencies: Dict[str, int] = field(default_factory=dict)
+    missing_disciplines: List[Dict[str, Any]] = field(default_factory=list)
 
 
 class AccountDiffEngine:
-    """Computes the difference between an account snapshot and a target item's dependency graph."""
+    """Recursive graph traversal engine for computing inventory deltas and progression gaps."""
 
     def __init__(self, graph_store: PrioryGraphStore):
         self.store = graph_store
 
-    def compute_diff(
-        self,
-        goal_item_id: int,
-        account: AccountState,
-        target_quantity: int = 1
-    ) -> AccountDiffReport:
-        """Computes the full delta tree for a goal item with quantity multiplier."""
-        goal_item = self.store.get_item_by_id(goal_item_id)
-        goal_name = goal_item["label"] if goal_item else f"Item {goal_item_id}"
+    def compute_diff(self, goal_item_id: int, account: AccountState, target_quantity: int = 1) -> AccountDiffReport:
+        """Recursively evaluates the delta between the goal item's recipe DAG and the account."""
+        item_meta = self.store.get_item_by_id(goal_item_id)
+        goal_name = item_meta["label"] if item_meta else f"Item {goal_item_id}"
 
         summary_missing: Dict[str, int] = {}
         missing_currencies: Dict[str, int] = {}
         used_recipes: Set[str] = set()
-        root_node = self._resolve_node(goal_item_id, target_quantity, account, summary_missing, missing_currencies, used_recipes)
+        visited: Set[int] = set()
 
-        # Check required crafting disciplines for recipes actually in this goal's tree
-        missing_disciplines = []
-        for recipe_uri_str in used_recipes:
-            disc_query = """
-            SELECT ?recipe ?recipeLabel ?discipline ?rating WHERE {
-                ?recipe a priory:DisciplineRecipe ;
-                        priory:requiresDiscipline ?discipline ;
-                        priory:requiresRating ?rating .
-                OPTIONAL { ?recipe rdfs:label ?recipeLabel }
-            }
-            """
-            for r in self.store.query(disc_query, init_bindings={"recipe": URIRef(recipe_uri_str)}):
-                disc_name = str(r["discipline"]).split("/")[-1].lower()
-                required_rating = r["rating"]
-                current_rating = account.disciplines.get(disc_name, 0)
-                if current_rating < required_rating:
-                    missing_disciplines.append({
-                        "discipline": disc_name,
-                        "required_rating": required_rating,
-                        "current_rating": current_rating,
-                        "recipe": r.get("recipeLabel", "Unknown Recipe")
-                    })
+        root_node = self._resolve_node(
+            goal_item_id,
+            target_quantity,
+            account,
+            summary_missing,
+            missing_currencies,
+            used_recipes,
+            visited
+        )
+
+        missing_disciplines = self._evaluate_discipline_requirements(used_recipes, account)
+
+        total_req_items = max(1, sum(summary_missing.values()) + root_node.owned_quantity)
+        readiness = max(0.0, min(100.0, (1.0 - (sum(summary_missing.values()) / total_req_items)) * 100.0))
+
+        is_fully_satisfied = (
+            root_node.is_satisfied or 
+            (len(summary_missing) == 0 and len(missing_currencies) == 0 and len(missing_disciplines) == 0)
+        )
 
         return AccountDiffReport(
             goal_item_id=goal_item_id,
             goal_item_name=goal_name,
             target_quantity=target_quantity,
-            is_fully_satisfied=root_node.is_satisfied,
+            overall_readiness_pct=round(readiness, 1),
+            is_fully_satisfied=is_fully_satisfied,
             root_node=root_node,
-            missing_disciplines=missing_disciplines,
-            missing_currencies=missing_currencies,
-            summary_missing_materials=summary_missing
+            summary_missing_materials=summary_missing,
+            summary_missing_currencies=missing_currencies,
+            missing_disciplines=missing_disciplines
         )
 
     def _resolve_node(
@@ -125,8 +117,12 @@ class AccountDiffEngine:
         account: AccountState,
         summary_missing: Dict[str, int],
         missing_currencies: Dict[str, int],
-        used_recipes: Optional[Set[str]] = None
+        used_recipes: Optional[Set[str]] = None,
+        visited: Optional[Set[int]] = None
     ) -> ItemRequirementNode:
+        if visited is None:
+            visited = set()
+
         item_meta = self.store.get_item_by_id(item_id)
         label = item_meta["label"] if item_meta else f"Item {item_id}"
         is_bound = item_meta.get("isAccountBound", True) if item_meta else True
@@ -146,27 +142,64 @@ class AccountDiffEngine:
             is_account_bound=is_bound
         )
 
-        if not is_satisfied:
-            # Add item's producedBy recipe to used_recipes
-            if used_recipes is not None:
-                rec_query = """
-                SELECT ?recipe WHERE {
-                    ?item priory:gw2Id ?gw2Id ;
-                          priory:producedBy ?recipe .
+        if not is_satisfied and item_id not in visited:
+            branch_visited = visited.copy()
+            branch_visited.add(item_id)
+
+            # Check 1: Direct crafting recipes producing this item
+            rec_query = """
+            SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      priory:producedBy ?recipe .
+                OPTIONAL { ?recipe priory:requiresDiscipline ?discipline }
+                OPTIONAL { 
+                    ?recipe priory:requiredRating ?requiredRating 
+                }
+                OPTIONAL { 
+                    ?recipe priory:requiresRating ?requiredRating 
+                }
+            }
+            """
+            recipes = self.store.query(rec_query, init_bindings={"gw2Id": Literal(item_id)})
+
+            if recipes:
+                # Multi-discipline preference: Select recipe matching player's active high-level discipline
+                selected_recipe_str = None
+                if len(recipes) > 1 and account.disciplines:
+                    for r in recipes:
+                        disc_raw = r.get("discipline", "")
+                        disc_name = disc_raw.split("/")[-1].lower() if disc_raw else ""
+                        req_rating = int(r.get("requiredRating", 0)) if r.get("requiredRating") is not None else 0
+                        if disc_name and account.disciplines.get(disc_name, 0) >= req_rating:
+                            selected_recipe_str = r["recipe"]
+                            break
+
+                if not selected_recipe_str:
+                    selected_recipe_str = recipes[0]["recipe"]
+
+                if used_recipes is not None:
+                    used_recipes.add(selected_recipe_str)
+
+                # Fetch ingredients for the selected recipe
+                ing_query = """
+                SELECT DISTINCT ?ingredientId ?ingredientLabel ?quantity WHERE {
+                    ?recipe priory:hasIngredientRequirement ?req .
+                    ?req priory:requiresItem ?ingredient ;
+                         priory:requiredQuantity ?quantity .
+                    ?ingredient priory:gw2Id ?ingredientId ;
+                                rdfs:label ?ingredientLabel .
                 }
                 """
-                for r_row in self.store.query(rec_query, init_bindings={"gw2Id": Literal(item_id)}):
-                    used_recipes.add(r_row["recipe"])
-
-            # Check 1: Direct crafting recipe ingredients
-            direct_ingredients = self.store.get_direct_recipe_ingredients(item_id)
-            if direct_ingredients:
-                for ing in direct_ingredients:
-                    ing_id = ing["ingredientId"]
-                    ing_qty = ing["quantity"] * missing
-                    sub_node = self._resolve_node(ing_id, ing_qty, account, summary_missing, missing_currencies, used_recipes)
-                    node.sub_requirements.append(sub_node)
-                return node
+                ingredients = self.store.query(ing_query, init_bindings={"recipe": URIRef(selected_recipe_str)})
+                if ingredients:
+                    for ing in ingredients:
+                        ing_id = int(ing["ingredientId"])
+                        ing_qty = int(ing["quantity"]) * missing
+                        sub_node = self._resolve_node(
+                            ing_id, ing_qty, account, summary_missing, missing_currencies, used_recipes, branch_visited
+                        )
+                        node.sub_requirements.append(sub_node)
+                    return node
 
             # Check 2: Vendor Exchange with Currency (e.g. Gift of Craftsmanship -> Provisioner Tokens)
             vendor_query = """
@@ -206,3 +239,33 @@ class AccountDiffEngine:
             summary_missing[label] = summary_missing.get(label, 0) + missing
 
         return node
+
+    def _evaluate_discipline_requirements(self, used_recipes: Set[str], account: AccountState) -> List[Dict[str, Any]]:
+        """Determines if the account lacks required crafting disciplines for used recipes."""
+        missing = []
+        if not used_recipes:
+            return missing
+
+        disc_query = """
+        SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
+            ?recipe a priory:DisciplineRecipe ;
+                    priory:requiresDiscipline ?discipline .
+            OPTIONAL { ?recipe priory:requiredRating ?requiredRating }
+            OPTIONAL { ?recipe priory:requiresRating ?requiredRating }
+        }
+        """
+        for row in self.store.query(disc_query):
+            rec_uri = row["recipe"]
+            if rec_uri in used_recipes:
+                disc_uri = row.get("discipline", "")
+                disc_name = disc_uri.split("/")[-1].lower() if disc_uri else "unknown"
+                req_rating = int(row.get("requiredRating", 0)) if row.get("requiredRating") is not None else 0
+                player_rating = account.disciplines.get(disc_name, 0)
+
+                if player_rating < req_rating:
+                    missing.append({
+                        "discipline": disc_name,
+                        "required_rating": req_rating,
+                        "current_rating": player_rating
+                    })
+        return missing

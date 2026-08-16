@@ -21,6 +21,9 @@ RARITY = Namespace("https://priory.gw2/ref/rarity/")
 DISCIPLINE = Namespace("https://priory.gw2/ref/discipline/")
 GAMEMODE = Namespace("https://priory.gw2/ref/gamemode/")
 CURRENCY = Namespace("https://priory.gw2/ref/currency/")
+ARMOR = Namespace("https://priory.gw2/ref/armor/")
+SLOT = Namespace("https://priory.gw2/ref/slot/")
+ITEMTYPE = Namespace("https://priory.gw2/ref/itemtype/")
 
 DEFAULT_NAMESPACES = {
     "priory": PRIORY,
@@ -28,6 +31,9 @@ DEFAULT_NAMESPACES = {
     "item": ITEM,
     "recipe": RECIPE,
     "weapon": WEAPON,
+    "armor": ARMOR,
+    "slot": SLOT,
+    "itemtype": ITEMTYPE,
     "rarity": RARITY,
     "discipline": DISCIPLINE,
     "gamemode": GAMEMODE,
@@ -77,10 +83,10 @@ class PrioryGraphStore:
         if core_ontology.exists():
             self.graph.parse(core_ontology, format="turtle")
 
-        # 3. Load Instances
+        # 3. Load Instances (Recursively from ontology/instances/**/*.ttl)
         instances_dir = self.def_repo_path / "ontology" / "instances"
         if instances_dir.exists():
-            for ttl_file in instances_dir.glob("*.ttl"):
+            for ttl_file in instances_dir.rglob("*.ttl"):
                 self.graph.parse(ttl_file, format="turtle")
 
         self._loaded = True

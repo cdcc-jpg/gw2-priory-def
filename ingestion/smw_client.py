@@ -24,6 +24,10 @@ DISCIPLINE = Namespace("https://priory.gw2/ref/discipline/")
 RARITY = Namespace("https://priory.gw2/ref/rarity/")
 CURRENCY = Namespace("https://priory.gw2/ref/currency/")
 GAMEMODE = Namespace("https://priory.gw2/ref/gamemode/")
+ARMOR = Namespace("https://priory.gw2/ref/armor/")
+SLOT = Namespace("https://priory.gw2/ref/slot/")
+ITEMTYPE = Namespace("https://priory.gw2/ref/itemtype/")
+WEAPON = Namespace("https://priory.gw2/ref/weapon/")
 
 
 class GW2SMWClient:
@@ -41,10 +45,78 @@ class GW2SMWClient:
             "format": "json",
             "query": query_str
         }
-        async with httpx.AsyncClient(headers=self.headers, timeout=15.0) as client:
+        async with httpx.AsyncClient(headers=self.headers, timeout=20.0) as client:
             resp = await client.get(self.WIKI_API_URL, params=params)
             resp.raise_for_status()
             return resp.json()
+
+    # =========================================================================
+    # Bulk Archetype: All Legendary Items & Equipment
+    # =========================================================================
+    async def get_all_legendaries(self) -> List[Dict[str, Any]]:
+        """Queries SMW for all Legendary weapons, armor pieces, trinkets, runes, and relics."""
+        categories = [
+            "Category:Legendary weapons",
+            "Category:Legendary armor",
+            "Category:Legendary trinkets",
+            "Category:Legendary backpacks",
+            "Category:Legendary upgrade components",
+            "Category:Legendary relics"
+        ]
+        cat_filter = " OR ".join(f"[[{c}]]" for c in categories)
+        ask_query = (
+            f"{cat_filter}[[Has game id::+]]"
+            "|?Has game id|?Has canonical name|?Has item type|?Has weapon type"
+            "|?Has armor weight|?Has equipment slot|?Has chat link|limit=500"
+        )
+        res = await self.ask_query(ask_query)
+        raw_res = res.get("query", {}).get("results", {})
+        results_dict = raw_res if isinstance(raw_res, dict) else {}
+        results = []
+
+        def safe_first(arr, default=None):
+            return arr[0] if (isinstance(arr, list) and len(arr) > 0) else default
+
+        for page_name, page_data in results_dict.items():
+            po = page_data.get("printouts", {})
+            item_ids = po.get("Has game id", [])
+            if not item_ids:
+                continue
+
+            item_id = safe_first(item_ids)
+            clean_name = safe_first(po.get("Has canonical name"), page_name)
+            if isinstance(clean_name, dict):
+                clean_name = clean_name.get("fulltext", page_name)
+
+            # Strip wiki disambiguation e.g. "Aurora (trinket)" -> "Aurora"
+            display_name = re.sub(r"\s*\([^)]*\)", "", str(clean_name)).strip()
+
+            item_type = safe_first(po.get("Has item type"), "Item")
+            item_type_str = item_type.get("fulltext", str(item_type)) if isinstance(item_type, dict) else str(item_type)
+
+            weapon_type = safe_first(po.get("Has weapon type"))
+            weapon_type_str = weapon_type.get("fulltext", str(weapon_type)) if isinstance(weapon_type, dict) else (str(weapon_type) if weapon_type else None)
+
+            armor_weight = safe_first(po.get("Has armor weight"))
+            armor_weight_str = armor_weight.get("fulltext", str(armor_weight)) if isinstance(armor_weight, dict) else (str(armor_weight) if armor_weight else None)
+
+            slot_type = safe_first(po.get("Has equipment slot"))
+            slot_type_str = slot_type.get("fulltext", str(slot_type)) if isinstance(slot_type, dict) else (str(slot_type) if slot_type else None)
+
+            chat = safe_first(po.get("Has chat link"))
+
+            results.append({
+                "page_name": page_name,
+                "item_id": int(item_id),
+                "label": display_name,
+                "wiki_url": f"https://wiki.guildwars2.com/wiki/{page_name.replace(' ', '_')}",
+                "item_type": item_type_str,
+                "weapon_type": weapon_type_str,
+                "armor_weight": armor_weight_str,
+                "equipment_slot": slot_type_str,
+                "chat_code": chat
+            })
+        return results
 
     # =========================================================================
     # Archetype 1: Crafting & Discipline Recipes
@@ -219,20 +291,62 @@ class GW2SMWClient:
         item_id: int,
         item_name: str,
         rarity_str: str = "Legendary",
-        chat_code: Optional[str] = None
+        chat_code: Optional[str] = None,
+        weapon_type: Optional[str] = None,
+        armor_weight: Optional[str] = None,
+        equipment_slot: Optional[str] = None,
+        item_type: Optional[str] = None,
+        wiki_url: Optional[str] = None
     ) -> rdflib.Graph:
         """Generates a W3C OWL 2 DL compliant RDF graph individual for an item."""
         g = rdflib.Graph()
         g.bind("priory", PRIORY)
         g.bind("item", ITEM)
         g.bind("rarity", RARITY)
+        g.bind("weapon", WEAPON)
+        g.bind("armor", ARMOR)
+        g.bind("slot", SLOT)
+        g.bind("itemtype", ITEMTYPE)
 
         item_uri = ITEM[str(item_id)]
-        g.add((item_uri, RDF.type, PRIORY.Item))
+
+        # Determine appropriate OWL class
+        if rarity_str.lower() == "legendary":
+            if weapon_type:
+                g.add((item_uri, RDF.type, PRIORY.LegendaryWeapon))
+            elif armor_weight:
+                g.add((item_uri, RDF.type, PRIORY.LegendaryArmor))
+            elif equipment_slot in ["Amulet", "Ring", "Accessory"]:
+                g.add((item_uri, RDF.type, PRIORY.LegendaryTrinket))
+            elif equipment_slot == "Back":
+                g.add((item_uri, RDF.type, PRIORY.LegendaryBackpack))
+            elif item_type == "UpgradeComponent":
+                g.add((item_uri, RDF.type, PRIORY.LegendarySigil))
+            else:
+                g.add((item_uri, RDF.type, PRIORY.LegendaryItem))
+        else:
+            g.add((item_uri, RDF.type, PRIORY.Item))
+
         g.add((item_uri, RDFS.label, Literal(item_name, lang="en")))
         g.add((item_uri, PRIORY.gw2Id, Literal(item_id, datatype=XSD.integer)))
         g.add((item_uri, PRIORY.hasRarity, RARITY[rarity_str.capitalize()]))
+        g.add((item_uri, PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
+
+        def to_pascal_case(s: str) -> str:
+            return "".join(word.capitalize() for word in re.split(r"[\s_-]+", s.strip())) if s else ""
+
         if chat_code:
             g.add((item_uri, PRIORY.chatCode, Literal(chat_code)))
+        if weapon_type:
+            g.add((item_uri, PRIORY.hasWeaponType, WEAPON[to_pascal_case(weapon_type)]))
+        if armor_weight:
+            w_str = to_pascal_case(armor_weight).replace("Armor", "")
+            g.add((item_uri, PRIORY.hasArmorWeight, ARMOR[f"{w_str}Armor"]))
+        if equipment_slot:
+            g.add((item_uri, PRIORY.hasEquipmentSlot, SLOT[to_pascal_case(equipment_slot)]))
+        if item_type:
+            g.add((item_uri, PRIORY.hasItemType, ITEMTYPE[to_pascal_case(item_type)]))
+        if wiki_url:
+            g.add((item_uri, RDFS.seeAlso, URIRef(wiki_url)))
 
         return g
