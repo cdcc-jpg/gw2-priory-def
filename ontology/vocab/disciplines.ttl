@@ -2,6 +2,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix priory: <https://priory.gw2/def/> .
 @prefix priory-ref: <https://priory.gw2/ref/> .
 @prefix discipline: <https://priory.gw2/ref/discipline/> .
 
@@ -16,61 +17,70 @@ discipline:Armorsmith a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Armorsmith"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Armorsmith" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Armorsmith> .
 
 discipline:Artificer a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Artificer"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Artificer" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Artificer> .
 
 discipline:Chef a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Chef"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Chef" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Chef> .
 
 discipline:Huntsman a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Huntsman"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Huntsman" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Huntsman> .
 
 discipline:Jeweler a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Jeweler"@en ;
-    skos:notation "400"^^xsd:integer ;
+    skos:notation "Jeweler" ;
+    priory:maxRating 400 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Jeweler> .
 
 discipline:Leatherworker a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Leatherworker"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Leatherworker" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Leatherworker> .
 
 discipline:Scribe a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Scribe"@en ;
-    skos:notation "400"^^xsd:integer ;
+    skos:notation "Scribe" ;
+    priory:maxRating 400 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Scribe> .
 
 discipline:Tailor a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Tailor"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Tailor" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Tailor> .
 
 discipline:Weaponsmith a skos:Concept ;
     skos:inScheme priory-ref:DisciplineScheme ;
     skos:topConceptOf priory-ref:DisciplineScheme ;
     skos:prefLabel "Weaponsmith"@en ;
-    skos:notation "500"^^xsd:integer ;
+    skos:notation "Weaponsmith" ;
+    priory:maxRating 500 ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Weaponsmith> .

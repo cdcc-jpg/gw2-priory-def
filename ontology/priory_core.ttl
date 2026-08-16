@@ -234,6 +234,11 @@ priory:requiresRating a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
     rdfs:label "required discipline rating (0-500)"@en .
 
+priory:maxRating a owl:DatatypeProperty ;
+    rdfs:range xsd:integer ;
+    rdfs:label "maximum achievable discipline rating (400 or 500)"@en ;
+    rdfs:comment "Specifies the highest crafting level achievable for a crafting discipline in Guild Wars 2."@en .
+
 priory:isAccountBound a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
     rdfs:range xsd:boolean ;
