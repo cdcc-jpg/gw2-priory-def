@@ -102,30 +102,49 @@ priory:IngredientRequirement a owl:Class ;
 
 priory:AcquisitionPath a owl:Class ;
     rdfs:label "Acquisition Pathway"@en ;
+    skos:definition "A method by which a player can obtain an item or currency in Guild Wars 2."@en ;
     rdfs:comment "A method by which a player can obtain an item or currency."@en .
 
 priory:CraftingPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
-    rdfs:label "Crafting Acquisition"@en .
+    rdfs:label "Crafting Acquisition"@en ;
+    skos:altLabel "craft"@en, "forge"@en, "make"@en, "build"@en ;
+    skos:definition "Acquiring an item through crafting disciplines or Mystic Forge recipe transformations."@en .
 
 priory:VendorExchangePath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
-    rdfs:label "Vendor Exchange"@en .
+    rdfs:label "Vendor Exchange"@en ;
+    skos:altLabel "buy"@en, "purchase"@en, "vendor"@en, "merchant"@en, "barter"@en ;
+    skos:definition "Acquiring an item from an NPC merchant using wallet currencies or map tokens."@en .
 
 priory:TradingPostPurchasePath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
-    rdfs:label "Trading Post Purchase"@en .
+    rdfs:label "Trading Post Purchase"@en ;
+    skos:altLabel "tp"@en, "trading post"@en, "buy on tp"@en, "instant buy"@en ;
+    skos:definition "Acquiring a tradeable item via Black Lion Trading Post commerce."@en .
 
 priory:AchievementCollectionPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
-    rdfs:label "Achievement Collection Journey"@en .
+    rdfs:label "Achievement Collection Journey"@en ;
+    skos:altLabel "achievement"@en, "quest"@en, "collection"@en, "unlock"@en, "journey"@en ;
+    skos:definition "Unlocking an item by completing achievement milestones, masteries, and story tasks."@en .
 
 priory:RewardTrackPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
-    rdfs:label "WvW/PvP Reward Track"@en .
+    rdfs:label "WvW/PvP Reward Track"@en ;
+    skos:altLabel "reward track"@en, "wvw track"@en, "pvp track"@en, "wvw"@en, "pvp"@en ;
+    skos:definition "Earning an item by progressing competitive WvW or PvP reward tracks."@en .
+
+priory:RaidMilestonePath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Raid / Strike Milestone"@en ;
+    skos:altLabel "raid"@en, "strike"@en, "boss kill"@en, "insights"@en ;
+    skos:definition "Earning prestige items by defeating raid wings or strike mission bosses."@en .
 
 priory:TimeGate a owl:Class ;
     rdfs:label "Time Gate & Cooldown Constraint"@en ;
+    skos:altLabel "daily reset"@en, "weekly reset"@en, "cooldown"@en, "time gate"@en ;
+    skos:definition "Limits the frequency or quantity of crafting/purchasing per unit time."@en ;
     rdfs:comment "Limits the frequency or quantity of crafting/purchasing per unit time."@en .
 
 # ==============================================================================
@@ -141,7 +160,9 @@ priory:producedBy a owl:ObjectProperty ;
     owl:inverseOf priory:producesItem ;
     rdfs:domain priory:Item ;
     rdfs:range priory:Recipe ;
-    rdfs:label "produced by"@en .
+    rdfs:label "produced by"@en ;
+    skos:altLabel "craft"@en, "forge"@en, "make"@en, "build"@en ;
+    skos:definition "Links an item to the crafting or Mystic Forge recipe that produces it."@en .
 
 priory:hasIngredientRequirement a owl:ObjectProperty ;
     rdfs:domain priory:Recipe ;

@@ -262,3 +262,24 @@ class SemanticQueryService:
                 lines.append(f"  * Mode: {rt['game_mode']}")
 
         return "\n".join(lines)
+
+    def get_action_intent_vocabularies(self) -> Dict[str, Dict[str, Any]]:
+        """Queries the graph dynamically for all acquisition path classes, their definitions, and altLabel synonyms."""
+        sparql = """
+        SELECT ?class ?label ?definition (GROUP_CONCAT(?alt; separator=", ") AS ?synonyms) WHERE {
+            ?class rdfs:subClassOf* priory:AcquisitionPath ;
+                   rdfs:label ?label .
+            OPTIONAL { ?class skos:definition ?definition }
+            OPTIONAL { ?class skos:altLabel ?alt }
+        } GROUP BY ?class ?label ?definition
+        """
+        results = self.store.query(sparql)
+        vocab = {}
+        for r in results:
+            class_name = r["class"].split("/")[-1].split("#")[-1]
+            vocab[class_name] = {
+                "label": r.get("label", class_name),
+                "definition": r.get("definition", ""),
+                "synonyms": [s.strip() for s in r.get("synonyms", "").split(",") if s.strip()]
+            }
+        return vocab
