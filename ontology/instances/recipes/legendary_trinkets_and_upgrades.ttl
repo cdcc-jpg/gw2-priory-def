@@ -1,0 +1,269 @@
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+item:43775 a priory:CraftingMaterial ;
+    rdfs:label "Provisioner Token"@en ;
+    priory:gw2Id 43775 .
+
+item:77700 a priory:CraftingMaterial ;
+    rdfs:label "Legendary Insight"@en ;
+    priory:gw2Id 77700 .
+
+item:101582 a owl:NamedIndividual,
+        priory:LegendaryUpgrade ;
+    rdfs:label "Legendary Relic"@en ;
+    priory:gw2Id 101582 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_legendary_relic .
+
+item:77474 a owl:NamedIndividual,
+        priory:LegendaryBackpack ;
+    rdfs:label "Ad Infinitum"@en ;
+    priory:gw2Id 77474 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_ad_infinitum .
+
+item:78430 a owl:NamedIndividual,
+        priory:LegendaryBackpack ;
+    rdfs:label "The Ascension"@en ;
+    priory:gw2Id 78430 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_ascension .
+
+item:81706 a owl:NamedIndividual,
+        priory:LegendaryBackpack ;
+    rdfs:label "Warbringer"@en ;
+    priory:gw2Id 81706 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_warbringer .
+
+item:81908 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Aurora"@en ;
+    priory:gw2Id 81908 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurora .
+
+item:91048 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Coalescence"@en ;
+    priory:gw2Id 91048 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_coalescence .
+
+item:91234 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Vision"@en ;
+    priory:gw2Id 91234 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_vision .
+
+item:91536 a owl:NamedIndividual,
+        priory:LegendaryUpgrade ;
+    rdfs:label "Legendary Rune"@en ;
+    priory:gw2Id 91536 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_legendary_rune .
+
+item:92946 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Transcendence"@en ;
+    priory:gw2Id 92946 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_transcendence .
+
+item:92991 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Conflux"@en ;
+    priory:gw2Id 92991 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_conflux .
+
+item:95380 a owl:NamedIndividual,
+        priory:LegendaryTrinket ;
+    rdfs:label "Prismatic Champion's Regalia"@en ;
+    priory:gw2Id 95380 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_prismatic_champions_regalia .
+
+recipe:forge_ad_infinitum a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Ad Infinitum"@en ;
+    priory:hasIngredientRequirement recipe:req_ad_infinitum_19675,
+        recipe:req_ad_infinitum_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:77474 .
+
+recipe:forge_aurora a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurora"@en ;
+    priory:hasIngredientRequirement recipe:req_aurora_19675,
+        recipe:req_aurora_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:81908 .
+
+recipe:forge_coalescence a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Coalescence"@en ;
+    priory:hasIngredientRequirement recipe:req_coalescence_19675,
+        recipe:req_coalescence_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91048 .
+
+recipe:forge_conflux a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Conflux"@en ;
+    priory:hasIngredientRequirement recipe:req_conflux_19675,
+        recipe:req_conflux_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:92991 .
+
+recipe:forge_legendary_relic a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Legendary Relic"@en ;
+    priory:hasIngredientRequirement recipe:req_legendary_relic_19675,
+        recipe:req_legendary_relic_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:101582 .
+
+recipe:forge_legendary_rune a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Legendary Rune"@en ;
+    priory:hasIngredientRequirement recipe:req_legendary_rune_19675,
+        recipe:req_legendary_rune_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91536 .
+
+recipe:forge_prismatic_champions_regalia a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Prismatic Champion's Regalia"@en ;
+    priory:hasIngredientRequirement recipe:req_prismatic_champions_regalia_19675,
+        recipe:req_prismatic_champions_regalia_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:95380 .
+
+recipe:forge_the_ascension a priory:MysticForgeRecipe ;
+    rdfs:label "Forge The Ascension"@en ;
+    priory:hasIngredientRequirement recipe:req_the_ascension_19675,
+        recipe:req_the_ascension_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:78430 .
+
+recipe:forge_transcendence a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Transcendence"@en ;
+    priory:hasIngredientRequirement recipe:req_transcendence_19675,
+        recipe:req_transcendence_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:92946 .
+
+recipe:forge_vision a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Vision"@en ;
+    priory:hasIngredientRequirement recipe:req_vision_19675,
+        recipe:req_vision_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91234 .
+
+recipe:forge_warbringer a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Warbringer"@en ;
+    priory:hasIngredientRequirement recipe:req_warbringer_19675,
+        recipe:req_warbringer_19721 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:81706 .
+
+recipe:req_ad_infinitum_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_ad_infinitum_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_aurora_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_aurora_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_coalescence_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_coalescence_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_conflux_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_conflux_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_legendary_relic_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_legendary_relic_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_legendary_rune_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_legendary_rune_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_prismatic_champions_regalia_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_prismatic_champions_regalia_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_the_ascension_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_the_ascension_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_transcendence_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_transcendence_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_vision_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_vision_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_warbringer_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_warbringer_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+

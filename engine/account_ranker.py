@@ -37,9 +37,9 @@ class AccountRanker:
         self.diff_engine = diff_engine or AccountDiffEngine(graph_store)
 
     def get_all_legendaries_in_graph(self) -> List[Dict[str, Any]]:
-        """Retrieves all legendary items from the Knowledge Graph."""
+        """Retrieves all legendary items from the Knowledge Graph with SKOS altLabels."""
         sparql = """
-        SELECT DISTINCT ?item ?gw2Id ?label ?weaponTypeLabel ?chatCode WHERE {
+        SELECT DISTINCT ?item ?gw2Id ?label ?weaponTypeLabel ?chatCode ?altLabel WHERE {
             ?item a ?type ;
                   priory:gw2Id ?gw2Id ;
                   rdfs:label ?label .
@@ -56,29 +56,35 @@ class AccountRanker:
                 ?wt skos:prefLabel ?weaponTypeLabel .
             }
             OPTIONAL { ?item priory:chatCode ?chatCode }
+            OPTIONAL { ?item skos:altLabel ?altLabel }
         } ORDER BY ?label
         """
         results = self.store.query(sparql)
-        items = []
-        seen_ids = set()
+        items_by_id: Dict[int, Dict[str, Any]] = {}
         for r in results:
             iid = r.get("gw2Id")
-            if iid and iid not in seen_ids:
-                seen_ids.add(iid)
-                items.append({
-                    "gw2Id": int(iid),
+            if not iid:
+                continue
+            iid = int(iid)
+            if iid not in items_by_id:
+                items_by_id[iid] = {
+                    "gw2Id": iid,
                     "label": r.get("label", "Unknown Legendary"),
                     "weaponType": r.get("weaponTypeLabel"),
-                    "chatCode": r.get("chatCode")
-                })
-        return items
+                    "chatCode": r.get("chatCode"),
+                    "altLabels": set()
+                }
+            if r.get("altLabel"):
+                items_by_id[iid]["altLabels"].add(str(r["altLabel"]).lower())
+        return list(items_by_id.values())
 
     def rank_all_legendaries(
         self,
         account: AccountState,
         tp_prices: Optional[Dict[int, float]] = None,
         top_n: int = 10,
-        exclude_unlocked: bool = True
+        exclude_unlocked: bool = True,
+        filter_query: Optional[str] = None
     ) -> List[LegendaryRankingItem]:
         """Evaluates and ranks all legendary items against the player account.
         
@@ -87,9 +93,31 @@ class AccountRanker:
             tp_prices: Optional dict mapping GW2 item IDs to live TP prices.
             top_n: Number of top closest items to return.
             exclude_unlocked: Whether to exclude already owned Armory legendaries.
+            filter_query: Optional filter string (e.g. 'Gen 2', 'Generation 2', 'Aurene', 'Greatsword').
         """
         legendaries = self.get_all_legendaries_in_graph()
         rankings: List[LegendaryRankingItem] = []
+
+        # Filter by generation or category if requested
+        if filter_query:
+            fq = filter_query.lower().strip()
+            # Normalize generation terms
+            norm_terms = [fq]
+            if "gen 2" in fq or "generation 2" in fq or "gen two" in fq:
+                norm_terms.extend(["gen 2", "generation 2", "gen two"])
+            elif "gen 1" in fq or "generation 1" in fq or "gen one" in fq:
+                norm_terms.extend(["gen 1", "generation 1", "gen one"])
+            elif "gen 3" in fq or "generation 3" in fq or "gen three" in fq or "aurene" in fq:
+                norm_terms.extend(["gen 3", "generation 3", "gen three", "aurene"])
+
+            filtered_legs = []
+            for leg in legendaries:
+                lbl = leg["label"].lower()
+                wt = (leg.get("weaponType") or "").lower()
+                alts = leg.get("altLabels", set())
+                if any(term in lbl or term in wt or any(term in a for a in alts) for term in norm_terms):
+                    filtered_legs.append(leg)
+            legendaries = filtered_legs
 
         # Default baseline price fallbacks for leaf materials (if no live TP feed)
         prices = tp_prices or {

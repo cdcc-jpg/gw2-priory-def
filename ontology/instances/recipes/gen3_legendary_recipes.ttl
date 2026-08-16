@@ -1,0 +1,834 @@
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+item:95612 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Weight"@en ;
+    skos:altLabel "Aurene Hammer"@en,
+        "Aurene's Hammer"@en,
+        "Gen 3 Hammer"@en,
+        "Gen Three Hammer"@en,
+        "Generation 3 Hammer"@en ;
+    priory:gw2Id 95612 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Hammer ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_weight .
+
+item:95675 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Wing"@en ;
+    skos:altLabel "Aurene ShortBow"@en,
+        "Aurene's ShortBow"@en,
+        "Gen 3 ShortBow"@en,
+        "Gen Three ShortBow"@en,
+        "Generation 3 ShortBow"@en ;
+    priory:gw2Id 95675 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:ShortBow ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_wing .
+
+item:95684 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Flight"@en ;
+    skos:altLabel "Aurene Longbow"@en,
+        "Aurene's Longbow"@en,
+        "Gen 3 Longbow"@en,
+        "Gen Three Longbow"@en,
+        "Generation 3 Longbow"@en ;
+    priory:gw2Id 95684 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Longbow ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_flight .
+
+item:95802 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Tail"@en ;
+    priory:gw2Id 95802 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Mace ;
+    priory:isAccountBound true .
+
+item:96028 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Rending"@en ;
+    priory:gw2Id 96028 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true .
+
+item:96074 a priory:CraftingMaterial ;
+    rdfs:label "Memory of Aurene"@en ;
+    priory:gw2Id 96074 .
+
+item:96191 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Breath"@en ;
+    priory:gw2Id 96191 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Torch ;
+    priory:isAccountBound true .
+
+item:96203 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Bite"@en ;
+    skos:altLabel "Aurene Greatsword"@en,
+        "Aurene's Greatsword"@en,
+        "Gen 3 Greatsword"@en,
+        "Gen Three Greatsword"@en,
+        "Generation 3 Greatsword"@en ;
+    priory:gw2Id 96203 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_bite .
+
+item:96221 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Bite"@en ;
+    priory:gw2Id 96221 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true .
+
+item:96228 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Voice"@en ;
+    skos:altLabel "Aurene Warhorn"@en,
+        "Aurene's Warhorn"@en,
+        "Gen 3 Warhorn"@en,
+        "Gen Three Warhorn"@en,
+        "Generation 3 Warhorn"@en ;
+    priory:gw2Id 96228 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Warhorn ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_voice .
+
+item:96356 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Gaze"@en ;
+    skos:altLabel "Aurene Focus"@en,
+        "Aurene's Focus"@en,
+        "Gen 3 Focus"@en,
+        "Gen Three Focus"@en,
+        "Generation 3 Focus"@en ;
+    priory:gw2Id 96356 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Focus ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_gaze .
+
+item:96365 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Wing"@en ;
+    priory:gw2Id 96365 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:ShortBow ;
+    priory:isAccountBound true .
+
+item:96376 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Persuasion"@en ;
+    skos:altLabel "Aurene Rifle"@en,
+        "Aurene's Rifle"@en,
+        "Gen 3 Rifle"@en,
+        "Gen Three Rifle"@en,
+        "Generation 3 Rifle"@en ;
+    priory:gw2Id 96376 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Rifle ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_persuasion .
+
+item:96519 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Wisdom"@en ;
+    priory:gw2Id 96519 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Scepter ;
+    priory:isAccountBound true .
+
+item:96556 a priory:CraftingMaterial ;
+    rdfs:label "Jade Runestone"@en ;
+    priory:gw2Id 96556 .
+
+item:96603 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Scale"@en ;
+    skos:altLabel "Aurene Shield"@en,
+        "Aurene's Shield"@en,
+        "Gen 3 Shield"@en,
+        "Gen Three Shield"@en,
+        "Generation 3 Shield"@en ;
+    priory:gw2Id 96603 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Shield ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_scale .
+
+item:96613 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Wisdom"@en ;
+    skos:altLabel "Aurene Scepter"@en,
+        "Aurene's Scepter"@en,
+        "Gen 3 Scepter"@en,
+        "Gen Three Scepter"@en,
+        "Generation 3 Scepter"@en ;
+    priory:gw2Id 96613 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Scepter ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_wisdom .
+
+item:96652 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Fang"@en ;
+    skos:altLabel "Aurene Sword"@en,
+        "Aurene's Sword"@en,
+        "Gen 3 Sword"@en,
+        "Gen Three Sword"@en,
+        "Generation 3 Sword"@en ;
+    priory:gw2Id 96652 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Sword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_fang .
+
+item:96656 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Scale"@en ;
+    priory:gw2Id 96656 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Shield ;
+    priory:isAccountBound true .
+
+item:96722 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Flight"@en ;
+    priory:gw2Id 96722 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Longbow ;
+    priory:isAccountBound true .
+
+item:96841 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Argument"@en ;
+    skos:altLabel "Aurene Pistol"@en,
+        "Aurene's Pistol"@en,
+        "Gen 3 Pistol"@en,
+        "Gen Three Pistol"@en,
+        "Generation 3 Pistol"@en ;
+    priory:gw2Id 96841 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Pistol ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_argument .
+
+item:96900 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Insight"@en ;
+    priory:gw2Id 96900 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true .
+
+item:96937 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Claw"@en ;
+    skos:altLabel "Aurene Dagger"@en,
+        "Aurene's Dagger"@en,
+        "Gen 3 Dagger"@en,
+        "Gen Three Dagger"@en,
+        "Generation 3 Dagger"@en ;
+    priory:gw2Id 96937 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Dagger ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_claw .
+
+item:96978 a priory:CraftingMaterial ;
+    rdfs:label "Antique Summoning Stone"@en ;
+    priory:gw2Id 96978 .
+
+item:97067 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Voice"@en ;
+    priory:gw2Id 97067 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Warhorn ;
+    priory:isAccountBound true .
+
+item:97077 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Rending"@en ;
+    skos:altLabel "Aurene Axe"@en,
+        "Aurene's Axe"@en,
+        "Gen 3 Axe"@en,
+        "Gen Three Axe"@en,
+        "Generation 3 Axe"@en ;
+    priory:gw2Id 97077 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_rending .
+
+item:97086 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Argument"@en ;
+    priory:gw2Id 97086 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Pistol ;
+    priory:isAccountBound true .
+
+item:97141 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Breath"@en ;
+    skos:altLabel "Aurene Torch"@en,
+        "Aurene's Torch"@en,
+        "Gen 3 Torch"@en,
+        "Gen Three Torch"@en,
+        "Generation 3 Torch"@en ;
+    priory:gw2Id 97141 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Torch ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_breath .
+
+item:97165 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Tail"@en ;
+    skos:altLabel "Aurene Mace"@en,
+        "Aurene's Mace"@en,
+        "Gen 3 Mace"@en,
+        "Gen Three Mace"@en,
+        "Generation 3 Mace"@en ;
+    priory:gw2Id 97165 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Mace ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_tail .
+
+item:97269 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Weight"@en ;
+    priory:gw2Id 97269 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Hammer ;
+    priory:isAccountBound true .
+
+item:97365 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Claw"@en ;
+    priory:gw2Id 97365 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Dagger ;
+    priory:isAccountBound true .
+
+item:97415 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Gaze"@en ;
+    priory:gw2Id 97415 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Focus ;
+    priory:isAccountBound true .
+
+item:97486 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Persuasion"@en ;
+    priory:gw2Id 97486 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Rifle ;
+    priory:isAccountBound true .
+
+item:97594 a owl:NamedIndividual,
+        priory:LegendaryWeapon ;
+    rdfs:label "Aurene's Insight"@en ;
+    skos:altLabel "Aurene Staff"@en,
+        "Aurene's Staff"@en,
+        "Gen 3 Staff"@en,
+        "Gen Three Staff"@en,
+        "Generation 3 Staff"@en ;
+    priory:gw2Id 97594 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_insight .
+
+item:97783 a owl:NamedIndividual,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dragon's Fang"@en ;
+    priory:gw2Id 97783 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Sword ;
+    priory:isAccountBound true .
+
+recipe:forge_aurenes_argument a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Argument"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_argument_aurene,
+        recipe:req_aurenes_argument_empire,
+        recipe:req_aurenes_argument_jademast,
+        recipe:req_aurenes_argument_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96841 .
+
+recipe:forge_aurenes_bite a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Bite"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_bite_aurene,
+        recipe:req_aurenes_bite_empire,
+        recipe:req_aurenes_bite_jademast,
+        recipe:req_aurenes_bite_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96203 .
+
+recipe:forge_aurenes_breath a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Breath"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_breath_aurene,
+        recipe:req_aurenes_breath_empire,
+        recipe:req_aurenes_breath_jademast,
+        recipe:req_aurenes_breath_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:97141 .
+
+recipe:forge_aurenes_claw a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Claw"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_claw_aurene,
+        recipe:req_aurenes_claw_empire,
+        recipe:req_aurenes_claw_jademast,
+        recipe:req_aurenes_claw_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96937 .
+
+recipe:forge_aurenes_fang a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Fang"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_fang_aurene,
+        recipe:req_aurenes_fang_empire,
+        recipe:req_aurenes_fang_jademast,
+        recipe:req_aurenes_fang_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96652 .
+
+recipe:forge_aurenes_flight a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Flight"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_flight_aurene,
+        recipe:req_aurenes_flight_empire,
+        recipe:req_aurenes_flight_jademast,
+        recipe:req_aurenes_flight_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:95684 .
+
+recipe:forge_aurenes_gaze a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Gaze"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_gaze_aurene,
+        recipe:req_aurenes_gaze_empire,
+        recipe:req_aurenes_gaze_jademast,
+        recipe:req_aurenes_gaze_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96356 .
+
+recipe:forge_aurenes_insight a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Insight"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_insight_aurene,
+        recipe:req_aurenes_insight_empire,
+        recipe:req_aurenes_insight_jademast,
+        recipe:req_aurenes_insight_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:97594 .
+
+recipe:forge_aurenes_persuasion a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Persuasion"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_persuasion_aurene,
+        recipe:req_aurenes_persuasion_empire,
+        recipe:req_aurenes_persuasion_jademast,
+        recipe:req_aurenes_persuasion_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96376 .
+
+recipe:forge_aurenes_rending a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Rending"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_rending_aurene,
+        recipe:req_aurenes_rending_empire,
+        recipe:req_aurenes_rending_jademast,
+        recipe:req_aurenes_rending_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:97077 .
+
+recipe:forge_aurenes_scale a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Scale"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_scale_aurene,
+        recipe:req_aurenes_scale_empire,
+        recipe:req_aurenes_scale_jademast,
+        recipe:req_aurenes_scale_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96603 .
+
+recipe:forge_aurenes_tail a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Tail"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_tail_aurene,
+        recipe:req_aurenes_tail_empire,
+        recipe:req_aurenes_tail_jademast,
+        recipe:req_aurenes_tail_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:97165 .
+
+recipe:forge_aurenes_voice a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Voice"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_voice_aurene,
+        recipe:req_aurenes_voice_empire,
+        recipe:req_aurenes_voice_jademast,
+        recipe:req_aurenes_voice_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96228 .
+
+recipe:forge_aurenes_weight a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Weight"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_weight_aurene,
+        recipe:req_aurenes_weight_empire,
+        recipe:req_aurenes_weight_jademast,
+        recipe:req_aurenes_weight_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:95612 .
+
+recipe:forge_aurenes_wing a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Wing"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_wing_aurene,
+        recipe:req_aurenes_wing_empire,
+        recipe:req_aurenes_wing_jademast,
+        recipe:req_aurenes_wing_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:95675 .
+
+recipe:forge_aurenes_wisdom a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Aurene's Wisdom"@en ;
+    priory:hasIngredientRequirement recipe:req_aurenes_wisdom_aurene,
+        recipe:req_aurenes_wisdom_empire,
+        recipe:req_aurenes_wisdom_jademast,
+        recipe:req_aurenes_wisdom_prec ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96613 .
+
+recipe:forge_dragon_empire a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of the Dragon Empire"@en ;
+    priory:hasIngredientRequirement recipe:req_de_96347,
+        recipe:req_de_96556,
+        recipe:req_de_96978 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:97330 .
+
+recipe:forge_gift_of_aurene a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Aurene"@en ;
+    priory:hasIngredientRequirement recipe:req_ga_19675,
+        recipe:req_ga_19721,
+        recipe:req_ga_79659,
+        recipe:req_ga_96074 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:95797 .
+
+recipe:req_aurenes_argument_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_argument_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_argument_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_argument_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97086 .
+
+recipe:req_aurenes_bite_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_bite_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_bite_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_bite_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96221 .
+
+recipe:req_aurenes_breath_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_breath_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_breath_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_breath_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96191 .
+
+recipe:req_aurenes_claw_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_claw_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_claw_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_claw_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97365 .
+
+recipe:req_aurenes_fang_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_fang_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_fang_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_fang_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97783 .
+
+recipe:req_aurenes_flight_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_flight_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_flight_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_flight_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96722 .
+
+recipe:req_aurenes_gaze_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_gaze_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_gaze_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_gaze_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97415 .
+
+recipe:req_aurenes_insight_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_insight_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_insight_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_insight_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96900 .
+
+recipe:req_aurenes_persuasion_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_persuasion_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_persuasion_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_persuasion_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97486 .
+
+recipe:req_aurenes_rending_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_rending_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_rending_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_rending_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96028 .
+
+recipe:req_aurenes_scale_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_scale_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_scale_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_scale_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96656 .
+
+recipe:req_aurenes_tail_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_tail_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_tail_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_tail_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95802 .
+
+recipe:req_aurenes_voice_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_voice_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_voice_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_voice_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97067 .
+
+recipe:req_aurenes_weight_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_weight_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_weight_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_weight_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97269 .
+
+recipe:req_aurenes_wing_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_wing_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_wing_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_wing_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96365 .
+
+recipe:req_aurenes_wisdom_aurene a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:95797 .
+
+recipe:req_aurenes_wisdom_empire a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97330 .
+
+recipe:req_aurenes_wisdom_jademast a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:97034 .
+
+recipe:req_aurenes_wisdom_prec a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:96519 .
+
+recipe:req_de_96347 a priory:IngredientRequirement ;
+    priory:requiredQuantity 200 ;
+    priory:requiresItem item:96347 .
+
+recipe:req_de_96556 a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:96556 .
+
+recipe:req_de_96978 a priory:IngredientRequirement ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:96978 .
+
+recipe:req_ga_19675 a priory:IngredientRequirement ;
+    priory:requiredQuantity 77 ;
+    priory:requiresItem item:19675 .
+
+recipe:req_ga_19721 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:19721 .
+
+recipe:req_ga_79659 a priory:IngredientRequirement ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:79659 .
+
+recipe:req_ga_96074 a priory:IngredientRequirement ;
+    priory:requiredQuantity 250 ;
+    priory:requiresItem item:96074 .
+
+item:97034 a priory:GiftItem ;
+    rdfs:label "Gift of Jade Mastery"@en ;
+    priory:gw2Id 97034 ;
+    priory:isAccountBound true .
+
+item:95797 a priory:GiftItem ;
+    rdfs:label "Gift of Aurene"@en ;
+    priory:gw2Id 95797 ;
+    priory:producedBy recipe:forge_gift_of_aurene .
+
+item:97330 a priory:GiftItem ;
+    rdfs:label "Gift of the Dragon Empire"@en ;
+    priory:gw2Id 97330 ;
+    priory:producedBy recipe:forge_dragon_empire .
+

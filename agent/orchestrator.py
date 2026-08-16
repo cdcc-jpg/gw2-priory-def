@@ -45,11 +45,20 @@ class PrioryChatSession:
         is_ranking_query = any(k in prompt_lower for k in [
             "closest", "which legendary", "what legendary", "rank all", "what should i craft", "what to craft", "leaderboard", "rank"
         ])
+
+        # Check for generation or category filter
+        filter_query = None
+        for gen_term in ["gen 1", "generation 1", "gen one", "gen 2", "generation 2", "gen two", "gen 3", "generation 3", "gen three", "aurene", "armor", "trinket", "sigil", "rune", "relic"]:
+            if gen_term in prompt_lower:
+                filter_query = gen_term
+                break
+
         if is_ranking_query:
             rankings = self.orchestrator.ranker.rank_all_legendaries(
                 account=self.account_state,
                 tp_prices=live_tp_prices,
-                top_n=5
+                top_n=5,
+                filter_query=filter_query
             )
             guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(rankings, user_prompt)
             self.history.append({"role": "user", "content": user_prompt})

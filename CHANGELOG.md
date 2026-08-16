@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Complete Recipe DAGs for All Generations & Categories:** Ingested 100% complete multi-step recipe DAGs across all 56 Legendary items, bringing the Knowledge Graph to **5,299 active triples**:
+  - [`ontology/instances/recipes/gen2_legendary_recipes.ttl`](./ontology/instances/recipes/gen2_legendary_recipes.ttl): All 16 Gen 2 weapons (*Astralaria*, *Nevermore*, *HOPE*, *Exordium*, *The Shining Blade*, etc.), precursors, weapon gifts, *Mystic Tribute*, and *Gift of Maguuma Mastery*.
+  - [`ontology/instances/recipes/gen3_legendary_recipes.ttl`](./ontology/instances/recipes/gen3_legendary_recipes.ttl): All 16 Gen 3 (Aurene) weapons, precursors, *Gift of Aurene*, *Gift of the Dragon Empire*, and *Gift of Jade Mastery*.
+  - [`ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl`](./ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl): Legendary Trinkets (*Aurora*, *Vision*, *Coalescence*, *Conflux*, *Transcendence*, *Prismatic Regalia*), Backpacks (*Ad Infinitum*, *The Ascension*, *Warbringer*), and Upgrades (*Legendary Rune*, *Legendary Relic*).
+- **Generation & Category Filtering in `AccountRanker`:** Added dynamic filtering by generation (`"Gen 1"`, `"Gen 2"`, `"Gen 3"`) and category (`"Armor"`, `"Trinket"`, `"Upgrade"`) into [`engine/account_ranker.py`](./engine/account_ranker.py).
 - **Account-Wide Legendary Ranker (`engine/account_ranker.py`):** Added deterministic ranking engine that evaluates all known Legendary items in the Knowledge Graph against a player's live account snapshot (materials, bank slots, and choice chests) to answer *"Which legendary am I closest to crafting?"*.
 - **Closest Legendary Leaderboard Guide Generation:** Enhanced [`agent/guide_generator.py`](./agent/guide_generator.py) with `generate_ranking_guide` to synthesize comparative leaderboards with estimated remaining gold costs and Bank Starter Kit detection.
 - **8th Acquisition Archetype (`ContainerUnpackPath`):** Added container unpacking ontology modeling in [`ontology/priory_core.ttl`](./ontology/priory_core.ttl) (`priory:ContainerItem`, `priory:ChoiceChest`, `priory:unpacksInto`, `priory:fromContainer`, `priory:grantsItem`) to dynamically resolve Wizard's Vault Starter Kits and choice containers from user bank storage.

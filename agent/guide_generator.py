@@ -346,9 +346,10 @@ class GuideGenerator:
             f"you are closest to crafting **{top_choice.name}** ({readiness}% ready, ~{top_choice.estimated_remaining_gold}g remaining)!"
         )
 
-        tip = (
-            f"💡 **Priory Tip:** Crafting {top_choice.name} with your Bank Starter Kit saves you ~200g in precursor costs!"
-        )
+        if top_choice.starter_kit_eligible:
+            tip = f"💡 **Priory Tip:** Crafting {top_choice.name} with your Bank Starter Kit saves you ~200g in precursor costs!"
+        else:
+            tip = f"💡 **Priory Tip:** Remember to convert your daily Astral Acclaim into Mystic Clovers from the Wizard's Vault to save over ~100g in crafting costs!"
 
         return PersonalizedGuide(
             goal_name=f"Closest: {top_choice.name}",
