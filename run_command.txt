@@ -1,0 +1,1 @@
+python3 priory_cli.py

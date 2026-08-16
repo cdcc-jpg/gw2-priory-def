@@ -125,11 +125,11 @@ class RuleBasedMockLLMClient(BaseLLMClient):
 class GeminiLLMClient(BaseLLMClient):
     """Live LLM client using Google GenAI SDK (Gemini 2.0 Flash / 1.5 Flash)."""
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-2.0-flash"):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY must be provided or set in environment.")
-        self.model = model
+        self.model = model or os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
         self.fallback = RuleBasedMockLLMClient()
 
         from google import genai
