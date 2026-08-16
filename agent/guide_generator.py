@@ -88,8 +88,7 @@ class GuideGenerator:
             )
 
         # Case 2: Partially missing materials
-        total_items_needed = sum(missing_mats.values())
-        readiness = 0 if total_items_needed > 1000 else max(5, 100 - (total_items_needed // 15))
+        readiness = int(diff_report.overall_readiness_pct)
 
         # Strategic analysis based on intent, constraints & optimal plan
         recommendations = []

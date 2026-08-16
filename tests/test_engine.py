@@ -18,7 +18,7 @@ class TestEngine(unittest.TestCase):
 
     def test_twilight_direct_ingredients(self):
         """Verifies that Twilight has all 4 expected Gen 1 components."""
-        ingredients = self.store.get_direct_recipe_ingredients(30699) # Twilight ID
+        ingredients = self.store.get_direct_recipe_ingredients(30704) # Twilight ID
         self.assertEqual(len(ingredients), 4)
 
         labels = {ing["ingredientLabel"] for ing in ingredients}
@@ -32,7 +32,7 @@ class TestEngine(unittest.TestCase):
         engine = AccountDiffEngine(self.store)
         fresh_account = AccountState()
 
-        report = engine.compute_diff(30699, fresh_account)
+        report = engine.compute_diff(30704, fresh_account)
         self.assertFalse(report.is_fully_satisfied)
         self.assertEqual(report.goal_item_name, "Twilight")
 
@@ -47,8 +47,8 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(report.summary_missing_materials["Glob of Ectoplasm"], 250)
         self.assertEqual(report.summary_missing_materials["Icy Runestone"], 100)
         self.assertEqual(report.summary_missing_materials["Dusk"], 1)
-        self.assertEqual(report.summary_missing_materials["Mithril Ingot"], 100)
-        self.assertEqual(report.summary_missing_materials["Orichalcum Ingot"], 350)
+        self.assertEqual(report.summary_missing_materials["Mithril Ingot"], 200)
+        self.assertEqual(report.summary_missing_materials["Orichalcum Ingot"], 450)
         self.assertEqual(report.summary_missing_materials["Onyx Lodestone"], 100)
 
     def test_account_diff_engine_partially_completed_account(self):

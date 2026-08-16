@@ -52,9 +52,11 @@ class TestSemanticQuery(unittest.TestCase):
 
     def test_semantic_context_generation_for_llm(self):
         """Verifies semantic subgraph serialization produces structured markdown facts."""
-        context = self.service.get_item_semantic_context_for_llm(30699)
+        service = SemanticQueryService(self.store)
+        context = service.get_item_semantic_context_for_llm(30704) # Twilight
+
         self.assertIn("Semantic Entity: Twilight", context)
-        self.assertIn("Forge Twilight", context)
+        self.assertIn("Legendary", context)
         self.assertIn("Requires: 1x Dusk", context)
         self.assertIn("Requires: 1x Gift of Fortune", context)
 

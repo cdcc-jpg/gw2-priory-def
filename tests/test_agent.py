@@ -30,7 +30,7 @@ class TestAgentPipeline(unittest.TestCase):
         resolved_goal = parser.parse_intent(prompt)
 
         self.assertEqual(resolved_goal.resolved_item_name, "Twilight")
-        self.assertEqual(resolved_goal.resolved_item_id, 30699)
+        self.assertEqual(resolved_goal.resolved_item_id, 30704)
         self.assertEqual(resolved_goal.intent.time_budget_minutes, 180)
         self.assertIn("WvW", resolved_goal.intent.excluded_game_modes)
         self.assertEqual(resolved_goal.intent.liquid_gold_budget, 400)

@@ -14,13 +14,13 @@
 @prefix recipe: <https://priory.gw2/id/recipe/> .
 
 # ==============================================================================
-# Twilight (Generation 1 Legendary Greatsword - GW2 ID: 30699)
+# Twilight (Generation 1 Legendary Greatsword - GW2 ID: 30704)
 # Reference: https://wiki.guildwars2.com/wiki/Twilight
 # ==============================================================================
 
-item:30699 a priory:LegendaryWeapon ;
+item:30704 a priory:LegendaryWeapon ;
     rdfs:label "Twilight"@en ;
-    priory:gw2Id 30699 ;
+    priory:gw2Id 30704 ;
     priory:chatCode "[&AgErZgAA]" ;
     priory:hasRarity rarity:Legendary ;
     priory:hasWeaponType weapon:Greatsword ;
@@ -30,7 +30,7 @@ item:30699 a priory:LegendaryWeapon ;
 
 recipe:forge_twilight a priory:MysticForgeRecipe ;
     rdfs:label "Forge Twilight"@en ;
-    priory:producesItem item:30699 ;
+    priory:producesItem item:30704 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;

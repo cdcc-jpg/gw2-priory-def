@@ -31,8 +31,7 @@ item:100123 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividua
     priory:hasItemType itemtype:Container ;
     priory:isAccountBound true ;
     priory:unpacksInto item:29167, item:19641, item:29174, item:19649, item:29170, item:19645, item:29168, item:19643 ;
-    rdfs:comment "Contains a choice between Bolt, The Bifrost, Meteorlogicus, or Quip Starter Kits."@en ;
-    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Legendary_Weapon_Starter_Kit%E2%80%94Set_1> .
+    rdfs:comment "Contains a choice between Bolt, The Bifrost, Meteorlogicus, or Quip Starter Kits."@en .
 
 # --- Starter Kit Set 3 ---
 item:101500 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividual ;
@@ -41,6 +40,7 @@ item:101500 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividua
     priory:hasRarity rarity:Exotic ;
     priory:hasItemType itemtype:Container ;
     priory:isAccountBound true ;
+    priory:unpacksInto item:29177, item:19652, item:29179, item:19654, item:29181, item:19659, item:29180, item:19656 ;
     rdfs:comment "Contains a choice between The Flameseeker Prophecies, Rodgort, Frenzy, or Howler Starter Kits."@en .
 
 # --- Starter Kit Set 4 ---
@@ -50,18 +50,42 @@ item:102000 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividua
     priory:hasRarity rarity:Exotic ;
     priory:hasItemType itemtype:Container ;
     priory:isAccountBound true ;
+    priory:unpacksInto item:29165, item:19637, item:29169, item:19636, item:29172, item:19647, item:29182, item:19660 ;
     rdfs:comment "Contains a choice between Incinerator, Frostfang, The Juggernaut, or Kraitkin Starter Kits."@en .
 
 # ==============================================================================
 # Acquisition Pathway Individuals (Container Unpack Routes)
 # ==============================================================================
 
-# Unpack The Moot from Set 2
-item:unpack_moot_kit_set2 a priory:ContainerUnpackPath, owl:NamedIndividual ;
+# Unpack Set 2 Routes (The Moot, The Predator, Quip, Meteorlogicus)
+item:29166 priory:acquiredVia item:unpack_set2_moot .
+item:19642 priory:acquiredVia item:unpack_set2_moot .
+
+item:29173 priory:acquiredVia item:unpack_set2_predator .
+item:19648 priory:acquiredVia item:unpack_set2_predator .
+
+item:29168 priory:acquiredVia item:unpack_set2_quip .
+item:19643 priory:acquiredVia item:unpack_set2_quip .
+
+item:29170 priory:acquiredVia item:unpack_set2_meteorlogicus .
+item:19645 priory:acquiredVia item:unpack_set2_meteorlogicus .
+
+item:unpack_set2_moot a priory:ContainerUnpackPath, owl:NamedIndividual ;
     rdfs:label "Unpack The Moot Starter Kit from Set 2"@en ;
     priory:fromContainer item:101123 ;
-    priory:grantsItem item:29166, item:19642 ;
-    rdfs:comment "Opening Legendary Weapon Starter Kit—Set 2 grants precursor The Energizer and Gift of The Moot."@en .
+    priory:grantsItem item:29166, item:19642 .
 
-item:29166 priory:acquiredVia item:unpack_moot_kit_set2 .
-item:19642 priory:acquiredVia item:unpack_moot_kit_set2 .
+item:unpack_set2_predator a priory:ContainerUnpackPath, owl:NamedIndividual ;
+    rdfs:label "Unpack The Predator Starter Kit from Set 2"@en ;
+    priory:fromContainer item:101123 ;
+    priory:grantsItem item:29173, item:19648 .
+
+item:unpack_set2_quip a priory:ContainerUnpackPath, owl:NamedIndividual ;
+    rdfs:label "Unpack Quip Starter Kit from Set 2"@en ;
+    priory:fromContainer item:101123 ;
+    priory:grantsItem item:29168, item:19643 .
+
+item:unpack_set2_meteorlogicus a priory:ContainerUnpackPath, owl:NamedIndividual ;
+    rdfs:label "Unpack Meteorlogicus Starter Kit from Set 2"@en ;
+    priory:fromContainer item:101123 ;
+    priory:grantsItem item:29170, item:19645 .
