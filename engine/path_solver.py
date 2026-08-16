@@ -84,10 +84,15 @@ class PathSolver:
         exhausted = exhausted_sources or []
         target_qty = diff_report.target_quantity
 
-        # 1. Precursor Strategy (for weapons)
+        # 1. Precursor Strategy (Check if precursor is unpackable or already owned)
         precursor_strat = None
         dusk_cost = 0.0
-        if diff_report.goal_item_id == 30699: # Twilight
+        for sub in diff_report.root_node.sub_requirements:
+            if "Unpackable from" in sub.label:
+                precursor_strat = f"🎁 **Starter Kit Shortcut:** {sub.label}! (0 gold needed — select this option when opening your Bank choice chest)"
+                break
+
+        if not precursor_strat and diff_report.goal_item_id == 30699: # Twilight
             if "Dusk" not in missing:
                 precursor_strat = "✅ Dusk is already owned in your inventory/bank. (0 gold needed)"
             else:
@@ -190,6 +195,17 @@ class PathSolver:
 
         # 5. Build Roadmap
         roadmap = []
+        for sub in diff_report.root_node.sub_requirements:
+            if "Unpackable from" in sub.label:
+                kit_name = sub.label.split("Unpackable from")[-1].replace(")", "").strip()
+                item_name = sub.label.split("(")[0].strip()
+                roadmap.append({
+                    "phase": "Phase 0: Claim Bank Starter Kit",
+                    "action": f"Withdraw '{kit_name}' from your Bank and choose the '{diff_report.goal_item_name} Kit' to immediately receive {item_name} for 0 gold!",
+                    "est_cost": "0 gold (Already Owned!)"
+                })
+                break
+
         if diff_report.missing_disciplines:
             roadmap.append({
                 "phase": "Phase 1: Crafting Discipline Setup",

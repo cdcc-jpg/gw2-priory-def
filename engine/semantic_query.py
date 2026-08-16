@@ -200,19 +200,28 @@ class SemanticQueryService:
         if res:
             return res
 
-        # 2. Exact label match (case-insensitive)
+        # 2. Exact label match (case-insensitive, with and without 'The ' prefix)
         exact_query = """
         SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?type WHERE {
             ?item priory:gw2Id ?gw2Id ;
                   rdfs:label ?label ;
                   a ?type .
             OPTIONAL { ?item priory:chatCode ?chatCode }
-            FILTER (lcase(str(?label)) = ?targetLabel)
+            FILTER (lcase(str(?label)) = ?targetLabel || lcase(str(?label)) = ?altLabel)
             FILTER (?type != owl:NamedIndividual)
         } LIMIT 5
         """
-        exact_res = self.store.query(exact_query, init_bindings={"targetLabel": Literal(clean_search)})
+        alt_label = f"the {clean_search}" if not clean_search.startswith("the ") else clean_search[4:]
+        exact_res = self.store.query(exact_query, init_bindings={
+            "targetLabel": Literal(clean_search),
+            "altLabel": Literal(alt_label)
+        })
         if exact_res:
+            # Prioritize Legendary Weapons/Armors over sub-gifts
+            exact_res.sort(key=lambda x: (
+                0 if any(k in str(x.get("type", "")) for k in ["LegendaryWeapon", "LegendaryArmor", "LegendaryTrinket", "LegendarySigil"]) else 1,
+                len(x.get("label", ""))
+            ))
             return exact_res
 
         # 3. Partial substring match on Items with gw2Id
@@ -224,10 +233,14 @@ class SemanticQueryService:
             OPTIONAL { ?item priory:chatCode ?chatCode }
             FILTER (regex(str(?label), ?pattern, "i"))
             FILTER (?type != owl:NamedIndividual)
-        } LIMIT 10
+        } LIMIT 15
         """
         items = self.store.query(item_query, init_bindings={"pattern": Literal(clean_search)})
         if items:
+            items.sort(key=lambda x: (
+                0 if any(k in str(x.get("type", "")) for k in ["LegendaryWeapon", "LegendaryArmor", "LegendaryTrinket", "LegendarySigil"]) else 1,
+                len(x.get("label", ""))
+            ))
             return items
 
         # 3b. Plural stemming fallback (e.g. "sigils" -> "sigil", "axes" -> "axe")
@@ -240,11 +253,19 @@ class SemanticQueryService:
             stemmed = clean_search[:-1]
 
         if stemmed:
-            stem_res = self.store.query(exact_query, init_bindings={"targetLabel": Literal(stemmed)})
+            stem_alt = f"the {stemmed}" if not stemmed.startswith("the ") else stemmed[4:]
+            stem_res = self.store.query(exact_query, init_bindings={
+                "targetLabel": Literal(stemmed),
+                "altLabel": Literal(stem_alt)
+            })
             if stem_res:
                 return stem_res
             stem_items = self.store.query(item_query, init_bindings={"pattern": Literal(stemmed)})
             if stem_items:
+                stem_items.sort(key=lambda x: (
+                    0 if any(k in str(x.get("type", "")) for k in ["LegendaryWeapon", "LegendaryArmor", "LegendaryTrinket", "LegendarySigil"]) else 1,
+                    len(x.get("label", ""))
+                ))
                 return stem_items
 
         # 4. Fallback to any entity with matching label

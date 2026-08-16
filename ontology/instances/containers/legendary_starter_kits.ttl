@@ -1,0 +1,67 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix itemtype: <https://priory.gw2/ref/itemtype/> .
+
+# ==============================================================================
+# Legendary Weapon Starter Kits (Wizard's Vault Choice Chests)
+# ==============================================================================
+
+# --- Starter Kit Set 2 (Owned in User Bank) ---
+item:101123 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividual ;
+    rdfs:label "Legendary Weapon Starter Kit—Set 2"@en ;
+    priory:gw2Id 101123 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Container ;
+    priory:isAccountBound true ;
+    priory:unpacksInto item:29166, item:19642, item:29168, item:19643, item:29173, item:19648, item:29170, item:19645, item:19672, item:19673 ;
+    rdfs:comment "Contains a choice between The Moot, Quip, The Predator, or Meteorlogicus Starter Kits."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Legendary_Weapon_Starter_Kit%E2%80%94Set_2> .
+
+# --- Starter Kit Set 1 ---
+item:100123 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividual ;
+    rdfs:label "Legendary Weapon Starter Kit—Set 1"@en ;
+    priory:gw2Id 100123 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Container ;
+    priory:isAccountBound true ;
+    priory:unpacksInto item:29167, item:19641, item:29174, item:19649, item:29170, item:19645, item:29168, item:19643 ;
+    rdfs:comment "Contains a choice between Bolt, The Bifrost, Meteorlogicus, or Quip Starter Kits."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Legendary_Weapon_Starter_Kit%E2%80%94Set_1> .
+
+# --- Starter Kit Set 3 ---
+item:101500 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividual ;
+    rdfs:label "Legendary Weapon Starter Kit—Set 3"@en ;
+    priory:gw2Id 101500 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Container ;
+    priory:isAccountBound true ;
+    rdfs:comment "Contains a choice between The Flameseeker Prophecies, Rodgort, Frenzy, or Howler Starter Kits."@en .
+
+# --- Starter Kit Set 4 ---
+item:102000 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividual ;
+    rdfs:label "Legendary Weapon Starter Kit—Set 4"@en ;
+    priory:gw2Id 102000 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Container ;
+    priory:isAccountBound true ;
+    rdfs:comment "Contains a choice between Incinerator, Frostfang, The Juggernaut, or Kraitkin Starter Kits."@en .
+
+# ==============================================================================
+# Acquisition Pathway Individuals (Container Unpack Routes)
+# ==============================================================================
+
+# Unpack The Moot from Set 2
+item:unpack_moot_kit_set2 a priory:ContainerUnpackPath, owl:NamedIndividual ;
+    rdfs:label "Unpack The Moot Starter Kit from Set 2"@en ;
+    priory:fromContainer item:101123 ;
+    priory:grantsItem item:29166, item:19642 ;
+    rdfs:comment "Opening Legendary Weapon Starter Kit—Set 2 grants precursor The Energizer and Gift of The Moot."@en .
+
+item:29166 priory:acquiredVia item:unpack_moot_kit_set2 .
+item:19642 priory:acquiredVia item:unpack_moot_kit_set2 .

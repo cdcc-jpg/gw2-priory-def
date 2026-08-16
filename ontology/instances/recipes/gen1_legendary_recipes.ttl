@@ -1,0 +1,186 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+# ==============================================================================
+# The Moot (Generation 1 Legendary Mace - GW2 ID: 30692)
+# ==============================================================================
+
+item:30692 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "The Moot"@en ;
+    priory:gw2Id 30692 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Mace ;
+    priory:chatCode "[&AgFkZgAA]" ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_the_moot ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Moot> .
+
+# --- Mystic Forge Recipe: The Moot ---
+recipe:forge_the_moot a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge The Moot"@en ;
+    priory:producesItem item:30692 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        recipe:req_moot_energizer ,
+        recipe:req_moot_gift_moot ,
+        recipe:req_moot_gift_fortune ,
+        recipe:req_moot_gift_mastery .
+
+recipe:req_moot_energizer a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:29166 ; # The Energizer
+    priory:requiredQuantity 1 .
+
+recipe:req_moot_gift_moot a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19642 ; # Gift of The Moot
+    priory:requiredQuantity 1 .
+
+recipe:req_moot_gift_fortune a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19627 ; # Gift of Fortune
+    priory:requiredQuantity 1 .
+
+recipe:req_moot_gift_mastery a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19626 ; # Gift of Mastery
+    priory:requiredQuantity 1 .
+
+# ==============================================================================
+# Precursor: The Energizer (GW2 ID: 29166)
+# ==============================================================================
+
+item:29166 a priory:PrecursorWeapon, owl:NamedIndividual ;
+    rdfs:label "The Energizer"@en ;
+    priory:gw2Id 29166 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Mace ;
+    priory:chatCode "[&AgEmcgAA]" ;
+    priory:isAccountBound false ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Energizer> .
+
+# ==============================================================================
+# Gift of The Moot (GW2 ID: 19642)
+# ==============================================================================
+
+item:19642 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of The Moot"@en ;
+    priory:gw2Id 19642 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_the_moot ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_The_Moot> .
+
+recipe:forge_gift_of_the_moot a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of The Moot"@en ;
+    priory:producesItem item:19642 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        recipe:req_moot_gift_metal ,
+        recipe:req_moot_gift_entertainment ,
+        recipe:req_moot_runestones ,
+        recipe:req_moot_sigil_energy .
+
+recipe:req_moot_gift_metal a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19655 ; # Gift of Metal
+    priory:requiredQuantity 1 .
+
+recipe:req_moot_gift_entertainment a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19639 ; # Gift of Entertainment
+    priory:requiredQuantity 1 .
+
+recipe:req_moot_runestones a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:10796 ; # 100 Icy Runestones
+    priory:requiredQuantity 100 .
+
+recipe:req_moot_sigil_energy a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:24607 ; # Superior Sigil of Energy
+    priory:requiredQuantity 1 .
+
+# ==============================================================================
+# Gift of Entertainment (GW2 ID: 19639)
+# ==============================================================================
+
+item:19639 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Entertainment"@en ;
+    priory:gw2Id 19639 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_gift_of_entertainment ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Entertainment> .
+
+recipe:craft_gift_of_entertainment a priory:DisciplineRecipe, owl:NamedIndividual ;
+    rdfs:label "Craft Gift of Entertainment"@en ;
+    priory:producesItem item:19639 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiredRating 400 ;
+    priory:hasIngredientRequirement
+        recipe:req_ent_carnival ,
+        recipe:req_ent_screaming_crystals ,
+        recipe:req_ent_chitin ,
+        recipe:req_ent_silk .
+
+recipe:req_ent_carnival a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19638 ; # Gift of the Carnival (Dungeon Token Exchange)
+    priory:requiredQuantity 1 .
+
+recipe:req_ent_screaming_crystals a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:24355 ; # 250 Screaming Crystals (from vendor in Gendarran Fields)
+    priory:requiredQuantity 250 .
+
+recipe:req_ent_chitin a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:24356 ; # 250 Hardened Chitin Sections
+    priory:requiredQuantity 250 .
+
+recipe:req_ent_silk a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19748 ; # 250 Silk Scrap
+    priory:requiredQuantity 250 .
+
+# ==============================================================================
+# Gift of the Carnival (GW2 ID: 19638 - Vendor Exchange)
+# ==============================================================================
+
+item:19638 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of the Carnival"@en ;
+    priory:gw2Id 19638 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia item:exchange_gift_carnival .
+
+item:exchange_gift_carnival a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Purchase Gift of the Carnival from Dungeon Vendor"@en ;
+    priory:requiresCurrency currency:TalesOfDungeonDelving ;
+    priory:requiredQuantity 500 ;
+    priory:vendorNPC "Dungeon Merchant" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:waypointName "Sanctum Harbor Waypoint" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" .
+
+# ==============================================================================
+# Sub-Materials
+# ==============================================================================
+
+item:24607 a priory:UpgradeComponent, owl:NamedIndividual ;
+    rdfs:label "Superior Sigil of Energy"@en ;
+    priory:gw2Id 24607 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound false .
+
+item:24355 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Screaming Crystal"@en ;
+    priory:gw2Id 24355 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:24356 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Hardened Chitin Section"@en ;
+    priory:gw2Id 24356 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .

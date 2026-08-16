@@ -209,6 +209,27 @@ priory:RaidMilestonePath a owl:Class ;
     skos:altLabel "raid"@en, "strike"@en, "boss kill"@en, "insights"@en ;
     skos:definition "Earning prestige items by defeating raid wings or strike mission bosses."@en .
 
+priory:ContainerUnpackPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Container Unpack Acquisition"@en ;
+    skos:altLabel "unpack"@en, "open chest"@en, "starter kit"@en, "choice chest"@en, "open box"@en ;
+    skos:definition "Acquiring an item or precursor by unpacking or selecting it from a container chest or starter kit in inventory or bank."@en .
+
+priory:ContainerItem a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Container / Chest"@en ;
+    rdfs:comment "An inventory container, chest, or kit that can be opened or unpacked to yield items."@en .
+
+priory:ChoiceChest a owl:Class ;
+    rdfs:subClassOf priory:ContainerItem ;
+    rdfs:label "Choice Chest"@en ;
+    rdfs:comment "A container that allows the player to select one item package from a predefined list of choices."@en .
+
+priory:LegendaryStarterKit a owl:Class ;
+    rdfs:subClassOf priory:ChoiceChest ;
+    rdfs:label "Legendary Weapon Starter Kit"@en ;
+    rdfs:comment "Wizard's Vault starter kit providing a choice of Gen 1 legendary precursors, gifts, and crafting materials."@en .
+
 priory:TimeGate a owl:Class ;
     rdfs:label "Time Gate & Cooldown Constraint"@en ;
     skos:altLabel "daily reset"@en, "weekly reset"@en, "cooldown"@en, "time gate"@en ;
@@ -218,6 +239,28 @@ priory:TimeGate a owl:Class ;
 # ==============================================================================
 # Object Properties (Verbs / Verb Phrases)
 # ==============================================================================
+
+priory:unpacksInto a owl:ObjectProperty ;
+    rdfs:domain priory:ContainerItem ;
+    rdfs:range priory:Item ;
+    rdfs:label "unpacks into"@en ;
+    skos:definition "Connects a container or starter kit to the items it produces when opened or selected."@en .
+
+priory:unpacksFrom a owl:ObjectProperty ;
+    owl:inverseOf priory:unpacksInto ;
+    rdfs:domain priory:Item ;
+    rdfs:range priory:ContainerItem ;
+    rdfs:label "unpacks from"@en .
+
+priory:fromContainer a owl:ObjectProperty ;
+    rdfs:domain priory:ContainerUnpackPath ;
+    rdfs:range priory:ContainerItem ;
+    rdfs:label "from container"@en .
+
+priory:grantsItem a owl:ObjectProperty ;
+    rdfs:domain priory:ContainerUnpackPath ;
+    rdfs:range priory:Item ;
+    rdfs:label "grants item"@en .
 
 priory:producesItem a owl:ObjectProperty ;
     rdfs:domain priory:Recipe ;

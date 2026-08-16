@@ -146,6 +146,25 @@ class AccountDiffEngine:
             branch_visited = visited.copy()
             branch_visited.add(item_id)
 
+            # Check 0: Container Unpack Path (e.g. Starter Kit in Bank or Inventory)
+            container_query = """
+            SELECT ?containerId ?containerLabel WHERE {
+                ?container priory:unpacksInto ?item ;
+                           priory:gw2Id ?containerId .
+                ?item priory:gw2Id ?gw2Id .
+                OPTIONAL { ?container rdfs:label ?containerLabel }
+            }
+            """
+            c_res = self.store.query(container_query, init_bindings={"gw2Id": Literal(item_id)})
+            for c_row in c_res:
+                c_id = int(c_row["containerId"])
+                if account.total_item_count(c_id) > 0:
+                    c_label = c_row.get("containerLabel", "Starter Kit")
+                    node.is_satisfied = True
+                    node.missing_quantity = 0
+                    node.label = f"{label} (Unpackable from {c_label})"
+                    return node
+
             # Check 1: Direct crafting recipes producing this item
             rec_query = """
             SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
