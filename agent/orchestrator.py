@@ -40,51 +40,13 @@ class PrioryChatSession:
         live_tp_prices: Optional[Dict[int, float]] = None
     ) -> PersonalizedGuide:
         """Processes a follow-up user prompt with multi-turn session awareness."""
-        # Check if this is a ranking / recommendation query
-        prompt_lower = user_prompt.lower()
-        ranking_triggers = [
-            "closest", "which legendary", "what legendary", "rank all", "what should i craft",
-            "what to craft", "leaderboard", "rank", "how far", "how close", "where am i",
-            "what can i craft", "can i craft", "next legendary", "best legendary", "recommend",
-            "suggest", "progress towards", "progress on"
-        ]
-        is_ranking_query = any(k in prompt_lower for k in ranking_triggers)
-
-        # Check for generation, expansion, or category filter
-        filter_query = None
-        facet_terms = [
-            "gen 1", "generation 1", "gen one", "core",
-            "gen 2", "generation 2", "gen two", "heart of thorns", "hot",
-            "gen 3", "generation 3", "gen three", "aurene", "end of dragons", "eod",
-            "soto", "secrets of the obscure", "obsidian",
-            "janthir", "janthir wilds", "jw", "spear",
-            "envoy", "raid", "armor", "trinket", "ring", "accessory", "amulet",
-            "backpack", "back", "sigil", "rune", "relic", "upgrade"
-        ]
-        for gen_term in facet_terms:
-            if gen_term in prompt_lower:
-                filter_query = gen_term
-                break
-
-        # Format history context
+        # 1. Format conversation context
         context_str = None
         if self.history:
             context_str = "\n".join([f"{h['role']}: {h['content']}" for h in self.history[-4:]])
 
-        # If keyword matched ranking, evaluate ranker immediately
-        if is_ranking_query:
-            rankings = self.orchestrator.ranker.rank_all_legendaries(
-                account=self.account_state,
-                tp_prices=live_tp_prices,
-                top_n=5,
-                filter_query=filter_query
-            )
-            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(rankings, user_prompt)
-            self.history.append({"role": "user", "content": user_prompt})
-            self.history.append({"role": "assistant", "content": guide.executive_summary})
-            return guide
-
-        # 1. Top LLM parses intent with previous goal memory
+        # 2. Top LLM parses intent with previous goal memory
+        from agent.intent_parser import GoalType
         resolved_goal: ResolvedGoal = self.orchestrator.intent_parser.parse_intent(
             user_prompt=user_prompt,
             previous_goal=self.last_goal,
@@ -92,16 +54,13 @@ class PrioryChatSession:
         )
         self.last_goal = resolved_goal
 
-        # If Top LLM classified this as a comparative ranking query, route to ranker
-        if resolved_goal.intent.is_ranking_query or (
-            resolved_goal.resolved_item_name == "Twilight" and any(k in resolved_goal.intent.goal_item_query.lower() for k in ["gen", "generation", "legendary", "armor", "weapon", "trinket"])
-        ):
-            active_filter = filter_query or resolved_goal.intent.filter_category or resolved_goal.intent.goal_item_query
+        # 3. Dynamic routing based on Top LLM's semantic GoalType classification
+        if resolved_goal.goal_type == GoalType.COMPARATIVE_RANKING:
             rankings = self.orchestrator.ranker.rank_all_legendaries(
                 account=self.account_state,
                 tp_prices=live_tp_prices,
                 top_n=5,
-                filter_query=active_filter
+                filter_query=resolved_goal.category_filter
             )
             guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(rankings, user_prompt)
             self.history.append({"role": "user", "content": user_prompt})

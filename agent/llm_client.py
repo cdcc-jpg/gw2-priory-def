@@ -98,11 +98,34 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if gold_match:
             gold_budget = int(gold_match.group(1))
 
+        # Determine comparative vs specific goal
+        is_comparative = any(k in p_lower for k in [
+            "closest", "which legendary", "what legendary", "rank all", "what should i craft",
+            "what to craft", "leaderboard", "rank", "how far", "how close", "where am i",
+            "what can i craft", "can i craft", "next legendary", "best legendary", "recommend"
+        ])
+
+        cat_filter = None
+        for term in ["gen 1", "generation 1", "gen 2", "generation 2", "gen 3", "generation 3", "aurene", "soto", "obsidian", "janthir", "armor", "trinket", "upgrade"]:
+            if term in p_lower:
+                cat_filter = term
+                break
+
         # Instantiate target schema dynamically
         fields = schema.model_fields.keys()
         data: Dict[str, Any] = {}
+        if "goal_type" in fields:
+            data["goal_type"] = "COMPARATIVE_RANKING" if (is_comparative or (cat_filter and goal_item == "Twilight")) else "SPECIFIC_ITEM"
+        if "target_item_name" in fields:
+            data["target_item_name"] = None if is_comparative else goal_item
+        if "category_filter" in fields:
+            data["category_filter"] = cat_filter
         if "goal_item_query" in fields:
-            data["goal_item_query"] = goal_item
+            data["goal_item_query"] = cat_filter or goal_item
+        if "is_ranking_query" in fields:
+            data["is_ranking_query"] = is_comparative or (cat_filter is not None and goal_item == "Twilight")
+        if "filter_category" in fields:
+            data["filter_category"] = cat_filter
         if "target_quantity" in fields:
             data["target_quantity"] = target_qty
         if "time_budget_minutes" in fields:
