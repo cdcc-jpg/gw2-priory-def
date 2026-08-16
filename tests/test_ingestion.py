@@ -29,9 +29,9 @@ class TestSMWIngestion(unittest.TestCase):
         shacl_graph = rdflib.Graph()
         shacl_graph.parse(DEF_REPO / "ontology" / "priory_shacl.ttl", format="turtle")
 
-        # Load vocabulary concept
+        # Load vocabulary concept directly from REF_REPO
         vocab_graph = rdflib.Graph()
-        vocab_graph.parse(DEF_REPO / "ontology" / "vocab" / "rarities.ttl", format="turtle")
+        vocab_graph.parse(REF_REPO / "vocab" / "rarities.ttl", format="turtle")
         combined_data = g + vocab_graph
 
         conforms, results_graph, results_text = pyshacl.validate(

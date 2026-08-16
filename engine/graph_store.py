@@ -61,14 +61,16 @@ class PrioryGraphStore:
 
         total_triples_before = len(self.graph)
 
-        # 1. Load Reference Vocabularies (from local ontology/vocab/ or ref_repo_path/vocab/)
-        local_vocab_dir = self.def_repo_path / "ontology" / "vocab"
-        if local_vocab_dir.exists():
-            for ttl_file in local_vocab_dir.glob("*.ttl"):
+        # 1. Load Reference Vocabularies exclusively from gw2-priory-ref repository
+        vocab_dir = self.ref_repo_path / "vocab"
+        if vocab_dir.exists():
+            for ttl_file in vocab_dir.glob("*.ttl"):
                 self.graph.parse(ttl_file, format="turtle")
-        elif self.ref_repo_path.exists():
-            for ttl_file in (self.ref_repo_path / "vocab").glob("*.ttl"):
-                self.graph.parse(ttl_file, format="turtle")
+        else:
+            raise FileNotFoundError(
+                f"Reference vocabulary directory not found at: {vocab_dir}. "
+                "Ensure gw2-priory-ref repository is cloned."
+            )
 
         # 2. Load Core Ontology Schema
         core_ontology = self.def_repo_path / "ontology" / "priory_core.ttl"

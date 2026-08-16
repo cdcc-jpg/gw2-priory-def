@@ -183,10 +183,14 @@ class AccountDiffEngine:
             v_res = self.store.query(vendor_query, init_bindings={"gw2Id": Literal(item_id)})
             if v_res:
                 v_info = v_res[0]
-                curr_id = int(v_info.get("currNotation", 0))
+                curr_not = v_info.get("currNotation")
+                try:
+                    curr_id = int(curr_not) if curr_not is not None else 0
+                except (ValueError, TypeError):
+                    curr_id = 0
                 curr_label = v_info.get("currLabel", "Currency")
                 total_curr_needed = int(v_info.get("requiredQty", 1)) * missing
-                owned_curr = account.total_currency_count(curr_id)
+                owned_curr = account.total_currency_count(curr_id) if curr_id > 0 else 0
 
                 if owned_curr >= total_curr_needed:
                     node.is_satisfied = True
