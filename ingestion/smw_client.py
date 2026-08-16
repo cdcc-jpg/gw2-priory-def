@@ -339,6 +339,28 @@ class GW2SMWClient:
             g.add((item_uri, PRIORY.chatCode, Literal(chat_code)))
         if weapon_type:
             g.add((item_uri, PRIORY.hasWeaponType, WEAPON[to_pascal_case(weapon_type)]))
+            # Determine generation for legendary weapons
+            gen = None
+            if item_name.startswith("Aurene") or item_name in ["Ancora Bellum", "Ancora Pax"]:
+                gen = 3
+            elif item_name in [
+                "Astralaria", "HOPE", "Nevermore", "Chuka and Champawat", "HMS Divinity",
+                "Eureka", "The Shining Blade", "Xiuquatl", "Claw of the Khan-Ur", "Exordium",
+                "Pharus", "Verdarach", "The Binding of Ipos", "Sharur", "Shooshadoo"
+            ]:
+                gen = 2
+            elif item_id < 40000 and rarity_str.lower() == "legendary":
+                gen = 1
+
+            if gen:
+                g.add((item_uri, rdflib.SKOS.altLabel, Literal(f"Gen {gen} {weapon_type}", lang="en")))
+                g.add((item_uri, rdflib.SKOS.altLabel, Literal(f"Generation {gen} {weapon_type}", lang="en")))
+                g.add((item_uri, rdflib.SKOS.altLabel, Literal(f"Gen {gen} Legendary {weapon_type}", lang="en")))
+                word_gen = {1: "One", 2: "Two", 3: "Three"}.get(gen, "")
+                if word_gen:
+                    g.add((item_uri, rdflib.SKOS.altLabel, Literal(f"Gen {word_gen} {weapon_type}", lang="en")))
+                    g.add((item_uri, rdflib.SKOS.altLabel, Literal(f"Generation {word_gen} {weapon_type}", lang="en")))
+
         if armor_weight:
             w_str = to_pascal_case(armor_weight).replace("Armor", "")
             g.add((item_uri, PRIORY.hasArmorWeight, ARMOR[f"{w_str}Armor"]))

@@ -1,5 +1,6 @@
 @prefix ns1: <https://priory.gw2/def/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://priory.gw2/id/item/103815> a ns1:LegendaryWeapon ;
@@ -14,6 +15,11 @@
 <https://priory.gw2/id/item/105653> a ns1:LegendaryWeapon ;
     rdfs:label "Ancora Pax"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Ancora_Pax> ;
+    skos:altLabel "Gen 3 Legendary Staff"@en,
+        "Gen 3 Staff"@en,
+        "Gen Three Staff"@en,
+        "Generation 3 Staff"@en,
+        "Generation Three Staff"@en ;
     ns1:gw2Id 105653 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -23,6 +29,11 @@
 <https://priory.gw2/id/item/106273> a ns1:LegendaryWeapon ;
     rdfs:label "Ancora Bellum"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Ancora_Bellum> ;
+    skos:altLabel "Gen 3 Legendary Spear"@en,
+        "Gen 3 Spear"@en,
+        "Gen Three Spear"@en,
+        "Generation 3 Spear"@en,
+        "Generation Three Spear"@en ;
     ns1:gw2Id 106273 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -32,6 +43,11 @@
 <https://priory.gw2/id/item/30684> a ns1:LegendaryWeapon ;
     rdfs:label "Frostfang"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Frostfang> ;
+    skos:altLabel "Gen 1 Axe"@en,
+        "Gen 1 Legendary Axe"@en,
+        "Gen One Axe"@en,
+        "Generation 1 Axe"@en,
+        "Generation One Axe"@en ;
     ns1:gw2Id 30684 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Axe> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -41,6 +57,11 @@
 <https://priory.gw2/id/item/30685> a ns1:LegendaryWeapon ;
     rdfs:label "Kudzu"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Kudzu> ;
+    skos:altLabel "Gen 1 Legendary Longbow"@en,
+        "Gen 1 Longbow"@en,
+        "Gen One Longbow"@en,
+        "Generation 1 Longbow"@en,
+        "Generation One Longbow"@en ;
     ns1:gw2Id 30685 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Longbow> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -50,6 +71,11 @@
 <https://priory.gw2/id/item/30686> a ns1:LegendaryWeapon ;
     rdfs:label "The Dreamer"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Dreamer> ;
+    skos:altLabel "Gen 1 Legendary Short bow"@en,
+        "Gen 1 Short bow"@en,
+        "Gen One Short bow"@en,
+        "Generation 1 Short bow"@en,
+        "Generation One Short bow"@en ;
     ns1:gw2Id 30686 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/ShortBow> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -59,6 +85,11 @@
 <https://priory.gw2/id/item/30687> a ns1:LegendaryWeapon ;
     rdfs:label "Incinerator"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Incinerator> ;
+    skos:altLabel "Gen 1 Dagger"@en,
+        "Gen 1 Legendary Dagger"@en,
+        "Gen One Dagger"@en,
+        "Generation 1 Dagger"@en,
+        "Generation One Dagger"@en ;
     ns1:gw2Id 30687 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Dagger> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -68,6 +99,11 @@
 <https://priory.gw2/id/item/30688> a ns1:LegendaryWeapon ;
     rdfs:label "The Minstrel"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Minstrel> ;
+    skos:altLabel "Gen 1 Focus"@en,
+        "Gen 1 Legendary Focus"@en,
+        "Gen One Focus"@en,
+        "Generation 1 Focus"@en,
+        "Generation One Focus"@en ;
     ns1:gw2Id 30688 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Focus> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -77,6 +113,11 @@
 <https://priory.gw2/id/item/30689> a ns1:LegendaryWeapon ;
     rdfs:label "Eternity"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Eternity> ;
+    skos:altLabel "Gen 1 Greatsword"@en,
+        "Gen 1 Legendary Greatsword"@en,
+        "Gen One Greatsword"@en,
+        "Generation 1 Greatsword"@en,
+        "Generation One Greatsword"@en ;
     ns1:gw2Id 30689 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -86,6 +127,11 @@
 <https://priory.gw2/id/item/30690> a ns1:LegendaryWeapon ;
     rdfs:label "The Juggernaut"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Juggernaut> ;
+    skos:altLabel "Gen 1 Hammer"@en,
+        "Gen 1 Legendary Hammer"@en,
+        "Gen One Hammer"@en,
+        "Generation 1 Hammer"@en,
+        "Generation One Hammer"@en ;
     ns1:gw2Id 30690 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Hammer> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -95,6 +141,11 @@
 <https://priory.gw2/id/item/30691> a ns1:LegendaryWeapon ;
     rdfs:label "Kamohoali'i Kotaki"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Kamohoali'i_Kotaki> ;
+    skos:altLabel "Gen 1 Legendary Spear"@en,
+        "Gen 1 Spear"@en,
+        "Gen One Spear"@en,
+        "Generation 1 Spear"@en,
+        "Generation One Spear"@en ;
     ns1:gw2Id 30691 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -104,6 +155,11 @@
 <https://priory.gw2/id/item/30692> a ns1:LegendaryWeapon ;
     rdfs:label "The Moot"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Moot> ;
+    skos:altLabel "Gen 1 Legendary Mace"@en,
+        "Gen 1 Mace"@en,
+        "Gen One Mace"@en,
+        "Generation 1 Mace"@en,
+        "Generation One Mace"@en ;
     ns1:gw2Id 30692 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Mace> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -113,6 +169,11 @@
 <https://priory.gw2/id/item/30693> a ns1:LegendaryWeapon ;
     rdfs:label "Quip"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Quip> ;
+    skos:altLabel "Gen 1 Legendary Pistol"@en,
+        "Gen 1 Pistol"@en,
+        "Gen One Pistol"@en,
+        "Generation 1 Pistol"@en,
+        "Generation One Pistol"@en ;
     ns1:gw2Id 30693 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Pistol> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -122,6 +183,11 @@
 <https://priory.gw2/id/item/30694> a ns1:LegendaryWeapon ;
     rdfs:label "The Predator"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Predator> ;
+    skos:altLabel "Gen 1 Legendary Rifle"@en,
+        "Gen 1 Rifle"@en,
+        "Gen One Rifle"@en,
+        "Generation 1 Rifle"@en,
+        "Generation One Rifle"@en ;
     ns1:gw2Id 30694 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Rifle> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -131,6 +197,11 @@
 <https://priory.gw2/id/item/30695> a ns1:LegendaryWeapon ;
     rdfs:label "Meteorlogicus"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Meteorlogicus> ;
+    skos:altLabel "Gen 1 Legendary Scepter"@en,
+        "Gen 1 Scepter"@en,
+        "Gen One Scepter"@en,
+        "Generation 1 Scepter"@en,
+        "Generation One Scepter"@en ;
     ns1:gw2Id 30695 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Scepter> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -140,6 +211,11 @@
 <https://priory.gw2/id/item/30696> a ns1:LegendaryWeapon ;
     rdfs:label "The Flameseeker Prophecies"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Flameseeker_Prophecies> ;
+    skos:altLabel "Gen 1 Legendary Shield"@en,
+        "Gen 1 Shield"@en,
+        "Gen One Shield"@en,
+        "Generation 1 Shield"@en,
+        "Generation One Shield"@en ;
     ns1:gw2Id 30696 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Shield> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -149,6 +225,11 @@
 <https://priory.gw2/id/item/30697> a ns1:LegendaryWeapon ;
     rdfs:label "Frenzy"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Frenzy> ;
+    skos:altLabel "Gen 1 Harpoon gun"@en,
+        "Gen 1 Legendary Harpoon gun"@en,
+        "Gen One Harpoon gun"@en,
+        "Generation 1 Harpoon gun"@en,
+        "Generation One Harpoon gun"@en ;
     ns1:gw2Id 30697 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/HarpoonGun> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -158,6 +239,11 @@
 <https://priory.gw2/id/item/30698> a ns1:LegendaryWeapon ;
     rdfs:label "The Bifrost"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Bifrost> ;
+    skos:altLabel "Gen 1 Legendary Staff"@en,
+        "Gen 1 Staff"@en,
+        "Gen One Staff"@en,
+        "Generation 1 Staff"@en,
+        "Generation One Staff"@en ;
     ns1:gw2Id 30698 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -167,6 +253,11 @@
 <https://priory.gw2/id/item/30699> a ns1:LegendaryWeapon ;
     rdfs:label "Bolt"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Bolt> ;
+    skos:altLabel "Gen 1 Legendary Sword"@en,
+        "Gen 1 Sword"@en,
+        "Gen One Sword"@en,
+        "Generation 1 Sword"@en,
+        "Generation One Sword"@en ;
     ns1:gw2Id 30699 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Sword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -176,6 +267,11 @@
 <https://priory.gw2/id/item/30700> a ns1:LegendaryWeapon ;
     rdfs:label "Rodgort"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Rodgort> ;
+    skos:altLabel "Gen 1 Legendary Torch"@en,
+        "Gen 1 Torch"@en,
+        "Gen One Torch"@en,
+        "Generation 1 Torch"@en,
+        "Generation One Torch"@en ;
     ns1:gw2Id 30700 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Torch> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -185,6 +281,11 @@
 <https://priory.gw2/id/item/30701> a ns1:LegendaryWeapon ;
     rdfs:label "Kraitkin"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Kraitkin> ;
+    skos:altLabel "Gen 1 Legendary Trident"@en,
+        "Gen 1 Trident"@en,
+        "Gen One Trident"@en,
+        "Generation 1 Trident"@en,
+        "Generation One Trident"@en ;
     ns1:gw2Id 30701 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Trident> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -194,6 +295,11 @@
 <https://priory.gw2/id/item/30702> a ns1:LegendaryWeapon ;
     rdfs:label "Howler"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Howler> ;
+    skos:altLabel "Gen 1 Legendary Warhorn"@en,
+        "Gen 1 Warhorn"@en,
+        "Gen One Warhorn"@en,
+        "Generation 1 Warhorn"@en,
+        "Generation One Warhorn"@en ;
     ns1:gw2Id 30702 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Warhorn> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -203,6 +309,11 @@
 <https://priory.gw2/id/item/30703> a ns1:LegendaryWeapon ;
     rdfs:label "Sunrise"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sunrise> ;
+    skos:altLabel "Gen 1 Greatsword"@en,
+        "Gen 1 Legendary Greatsword"@en,
+        "Gen One Greatsword"@en,
+        "Generation 1 Greatsword"@en,
+        "Generation One Greatsword"@en ;
     ns1:gw2Id 30703 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -212,6 +323,11 @@
 <https://priory.gw2/id/item/30704> a ns1:LegendaryWeapon ;
     rdfs:label "Twilight"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Twilight> ;
+    skos:altLabel "Gen 1 Greatsword"@en,
+        "Gen 1 Legendary Greatsword"@en,
+        "Gen One Greatsword"@en,
+        "Generation 1 Greatsword"@en,
+        "Generation One Greatsword"@en ;
     ns1:gw2Id 30704 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -221,6 +337,11 @@
 <https://priory.gw2/id/item/71383> a ns1:LegendaryWeapon ;
     rdfs:label "Nevermore"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Nevermore> ;
+    skos:altLabel "Gen 2 Legendary Staff"@en,
+        "Gen 2 Staff"@en,
+        "Gen Two Staff"@en,
+        "Generation 2 Staff"@en,
+        "Generation Two Staff"@en ;
     ns1:gw2Id 71383 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -230,6 +351,11 @@
 <https://priory.gw2/id/item/72713> a ns1:LegendaryWeapon ;
     rdfs:label "HOPE"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/HOPE> ;
+    skos:altLabel "Gen 2 Legendary Pistol"@en,
+        "Gen 2 Pistol"@en,
+        "Gen Two Pistol"@en,
+        "Generation 2 Pistol"@en,
+        "Generation Two Pistol"@en ;
     ns1:gw2Id 72713 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Pistol> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -239,6 +365,11 @@
 <https://priory.gw2/id/item/76158> a ns1:LegendaryWeapon ;
     rdfs:label "Astralaria"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Astralaria> ;
+    skos:altLabel "Gen 2 Axe"@en,
+        "Gen 2 Legendary Axe"@en,
+        "Gen Two Axe"@en,
+        "Generation 2 Axe"@en,
+        "Generation Two Axe"@en ;
     ns1:gw2Id 76158 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Axe> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -248,6 +379,11 @@
 <https://priory.gw2/id/item/78556> a ns1:LegendaryWeapon ;
     rdfs:label "Chuka and Champawat"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Chuka_and_Champawat> ;
+    skos:altLabel "Gen 2 Legendary Short bow"@en,
+        "Gen 2 Short bow"@en,
+        "Gen Two Short bow"@en,
+        "Generation 2 Short bow"@en,
+        "Generation Two Short bow"@en ;
     ns1:gw2Id 78556 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/ShortBow> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -257,6 +393,11 @@
 <https://priory.gw2/id/item/79562> a ns1:LegendaryWeapon ;
     rdfs:label "Eureka"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Eureka> ;
+    skos:altLabel "Gen 2 Legendary Mace"@en,
+        "Gen 2 Mace"@en,
+        "Gen Two Mace"@en,
+        "Generation 2 Mace"@en,
+        "Generation Two Mace"@en ;
     ns1:gw2Id 79562 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Mace> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -266,6 +407,11 @@
 <https://priory.gw2/id/item/79802> a ns1:LegendaryWeapon ;
     rdfs:label "Shooshadoo"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Shooshadoo> ;
+    skos:altLabel "Gen 2 Legendary Shield"@en,
+        "Gen 2 Shield"@en,
+        "Gen Two Shield"@en,
+        "Generation 2 Shield"@en,
+        "Generation Two Shield"@en ;
     ns1:gw2Id 79802 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Shield> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -293,6 +439,11 @@
 <https://priory.gw2/id/item/81839> a ns1:LegendaryWeapon ;
     rdfs:label "Sharur"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sharur> ;
+    skos:altLabel "Gen 2 Hammer"@en,
+        "Gen 2 Legendary Hammer"@en,
+        "Gen Two Hammer"@en,
+        "Generation 2 Hammer"@en,
+        "Generation Two Hammer"@en ;
     ns1:gw2Id 81839 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Hammer> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -302,6 +453,11 @@
 <https://priory.gw2/id/item/81957> a ns1:LegendaryWeapon ;
     rdfs:label "The Shining Blade"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Shining_Blade> ;
+    skos:altLabel "Gen 2 Legendary Sword"@en,
+        "Gen 2 Sword"@en,
+        "Gen Two Sword"@en,
+        "Generation 2 Sword"@en,
+        "Generation Two Sword"@en ;
     ns1:gw2Id 81957 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Sword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -311,6 +467,11 @@
 <https://priory.gw2/id/item/86098> a ns1:LegendaryWeapon ;
     rdfs:label "The Binding of Ipos"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Binding_of_Ipos> ;
+    skos:altLabel "Gen 2 Focus"@en,
+        "Gen 2 Legendary Focus"@en,
+        "Gen Two Focus"@en,
+        "Generation 2 Focus"@en,
+        "Generation Two Focus"@en ;
     ns1:gw2Id 86098 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Focus> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -320,6 +481,11 @@
 <https://priory.gw2/id/item/87109> a ns1:LegendaryWeapon ;
     rdfs:label "Claw of the Khan-Ur"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Claw_of_the_Khan-Ur> ;
+    skos:altLabel "Gen 2 Dagger"@en,
+        "Gen 2 Legendary Dagger"@en,
+        "Gen Two Dagger"@en,
+        "Generation 2 Dagger"@en,
+        "Generation Two Dagger"@en ;
     ns1:gw2Id 87109 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Dagger> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -329,6 +495,11 @@
 <https://priory.gw2/id/item/87687> a ns1:LegendaryWeapon ;
     rdfs:label "Verdarach"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Verdarach> ;
+    skos:altLabel "Gen 2 Legendary Warhorn"@en,
+        "Gen 2 Warhorn"@en,
+        "Gen Two Warhorn"@en,
+        "Generation 2 Warhorn"@en,
+        "Generation Two Warhorn"@en ;
     ns1:gw2Id 87687 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Warhorn> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -338,6 +509,11 @@
 <https://priory.gw2/id/item/88576> a ns1:LegendaryWeapon ;
     rdfs:label "Xiuquatl"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Xiuquatl> ;
+    skos:altLabel "Gen 2 Legendary Scepter"@en,
+        "Gen 2 Scepter"@en,
+        "Gen Two Scepter"@en,
+        "Generation 2 Scepter"@en,
+        "Generation Two Scepter"@en ;
     ns1:gw2Id 88576 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Scepter> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -347,6 +523,11 @@
 <https://priory.gw2/id/item/89854> a ns1:LegendaryWeapon ;
     rdfs:label "Pharus"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Pharus> ;
+    skos:altLabel "Gen 2 Legendary Longbow"@en,
+        "Gen 2 Longbow"@en,
+        "Gen Two Longbow"@en,
+        "Generation 2 Longbow"@en,
+        "Generation Two Longbow"@en ;
     ns1:gw2Id 89854 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Longbow> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -356,6 +537,11 @@
 <https://priory.gw2/id/item/90551> a ns1:LegendaryWeapon ;
     rdfs:label "Exordium"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Exordium> ;
+    skos:altLabel "Gen 2 Greatsword"@en,
+        "Gen 2 Legendary Greatsword"@en,
+        "Gen Two Greatsword"@en,
+        "Generation 2 Greatsword"@en,
+        "Generation Two Greatsword"@en ;
     ns1:gw2Id 90551 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -365,6 +551,11 @@
 <https://priory.gw2/id/item/95612> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Tail"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Tail> ;
+    skos:altLabel "Gen 3 Legendary Mace"@en,
+        "Gen 3 Mace"@en,
+        "Gen Three Mace"@en,
+        "Generation 3 Mace"@en,
+        "Generation Three Mace"@en ;
     ns1:gw2Id 95612 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Mace> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -374,6 +565,11 @@
 <https://priory.gw2/id/item/95675> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Fang"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Fang> ;
+    skos:altLabel "Gen 3 Legendary Sword"@en,
+        "Gen 3 Sword"@en,
+        "Gen Three Sword"@en,
+        "Generation 3 Sword"@en,
+        "Generation Three Sword"@en ;
     ns1:gw2Id 95675 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Sword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -383,6 +579,11 @@
 <https://priory.gw2/id/item/95684> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Weight"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Weight> ;
+    skos:altLabel "Gen 3 Hammer"@en,
+        "Gen 3 Legendary Hammer"@en,
+        "Gen Three Hammer"@en,
+        "Generation 3 Hammer"@en,
+        "Generation Three Hammer"@en ;
     ns1:gw2Id 95684 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Hammer> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -392,6 +593,11 @@
 <https://priory.gw2/id/item/95808> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Argument"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Argument> ;
+    skos:altLabel "Gen 3 Legendary Pistol"@en,
+        "Gen 3 Pistol"@en,
+        "Gen Three Pistol"@en,
+        "Generation 3 Pistol"@en,
+        "Generation Three Pistol"@en ;
     ns1:gw2Id 95808 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Pistol> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -401,6 +607,11 @@
 <https://priory.gw2/id/item/96028> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Scale"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Scale> ;
+    skos:altLabel "Gen 3 Legendary Shield"@en,
+        "Gen 3 Shield"@en,
+        "Gen Three Shield"@en,
+        "Generation 3 Shield"@en,
+        "Generation Three Shield"@en ;
     ns1:gw2Id 96028 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Shield> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -410,6 +621,11 @@
 <https://priory.gw2/id/item/96203> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Claw"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Claw> ;
+    skos:altLabel "Gen 3 Dagger"@en,
+        "Gen 3 Legendary Dagger"@en,
+        "Gen Three Dagger"@en,
+        "Generation 3 Dagger"@en,
+        "Generation Three Dagger"@en ;
     ns1:gw2Id 96203 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Dagger> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -419,6 +635,11 @@
 <https://priory.gw2/id/item/96221> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Wisdom"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Wisdom> ;
+    skos:altLabel "Gen 3 Legendary Scepter"@en,
+        "Gen 3 Scepter"@en,
+        "Gen Three Scepter"@en,
+        "Generation 3 Scepter"@en,
+        "Generation Three Scepter"@en ;
     ns1:gw2Id 96221 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Scepter> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -428,6 +649,11 @@
 <https://priory.gw2/id/item/96356> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Bite"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Bite> ;
+    skos:altLabel "Gen 3 Greatsword"@en,
+        "Gen 3 Legendary Greatsword"@en,
+        "Gen Three Greatsword"@en,
+        "Generation 3 Greatsword"@en,
+        "Generation Three Greatsword"@en ;
     ns1:gw2Id 96356 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -437,6 +663,11 @@
 <https://priory.gw2/id/item/96652> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Insight"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Insight> ;
+    skos:altLabel "Gen 3 Legendary Staff"@en,
+        "Gen 3 Staff"@en,
+        "Gen Three Staff"@en,
+        "Generation 3 Staff"@en,
+        "Generation Three Staff"@en ;
     ns1:gw2Id 96652 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -446,6 +677,11 @@
 <https://priory.gw2/id/item/96937> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Rending"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Rending> ;
+    skos:altLabel "Gen 3 Axe"@en,
+        "Gen 3 Legendary Axe"@en,
+        "Gen Three Axe"@en,
+        "Generation 3 Axe"@en,
+        "Generation Three Axe"@en ;
     ns1:gw2Id 96937 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Axe> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -455,6 +691,11 @@
 <https://priory.gw2/id/item/97077> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Wing"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Wing> ;
+    skos:altLabel "Gen 3 Legendary Short bow"@en,
+        "Gen 3 Short bow"@en,
+        "Gen Three Short bow"@en,
+        "Generation 3 Short bow"@en,
+        "Generation Three Short bow"@en ;
     ns1:gw2Id 97077 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/ShortBow> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -464,6 +705,11 @@
 <https://priory.gw2/id/item/97099> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Breath"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Breath> ;
+    skos:altLabel "Gen 3 Legendary Torch"@en,
+        "Gen 3 Torch"@en,
+        "Gen Three Torch"@en,
+        "Generation 3 Torch"@en,
+        "Generation Three Torch"@en ;
     ns1:gw2Id 97099 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Torch> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -473,6 +719,11 @@
 <https://priory.gw2/id/item/97165> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Gaze"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Gaze> ;
+    skos:altLabel "Gen 3 Focus"@en,
+        "Gen 3 Legendary Focus"@en,
+        "Gen Three Focus"@en,
+        "Generation 3 Focus"@en,
+        "Generation Three Focus"@en ;
     ns1:gw2Id 97165 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Focus> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -482,6 +733,11 @@
 <https://priory.gw2/id/item/97377> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Persuasion"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Persuasion> ;
+    skos:altLabel "Gen 3 Legendary Rifle"@en,
+        "Gen 3 Rifle"@en,
+        "Gen Three Rifle"@en,
+        "Generation 3 Rifle"@en,
+        "Generation Three Rifle"@en ;
     ns1:gw2Id 97377 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Rifle> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -491,6 +747,11 @@
 <https://priory.gw2/id/item/97590> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Flight"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Flight> ;
+    skos:altLabel "Gen 3 Legendary Longbow"@en,
+        "Gen 3 Longbow"@en,
+        "Gen Three Longbow"@en,
+        "Generation 3 Longbow"@en,
+        "Generation Three Longbow"@en ;
     ns1:gw2Id 97590 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Longbow> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
@@ -500,6 +761,11 @@
 <https://priory.gw2/id/item/97783> a ns1:LegendaryWeapon ;
     rdfs:label "Aurene's Voice"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Aurene's_Voice> ;
+    skos:altLabel "Gen 3 Legendary Warhorn"@en,
+        "Gen 3 Warhorn"@en,
+        "Gen Three Warhorn"@en,
+        "Generation 3 Warhorn"@en,
+        "Generation Three Warhorn"@en ;
     ns1:gw2Id 97783 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Warhorn> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;

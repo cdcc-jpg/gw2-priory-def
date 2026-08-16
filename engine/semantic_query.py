@@ -200,14 +200,20 @@ class SemanticQueryService:
         if res:
             return res
 
-        # 2. Exact label match (case-insensitive, with and without 'The ' prefix)
+        # 2. Exact label & altLabel match (case-insensitive, with and without 'The ' prefix)
         exact_query = """
         SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?type WHERE {
             ?item priory:gw2Id ?gw2Id ;
                   rdfs:label ?label ;
                   a ?type .
             OPTIONAL { ?item priory:chatCode ?chatCode }
-            FILTER (lcase(str(?label)) = ?targetLabel || lcase(str(?label)) = ?altLabel)
+            OPTIONAL { ?item skos:altLabel ?alt }
+            FILTER (
+                lcase(str(?label)) = ?targetLabel || 
+                lcase(str(?label)) = ?altLabel ||
+                lcase(str(?alt)) = ?targetLabel ||
+                lcase(str(?alt)) = ?altLabel
+            )
             FILTER (?type != owl:NamedIndividual)
         } LIMIT 5
         """
@@ -217,21 +223,21 @@ class SemanticQueryService:
             "altLabel": Literal(alt_label)
         })
         if exact_res:
-            # Prioritize Legendary Weapons/Armors over sub-gifts
             exact_res.sort(key=lambda x: (
                 0 if any(k in str(x.get("type", "")) for k in ["LegendaryWeapon", "LegendaryArmor", "LegendaryTrinket", "LegendarySigil"]) else 1,
                 len(x.get("label", ""))
             ))
             return exact_res
 
-        # 3. Partial substring match on Items with gw2Id
+        # 3. Partial substring match on Items with gw2Id (checking both label and altLabel)
         item_query = """
         SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?type WHERE {
             ?item priory:gw2Id ?gw2Id ;
                   rdfs:label ?label ;
                   a ?type .
             OPTIONAL { ?item priory:chatCode ?chatCode }
-            FILTER (regex(str(?label), ?pattern, "i"))
+            OPTIONAL { ?item skos:altLabel ?alt }
+            FILTER (regex(str(?label), ?pattern, "i") || regex(str(?alt), ?pattern, "i"))
             FILTER (?type != owl:NamedIndividual)
         } LIMIT 15
         """
