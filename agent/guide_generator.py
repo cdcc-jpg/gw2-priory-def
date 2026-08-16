@@ -46,7 +46,8 @@ class GuideGenerator:
         self,
         goal: ResolvedGoal,
         diff_report: AccountDiffReport,
-        semantic_context: str
+        semantic_context: str,
+        optimal_plan: Optional[Any] = None
     ) -> PersonalizedGuide:
         """Synthesizes deterministic diff results and spatial waypoints into a structured guide."""
         intent = goal.intent
@@ -90,8 +91,16 @@ class GuideGenerator:
         total_items_needed = sum(missing_mats.values())
         readiness = 0 if total_items_needed > 1000 else max(5, 100 - (total_items_needed // 15))
 
-        # Strategic analysis based on intent & constraints
+        # Strategic analysis based on intent, constraints & optimal plan
         recommendations = []
+        if optimal_plan and getattr(optimal_plan, "precursor_strategy", None):
+            recommendations.append(optimal_plan.precursor_strategy)
+
+        if optimal_plan and getattr(optimal_plan, "bottlenecks", None):
+            for b in optimal_plan.bottlenecks:
+                if b not in recommendations:
+                    recommendations.append(b)
+
         if "WvW" in intent.excluded_game_modes and "Gift of Battle" in missing_mats:
             recommendations.append(
                 "⚠️ **WvW Trade-off Alert:** *Gift of Battle* strictly requires the WvW Gift of Battle Reward Track. "
@@ -127,16 +136,26 @@ class GuideGenerator:
                     f"before gambling in the Mystic Forge."
                 )
 
-        if "Dusk" in missing_mats:
-            recommendations.append(
-                "🗡️ **Precursor Weapon (Dusk):** "
-                "Compare current Trading Post buy price against Tier 1-3 collection crafting costs before committing gold."
-            )
-
         # Build personalized session checklist with waypoint navigation
         checklist = []
         allocated_time = 0
         step_num = 1
+
+        # Step 0: Starter Kit from Bank (if detected in roadmap)
+        if optimal_plan and getattr(optimal_plan, "step_by_step_roadmap", None):
+            for step in optimal_plan.step_by_step_roadmap:
+                if "Phase 0" in step.get("phase", ""):
+                    checklist.append(ActionStep(
+                        step_number=step_num,
+                        title="Open Starter Kit in Bank",
+                        estimated_time_minutes=2,
+                        game_mode="Account",
+                        description=step.get("action", "Withdraw and unpack your starter kit from bank."),
+                        chat_code=None
+                    ))
+                    allocated_time += 2
+                    step_num += 1
+                    break
 
         # Step 1: Crafting disciplines if missing
         if missing_discs:

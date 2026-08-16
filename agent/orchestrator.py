@@ -75,7 +75,8 @@ class PrioryChatSession:
         guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_guide(
             goal=resolved_goal,
             diff_report=diff_report,
-            semantic_context=semantic_context
+            semantic_context=semantic_context,
+            optimal_plan=optimal_plan
         )
 
         # Save to history
