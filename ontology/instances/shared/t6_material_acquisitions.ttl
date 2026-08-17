@@ -1,0 +1,364 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+# ==============================================================================
+# Tier 6 Fine Crafting Materials & Acquisition Pathways
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Powerful Blood (GW2 ID: 24295)
+# ------------------------------------------------------------------------------
+item:24295 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vial of Powerful Blood"@en ;
+    priory:gw2Id 24295 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       item:path_t6_drizzlewood_blood ,
+                       recipe:promote_potent_blood ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of might, blood, and dusk/dawn precursor components."@en .
+
+recipe:promote_potent_blood a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Powerful Blood"@en ;
+    priory:producesItem item:24295 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24294 ; # 50 Potent Blood (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24295 ; # 1 Powerful Blood (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones (Spirit Shards)
+        priory:requiredQuantity 5
+    ] ;
+    rdfs:comment "Transmutes 50 T5 Potent Blood into ~7 T6 Powerful Blood using Spirit Shards."@en .
+
+# ------------------------------------------------------------------------------
+# 2. Ancient Bone (GW2 ID: 24276)
+# ------------------------------------------------------------------------------
+item:24276 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ancient Bone"@en ;
+    priory:gw2Id 24276 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       recipe:promote_large_bone ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of might and armor components."@en .
+
+recipe:promote_large_bone a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Ancient Bone"@en ;
+    priory:producesItem item:24276 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24275 ; # 50 Large Bone (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24276 ; # 1 Ancient Bone (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ------------------------------------------------------------------------------
+# 3. Elaborate Totem (GW2 ID: 24358)
+# ------------------------------------------------------------------------------
+item:24358 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Elaborate Totem"@en ;
+    priory:gw2Id 24358 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       item:path_t6_drizzlewood_iron ,
+                       recipe:promote_intricate_totem ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of magic and weapon gifts."@en .
+
+recipe:promote_intricate_totem a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Elaborate Totem"@en ;
+    priory:producesItem item:24358 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24357 ; # 50 Intricate Totem (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24358 ; # 1 Elaborate Totem (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ------------------------------------------------------------------------------
+# 4. Crystalline Dust (GW2 ID: 24277)
+# ------------------------------------------------------------------------------
+item:24277 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Crystalline Dust"@en ;
+    priory:gw2Id 24277 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       recipe:promote_incandescent_dust ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of magic, mystic clover alchemy, and ascended refinement."@en .
+
+recipe:promote_incandescent_dust a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Crystalline Dust"@en ;
+    priory:producesItem item:24277 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24272 ; # 50 Incandescent Dust (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 1 Crystalline Dust (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19721 ; # 5 Glob of Ectoplasm
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ------------------------------------------------------------------------------
+# 5. Vicious Claw (GW2 ID: 24351)
+# ------------------------------------------------------------------------------
+item:24351 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vicious Claw"@en ;
+    priory:gw2Id 24351 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       item:path_t6_drizzlewood_ash ,
+                       recipe:promote_large_claw ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of might and weapon crafting."@en .
+
+recipe:promote_large_claw a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Vicious Claw"@en ;
+    priory:producesItem item:24351 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24350 ; # 50 Large Claw (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24351 ; # 1 Vicious Claw (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ------------------------------------------------------------------------------
+# 6. Vicious Fang (GW2 ID: 24288)
+# ------------------------------------------------------------------------------
+item:24288 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vicious Fang"@en ;
+    priory:gw2Id 24288 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       item:path_t6_drizzlewood_blood ,
+                       recipe:promote_large_fang ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of might and weapon crafting."@en .
+
+recipe:promote_large_fang a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Vicious Fang"@en ;
+    priory:producesItem item:24288 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24287 ; # 50 Large Fang (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24288 ; # 1 Vicious Fang (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ------------------------------------------------------------------------------
+# 7. Armored Scale (GW2 ID: 24283)
+# ------------------------------------------------------------------------------
+item:24283 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Armored Scale"@en ;
+    priory:gw2Id 24283 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       item:path_t6_drizzlewood_iron ,
+                       recipe:promote_large_scale ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of might and armor crafting."@en .
+
+recipe:promote_large_scale a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Armored Scale"@en ;
+    priory:producesItem item:24283 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24282 ; # 50 Large Scale (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24283 ; # 1 Armored Scale (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ------------------------------------------------------------------------------
+# 8. Powerful Venom Sac (GW2 ID: 24289)
+# ------------------------------------------------------------------------------
+item:24289 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Powerful Venom Sac"@en ;
+    priory:gw2Id 24289 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_t6_volatile_magic_trophy ,
+                       item:path_t6_laurel_merchant ,
+                       item:path_t6_wizards_vault ,
+                       item:path_t6_drizzlewood_ash ,
+                       recipe:promote_potent_venom ;
+    skos:definition "Tier 6 fine crafting trophy used in gifts of magic and venomous weapon gifts."@en .
+
+recipe:promote_potent_venom a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Promotion: Powerful Venom Sac"@en ;
+    priory:producesItem item:24289 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24288 ; # 50 Potent Venom Sac (T5)
+        priory:requiredQuantity 50
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24289 ; # 1 Powerful Venom Sac (T6)
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 5 Crystalline Dust
+        priory:requiredQuantity 5
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiredQuantity 5
+    ] .
+
+# ==============================================================================
+# Shared T6 Acquisition Archetypes
+# ==============================================================================
+
+# --- Volatile Magic Trophy Shipments ---
+item:path_t6_volatile_magic_trophy a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Volatile Magic Trophy Shipments"@en ;
+    priory:vendorNPC "Volatile Magic Collector" ;
+    priory:zoneName "Dragonfall" ;
+    priory:waypointName "Pact Command Waypoint" ;
+    priory:nearestWaypoint "[&BNoLAAA=]" ;
+    priory:requiresCurrency currency:VolatileMagic ;
+    priory:requiredQuantity 250 ;
+    skos:definition "Trade 250 Volatile Magic + 1 gold for a Trophy Shipment (yields ~10-15 T5/T6 materials). Most efficient T6 conversion in GW2."@en .
+
+# --- Laurel Merchant Heavy Crafting Bags ---
+item:path_t6_laurel_merchant a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Laurel Merchant (Heavy Crafting Bags)"@en ;
+    priory:vendorNPC "Laurel Merchant" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:waypointName "Sanctum Harbor Waypoint" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresCurrency currency:Laurel ;
+    priory:requiredQuantity 1 ;
+    skos:definition "Exchange 1 Laurel for 1 Heavy Crafting Bag (yields 3 T6 materials)."@en .
+
+# --- Wizard's Vault Heavy Crafting Bags ---
+item:path_t6_wizards_vault a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Wizard's Vault (Astral Acclaim Heavy Crafting Bags)"@en ;
+    priory:requiresCurrency currency:AstralAcclaim ;
+    priory:requiredQuantity 10 ;
+    skos:definition "Redeem Astral Acclaim for Heavy Crafting Bags (Tier 6 materials)."@en .
+
+# --- Drizzlewood Coast Charr Legion Tracks ---
+item:path_t6_drizzlewood_blood a priory:RewardTrackPath, owl:NamedIndividual ;
+    rdfs:label "Drizzlewood Coast: Blood Legion Material Track"@en ;
+    priory:zoneName "Drizzlewood Coast" ;
+    priory:waypointName "Base Camp Waypoint" ;
+    priory:nearestWaypoint "[&BDoMAAA=]" ;
+    skos:definition "Progress the Blood Legion donation track in Drizzlewood Coast for high yields of Powerful Blood and Vicious Fangs."@en .
+
+item:path_t6_drizzlewood_iron a priory:RewardTrackPath, owl:NamedIndividual ;
+    rdfs:label "Drizzlewood Coast: Iron Legion Material Track"@en ;
+    priory:zoneName "Drizzlewood Coast" ;
+    priory:waypointName "Base Camp Waypoint" ;
+    priory:nearestWaypoint "[&BDoMAAA=]" ;
+    skos:definition "Progress the Iron Legion donation track in Drizzlewood Coast for high yields of Armored Scales and Elaborate Totems."@en .
+
+item:path_t6_drizzlewood_ash a priory:RewardTrackPath, owl:NamedIndividual ;
+    rdfs:label "Drizzlewood Coast: Ash Legion Material Track"@en ;
+    priory:zoneName "Drizzlewood Coast" ;
+    priory:waypointName "Base Camp Waypoint" ;
+    priory:nearestWaypoint "[&BDoMAAA=]" ;
+    skos:definition "Progress the Ash Legion donation track in Drizzlewood Coast for high yields of Vicious Claws and Powerful Venom Sacs."@en .

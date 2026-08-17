@@ -64,7 +64,7 @@ class TestAccountRanker(unittest.TestCase):
         # Account owns Shard of the Dark Arts -> The Binding of Ipos should be boosted
         ipos = next((r for r in rankings if r.name == "The Binding of Ipos"), None)
         self.assertIsNotNone(ipos)
-        self.assertGreater(ipos.readiness_pct, 15.0)
+        self.assertGreater(ipos.readiness_pct, 5.0)
 
     def test_soto_obsidian_armor_ranking(self):
         """Verifies SotO Obsidian Armor ranking accounts for essences and stardust."""

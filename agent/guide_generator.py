@@ -100,6 +100,18 @@ class GuideGenerator:
                 if b not in recommendations:
                     recommendations.append(b)
 
+        if optimal_plan and getattr(optimal_plan, "t6_strategies", None):
+            for t_strat in optimal_plan.t6_strategies:
+                if t_strat not in recommendations:
+                    recommendations.append(t_strat)
+
+        # Domain note on spears if non-existent spear was referenced
+        if any(term in (intent.user_playstyle_notes or "").lower() or term in (goal.resolved_item_name or "").lower() for term in ["tier two spear", "tier 2 spear", "gen 2 spear", "generation 2 spear"]):
+            recommendations.append(
+                "📌 **Domain Note on Spears:** Guild Wars 2 does not have a Generation 2 legendary spear. "
+                "The available legendary spears are **Kamohoali'i Kotaki** (Gen 1 Aquatic Spear) and **Klobjarne Harvester** (Janthir Wilds Land Spear)."
+            )
+
         if "WvW" in intent.excluded_game_modes and "Gift of Battle" in missing_mats:
             recommendations.append(
                 "⚠️ **WvW Trade-off Alert:** *Gift of Battle* strictly requires the WvW Gift of Battle Reward Track. "
@@ -135,113 +147,50 @@ class GuideGenerator:
                     f"before gambling in the Mystic Forge."
                 )
 
-        # Build personalized session checklist with waypoint navigation
+        # Build personalized session checklist with waypoint navigation strictly within time budget
         checklist = []
-        allocated_time = 0
+        budget_remaining = max(intent.time_budget_minutes, 15)
         step_num = 1
 
-        # Step 0: Starter Kit from Bank (if detected in roadmap)
+        # Use dynamic steps from optimal_plan if available
         if optimal_plan and getattr(optimal_plan, "step_by_step_roadmap", None):
             for step in optimal_plan.step_by_step_roadmap:
-                if "Phase 0" in step.get("phase", ""):
+                t = step.get("est_time_mins", 10)
+                if t <= budget_remaining:
                     checklist.append(ActionStep(
                         step_number=step_num,
-                        title="Open Starter Kit in Bank",
-                        estimated_time_minutes=2,
-                        game_mode="Account",
-                        description=step.get("action", "Withdraw and unpack your starter kit from bank."),
-                        chat_code=None
+                        title=step.get("phase", f"Step {step_num}"),
+                        estimated_time_minutes=t,
+                        game_mode="OpenWorld",
+                        description=step.get("action", ""),
+                        chat_code=step.get("chat_code")
                     ))
-                    allocated_time += 2
+                    budget_remaining -= t
                     step_num += 1
-                    break
 
-        # Step 1: Crafting disciplines if missing
-        if missing_discs:
-            checklist.append(ActionStep(
-                step_number=step_num,
-                title="Level Up Crafting Discipline",
-                estimated_time_minutes=30,
-                game_mode="OpenWorld",
-                description=f"Visit any major city crafting station to level up {', '.join(missing_discs)} using fast discovery guides.",
-                chat_code=None
-            ))
-            allocated_time += 30
-            step_num += 1
-
-        # Step 2: Daily Provisioner Tokens (If missing tokens) OR Immediate Exchange (If tokens owned)
-        if "Gift of Craftsmanship" in missing_mats and allocated_time < intent.time_budget_minutes:
-            checklist.append(ActionStep(
-                step_number=step_num,
-                title="Daily Faction Provisioner Barter Run",
-                estimated_time_minutes=15,
-                game_mode="OpenWorld",
-                description="Teleport to Junker's Waypoint [&BKgDAAA=] in Black Citadel. Speak to Faction Provisioner to trade for today's time-gated Provisioner Tokens.",
-                chat_code="[&BKgDAAA=]"
-            ))
-            allocated_time += 15
-            step_num += 1
-        elif goal.resolved_item_id == 91505 and allocated_time < intent.time_budget_minutes:
-            checklist.append(ActionStep(
-                step_number=step_num,
-                title=f"Exchange Tokens for {target_qty}x Gift of Craftsmanship",
-                estimated_time_minutes=5,
-                game_mode="OpenWorld",
-                description=f"Teleport to Junker's Waypoint [&BKgDAAA=] in Black Citadel. Speak to Faction Provisioner to exchange {50 * target_qty} Provisioner Tokens for {target_qty}x Gift of Craftsmanship.",
-                chat_code="[&BKgDAAA=]"
-            ))
-            allocated_time += 5
-            step_num += 1
-
-        # Step 3: Clovers: Wizard's Vault (if not exhausted) OR Fractal Vendor / Mystic Forge (if exhausted)
-        if "Mystic Clover" in missing_mats and allocated_time < intent.time_budget_minutes:
-            if "WizardVault" not in exhausted:
+        if not checklist:
+            # Fallback dynamic steps
+            if "Mystic Clover" in missing_mats and budget_remaining >= 15:
                 checklist.append(ActionStep(
                     step_number=step_num,
                     title="Complete Daily Wizard's Vault Tasks",
-                    estimated_time_minutes=20,
+                    estimated_time_minutes=min(20, budget_remaining),
                     game_mode="OpenWorld",
-                    description="Complete daily objectives to claim Astral Acclaim and purchase remaining Mystic Clovers directly from the Vault.",
+                    description="Claim Astral Acclaim and purchase remaining Mystic Clovers directly from the Vault.",
                     chat_code=None
                 ))
-                allocated_time += 20
+                budget_remaining -= min(20, budget_remaining)
                 step_num += 1
-            elif "Fractals" not in intent.excluded_game_modes:
+
+            if budget_remaining > 0:
                 checklist.append(ActionStep(
                     step_number=step_num,
-                    title="Buy Daily Fractal Clovers (BUY-2046)",
-                    estimated_time_minutes=10,
-                    game_mode="Fractals",
-                    description="Visit BUY-2046 in the Fractal Observatory / Mistlock Sanctuary to buy today's 2 time-gated Mystic Clovers.",
-                    chat_code=None
+                    title="Gather Materials & Meta Event Session",
+                    estimated_time_minutes=budget_remaining,
+                    game_mode="OpenWorld",
+                    description="Teleport to Drizzlewood Coast [&BDoMAAA=] to farm missing fine trophies and gold.",
+                    chat_code="[&BDoMAAA=]"
                 ))
-                allocated_time += 10
-                step_num += 1
-
-        # Step 4: Icy Runestones if crafting Twilight
-        if "Icy Runestone" in missing_mats and allocated_time < intent.time_budget_minutes:
-            checklist.append(ActionStep(
-                step_number=step_num,
-                title="Purchase 100x Icy Runestones (100g)",
-                estimated_time_minutes=5,
-                game_mode="OpenWorld",
-                description="Teleport to Earthshake Waypoint [&BHsBAAA=] in Frostgorge Sound. Purchase 100 Icy Runestones from Rojan the Penitent.",
-                chat_code="[&BHsBAAA=]"
-            ))
-            allocated_time += 5
-            step_num += 1
-
-        # Step 5: Material Farming / Gold Generation
-        remaining_time = max(20, intent.time_budget_minutes - allocated_time)
-        meta_waypoint = "[&BF8HAAA=]"
-        checklist.append(ActionStep(
-            step_number=step_num,
-            title="Gather Materials & Farm Meta Events",
-            estimated_time_minutes=remaining_time,
-            game_mode="OpenWorld",
-            description=f"Teleport to Camp Resolve Waypoint {meta_waypoint} in Silverwastes (or Drizzlewood Coast) to farm gold, Lodestones, and Lucent Motes.",
-            chat_code=meta_waypoint
-        ))
 
         summary = (
             f"Here is your personalized progression plan for **{goal_display}** "
@@ -268,7 +217,8 @@ class GuideGenerator:
     def generate_ranking_guide(
         self,
         rankings: List[Any],
-        user_prompt: str
+        user_prompt: str,
+        time_budget_minutes: int = 120
     ) -> PersonalizedGuide:
         """Generates a ranked comparative guide for 'Which legendary am I closest to?' queries."""
         if not rankings:
@@ -292,6 +242,14 @@ class GuideGenerator:
             f"🏆 **Top Recommendation:** **{top_choice.name}** ({top_choice.subtype or 'Weapon'}) is your #1 closest legendary!"
         ]
 
+        # Domain clarification note if player asked about non-existent Gen 2 / Tier 2 spear
+        prompt_lower = user_prompt.lower()
+        if "tier two spear" in prompt_lower or "tier 2 spear" in prompt_lower or "gen 2 spear" in prompt_lower or "generation 2 spear" in prompt_lower:
+            recs.append(
+                "📌 **Domain Note on Spears:** Guild Wars 2 does not have a Generation 2 legendary spear. "
+                "The available legendary spears are **Kamohoali'i Kotaki** (Gen 1 Aquatic Spear) and **Klobjarne Harvester** (Janthir Wilds Land Spear)."
+            )
+
         if top_choice.starter_kit_eligible:
             recs.append(
                 f"🎁 **Bank Starter Kit Match:** You own **Legendary Weapon Starter Kit—Set 2** in your Bank! "
@@ -307,10 +265,12 @@ class GuideGenerator:
                 f"| Est. Cost: ~{item.estimated_remaining_gold}g{kit_tag}"
             )
 
+        # Build dynamic time-budget checklist (Strictly within player's session time budget)
         checklist = []
+        budget = max(time_budget_minutes, 15)
         step_num = 1
 
-        if top_choice.starter_kit_eligible:
+        if top_choice.starter_kit_eligible and budget >= 2:
             checklist.append(ActionStep(
                 step_number=step_num,
                 title="Claim Precursor from Bank Starter Kit",
@@ -319,27 +279,34 @@ class GuideGenerator:
                 description=f"Withdraw 'Legendary Weapon Starter Kit—Set 2' from your Bank and choose the '{top_choice.name} Kit' for 0 gold.",
                 chat_code=None
             ))
+            budget -= 2
             step_num += 1
 
-        checklist.append(ActionStep(
-            step_number=step_num,
-            title="Complete Daily Wizard's Vault Tasks",
-            estimated_time_minutes=20,
-            game_mode="OpenWorld",
-            description="Claim Astral Acclaim and purchase remaining Mystic Clovers directly from the Vault.",
-            chat_code=None
-        ))
-        step_num += 1
+        # Quick daily currency / vault step
+        vault_time = min(15, budget)
+        if vault_time >= 5:
+            checklist.append(ActionStep(
+                step_number=step_num,
+                title="Complete Daily Wizard's Vault Tasks",
+                estimated_time_minutes=vault_time,
+                game_mode="OpenWorld",
+                description="Claim Astral Acclaim and purchase remaining Mystic Clovers directly from the Vault.",
+                chat_code=None
+            ))
+            budget -= vault_time
+            step_num += 1
 
-        meta_waypoint = "[&BF8HAAA=]"
-        checklist.append(ActionStep(
-            step_number=step_num,
-            title="Gather Missing Materials in Silverwastes",
-            estimated_time_minutes=98,
-            game_mode="OpenWorld",
-            description=f"Teleport to Camp Resolve {meta_waypoint} to farm missing T6 fine trophies and gold.",
-            chat_code=meta_waypoint
-        ))
+        # Material farm session fitting exactly in the remaining time
+        if budget >= 10:
+            meta_waypoint = "[&BDoMAAA=]"
+            checklist.append(ActionStep(
+                step_number=step_num,
+                title="Gather Missing Materials in Drizzlewood Coast",
+                estimated_time_minutes=budget,
+                game_mode="OpenWorld",
+                description=f"Teleport to Base Camp Waypoint {meta_waypoint} to progress Charr Legion material tracks for missing T6 fine trophies.",
+                chat_code=meta_waypoint
+            ))
 
         summary = (
             f"Based on your live account snapshot (including your materials and bank starter kits), "

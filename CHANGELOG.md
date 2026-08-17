@@ -10,7 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Complete Leaf-Level Recipe DAGs across ALL Generations & Expansions (7,390 Triples in Knowledge Graph):**
+- **T6 Fine Crafting Material Acquisition Ontology (7,654 Triples in Knowledge Graph):**
+  - Created [`ontology/instances/shared/t6_material_acquisitions.ttl`](./ontology/instances/shared/t6_material_acquisitions.ttl) formally modeling all 8 T6 fine materials (*Vials of Powerful Blood `24295`*, *Ancient Bones `24276`*, *Elaborate Totems `24358`*, *Crystalline Dust `24277`*, *Vicious Claws `24351`*, *Vicious Fangs `24288`*, *Armored Scales `24283`*, *Powerful Venom Sacs `24289`*) with multiple authentic RDF acquisition pathways (`priory:VendorExchangePath`, `priory:MysticForgeRecipe`, `priory:RewardTrackPath`).
+  - Modeled Volatile Magic Trophy Shipments (Dragonfall `[&BNoLAAA=]`), Spirit Shard Mystic Forge material transmutation, Laurel Merchant Heavy Crafting Bags (Lion's Arch `[&BBAEAAA=]`), Wizard's Vault Astral Acclaim, and Drizzlewood Coast Charr Legion tracks (`[&BDoMAAA=]`).
+- **Dynamic T6 Strategy Evaluation in `PathSolver` (`engine/path_solver.py`):**
+  - Evaluates player's live wallet balances (Volatile Magic, Spirit Shards, Laurels, Astral Acclaim) to recommend optimal conversion strategies rather than forcing raw gold expenditure.
+- **Time-Budget Constrained Session Planning in `GuideGenerator` & `PathSolver`:**
+  - Dynamically budgets session action steps to strictly respect player playtime limits (e.g., 45 minutes) with real tasks (currency claims, forge transmutations, meta events).
+- **Domain Truth Guidance on Non-Existent Categories:**
+  - Added domain clarification in progression guides explaining that Guild Wars 2 does not have a Generation 2 legendary spear and guiding the player to Gen 1 *Kamohoali'i Kotaki* (Aquatic) and Janthir Wilds *Klobjarne Harvester* (Land).
   - **Generation 1 (20 Weapons):** Expanded all 20 weapons down to leaf precursors, Gifts of Mastery/Fortune, and raw refined ingots, planks, and lodestones in [`ontology/instances/recipes/gen1_legendary_recipes.ttl`](./ontology/instances/recipes/gen1_legendary_recipes.ttl).
   - **Generation 2 (16 Weapons):** Full precursor crafting paths (including 290-shard recipes like *Shard of the Crown* and *Shard of the Dark Arts*), weapon gifts, *Mystic Tribute*, and *Gift of Maguuma Mastery* (*Gift of Tarir*, *Fleet*, *Chak*, *Insights* -> *Crystalline Ore*) and *Gift of Desert Mastery* (*Funerary Incense*, *Gift of the Rider*) in [`ontology/instances/recipes/gen2_legendary_recipes.ttl`](./ontology/instances/recipes/gen2_legendary_recipes.ttl).
   - **Generation 3 Aurene (16 Weapons):** Full Dragon precursor recipes (*Hydrocatalytic Reagents*, *Memories of Aurene*), weapon gifts, *Gift of Aurene*, *Gift of the Dragon Empire* (*Antique Summoning Stones*, *Pure Jade*, *Jade Runestones*), and *Gift of Jade Mastery* in [`ontology/instances/recipes/gen3_legendary_recipes.ttl`](./ontology/instances/recipes/gen3_legendary_recipes.ttl).

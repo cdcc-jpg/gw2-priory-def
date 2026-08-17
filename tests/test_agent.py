@@ -119,6 +119,48 @@ class TestAgentPipeline(unittest.TestCase):
         self.assertEqual(guide.missing_materials_summary["Mystic Clover"], 27)
         self.assertNotIn("Dusk", guide.missing_materials_summary)
 
+    def test_time_budget_constrained_session_planning(self):
+        """Verifies session checklist respects 45-minute budget and includes domain clarification on spears."""
+        player_account = AccountState(
+            wallet={45: 2500, 23: 150, 3: 20} # 2500 Volatile Magic, 150 Spirit Shards, 20 Laurels
+        )
+
+        user_prompt = "I have 45 minutes tonight and want to work on crafting the tier two spear."
+        guide = self.orchestrator.run_pipeline(user_prompt, player_account)
+
+        self.assertGreater(len(guide.session_checklist), 0)
+        total_time = sum(step.estimated_time_minutes for step in guide.session_checklist)
+        self.assertLessEqual(total_time, 45)
+
+        # Should include domain note on spears
+        spear_note = any("Domain Note on Spears" in r or "spear" in r.lower() for r in guide.strategic_recommendations)
+        self.assertTrue(spear_note)
+
+    def test_t6_acquisition_solver_strategies(self):
+        """Verifies PathSolver generates grounded T6 conversion strategies based on wallet currencies."""
+        player_account = AccountState(
+            wallet={45: 1000, 23: 50, 3: 15}
+        )
+
+        diff_report = self.orchestrator.diff_engine.compute_diff(
+            goal_item_id=30699, # Twilight (needs T6 Powerful Blood, etc.)
+            account=player_account
+        )
+        plan = self.orchestrator.solver.solve_optimal_path(
+            diff_report=diff_report,
+            account=player_account,
+            time_budget_minutes=45
+        )
+
+        self.assertGreater(len(plan.t6_strategies), 0)
+        self.assertTrue(any("Volatile Magic" in s for s in plan.t6_strategies))
+        self.assertTrue(any("Mystic Forge" in s for s in plan.t6_strategies))
+        self.assertTrue(any("Laurel" in s for s in plan.t6_strategies))
+
+        # Check that roadmap adheres to 45 min budget
+        total_roadmap_time = sum(s.get("est_time_mins", 0) for s in plan.step_by_step_roadmap)
+        self.assertLessEqual(total_roadmap_time, 45)
+
 
 if __name__ == "__main__":
     unittest.main()

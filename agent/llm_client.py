@@ -106,7 +106,7 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         ])
 
         cat_filter = None
-        for term in ["gen 1", "generation 1", "gen 2", "generation 2", "gen 3", "generation 3", "aurene", "soto", "obsidian", "janthir", "armor", "trinket", "upgrade"]:
+        for term in ["gen 1", "generation 1", "gen 2", "generation 2", "gen 3", "generation 3", "aurene", "soto", "obsidian", "janthir", "armor", "trinket", "upgrade", "spear"]:
             if term in p_lower:
                 cat_filter = term
                 break

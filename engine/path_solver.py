@@ -31,9 +31,10 @@ class OptimalCraftingPlan(BaseModel):
     is_already_owned: bool
     estimated_total_gold_cost: float
     precursor_strategy: Optional[str] = None
-    clover_strategy: List[CloverStrategyOption]
-    bottlenecks: List[str]
-    step_by_step_roadmap: List[Dict[str, Any]]
+    clover_strategy: List[CloverStrategyOption] = Field(default_factory=list)
+    t6_strategies: List[str] = Field(default_factory=list)
+    bottlenecks: List[str] = Field(default_factory=list)
+    step_by_step_roadmap: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class PathSolver:
@@ -48,7 +49,8 @@ class PathSolver:
         account: AccountState,
         tp_prices: Optional[Dict[int, float]] = None,
         excluded_modes: Optional[List[str]] = None,
-        exhausted_sources: Optional[List[str]] = None
+        exhausted_sources: Optional[List[str]] = None,
+        time_budget_minutes: int = 120
     ) -> OptimalCraftingPlan:
         prices = tp_prices or {}
         missing = diff_report.summary_missing_materials
@@ -66,7 +68,6 @@ class PathSolver:
                 break
 
         if not precursor_strat and not diff_report.is_fully_satisfied:
-            # Check if root has a precursor requirement in graph
             prec_query = """
             SELECT ?precursor ?precursorId ?label ?isBound WHERE {
                 ?recipe priory:producesItem ?goal ;
@@ -106,7 +107,6 @@ class PathSolver:
 
         if clovers_needed > 0:
             vault_available = "WizardVault" not in exhausted
-            # Query all acquisition pathways for Mystic Clover (GW2 ID: 19675)
             clover_query = """
             SELECT ?path ?pathLabel ?curr ?currNotation ?currLabel ?currQty ?npc ?zone ?waypoint ?def WHERE {
                 ?item priory:gw2Id 19675 ;
@@ -153,7 +153,6 @@ class PathSolver:
                             recommended=(not vault_available)
                         ))
 
-            # Default Forge Promotion Option
             clover_options.append(CloverStrategyOption(
                 source_name="Mystic Forge Promotion (Clover Recipe)",
                 clovers_obtainable=clovers_needed,
@@ -164,11 +163,76 @@ class PathSolver:
             ))
 
         # ----------------------------------------------------------------------
-        # 3. Dynamic Gold Cost Calculation
+        # 3. Dynamic T6 Fine Material Pathways Strategy (Queried from Graph)
+        # ----------------------------------------------------------------------
+        t6_strats = []
+        t6_ids = {
+            24295: "Powerful Blood",
+            24276: "Ancient Bone",
+            24358: "Elaborate Totem",
+            24277: "Crystalline Dust",
+            24351: "Vicious Claw",
+            24288: "Vicious Fang",
+            24283: "Armored Scale",
+            24289: "Powerful Venom Sac",
+        }
+        missing_t6 = {k: v for k, v in missing.items() if any(t_name.lower() in k.lower() for t_name in t6_ids.values())}
+
+        if missing_t6:
+            # Query all T6 acquisition pathways
+            t6_query = """
+            SELECT ?path ?pathLabel ?npc ?zone ?waypoint ?def ?currLabel WHERE {
+                ?item a priory:CraftingMaterial ;
+                      priory:acquiredVia ?path .
+                ?path rdfs:label ?pathLabel .
+                OPTIONAL { ?path skos:definition ?def }
+                OPTIONAL { ?path priory:vendorNPC ?npc }
+                OPTIONAL { ?path priory:zoneName ?zone }
+                OPTIONAL { ?path priory:nearestWaypoint ?waypoint }
+                OPTIONAL {
+                    ?path priory:requiresCurrency ?curr .
+                    OPTIONAL { ?curr skos:prefLabel ?currLabel }
+                }
+            } LIMIT 20
+            """
+            t6_paths = self.store.query(t6_query)
+
+            # Volatile Magic check
+            vm_amount = account.wallet.get(45, 0)
+            if vm_amount >= 250:
+                shipments = vm_amount // 250
+                t6_strats.append(
+                    f"⚡ **Volatile Magic Conversion ({vm_amount:,} available):** Trade {min(shipments, 20) * 250} Volatile Magic + {min(shipments, 20)}g "
+                    f"for {min(shipments, 20)}x **Trophy Shipments** at Dragonfall `[&BNoLAAA=]` (yields ~{min(shipments, 20) * 12} T5/T6 fine materials)."
+                )
+
+            # Spirit Shards Mystic Forge promotion
+            shards_amount = account.wallet.get(23, 0)
+            if shards_amount >= 10:
+                t6_strats.append(
+                    f"🔮 **Mystic Forge T5 -> T6 Transmutation ({shards_amount} Spirit Shards available):** "
+                    f"Combine 50x T5 materials + 1x T6 material + 5x Crystalline Dust + 5x Philosopher's Stones in the Mystic Forge for high-yield T6 output."
+                )
+
+            # Laurel Merchant
+            laurel_amount = account.wallet.get(3, 0)
+            if laurel_amount >= 1:
+                t6_strats.append(
+                    f"🌿 **Laurel Merchant ({laurel_amount} Laurels available):** "
+                    f"Exchange Laurels for Heavy Crafting Bags in Lion's Arch `[&BBAEAAA=]` (1 Laurel = 3 guaranteed T6 materials)."
+                )
+
+            # Open World / Drizzlewood
+            if "OpenWorld" not in excluded:
+                t6_strats.append(
+                    "🌲 **Drizzlewood Coast Meta (`[&BDoMAAA=]`):** Farm Charr Legion material reward tracks (Blood for Blood/Fangs, Ash for Claws/Venom, Iron for Scales/Totems)."
+                )
+
+        # ----------------------------------------------------------------------
+        # 4. Dynamic Gold Cost Calculation
         # ----------------------------------------------------------------------
         total_gold = 0.0
         for mat_name, needed_qty in missing.items():
-            # Query item ID and tradeability
             mat_query = """
             SELECT ?gw2Id ?isBound WHERE {
                 ?item rdfs:label ?label ;
@@ -185,7 +249,7 @@ class PathSolver:
                     total_gold += prices[m_id] * needed_qty
 
         # ----------------------------------------------------------------------
-        # 4. Dynamic Non-Negotiable Bottlenecks (100% Graph-Driven)
+        # 5. Dynamic Non-Negotiable Bottlenecks (100% Graph-Driven)
         # ----------------------------------------------------------------------
         bottlenecks = []
         for mat_name, needed_qty in missing.items():
@@ -239,9 +303,11 @@ class PathSolver:
                 bottlenecks.append(f"🔨 **{d['discipline'].capitalize()} Level {d['required_rating']}:** Required to craft weapon or upgrade gifts.")
 
         # ----------------------------------------------------------------------
-        # 5. Dynamic Roadmap (100% Graph-Driven)
+        # 6. Dynamic Time-Budget Constrained Roadmap
         # ----------------------------------------------------------------------
         roadmap = []
+        budget = max(time_budget_minutes, 15)
+
         for sub in diff_report.root_node.sub_requirements:
             if "Unpackable from" in sub.label:
                 kit_name = sub.label.split("Unpackable from")[-1].replace(")", "").strip()
@@ -249,29 +315,42 @@ class PathSolver:
                 roadmap.append({
                     "phase": "Phase 0: Claim Bank Starter Kit",
                     "action": f"Withdraw '{kit_name}' from your Bank and choose the '{diff_report.goal_item_name} Kit' to immediately receive {item_name} for 0 gold!",
+                    "est_time_mins": 2,
                     "est_cost": "0 gold (Already Owned!)"
                 })
+                budget -= 2
                 break
 
-        if diff_report.missing_disciplines:
+        # Fast currency conversion step
+        if missing_t6 and account.wallet.get(45, 0) >= 250 and budget >= 5:
             roadmap.append({
-                "phase": "Phase 1: Crafting Discipline Setup",
-                "action": f"Level crafting disciplines to {max(d['required_rating'] for d in diff_report.missing_disciplines)} using discovery guides.",
-                "est_cost": "15-25 gold"
+                "phase": "Phase 1: Volatile Magic Trophy Claim",
+                "action": "Teleport to Dragonfall [&BNoLAAA=] and buy Trophy Shipments from the Volatile Magic Collector.",
+                "est_time_mins": 5,
+                "est_cost": f"~{min(account.wallet.get(45, 0) // 250, 10)}g"
             })
+            budget -= 5
 
-        if clovers_needed > 0:
+        # Mystic Forge promotion step
+        if missing_t6 and account.wallet.get(23, 0) >= 10 and budget >= 10:
             roadmap.append({
-                "phase": "Phase 2: Guaranteed Clovers & Time-Gated Vendors",
-                "action": "Claim alternative clover vendor routes or Mystic Forge promotions.",
-                "est_cost": "0-15 gold"
+                "phase": "Phase 2: Mystic Forge T6 Promotion",
+                "action": "Transmute surplus T5 materials into T6 trophies using Spirit Shards at Miyani [&BBAEAAA=].",
+                "est_time_mins": 10,
+                "est_cost": "0 gold (Spirit Shards)"
             })
+            budget -= 10
 
-        roadmap.append({
-            "phase": "Phase 3: Trading Post Materials & Mystic Forge Assembly",
-            "action": f"Place TP buy orders for remaining materials and forge {target_qty}x {diff_report.goal_item_name}.",
-            "est_cost": f"~{total_gold:.0f} gold"
-        })
+        # Dedicated meta/farm step fitting within remaining time
+        if budget >= 15:
+            meta_time = min(budget, 30)
+            roadmap.append({
+                "phase": "Phase 3: Active Material / Meta Session",
+                "action": f"Farm Drizzlewood Coast Charr Legion reward tracks or meta events for {meta_time} minutes at Base Camp [&BDoMAAA=].",
+                "est_time_mins": meta_time,
+                "est_cost": "0 gold (Net Positive Farming)"
+            })
+            budget -= meta_time
 
         return OptimalCraftingPlan(
             goal_item_name=diff_report.goal_item_name,
@@ -281,6 +360,7 @@ class PathSolver:
             estimated_total_gold_cost=total_gold,
             precursor_strategy=precursor_strat,
             clover_strategy=clover_options,
+            t6_strategies=t6_strats,
             bottlenecks=bottlenecks,
             step_by_step_roadmap=roadmap
         )

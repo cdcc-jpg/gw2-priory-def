@@ -62,7 +62,11 @@ class PrioryChatSession:
                 top_n=5,
                 filter_query=resolved_goal.category_filter
             )
-            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(rankings, user_prompt)
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(
+                rankings=rankings,
+                user_prompt=user_prompt,
+                time_budget_minutes=resolved_goal.intent.time_budget_minutes
+            )
             self.history.append({"role": "user", "content": user_prompt})
             self.history.append({"role": "assistant", "content": guide.executive_summary})
             return guide
@@ -74,13 +78,14 @@ class PrioryChatSession:
             target_quantity=resolved_goal.target_quantity
         )
 
-        # 3. Path Solver Optimization (respecting exhausted sources like WizardVault)
+        # 3. Path Solver Optimization (respecting exhausted sources and time budgets)
         optimal_plan = self.orchestrator.solver.solve_optimal_path(
             diff_report=diff_report,
             account=self.account_state,
             tp_prices=live_tp_prices,
             excluded_modes=resolved_goal.intent.excluded_game_modes,
-            exhausted_sources=resolved_goal.intent.exhausted_sources
+            exhausted_sources=resolved_goal.intent.exhausted_sources,
+            time_budget_minutes=resolved_goal.intent.time_budget_minutes
         )
 
         # 4. Semantic Subgraph Context Extraction
