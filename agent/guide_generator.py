@@ -30,6 +30,7 @@ class PersonalizedGuide(BaseModel):
     readiness_percentage: int
     executive_summary: str
     strategic_recommendations: List[str]
+    master_roadmap_phases: List[str] = Field(default_factory=list)
     session_checklist: List[ActionStep]
     missing_materials_summary: Dict[str, int]
     missing_disciplines_summary: List[str]
@@ -192,6 +193,16 @@ class GuideGenerator:
                     chat_code="[&BDoMAAA=]"
                 ))
 
+        # Format Master Roadmap Phases
+        master_roadmap_formatted = []
+        if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
+            for phase in optimal_plan.master_roadmap:
+                master_roadmap_formatted.append(f"📌 **{phase.phase_title}** {phase.phase_status}")
+                for s in phase.milestone_steps:
+                    wp_str = f" `[{s.waypoint}]`" if s.waypoint else ""
+                    npc_str = f" ({s.npc_name})" if s.npc_name else ""
+                    master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{wp_str}: {s.description}")
+
         summary = (
             f"Here is your personalized progression plan for **{goal_display}** "
             f"tailored to your {intent.time_budget_minutes}-minute playtime tonight."
@@ -208,6 +219,7 @@ class GuideGenerator:
             readiness_percentage=readiness,
             executive_summary=summary,
             strategic_recommendations=recommendations,
+            master_roadmap_phases=master_roadmap_formatted,
             session_checklist=checklist,
             missing_materials_summary=missing_mats,
             missing_disciplines_summary=missing_discs,
@@ -218,7 +230,8 @@ class GuideGenerator:
         self,
         rankings: List[Any],
         user_prompt: str,
-        time_budget_minutes: int = 120
+        time_budget_minutes: int = 120,
+        optimal_plan: Optional[Any] = None
     ) -> PersonalizedGuide:
         """Generates a ranked comparative guide for 'Which legendary am I closest to?' queries."""
         if not rankings:
@@ -229,6 +242,7 @@ class GuideGenerator:
                 readiness_percentage=0,
                 executive_summary="No unowned legendary items found in the Knowledge Graph.",
                 strategic_recommendations=["All tracked legendaries are already unlocked in your Legendary Armory!"],
+                master_roadmap_phases=[],
                 session_checklist=[],
                 missing_materials_summary={},
                 missing_disciplines_summary=[],
@@ -308,6 +322,16 @@ class GuideGenerator:
                 chat_code=meta_waypoint
             ))
 
+        # Format Master Roadmap for the top-ranked recommendation
+        master_roadmap_formatted = []
+        if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
+            for phase in optimal_plan.master_roadmap:
+                master_roadmap_formatted.append(f"📌 **{phase.phase_title}** {phase.phase_status}")
+                for s in phase.milestone_steps:
+                    wp_str = f" `[{s.waypoint}]`" if s.waypoint else ""
+                    npc_str = f" ({s.npc_name})" if s.npc_name else ""
+                    master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{wp_str}: {s.description}")
+
         summary = (
             f"Based on your live account snapshot (including your materials and bank starter kits), "
             f"you are closest to crafting **{top_choice.name}** ({readiness}% ready, ~{top_choice.estimated_remaining_gold}g remaining)!"
@@ -325,6 +349,7 @@ class GuideGenerator:
             readiness_percentage=readiness,
             executive_summary=summary,
             strategic_recommendations=recs,
+            master_roadmap_phases=master_roadmap_formatted,
             session_checklist=checklist,
             missing_materials_summary={mat.split("x ")[1]: int(mat.split("x ")[0]) for mat in top_choice.top_missing_items if "x " in mat},
             missing_disciplines_summary=[],

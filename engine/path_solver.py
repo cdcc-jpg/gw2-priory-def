@@ -15,6 +15,25 @@ from engine.graph_store import PrioryGraphStore
 from engine.account_diff import AccountDiffReport, AccountState
 
 
+class MilestoneStep(BaseModel):
+    step_number: int
+    title: str
+    description: str
+    waypoint: Optional[str] = None
+    zone_name: Optional[str] = None
+    npc_name: Optional[str] = None
+    is_completed: bool = False
+
+
+class RoadmapPhase(BaseModel):
+    phase_number: int
+    phase_title: str
+    phase_status: str  # e.g. "[COMPLETED]", "[IN PROGRESS - 25%]", "[NOT STARTED]"
+    completion_percentage: float = 0.0
+    milestone_steps: List[MilestoneStep] = Field(default_factory=list)
+    key_materials: List[str] = Field(default_factory=list)
+
+
 class CloverStrategyOption(BaseModel):
     source_name: str
     clovers_obtainable: int
@@ -35,6 +54,7 @@ class OptimalCraftingPlan(BaseModel):
     t6_strategies: List[str] = Field(default_factory=list)
     bottlenecks: List[str] = Field(default_factory=list)
     step_by_step_roadmap: List[Dict[str, Any]] = Field(default_factory=list)
+    master_roadmap: List[RoadmapPhase] = Field(default_factory=list)
 
 
 class PathSolver:
@@ -352,6 +372,9 @@ class PathSolver:
             })
             budget -= meta_time
 
+        # Generate 5-Phase Step-by-Step Master Roadmap
+        master_roadmap = self.generate_master_roadmap(diff_report, account)
+
         return OptimalCraftingPlan(
             goal_item_name=diff_report.goal_item_name,
             goal_item_id=diff_report.goal_item_id,
@@ -362,5 +385,283 @@ class PathSolver:
             clover_strategy=clover_options,
             t6_strategies=t6_strats,
             bottlenecks=bottlenecks,
-            step_by_step_roadmap=roadmap
+            step_by_step_roadmap=roadmap,
+            master_roadmap=master_roadmap
         )
+
+    def generate_master_roadmap(self, diff_report: AccountDiffReport, account: AccountState) -> List[RoadmapPhase]:
+        """Decomposes the target legendary item into the authentic 5 Guild Wars 2 Master Milestone Phases."""
+        phases: List[RoadmapPhase] = []
+        root = diff_report.root_node
+        sub_reqs = root.sub_requirements
+
+        def find_sub(keywords: List[str]):
+            for sub in sub_reqs:
+                lbl = sub.label.lower()
+                if any(kw.lower() in lbl for kw in keywords):
+                    return sub
+            return None
+
+        # Phase 1: Precursor Journey
+        prec_node = find_sub(["precursor", "the mechanism", "the lexicon", "dusk", "dawn", "zap", "spark", "legend", "tooth of frostfang", "rodgort's flame", "the energizer", "chaos gun", "the bard", "howl", "venom", "storm", "the lover", "the colossus", "kamohoali'i", "carcharias", "frenzy", "aurene's", "experimental envoy", "refined envoy", "astral ward"])
+        p1_steps = []
+        p1_pct = 0.0
+        p1_status = "[NOT STARTED - 0%]"
+
+        if prec_node:
+            if prec_node.is_satisfied:
+                p1_pct = 100.0
+                p1_status = "[COMPLETED - 100%]"
+                p1_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="Precursor Weapon Acquired",
+                    description=f"You already own '{prec_node.label}' in your account storage/inventory!",
+                    is_completed=True
+                ))
+            elif "Unpackable from" in prec_node.label:
+                p1_pct = 100.0
+                p1_status = "[READY TO UNPACK - 100%]"
+                p1_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="Unpack from Bank Starter Kit",
+                    description=f"Withdraw choice chest from your bank to immediately receive {prec_node.label} for 0 gold!",
+                    is_completed=False
+                ))
+            else:
+                p1_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="Unlock Precursor Recipe / Collection",
+                    description="Visit Grandmaster Craftsman Hobbs in Lion's Arch [&BBAEAAA=] or Leivas in Arborstone [&BEwMAAA=] to unlock precursor crafting recipes.",
+                    waypoint="[&BBAEAAA=]",
+                    zone_name="Lion's Arch",
+                    npc_name="Grandmaster Craftsman Hobbs"
+                ))
+                p1_steps.append(MilestoneStep(
+                    step_number=2,
+                    title=f"Craft Precursor: {prec_node.label}",
+                    description=f"Craft {prec_node.label} at level 450/500 crafting station using refined Ascended materials and weapon shards.",
+                    is_completed=False
+                ))
+        else:
+            p1_steps.append(MilestoneStep(
+                step_number=1,
+                title="Acquire Precursor Component",
+                description="Obtain the requisite precursor item from the Trading Post, collections, or crafting.",
+                is_completed=False
+            ))
+
+        phases.append(RoadmapPhase(
+            phase_number=1,
+            phase_title=f"Phase 1: Precursor Journey ({prec_node.label.split('(')[0].strip() if prec_node else 'Precursor'})",
+            phase_status=p1_status,
+            completion_percentage=p1_pct,
+            milestone_steps=p1_steps
+        ))
+
+        # Phase 2: Mystic Tribute / Fortune Components
+        trib_node = find_sub(["mystic tribute", "gift of fortune", "gift of sigils", "gift of runes", "gift of prosperity", "condensed magic", "condensed might"])
+        p2_steps = []
+        p2_pct = 0.0
+        p2_status = "[NOT STARTED - 0%]"
+
+        if trib_node and trib_node.is_satisfied:
+            p2_pct = 100.0
+            p2_status = "[COMPLETED - 100%]"
+            p2_steps.append(MilestoneStep(
+                step_number=1,
+                title="Tribute / Fortune Components Completed",
+                description=f"All requirements for {trib_node.label} are fully satisfied!",
+                is_completed=True
+            ))
+        else:
+            p2_steps.append(MilestoneStep(
+                step_number=1,
+                title="Claim Mystic Clovers (77 needed)",
+                description="Purchase Mystic Clovers with Astral Acclaim in the Wizard's Vault (cheapest) and Fractal vendors before gambling in the Mystic Forge.",
+                waypoint="[&BBAEAAA=]",
+                zone_name="Lion's Arch",
+                npc_name="Miyani"
+            ))
+            p2_steps.append(MilestoneStep(
+                step_number=2,
+                title="Gather Ectoplasm & Amalgamated Gemstones (250 each)",
+                description="Salvage Rare lvl 68+ gear for Globs of Ectoplasm and complete Heart of Thorns / PoF meta events for Hero's Choice Gemstone chests.",
+                waypoint="[&BNYHAAA=]",
+                zone_name="Auric Basin",
+                npc_name="Tarir Meta Chests"
+            ))
+            p2_steps.append(MilestoneStep(
+                step_number=3,
+                title="Acquire T6 Fine Trophies (Blood, Bone, Claw, Fang, Scale, Totem, Venom, Dust)",
+                description="Exchange Volatile Magic for Trophy Shipments at Dragonfall [&BNoLAAA=], Laurel bags in Lion's Arch [&BBAEAAA=], or farm Drizzlewood Coast [&BDoMAAA=].",
+                waypoint="[&BNoLAAA=]",
+                zone_name="Dragonfall",
+                npc_name="Volatile Magic Collector"
+            ))
+
+        phases.append(RoadmapPhase(
+            phase_number=2,
+            phase_title="Phase 2: Mystic Tribute / Fortune Components",
+            phase_status=p2_status,
+            completion_percentage=p2_pct,
+            milestone_steps=p2_steps
+        ))
+
+        # Phase 3: Regional Mastery Gift
+        mast_node = find_sub(["maguuma mastery", "desert mastery", "gift of mastery", "cantha mastery", "amalgamated kryptis", "gift of the mists", "gift of exploration"])
+        p3_steps = []
+        p3_pct = 0.0
+        p3_status = "[NOT STARTED - 0%]"
+
+        if mast_node and mast_node.is_satisfied:
+            p3_pct = 100.0
+            p3_status = "[COMPLETED - 100%]"
+            p3_steps.append(MilestoneStep(
+                step_number=1,
+                title="Expansion Mastery Gift Completed",
+                description=f"All requirements for {mast_node.label} are satisfied!",
+                is_completed=True
+            ))
+        else:
+            mast_label = mast_node.label if mast_node else ""
+            if "Maguuma" in mast_label:
+                p3_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="100% Heart of Thorns Map Completion",
+                    description="Complete 100% world exploration across Verdant Brink, Auric Basin, Tangled Depths, and Dragon's Stand for Gift of the Jungle."
+                ))
+                p3_steps.append(MilestoneStep(
+                    step_number=2,
+                    title="Farm 250x Crystalline Ore in Dragon's Stand",
+                    description="Use Machetes to open Noxious Pods across Dragon's Stand [&BBAIAAA=] after the meta event.",
+                    waypoint="[&BBAIAAA=]",
+                    zone_name="Dragon's Stand"
+                ))
+                p3_steps.append(MilestoneStep(
+                    step_number=3,
+                    title="Purchase Gifts of Tarir, Fleet, and Chak",
+                    description="Exchange map currencies: Aurillium at Tarir [&BNYHAAA=], Airship Parts at Verdant Brink [&BO8FAAA=], and Ley-Line Sparks at Tangled Depths [&BPUHAAA=].",
+                    waypoint="[&BNYHAAA=]",
+                    zone_name="Auric Basin"
+                ))
+            elif "Desert" in mast_label:
+                p3_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="100% Path of Fire Map Completion",
+                    description="Complete 100% exploration of Crystal Oasis, Desert Highlands, Elon Riverlands, Desolation, and Domain of Vabbi for Gift of the Rider."
+                ))
+                p3_steps.append(MilestoneStep(
+                    step_number=2,
+                    title="Gather 250x Funerary Incense in Vabbi",
+                    description="Exchange Elegy Mosaics and Trade Contracts with the Primeval Dynasty Historian in Domain of Vabbi [&BO8KAAA=].",
+                    waypoint="[&BO8KAAA=]",
+                    zone_name="Domain of Vabbi",
+                    npc_name="Primeval Dynasty Historian"
+                ))
+            elif "Cantha" in mast_label:
+                p3_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="100% End of Dragons Map Completion",
+                    description="Complete 100% exploration of Seitung Province, New Kaineng City, Echovald Wilds, and Dragon's End for Gift of Cantha."
+                ))
+                p3_steps.append(MilestoneStep(
+                    step_number=2,
+                    title="Gather Antique Summoning Stones & Pure Jade",
+                    description="Exchange Imperial Favor and complete Dragon's End meta with Leivas in Arborstone [&BEwMAAA=].",
+                    waypoint="[&BEwMAAA=]",
+                    zone_name="Arborstone",
+                    npc_name="Leivas"
+                ))
+            else:
+                p3_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="100% Core Tyria World Completion",
+                    description="Complete all hearts, waypoints, vistas, and POIs across Core Tyria to earn 2x Gift of Exploration."
+                ))
+                p3_steps.append(MilestoneStep(
+                    step_number=2,
+                    title="Complete WvW Gift of Battle Reward Track",
+                    description="Participate in World vs World and complete the Gift of Battle reward track for Gift of Battle [&BBAEAAA=]."
+                ))
+
+            p3_steps.append(MilestoneStep(
+                step_number=len(p3_steps) + 1,
+                title="Purchase Bloodstone Shard (200 Spirit Shards)",
+                description="Buy Bloodstone Shard from Miyani at the Mystic Forge in Lion's Arch [&BBAEAAA=].",
+                waypoint="[&BBAEAAA=]",
+                zone_name="Lion's Arch",
+                npc_name="Miyani"
+            ))
+
+        phases.append(RoadmapPhase(
+            phase_number=3,
+            phase_title=f"Phase 3: Expansion & Regional Mastery ({mast_node.label.split('(')[0].strip() if mast_node else 'Mastery'})",
+            phase_status=p3_status,
+            completion_percentage=p3_pct,
+            milestone_steps=p3_steps
+        ))
+
+        # Phase 4: Specific Weapon / Item Gift
+        spec_node = find_sub(["gift of", "cosmos", "darkness", "metal", "wood", "energy", "weather", "light", "stealth", "nature", "history", "blood", "predator", "the moon", "the stars", "craftsmanship", "aurene"])
+        if spec_node == mast_node or spec_node == trib_node:
+            for sub in sub_reqs:
+                if sub != mast_node and sub != trib_node and sub != prec_node and "gift" in sub.label.lower():
+                    spec_node = sub
+                    break
+
+        p4_steps = []
+        p4_pct = 0.0
+        p4_status = "[NOT STARTED - 0%]"
+
+        if spec_node and spec_node.is_satisfied:
+            p4_pct = 100.0
+            p4_status = "[COMPLETED - 100%]"
+            p4_steps.append(MilestoneStep(
+                step_number=1,
+                title="Specific Weapon / Component Gift Completed",
+                description=f"All requirements for {spec_node.label} are satisfied!",
+                is_completed=True
+            ))
+        else:
+            p4_steps.append(MilestoneStep(
+                step_number=1,
+                title="Purchase 100x Icy Runestones (100 gold)",
+                description="Buy 100 Icy Runestones from Rojan the Penitent in Frostgorge Sound [&BHsBAAA=].",
+                waypoint="[&BHsBAAA=]",
+                zone_name="Frostgorge Sound",
+                npc_name="Rojan the Penitent"
+            ))
+            p4_steps.append(MilestoneStep(
+                step_number=2,
+                title=f"Craft {spec_node.label.split('(')[0].strip() if spec_node else 'Weapon Gift'}",
+                description="Combine specific lodestones, refined ingots/planks, and discipline components at Level 400 crafting station.",
+                is_completed=False
+            ))
+
+        phases.append(RoadmapPhase(
+            phase_number=4,
+            phase_title=f"Phase 4: Specific Weapon / Item Gift ({spec_node.label.split('(')[0].strip() if spec_node else 'Specific Gift'})",
+            phase_status=p4_status,
+            completion_percentage=p4_pct,
+            milestone_steps=p4_steps
+        ))
+
+        # Phase 5: Final Mystic Forge Assembly
+        phases.append(RoadmapPhase(
+            phase_number=5,
+            phase_title="Phase 5: Final Mystic Forge Assembly",
+            phase_status="[READY UPON COMPLETION OF PHASES 1-4]",
+            completion_percentage=0.0,
+            milestone_steps=[
+                MilestoneStep(
+                    step_number=1,
+                    title=f"Forge {diff_report.goal_item_name} at the Mystic Forge",
+                    description=f"Place the Precursor + Tribute + Mastery Gift + Specific Gift into the Mystic Forge with Miyani in Lion's Arch [&BBAEAAA=] to forge your {diff_report.goal_item_name}!",
+                    waypoint="[&BBAEAAA=]",
+                    zone_name="Lion's Arch",
+                    npc_name="Miyani"
+                )
+            ]
+        ))
+
+        return phases

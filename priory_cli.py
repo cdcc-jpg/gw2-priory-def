@@ -38,6 +38,11 @@ def print_guide(guide):
     for rec in guide.strategic_recommendations:
         print(f"   {rec}")
 
+    if guide.master_roadmap_phases:
+        print("\n🗺️  5-PHASE MASTER CRAFTING ROADMAP:")
+        for line in guide.master_roadmap_phases:
+            print(f"   {line}")
+
     print("\n📋 ACTIONABLE SESSION PLAN:")
     for step in guide.session_checklist:
         chat = f" [{step.chat_code}]" if step.chat_code else ""

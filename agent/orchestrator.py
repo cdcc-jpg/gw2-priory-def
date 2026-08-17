@@ -62,10 +62,25 @@ class PrioryChatSession:
                 top_n=5,
                 filter_query=resolved_goal.category_filter
             )
+            top_optimal_plan = None
+            if rankings:
+                top_diff = self.orchestrator.diff_engine.compute_diff(
+                    goal_item_id=rankings[0].gw2_id,
+                    account=self.account_state
+                )
+                top_optimal_plan = self.orchestrator.solver.solve_optimal_path(
+                    diff_report=top_diff,
+                    account=self.account_state,
+                    tp_prices=live_tp_prices,
+                    excluded_modes=resolved_goal.intent.excluded_game_modes,
+                    exhausted_sources=resolved_goal.intent.exhausted_sources,
+                    time_budget_minutes=resolved_goal.intent.time_budget_minutes
+                )
             guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_ranking_guide(
                 rankings=rankings,
                 user_prompt=user_prompt,
-                time_budget_minutes=resolved_goal.intent.time_budget_minutes
+                time_budget_minutes=resolved_goal.intent.time_budget_minutes,
+                optimal_plan=top_optimal_plan
             )
             self.history.append({"role": "user", "content": user_prompt})
             self.history.append({"role": "assistant", "content": guide.executive_summary})

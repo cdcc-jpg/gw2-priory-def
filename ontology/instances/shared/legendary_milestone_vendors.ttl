@@ -1,0 +1,118 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+# ==============================================================================
+# Legendary Milestone Vendors, NPCs, and Spatial Waypoints
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Lion's Arch Central Hub (Precursors, Mystic Forge, Spirit Shards)
+# ------------------------------------------------------------------------------
+
+# --- Grandmaster Craftsman Hobbs (Precursor Collections & Volumes) ---
+item:vendor_hobbs a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Grandmaster Craftsman Hobbs"@en ;
+    priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
+    priory:zoneName "Lion's Arch"@en ;
+    priory:waypointName "Trader's Forum Waypoint"@en ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    skos:definition "Sells Gen 1 and Gen 2 legendary precursor crafting collection books and recipes."@en .
+
+# --- Miyani / Mystic Forge (Ectoplasm, Spirit Shards, Clovers, Assembly) ---
+item:vendor_miyani a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Miyani & Mystic Forge"@en ;
+    priory:vendorNPC "Miyani"@en ;
+    priory:zoneName "Lion's Arch"@en ;
+    priory:waypointName "Trader's Forum Waypoint"@en ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    skos:definition "Exchanges Spirit Shards for Bloodstone Shards, Philosopher's Stones, Mystic Crystals, and hosts the Mystic Forge."@en .
+
+# ------------------------------------------------------------------------------
+# 2. Frostgorge Sound (Icy Runestones)
+# ------------------------------------------------------------------------------
+item:vendor_rojan a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Rojan the Penitent"@en ;
+    priory:vendorNPC "Rojan the Penitent"@en ;
+    priory:zoneName "Frostgorge Sound"@en ;
+    priory:waypointName "Earthshake Waypoint"@en ;
+    priory:nearestWaypoint "[&BHsBAAA=]" ;
+    skos:definition "Sells Icy Runestones for 1 gold each (100 needed for every Gen 1 & Gen 2 legendary weapon gift)."@en .
+
+# ------------------------------------------------------------------------------
+# 3. Heart of Thorns Masteries & Dragon's Stand
+# ------------------------------------------------------------------------------
+
+# --- Dragon's Stand Noxious Pods (Crystalline Ore) ---
+item:vendor_dragons_stand a priory:RewardTrackPath, owl:NamedIndividual ;
+    rdfs:label "Dragon's Stand Noxious Pods"@en ;
+    priory:zoneName "Dragon's Stand"@en ;
+    priory:waypointName "Pact Base Camp Waypoint"@en ;
+    priory:nearestWaypoint "[&BBAIAAA=]" ;
+    skos:definition "Gather Crystalline Ore from Noxious Pods across Dragon's Stand using Machetes after meta event completion."@en .
+
+# --- Exalted Mastery Vendor (Gift of Tarir / Aurillium) ---
+item:vendor_tarir a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exalted Mastery Vendor"@en ;
+    priory:vendorNPC "Exalted Mastery Vendor"@en ;
+    priory:zoneName "Auric Basin"@en ;
+    priory:waypointName "Forgotten City Waypoint"@en ;
+    priory:nearestWaypoint "[&BNYHAAA=]" ;
+    skos:definition "Exchanges Aurillium for Gift of Tarir."@en .
+
+# --- Itzel Mastery Vendor (Gift of the Fleet / Airship Parts) ---
+item:vendor_fleet a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Itzel Mastery Vendor"@en ;
+    priory:vendorNPC "Itzel Mastery Vendor"@en ;
+    priory:zoneName "Verdant Brink"@en ;
+    priory:waypointName "Jaka Itzel Waypoint"@en ;
+    priory:nearestWaypoint "[&BO8FAAA=]" ;
+    skos:definition "Exchanges Airship Parts for Gift of the Fleet."@en .
+
+# --- Nuhoch Mastery Vendor (Gift of the Chak / Ley-Line Sparks) ---
+item:vendor_chak a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Nuhoch Mastery Vendor"@en ;
+    priory:vendorNPC "Nuhoch Mastery Vendor"@en ;
+    priory:zoneName "Tangled Depths"@en ;
+    priory:waypointName "SCAR Bivouac Waypoint"@en ;
+    priory:nearestWaypoint "[&BPUHAAA=]" ;
+    skos:definition "Exchanges Ley-Line Sparks for Gift of the Chak."@en .
+
+# ------------------------------------------------------------------------------
+# 4. Path of Fire (Funerary Incense & Desert Mastery)
+# ------------------------------------------------------------------------------
+item:vendor_vabbi a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Primeval Dynasty Historian"@en ;
+    priory:vendorNPC "Primeval Dynasty Historian"@en ;
+    priory:zoneName "Domain of Vabbi"@en ;
+    priory:waypointName "Necropolis Waypoint"@en ;
+    priory:nearestWaypoint "[&BO8KAAA=]" ;
+    skos:definition "Exchanges Elegy Mosaics and Trade Contracts for Funerary Incense in the Tomb of Primeval Kings."@en .
+
+# ------------------------------------------------------------------------------
+# 5. End of Dragons (Antique Summoning Stones & Jade Mastery)
+# ------------------------------------------------------------------------------
+item:vendor_leivas a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Leivas"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:waypointName "Arborstone Waypoint"@en ;
+    priory:nearestWaypoint "[&BEwMAAA=]" ;
+    skos:definition "Sells Antique Summoning Stones and Dragon Precursor Recipes in Arborstone."@en .
+
+# ------------------------------------------------------------------------------
+# 6. Secrets of the Obscure (Obsidian Armor & Kryptis Purifications)
+# ------------------------------------------------------------------------------
+item:vendor_lyhr a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Lyhr"@en ;
+    priory:vendorNPC "Lyhr"@en ;
+    priory:zoneName "The Wizard's Tower"@en ;
+    priory:waypointName "Tower Courtyard Waypoint"@en ;
+    priory:nearestWaypoint "[&BB8OAAA=]" ;
+    skos:definition "Exchanges Kryptis Essences and map components for Purified Kryptis Essences and Obsidian Armor."@en .

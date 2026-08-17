@@ -10,7 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Comprehensive End-to-End Semantic Modeling for All Legendary Materials & Dependencies (8,941 Triples in Knowledge Graph):**
+- **5-Phase Step-by-Step Master Crafting Roadmap Engine (9,018 Triples in Knowledge Graph):**
+  - **Milestone Decomposition:** Implemented `generate_master_roadmap` in [`engine/path_solver.py`](./engine/path_solver.py) decomposing every legendary into the authentic 5 GW2 milestones:
+    - *Phase 1: Precursor Journey* (Grandmaster Hobbs `[&BBAEAAA=]`, 290 Shards, or TP)
+    - *Phase 2: Mystic Tribute / Fortune Components* (Clovers, Ectos, Amalgamated Gemstones, T6 Might & Magic)
+    - *Phase 3: Expansion & Regional Mastery* (Maguuma, Desert, Cantha, Central Tyria, or Kryptis Map & Metas)
+    - *Phase 4: Specific Weapon / Item Gift* (Icy Runestones `[&BHsBAAA=]`, Lodestones, Crafting Discipline 400)
+    - *Phase 5: Final Mystic Forge Assembly* (Miyani `[&BBAEAAA=]`)
+  - **Spatial Milestone RDF Graph:** Created [`ontology/instances/shared/legendary_milestone_vendors.ttl`](./ontology/instances/shared/legendary_milestone_vendors.ttl) modeling NPCs, zones, and waypoint chat codes for all legendary milestone exchanges across Lion's Arch, Frostgorge Sound, Dragon's Stand, Auric Basin, Domain of Vabbi, Arborstone, and The Wizard's Tower.
+  - **Roadmap Synthesis in Guides & CLI:** Enhanced [`agent/guide_generator.py`](./agent/guide_generator.py), [`agent/orchestrator.py`](./agent/orchestrator.py), and [`priory_cli.py`](./priory_cli.py) to automatically render formatted master roadmaps with waypoint navigation for direct and comparative ranking queries.
   - **Motes, Charms, Symbols & Upgrade Salvage Ecosystem:** Created [`ontology/instances/shared/motes_charms_symbols_and_upgrades.ttl`](./ontology/instances/shared/motes_charms_symbols_and_upgrades.ttl) formally modeling *Lucent Motes (`89216`)*, *Lucent Crystals (`89103`)*, *Mystic Motes (`91424`)*, *Charms (Brilliance, Potence, Skill)*, and *Symbols (Control, Enhancement, Pain)* with Rune and Sigil salvage pathways.
   - **Ascended Daily Time-Gated Refinement DAGs:** Created [`ontology/instances/shared/ascended_and_daily_materials.ttl`](./ontology/instances/shared/ascended_and_daily_materials.ttl) modeling *Deldrimor Steel Ingot (`46738`)*, *Lump of Mithrilium (`46736`)*, *Spiritwood Plank (`46739`)*, *Glob of Elder Spirit Residue (`46737`)*, *Elonian Leather Square (`46740`)*, *Spool of Thick Elonian Cord (`46742`)*, *Bolt of Damask (`46741`)*, and *Spool of Silk Weaving Thread (`46744`)*.
   - **Regional Expansion Currencies & Map Materials:** Created [`ontology/instances/shared/regional_expansion_materials.ttl`](./ontology/instances/shared/regional_expansion_materials.ttl) modeling LWS3 (Aurora map items + Unbound Magic), LWS4 (Vision map items + Volatile Magic), IBS (Eternal Ice Shards -> LWS4 currency hub), Heart of Thorns (*Crystalline Ore*), and Path of Fire (*Funerary Incense*).
