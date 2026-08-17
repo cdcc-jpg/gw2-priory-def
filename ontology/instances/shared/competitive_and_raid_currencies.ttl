@@ -1,0 +1,95 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+# ==============================================================================
+# Competitive, Raid & Endgame Tokens and Currencies
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. World vs. World (WvW)
+# ------------------------------------------------------------------------------
+item:78895 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "WvW Skirmish Claim Ticket"@en ;
+    priory:gw2Id 78895 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    skos:definition "Weekly time-gated WvW currency (max 365/week) used for Conflux, Warbringer, and Mistforged Legendary Armor."@en .
+
+item:71581 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Memory of Battle"@en ;
+    priory:gw2Id 71581 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false ;
+    skos:definition "Tradeable WvW material earned from pips and reward tracks. Used in all competitive legendary gifts."@en .
+
+# ------------------------------------------------------------------------------
+# 2. Structured PvP
+# ------------------------------------------------------------------------------
+item:70543 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "PvP League Ticket"@en ;
+    priory:gw2Id 70543 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    skos:definition "Seasonal PvP league currency used for The Ascension, Transcendence, and Ardent Glorious Armor."@en .
+
+item:81722 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ascended Shard of Glory"@en ;
+    priory:gw2Id 81722 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    skos:definition "Ranked PvP currency used for Legendary PvP armor and Transcendence."@en .
+
+item:73580 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Shard of Glory"@en ;
+    priory:gw2Id 73580 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false ;
+    skos:definition "Tradeable PvP material used in PvP legendary gifts."@en .
+
+item:79803 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Star of Destiny"@en ;
+    priory:gw2Id 79803 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    skos:definition "Final collection reward component required for Transcendence."@en .
+
+# ------------------------------------------------------------------------------
+# 3. Raids
+# ------------------------------------------------------------------------------
+item:77302 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Legendary Insight"@en ;
+    priory:gw2Id 77302 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    skos:definition "Weekly raid boss currency (Wings 1-7) required for Perfected Envoy Legendary Armor and Coalescence (150 total needed for full armor set)."@en .
+
+# ------------------------------------------------------------------------------
+# 4. Fractals of the Mists
+# ------------------------------------------------------------------------------
+item:79418 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Integrated Fractal Matrix"@en ;
+    priory:gw2Id 79418 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    skos:definition "Fractal component crafted from Stabilizing Matrices and Fractal Relics. Used for Ad Infinitum."@en .
+
+item:73248 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Stabilizing Matrix"@en ;
+    priory:gw2Id 73248 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    skos:definition "Salvaged from Ascended Rings or bought on TP. Used for Integrated Matrices and Fractal Clovers."@en .
+
+item:76839 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ball of Dark Energy"@en ;
+    priory:gw2Id 76839 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    skos:definition "Guaranteed salvage from Ascended weapons or armor. Used for Ad Infinitum and Legendary Armor gifts."@en .

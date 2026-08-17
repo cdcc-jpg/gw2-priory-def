@@ -1,0 +1,156 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+# ==============================================================================
+# Regional Expansion Materials & Living World Currencies
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Living World Season 3 (Aurora Materials & Unbound Magic)
+# ------------------------------------------------------------------------------
+item:79280 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Blood Ruby"@en ;
+    priory:gw2Id 79280 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Bloodstone Fen" ;
+    skos:definition "LWS3 map currency used in Aurora crafting and unbound magic conversions."@en .
+
+item:79469 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Petrified Wood"@en ;
+    priory:gw2Id 79469 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Ember Bay" ;
+    skos:definition "LWS3 map currency from Ember Bay used for Aurora."@en .
+
+item:79899 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Fresh Winterberry"@en ;
+    priory:gw2Id 79899 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Bitterfrost Frontier" ;
+    skos:definition "LWS3 map currency from Bitterfrost Frontier used for Aurora and fast unbound magic."@en .
+
+item:80332 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Jade Shard"@en ;
+    priory:gw2Id 80332 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Lake Doric" ;
+    skos:definition "LWS3 map currency from Lake Doric used for Aurora."@en .
+
+item:81127 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Fire Orchid Blossom"@en ;
+    priory:gw2Id 81127 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Draconis Mons" ;
+    skos:definition "LWS3 map currency from Draconis Mons used for Aurora."@en .
+
+item:81706 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Orrian Pearl"@en ;
+    priory:gw2Id 81706 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Siren's Landing" ;
+    skos:definition "LWS3 map currency from Siren's Landing used for Aurora."@en .
+
+# ------------------------------------------------------------------------------
+# 2. Living World Season 4 (Vision Materials & Volatile Magic)
+# ------------------------------------------------------------------------------
+item:86069 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Kralkatite Ore"@en ;
+    priory:gw2Id 86069 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Domain of Istan" ;
+    skos:definition "LWS4 map currency used in Vision and Astral weapons."@en .
+
+item:86977 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Difluorite Crystal"@en ;
+    priory:gw2Id 86977 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Sandswept Isles" ;
+    skos:definition "LWS4 map currency used in Vision."@en .
+
+item:87645 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Inscribed Shard"@en ;
+    priory:gw2Id 87645 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Domain of Kourna" ;
+    skos:definition "LWS4 map currency used in Vision."@en .
+
+item:88955 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mistborn Mote"@en ;
+    priory:gw2Id 88955 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Jahai Bluffs" ;
+    skos:definition "LWS4 map currency used in Vision."@en .
+
+item:89537 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Branded Mass"@en ;
+    priory:gw2Id 89537 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Thunderhead Peaks" ;
+    skos:definition "LWS4 map currency used in Vision and Dragonsblood weapons."@en .
+
+item:90783 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mistonium"@en ;
+    priory:gw2Id 90783 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:zoneName "Dragonfall" ;
+    skos:definition "LWS4 map currency used in Vision."@en .
+
+# ------------------------------------------------------------------------------
+# 3. Icebrood Saga (IBS Conversion Hub)
+# ------------------------------------------------------------------------------
+item:92072 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Eternal Ice Shard"@en ;
+    priory:gw2Id 92072 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:zoneName "Bjora Marches" ;
+    priory:waypointName "Jora's Keep Waypoint" ;
+    priory:nearestWaypoint "[&BCcMAAA=]" ;
+    skos:definition "IBS currency earned in Bjora Marches that can be converted directly into any LWS4 currency (Kralkatite, Difluorite, Inscribed, Mistborn, Branded, Mistonium) -> Volatile Magic -> T6 Shipments."@en .
+
+item:92203 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Eitrite Ingot"@en ;
+    priory:gw2Id 92203 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:zoneName "Bjora Marches" ;
+    skos:definition "IBS refined ingot used in Restored Boreal Weapons for Prismatic Champion's Regalia."@en .
+
+# ------------------------------------------------------------------------------
+# 4. Heart of Thorns & Path of Fire Currencies
+# ------------------------------------------------------------------------------
+item:46682 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Crystalline Ore"@en ;
+    priory:gw2Id 46682 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:zoneName "Dragon's Stand" ;
+    skos:definition "Heart of Thorns ore gathered from Noxious Pods in Dragon's Stand. Used in Gift of Maguuma Mastery."@en .
+
+item:83410 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Funerary Incense"@en ;
+    priory:gw2Id 83410 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:zoneName "Domain of Vabbi" ;
+    skos:definition "Path of Fire currency purchased with Elegy Mosaics and Trade Contracts for Gift of Desert Mastery and Coalescence."@en .

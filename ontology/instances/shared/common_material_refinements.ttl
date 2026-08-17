@@ -1,0 +1,717 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+
+# ==============================================================================
+# Common Material Refinement Trees (T1 to T6 Ores, Logs, Scraps, Sections)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Metals & Ores -> Ingots
+# ------------------------------------------------------------------------------
+
+# --- Copper Ore (19697) & Bronze Ingot (19680) ---
+item:19697 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Copper Ore"@en ;
+    priory:gw2Id 19697 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19704 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lump of Tin"@en ;
+    priory:gw2Id 19704 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_bronze_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bronze Ingot Crafting"@en ;
+    priory:producesItem item:19680 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith ;
+    priory:requiredRating 0 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19697 ; # 2 Copper Ore
+        priory:requiredQuantity 2
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19704 ; # 1 Lump of Tin
+        priory:requiredQuantity 1
+    ] .
+
+# --- Iron Ore (19699) -> Iron Ingot (19683) ---
+item:19699 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Iron Ore"@en ;
+    priory:gw2Id 19699 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19683 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Iron Ingot"@en ;
+    priory:gw2Id 19683 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_iron_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Iron Ingot Crafting"@en ;
+    priory:producesItem item:19683 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith ;
+    priory:requiredRating 75 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19699 ; # 3 Iron Ore
+        priory:requiredQuantity 3
+    ] .
+
+# --- Iron Ingot + Coal -> Steel Ingot (19688) ---
+item:19706 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lump of Coal"@en ;
+    priory:gw2Id 19706 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19688 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Steel Ingot"@en ;
+    priory:gw2Id 19688 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_steel_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Steel Ingot Crafting"@en ;
+    priory:producesItem item:19688 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith ;
+    priory:requiredRating 150 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19683 ; # 1 Iron Ingot
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19706 ; # 1 Lump of Coal
+        priory:requiredQuantity 1
+    ] .
+
+# --- Silver Ore (19703) -> Silver Ingot (19687) ---
+item:19703 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Silver Ore"@en ;
+    priory:gw2Id 19703 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19687 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Silver Ingot"@en ;
+    priory:gw2Id 19687 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_silver_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Silver Ingot Crafting"@en ;
+    priory:producesItem item:19687 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Jeweler , discipline:Artificer ;
+    priory:requiredRating 75 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19703 ; # 2 Silver Ore
+        priory:requiredQuantity 2
+    ] .
+
+# --- Gold Ore (19698) -> Gold Ingot (19682) ---
+item:19698 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gold Ore"@en ;
+    priory:gw2Id 19698 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19682 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gold Ingot"@en ;
+    priory:gw2Id 19682 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_gold_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Gold Ingot Crafting"@en ;
+    priory:producesItem item:19682 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Jeweler , discipline:Artificer ;
+    priory:requiredRating 150 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19698 ; # 2 Gold Ore
+        priory:requiredQuantity 2
+    ] .
+
+# --- Platinum Ore (19702) -> Platinum Ingot (19686) ---
+item:19702 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Platinum Ore"@en ;
+    priory:gw2Id 19702 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19686 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Platinum Ingot"@en ;
+    priory:gw2Id 19686 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_platinum_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Platinum Ingot Crafting"@en ;
+    priory:producesItem item:19686 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Jeweler , discipline:Weaponsmith ;
+    priory:requiredRating 225 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19702 ; # 2 Platinum Ore
+        priory:requiredQuantity 2
+    ] .
+
+# --- Platinum Ingot + Primordium -> Darksteel Ingot (19681) ---
+item:19705 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lump of Primordium"@en ;
+    priory:gw2Id 19705 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19681 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Darksteel Ingot"@en ;
+    priory:gw2Id 19681 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_darksteel_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Darksteel Ingot Crafting"@en ;
+    priory:producesItem item:19681 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith ;
+    priory:requiredRating 225 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19686 ; # 1 Platinum Ingot
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19705 ; # 1 Lump of Primordium
+        priory:requiredQuantity 1
+    ] .
+
+# --- Mithril Ore (19700) -> Mithril Ingot (19684) ---
+item:19700 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mithril Ore"@en ;
+    priory:gw2Id 19700 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19684 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mithril Ingot"@en ;
+    priory:gw2Id 19684 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_mithril_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Mithril Ingot Crafting"@en ;
+    priory:producesItem item:19684 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith , discipline:Jeweler ;
+    priory:requiredRating 300 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19700 ; # 2 Mithril Ore
+        priory:requiredQuantity 2
+    ] .
+
+# --- Orichalcum Ore (19701) -> Orichalcum Ingot (19685) ---
+item:19701 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Orichalcum Ore"@en ;
+    priory:gw2Id 19701 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+item:19685 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Orichalcum Ingot"@en ;
+    priory:gw2Id 19685 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+recipe:refine_orichalcum_ingot a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Orichalcum Ingot Crafting"@en ;
+    priory:producesItem item:19685 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith , discipline:Jeweler ;
+    priory:requiredRating 400 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19701 ; # 2 Orichalcum Ore
+        priory:requiredQuantity 2
+    ] .
+
+# ------------------------------------------------------------------------------
+# 2. Wood Logs -> Planks & Dowels
+# ------------------------------------------------------------------------------
+
+# --- Green Wood (19723) -> Green Wood Plank (19710) ---
+item:19723 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Green Wood Log"@en ;
+    priory:gw2Id 19723 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19710 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Green Wood Plank"@en ;
+    priory:gw2Id 19710 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_green_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Green Wood Plank Crafting"@en ;
+    priory:producesItem item:19710 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
+    priory:requiredRating 0 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19723 ; # 3 Green Wood Log
+        priory:requiredQuantity 3
+    ] .
+
+# --- Soft Wood (19726) -> Soft Wood Plank (19713) ---
+item:19726 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Soft Wood Log"@en ;
+    priory:gw2Id 19726 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19713 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Soft Wood Plank"@en ;
+    priory:gw2Id 19713 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_soft_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Soft Wood Plank Crafting"@en ;
+    priory:producesItem item:19713 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
+    priory:requiredRating 75 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19726 ; # 4 Soft Wood Log
+        priory:requiredQuantity 4
+    ] .
+
+# --- Seasoned Wood (19727) -> Seasoned Wood Plank (19714) ---
+item:19727 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Seasoned Wood Log"@en ;
+    priory:gw2Id 19727 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19714 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Seasoned Wood Plank"@en ;
+    priory:gw2Id 19714 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_seasoned_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Seasoned Wood Plank Crafting"@en ;
+    priory:producesItem item:19714 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
+    priory:requiredRating 150 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19727 ; # 3 Seasoned Wood Log
+        priory:requiredQuantity 3
+    ] .
+
+# --- Hard Wood (19724) -> Hard Wood Plank (19711) ---
+item:19724 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Hard Wood Log"@en ;
+    priory:gw2Id 19724 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19711 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Hard Wood Plank"@en ;
+    priory:gw2Id 19711 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_hard_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Hard Wood Plank Crafting"@en ;
+    priory:producesItem item:19711 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
+    priory:requiredRating 225 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19724 ; # 3 Hard Wood Log
+        priory:requiredQuantity 3
+    ] .
+
+# --- Elder Wood (19722) -> Elder Wood Plank (19709) ---
+item:19722 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Elder Wood Log"@en ;
+    priory:gw2Id 19722 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19709 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Elder Wood Plank"@en ;
+    priory:gw2Id 19709 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_elder_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Elder Wood Plank Crafting"@en ;
+    priory:producesItem item:19709 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
+    priory:requiredRating 300 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19722 ; # 3 Elder Wood Log
+        priory:requiredQuantity 3
+    ] .
+
+# --- Ancient Wood (19725) -> Ancient Wood Plank (19712) ---
+item:19725 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ancient Wood Log"@en ;
+    priory:gw2Id 19725 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+item:19712 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ancient Wood Plank"@en ;
+    priory:gw2Id 19712 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+recipe:refine_ancient_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Ancient Wood Plank Crafting"@en ;
+    priory:producesItem item:19712 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
+    priory:requiredRating 400 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19725 ; # 3 Ancient Wood Log
+        priory:requiredQuantity 3
+    ] .
+
+# ------------------------------------------------------------------------------
+# 3. Leather Sections -> Cured Squares
+# ------------------------------------------------------------------------------
+
+# --- Rawhide Leather (19718) -> Stretched Rawhide (19719) ---
+item:19718 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Rawhide Leather Section"@en ;
+    priory:gw2Id 19718 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19719 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Stretched Rawhide Leather Square"@en ;
+    priory:gw2Id 19719 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_rawhide_leather a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Stretched Rawhide Crafting"@en ;
+    priory:producesItem item:19719 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Leatherworker ;
+    priory:requiredRating 0 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19718 ; # 2 Rawhide Section
+        priory:requiredQuantity 2
+    ] .
+
+# --- Thin Leather (19728) -> Cured Thin Square (19733) ---
+item:19728 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Thin Leather Section"@en ;
+    priory:gw2Id 19728 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19733 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Thin Leather Square"@en ;
+    priory:gw2Id 19733 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_thin_leather a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Cured Thin Leather Crafting"@en ;
+    priory:producesItem item:19733 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Leatherworker ;
+    priory:requiredRating 75 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19728 ; # 2 Thin Leather Section
+        priory:requiredQuantity 2
+    ] .
+
+# --- Coarse Leather (19730) -> Cured Coarse Square (19734) ---
+item:19730 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Coarse Leather Section"@en ;
+    priory:gw2Id 19730 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19734 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Coarse Leather Square"@en ;
+    priory:gw2Id 19734 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_coarse_leather a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Cured Coarse Leather Crafting"@en ;
+    priory:producesItem item:19734 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Leatherworker ;
+    priory:requiredRating 150 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19730 ; # 2 Coarse Leather Section
+        priory:requiredQuantity 2
+    ] .
+
+# --- Rugged Leather (19731) -> Cured Rugged Square (19736) ---
+item:19731 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Rugged Leather Section"@en ;
+    priory:gw2Id 19731 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19736 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Rugged Leather Square"@en ;
+    priory:gw2Id 19736 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_rugged_leather a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Cured Rugged Leather Crafting"@en ;
+    priory:producesItem item:19736 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Leatherworker ;
+    priory:requiredRating 225 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19731 ; # 2 Rugged Leather Section
+        priory:requiredQuantity 2
+    ] .
+
+# --- Thick Leather (19729) -> Cured Thick Square (19735) ---
+item:19729 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Thick Leather Section"@en ;
+    priory:gw2Id 19729 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19735 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Thick Leather Square"@en ;
+    priory:gw2Id 19735 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_thick_leather a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Cured Thick Leather Crafting"@en ;
+    priory:producesItem item:19735 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Leatherworker ;
+    priory:requiredRating 300 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19729 ; # 4 Thick Leather Section
+        priory:requiredQuantity 4
+    ] .
+
+# --- Hardened Leather (19732) -> Cured Hardened Square (19737) ---
+item:19732 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Hardened Leather Section"@en ;
+    priory:gw2Id 19732 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+item:19737 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Hardened Leather Square"@en ;
+    priory:gw2Id 19737 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+recipe:refine_hardened_leather a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Cured Hardened Leather Crafting"@en ;
+    priory:producesItem item:19737 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Leatherworker ;
+    priory:requiredRating 400 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19732 ; # 3 Hardened Leather Section
+        priory:requiredQuantity 3
+    ] .
+
+# ------------------------------------------------------------------------------
+# 4. Cloth Scraps -> Bolts
+# ------------------------------------------------------------------------------
+
+# --- Jute Scrap (19717) -> Bolt of Jute (19720) ---
+item:19717 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Jute Scrap"@en ;
+    priory:gw2Id 19717 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19720 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bolt of Jute"@en ;
+    priory:gw2Id 19720 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_bolt_of_jute a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bolt of Jute Crafting"@en ;
+    priory:producesItem item:19720 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Tailor ;
+    priory:requiredRating 0 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19717 ; # 2 Jute Scrap
+        priory:requiredQuantity 2
+    ] .
+
+# --- Wool Scrap (19739) -> Bolt of Wool (19741) ---
+item:19739 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Wool Scrap"@en ;
+    priory:gw2Id 19739 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19741 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bolt of Wool"@en ;
+    priory:gw2Id 19741 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_bolt_of_wool a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bolt of Wool Crafting"@en ;
+    priory:producesItem item:19741 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Tailor ;
+    priory:requiredRating 75 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19739 ; # 2 Wool Scrap
+        priory:requiredQuantity 2
+    ] .
+
+# --- Cotton Scrap (19740) -> Bolt of Cotton (19742) ---
+item:19740 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cotton Scrap"@en ;
+    priory:gw2Id 19740 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19742 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bolt of Cotton"@en ;
+    priory:gw2Id 19742 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_bolt_of_cotton a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bolt of Cotton Crafting"@en ;
+    priory:producesItem item:19742 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Tailor ;
+    priory:requiredRating 150 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19740 ; # 2 Cotton Scrap
+        priory:requiredQuantity 2
+    ] .
+
+# --- Linen Scrap (19743) -> Bolt of Linen (19744) ---
+item:19743 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Linen Scrap"@en ;
+    priory:gw2Id 19743 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19744 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bolt of Linen"@en ;
+    priory:gw2Id 19744 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_bolt_of_linen a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bolt of Linen Crafting"@en ;
+    priory:producesItem item:19744 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Tailor ;
+    priory:requiredRating 225 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19743 ; # 2 Linen Scrap
+        priory:requiredQuantity 2
+    ] .
+
+# --- Silk Scrap (19745) -> Bolt of Silk (19747) ---
+item:19745 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Silk Scrap"@en ;
+    priory:gw2Id 19745 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+item:19747 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bolt of Silk"@en ;
+    priory:gw2Id 19747 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .
+
+recipe:refine_bolt_of_silk a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bolt of Silk Crafting"@en ;
+    priory:producesItem item:19747 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Tailor ;
+    priory:requiredRating 300 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19745 ; # 3 Silk Scrap
+        priory:requiredQuantity 3
+    ] .
+
+# --- Gossamer Scrap (19746) -> Bolt of Gossamer (19748) ---
+item:19746 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gossamer Scrap"@en ;
+    priory:gw2Id 19746 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+item:19748 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bolt of Gossamer"@en ;
+    priory:gw2Id 19748 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+recipe:refine_bolt_of_gossamer a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Bolt of Gossamer Crafting"@en ;
+    priory:producesItem item:19748 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Tailor ;
+    priory:requiredRating 400 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19746 ; # 2 Gossamer Scrap
+        priory:requiredQuantity 2
+    ] .

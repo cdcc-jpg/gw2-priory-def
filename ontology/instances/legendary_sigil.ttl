@@ -96,7 +96,7 @@ recipe:craft_mystic_mote a priory:DisciplineRecipe ;
     priory:requiresRating 75 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89140 ; # Pile of Lucent Crystal (10 per mote = 750 total)
+        priory:requiresItem item:89103 ; # Lucent Crystal (10 per mote = 750 total)
         priory:requiredQuantity 10
     ] , [
         a priory:IngredientRequirement ;
@@ -108,7 +108,7 @@ recipe:craft_mystic_mote a priory:DisciplineRecipe ;
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89216 ; # Symbol of Pain
+        priory:requiresItem item:89140 ; # Symbol of Pain
         priory:requiredQuantity 1
     ] .
 
@@ -193,10 +193,10 @@ recipe:forge_gift_of_condensed_magic a priory:MysticForgeRecipe ;
     ] .
 
 # --- Leaf Materials & Symbols ---
-item:89140 a priory:CraftingMaterial ;
-    rdfs:label "Pile of Lucent Crystal"@en ;
-    priory:gw2Id 89140 ;
-    priory:hasRarity rarity:Fine ;
+item:89103 a priory:CraftingMaterial ;
+    rdfs:label "Lucent Crystal"@en ;
+    priory:gw2Id 89103 ;
+    priory:hasRarity rarity:Rare ;
     priory:isAccountBound false .
 
 item:89258 a priory:CraftingMaterial ;
@@ -211,9 +211,9 @@ item:89182 a priory:CraftingMaterial ;
     priory:hasRarity rarity:Fine ;
     priory:isAccountBound false .
 
-item:89216 a priory:CraftingMaterial ;
+item:89140 a priory:CraftingMaterial ;
     rdfs:label "Symbol of Pain"@en ;
-    priory:gw2Id 89216 ;
+    priory:gw2Id 89140 ;
     priory:hasRarity rarity:Fine ;
     priory:isAccountBound false .
 

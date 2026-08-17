@@ -58,7 +58,7 @@ class TestAgentPipeline(unittest.TestCase):
         # 60 needed - 20 owned = 40 missing Clovers
         self.assertEqual(report.summary_missing_materials["Mystic Clover"], 40)
         # 10 * 75 * 2 = 1500 Lucent Crystals
-        self.assertEqual(report.summary_missing_materials["Pile of Lucent Crystal"], 1500)
+        self.assertEqual(report.summary_missing_materials["Lucent Crystal"], 1500)
         # 75 * 2 = 150 of each symbol
         self.assertEqual(report.summary_missing_materials["Symbol of Control"], 150)
         # Gift of Craftsmanship is satisfied because wallet has 440 tokens (needs 100)

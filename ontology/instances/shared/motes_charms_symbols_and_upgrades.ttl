@@ -1,0 +1,123 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+
+# ==============================================================================
+# Motes, Crystals, Charms, Symbols & Upgrade Salvage Ecosystem
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Lucent Mote (89216) & Lucent Crystal (89103)
+# ------------------------------------------------------------------------------
+item:89216 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lucent Mote"@en ;
+    priory:gw2Id 89216 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_sigils_runes ;
+    skos:definition "Basic magical component salvaged from upgrade components (runes and sigils)."@en .
+
+item:89103 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lucent Crystal"@en ;
+    priory:gw2Id 89103 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    skos:definition "Refined magical crystal used in legendary sigils, runes, and relics."@en .
+
+recipe:craft_lucent_crystal a priory:CraftingRecipe, owl:NamedIndividual ;
+    rdfs:label "Lucent Crystal Crafting"@en ;
+    priory:producesItem item:89103 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Artificer , discipline:Weaponsmith , discipline:Armorsmith , discipline:Tailor , discipline:Leatherworker , discipline:Huntsman ;
+    priory:requiredRating 400 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:89216 ; # 10 Lucent Mote
+        priory:requiredQuantity 10
+    ] .
+
+# ------------------------------------------------------------------------------
+# 2. Mystic Mote (91424)
+# ------------------------------------------------------------------------------
+item:91424 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mystic Mote"@en ;
+    priory:gw2Id 91424 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    skos:definition "Concentrated magical mote used in Gifts of Sigils and Runes."@en .
+
+# ------------------------------------------------------------------------------
+# 3. Charms (Rune Salvage Ecosystem)
+# ------------------------------------------------------------------------------
+item:89275 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Charm of Brilliance"@en ;
+    priory:gw2Id 89275 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_runes ;
+    skos:definition "Salvaged from condition and boon-focused runes. Used for Legendary Runes."@en .
+
+item:89267 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Charm of Potence"@en ;
+    priory:gw2Id 89267 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_runes ;
+    skos:definition "Salvaged from power and offensive runes. Used for Legendary Runes."@en .
+
+item:89141 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Charm of Skill"@en ;
+    priory:gw2Id 89141 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_runes ;
+    skos:definition "Salvaged from utility and defense runes. Used for Legendary Runes."@en .
+
+# ------------------------------------------------------------------------------
+# 4. Symbols (Sigil Salvage Ecosystem)
+# ------------------------------------------------------------------------------
+item:89258 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Symbol of Control"@en ;
+    priory:gw2Id 89258 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_sigils ;
+    skos:definition "Salvaged from control and CC-focused sigils. Used for Legendary Sigils."@en .
+
+item:89182 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Symbol of Enhancement"@en ;
+    priory:gw2Id 89182 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_sigils ;
+    skos:definition "Salvaged from stat enhancement sigils. Used for Legendary Sigils."@en .
+
+item:89140 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Symbol of Pain"@en ;
+    priory:gw2Id 89140 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia item:path_salvage_sigils ;
+    skos:definition "Salvaged from damage-dealing sigils. Used for Legendary Sigils."@en .
+
+# ------------------------------------------------------------------------------
+# 5. Salvage Archetypes
+# ------------------------------------------------------------------------------
+item:path_salvage_sigils_runes a priory:SalvagePath, owl:NamedIndividual ;
+    rdfs:label "Salvage Runes and Sigils"@en ;
+    skos:definition "Salvage unwanted green, yellow, or exotic runes/sigils using Runecrafter's or Silver-Fed Salvage-o-Matic."@en .
+
+item:path_salvage_runes a priory:SalvagePath, owl:NamedIndividual ;
+    rdfs:label "Salvage Runes for Charms"@en ;
+    skos:definition "Salvage Masterwork, Rare, or Exotic Runes for Charms of Brilliance, Potence, and Skill."@en .
+
+item:path_salvage_sigils a priory:SalvagePath, owl:NamedIndividual ;
+    rdfs:label "Salvage Sigils for Symbols"@en ;
+    skos:definition "Salvage Masterwork, Rare, or Exotic Sigils for Symbols of Control, Enhancement, and Pain."@en .
