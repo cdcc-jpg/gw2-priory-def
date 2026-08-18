@@ -34,7 +34,7 @@ class TestPrioryWebApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
         self.assertIn("PRIORY GRIMOIRE", html)
-        self.assertIn("Account Essence Snapshot", html)
+        self.assertIn("Inscription of Intent", html)
 
     def test_api_status(self):
         """Verifies that /api/status returns knowledge graph and wallet telemetry."""
