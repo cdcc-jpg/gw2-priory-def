@@ -62,9 +62,9 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         elif "clover" in p_lower or "mystic clover" in p_lower:
             goal_item = "Mystic Clover"
 
-        # Extract target quantity (e.g. "2 legendary sigils", "3 twilight", "2 sigils", "2 leggy upgrades")
+        # Extract target quantity (e.g. "2 legendaries", "2 legendary sigils", "3 twilight", "2 sigils", "2 leggy upgrades")
         target_qty = 1
-        qty_match = re.search(r"(\d+)\s*(?:legendary|sigils?|twilight|dusk|clovers?|weapons?|items?|upgrades?|leggy)", p_lower)
+        qty_match = re.search(r"(\d+)\s*(?:legendaries|legendary|sigils?|twilight|dusk|clovers?|weapons?|items?|upgrades?|leggy)", p_lower)
         if qty_match:
             target_qty = int(qty_match.group(1))
 

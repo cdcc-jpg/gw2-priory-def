@@ -58,12 +58,14 @@ class PrioryChatSession:
         if resolved_goal.goal_type == GoalType.COMPARATIVE_RANKING:
             is_speed = any(w in user_prompt.lower() for w in ["quick", "fast", "speed", "least effort", "instant", "soon"])
 
+            requested_n = resolved_goal.target_quantity if resolved_goal.target_quantity > 1 else 5
+
             rankings = self.orchestrator.ranker.rank_all_legendaries(
                 account=self.account_state,
                 tp_prices=live_tp_prices,
-                top_n=5,
+                top_n=max(requested_n, 5),
                 filter_query=resolved_goal.category_filter,
-                prefer_speed=is_speed
+                prefer_speed=resolved_goal.prefer_speed
             )
             top_optimal_plan = None
             if rankings:
@@ -83,7 +85,8 @@ class PrioryChatSession:
                 rankings=rankings,
                 user_prompt=user_prompt,
                 time_budget_minutes=resolved_goal.intent.time_budget_minutes,
-                optimal_plan=top_optimal_plan
+                optimal_plan=top_optimal_plan,
+                target_quantity=resolved_goal.target_quantity
             )
             self.history.append({"role": "user", "content": user_prompt})
             self.history.append({"role": "assistant", "content": guide.executive_summary})

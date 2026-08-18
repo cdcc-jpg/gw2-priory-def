@@ -231,7 +231,8 @@ class GuideGenerator:
         rankings: List[Any],
         user_prompt: str,
         time_budget_minutes: int = 120,
-        optimal_plan: Optional[Any] = None
+        optimal_plan: Optional[Any] = None,
+        target_quantity: int = 1
     ) -> PersonalizedGuide:
         """Generates a ranked comparative guide for 'Which legendary am I closest to?' queries."""
         if not rankings:
@@ -252,9 +253,12 @@ class GuideGenerator:
         top_choice = rankings[0]
         readiness = int(top_choice.readiness_pct)
 
-        recs = [
-            f"🏆 **Top Recommendation:** **{top_choice.name}** ({top_choice.subtype or 'Weapon'}) is your #1 closest legendary!"
-        ]
+        recs = []
+        if target_quantity > 1 and len(rankings) >= target_quantity:
+            item_names = ", ".join(f"**{r.name}** ({r.subtype or 'Item'})" for r in rankings[:target_quantity])
+            recs.append(f"🏆 **Top {target_quantity} Recommendations:** {item_names} are your top {target_quantity} closest legendaries!")
+        else:
+            recs.append(f"🏆 **Top Recommendation:** **{top_choice.name}** ({top_choice.subtype or 'Weapon'}) is your #1 closest legendary!")
 
         # Domain clarification note if player asked about non-existent Gen 2 / Tier 2 spear
         prompt_lower = user_prompt.lower()
@@ -264,7 +268,13 @@ class GuideGenerator:
                 "The available legendary spears are **Kamohoali'i Kotaki** (Gen 1 Aquatic Spear) and **Klobjarne Harvester** (Janthir Wilds Land Spear)."
             )
 
-        if top_choice.starter_kit_eligible:
+        # Starter kit match notes
+        if target_quantity > 1 and len(rankings) >= 2 and rankings[0].starter_kit_eligible and rankings[1].starter_kit_eligible:
+            recs.append(
+                f"🎁 **Bank Starter Kit Match:** You own **Legendary Weapon Starter Kit—Set 2** in your Bank! "
+                f"Both **{rankings[0].name}** and **{rankings[1].name}** can be chosen from this kit to immediately grant their Precursor and Gift for **0 gold**."
+            )
+        elif top_choice.starter_kit_eligible:
             recs.append(
                 f"🎁 **Bank Starter Kit Match:** You own **Legendary Weapon Starter Kit—Set 2** in your Bank! "
                 f"Selecting **{top_choice.name}** immediately gives you its Precursor and Gift for **0 gold**."
@@ -280,8 +290,9 @@ class GuideGenerator:
             )
 
         # Leaderboard items with precursor archetype and calendar days
-        recs.append("📊 **Closest Legendaries Leaderboard:**")
-        for i, item in enumerate(rankings[:5], 1):
+        display_n = target_quantity if 1 < target_quantity <= 10 else 5
+        recs.append(f"📊 **Closest Legendaries Leaderboard (Top {min(display_n, len(rankings))}):**")
+        for i, item in enumerate(rankings[:display_n], 1):
             kit_tag = " [🎁 Bank Kit Ready]" if item.starter_kit_eligible else ""
             tg_tag = f" | ⏳ ~{item.calendar_day_gates}d gate" if item.calendar_day_gates > 0 else ""
             recs.append(
