@@ -104,6 +104,20 @@ class TestAccountRanker(unittest.TestCase):
         # Top choice must be a shard crafting precursor (0.5h effort), NOT a 40h collection hunt
         self.assertIn("Shard", rankings[0].precursor_archetype)
         self.assertLessEqual(rankings[0].estimated_gameplay_hours, 1.0)
+    def test_global_speed_query_no_empty_rankings(self):
+        """Verifies that asking 'Which legendary item can I quickly craft' returns all top legendary candidates without empty results."""
+        account = AccountState(
+            materials={19721: 100, 19675: 30}
+        )
+        rankings = self.ranker.rank_all_legendaries(
+            account,
+            top_n=5,
+            filter_query=None,
+            prefer_speed=True
+        )
+        self.assertGreater(len(rankings), 0)
+        self.assertEqual(len(rankings), 5)
+        self.assertLessEqual(rankings[0].estimated_gameplay_hours, 1.0)
 
 
 if __name__ == "__main__":

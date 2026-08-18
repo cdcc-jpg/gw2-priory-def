@@ -5,6 +5,7 @@ accounting for owned items, Bank Choice Chests / Starter Kits, and materials to 
 the player is closest to crafting.
 """
 
+import re
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 from rdflib import Literal
@@ -87,7 +88,8 @@ class AccountRanker:
         tp_prices: Optional[Dict[int, float]] = None,
         top_n: int = 10,
         exclude_unlocked: bool = True,
-        filter_query: Optional[str] = None
+        filter_query: Optional[str] = None,
+        prefer_speed: bool = False
     ) -> List[LegendaryRankingItem]:
         """Evaluates and ranks all legendary items against the player account.
         
@@ -97,35 +99,63 @@ class AccountRanker:
             top_n: Number of top closest items to return.
             exclude_unlocked: Whether to exclude already owned Armory legendaries.
             filter_query: Optional filter string (e.g. 'Gen 2', 'Generation 2', 'Aurene', 'Greatsword').
+            prefer_speed: Whether to prioritize active gameplay speed and low time-gates.
         """
         legendaries = self.get_all_legendaries_in_graph()
         rankings: List[LegendaryRankingItem] = []
 
+        is_speed_query = prefer_speed
+        clean_filter = filter_query or ""
+        speed_words = ["quick", "quickly", "fast", "fastest", "speed", "speedy", "least effort", "instant", "soon"]
+        if any(w in clean_filter.lower() for w in speed_words):
+            is_speed_query = True
+            for w in speed_words:
+                clean_filter = re.sub(r'\b' + re.escape(w) + r'\b', '', clean_filter, flags=re.IGNORECASE)
+            clean_filter = clean_filter.strip()
+
         # Filter by generation, expansion, or category if requested
-        if filter_query:
-            fq = filter_query.lower().strip()
-            norm_terms = [fq]
+        domain_facets = False
+        norm_terms = []
+        fq = clean_filter.lower().strip()
+        if fq:
             if any(t in fq for t in ["gen 1", "generation 1", "gen one", "core"]):
                 norm_terms.extend(["gen 1", "generation 1", "gen one"])
+                domain_facets = True
             elif any(t in fq for t in ["gen 2", "generation 2", "gen two", "heart of thorns", "hot"]):
                 norm_terms.extend(["gen 2", "generation 2", "gen two", "hot", "maguuma"])
+                domain_facets = True
             elif any(t in fq for t in ["gen 3", "generation 3", "gen three", "aurene", "end of dragons", "eod"]):
                 norm_terms.extend(["gen 3", "generation 3", "gen three", "aurene", "dragon"])
+                domain_facets = True
             elif any(t in fq for t in ["soto", "secrets of the obscure", "obsidian"]):
                 norm_terms.extend(["soto", "secrets of the obscure", "obsidian", "open world"])
+                domain_facets = True
             elif any(t in fq for t in ["janthir", "janthir wilds", "jw", "spear"]):
                 norm_terms.extend(["janthir", "klobjarne", "spear"])
+                domain_facets = True
             elif any(t in fq for t in ["envoy", "raid", "insights"]):
                 norm_terms.extend(["envoy", "raid", "insights"])
+                domain_facets = True
             elif "armor" in fq:
                 norm_terms.extend(["armor", "helm", "pauldrons", "breastplate", "gauntlets", "tassets", "greaves", "mask", "shoulderguards", "jerkin", "vambraces", "leggings", "boots", "hood", "mantle", "vestments", "gloves", "pants", "shoes"])
+                domain_facets = True
             elif any(t in fq for t in ["trinket", "ring", "accessory", "amulet"]):
                 norm_terms.extend(["aurora", "vision", "coalescence", "conflux", "transcendence", "regalia", "accessory", "ring", "amulet", "trinket"])
+                domain_facets = True
             elif any(t in fq for t in ["backpack", "back"]):
                 norm_terms.extend(["ad infinitum", "the ascension", "warbringer", "backpack"])
+                domain_facets = True
             elif any(t in fq for t in ["upgrade", "sigil", "rune", "relic"]):
                 norm_terms.extend(["sigil", "rune", "relic", "upgrade"])
+                domain_facets = True
+            else:
+                stopwords = {"legendary", "item", "items", "weapon", "weapons", "craft", "crafting", "which", "what", "can", "i", "a", "an", "the"}
+                non_stop = [w for w in re.findall(r'\w+', fq) if w not in stopwords]
+                if non_stop:
+                    norm_terms = [fq] + non_stop
+                    domain_facets = True
 
+        if domain_facets and norm_terms:
             filtered_legs = []
             for leg in legendaries:
                 lbl = leg["label"].lower()
