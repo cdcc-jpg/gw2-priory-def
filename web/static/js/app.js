@@ -1,5 +1,5 @@
 /**
- * Project Priory — Frontend Interactive Controller
+ * The Priory Grimoire — Interactive 3D Tome Controller
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,27 +9,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSubmit = document.getElementById("btn-submit-query");
     const btnText = document.getElementById("btn-text");
     const btnSpinner = document.getElementById("btn-spinner");
-    const emptyState = document.getElementById("empty-state");
-    const guideView = document.getElementById("guide-view");
 
-    // Status Pills
+    const pageRightContainer = document.getElementById("page-right-container");
+    const pageFrontIdle = document.getElementById("page-front-idle");
+    const pageRevealedGuide = document.getElementById("page-revealed-guide");
+    const btnTurnBack = document.getElementById("btn-turn-back");
+
+    // Status Badges
     const valTriples = document.getElementById("val-triples");
     const valLlm = document.getElementById("val-llm");
     const valAccount = document.getElementById("val-account");
 
-    // Account Sidebar
+    // Account Seals
     const statArmory = document.getElementById("stat-armory");
     const statMaterials = document.getElementById("stat-materials");
     const currAa = document.getElementById("curr-aa");
     const currVm = document.getElementById("curr-vm");
     const currSs = document.getElementById("curr-ss");
     const currLaurels = document.getElementById("curr-laurels");
-    const currPt = document.getElementById("curr-pt");
     const btnRefreshAccount = document.getElementById("btn-refresh-account");
-    const inputApiKey = document.getElementById("input-api-key");
-    const btnApplyKey = document.getElementById("btn-apply-key");
 
-    // Guide Elements
+    // Manifestation / Guide Elements
     const goalTitle = document.getElementById("guide-goal-title");
     const executiveSummary = document.getElementById("guide-executive-summary");
     const readinessVal = document.getElementById("guide-readiness-val");
@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const materialsTags = document.getElementById("materials-tags");
     const tipText = document.getElementById("tip-text");
 
-    // Initialize System Status & Live Account
+    // Fetch initial telemetry and account snapshot
     fetchStatus();
 
-    // Query Submission
+    // Query Inscription Submission
     queryForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const query = queryInput.value.trim();
@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
         await executeQuery(query);
     });
 
-    // Quick Sample Prompts
-    document.querySelectorAll(".prompt-chip").forEach((chip) => {
+    // Quick Incantations (Sample Prompts)
+    document.querySelectorAll(".incantation-chip").forEach((chip) => {
         chip.addEventListener("click", () => {
             const query = chip.getAttribute("data-query");
             queryInput.value = query;
@@ -61,50 +61,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Refresh Account Button
+    // Refresh Account Essence
     btnRefreshAccount.addEventListener("click", () => {
         fetchStatus(true);
     });
 
-    // Apply API Key Button
-    btnApplyKey.addEventListener("click", async () => {
-        const apiKey = inputApiKey.value.trim();
-        if (!apiKey) return;
-        btnApplyKey.disabled = true;
-        btnApplyKey.innerText = "Applying...";
-        try {
-            const res = await fetch("/api/account/refresh", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ api_key: apiKey }),
-            });
-            const data = await res.json();
-            if (data.success) {
-                inputApiKey.value = "";
-                await fetchStatus();
-            } else {
-                alert(`Failed to apply API key: ${data.error || "Unknown error"}`);
-            }
-        } catch (err) {
-            alert(`Error updating API key: ${err.message}`);
-        } finally {
-            btnApplyKey.disabled = false;
-            btnApplyKey.innerText = "Apply";
-        }
-    });
+    // Turn Back Button (Flip back to dormant mirror)
+    if (btnTurnBack) {
+        btnTurnBack.addEventListener("click", () => {
+            flipPageToFront();
+        });
+    }
 
     // Copy Goal Chat Code
-    btnCopyChatcode.addEventListener("click", () => {
-        const code = chatcodeText.innerText.trim();
-        if (code) {
-            navigator.clipboard.writeText(code);
-            const originalText = chatcodeText.innerText;
-            chatcodeText.innerText = "Copied!";
-            setTimeout(() => {
-                chatcodeText.innerText = originalText;
-            }, 1500);
-        }
-    });
+    if (btnCopyChatcode) {
+        btnCopyChatcode.addEventListener("click", () => {
+            const code = chatcodeText.innerText.trim();
+            if (code) {
+                navigator.clipboard.writeText(code);
+                const original = chatcodeText.innerText;
+                chatcodeText.innerText = "Copied!";
+                setTimeout(() => {
+                    chatcodeText.innerText = original;
+                }, 1400);
+            }
+        });
+    }
 
     /**
      * Fetches telemetry and live account status.
@@ -117,23 +99,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const res = await fetch("/api/status");
             const data = await res.json();
 
-            // Status Pills
+            // Status Badges
             valTriples.innerText = `${data.triples_loaded.toLocaleString()} Triples`;
             valLlm.innerText = data.llm_provider || "Standard";
             valAccount.innerText = data.api_key_configured
                 ? `Live (${data.api_key_masked})`
                 : "Default Test Snapshot";
 
-            // Account Stats
+            // Account Metrics
             statArmory.innerText = data.account_armory_count || 0;
             statMaterials.innerText = data.account_materials_count || 0;
 
-            // Wallet
+            // Currency Orbs
             currAa.innerText = (data.wallet.astral_acclaim || 0).toLocaleString();
             currVm.innerText = (data.wallet.volatile_magic || 0).toLocaleString();
             currSs.innerText = (data.wallet.spirit_shards || 0).toLocaleString();
             currLaurels.innerText = (data.wallet.laurels || 0).toLocaleString();
-            currPt.innerText = (data.wallet.provisioner_tokens || 0).toLocaleString();
         } catch (err) {
             console.error("Failed to fetch system status:", err);
         } finally {
@@ -144,10 +125,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * Executes natural language query through the neuro-symbolic sandwich.
+     * Executes query with 3D magical page turn animation.
      */
     async function executeQuery(query) {
         setLoading(true);
+
+        // Start 3D Page Turn Animation
+        pageRightContainer.classList.add("page-flipping");
 
         try {
             const res = await fetch("/api/query", {
@@ -159,24 +143,42 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
 
             if (data.success && data.guide) {
-                renderGuide(data.guide);
+                setTimeout(() => {
+                    renderGuide(data.guide);
+                    pageFrontIdle.classList.add("hidden");
+                    pageRevealedGuide.classList.remove("hidden");
+                }, 400); // Reveal mid-flip for natural effect
             } else {
-                alert(`Query error: ${data.error || "Failed to process query."}`);
+                alert(`Oracle error: ${data.error || "Failed to process query."}`);
             }
         } catch (err) {
-            alert(`Network error: ${err.message}`);
+            alert(`Arcane connection interrupted: ${err.message}`);
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                pageRightContainer.classList.remove("page-flipping");
+                setLoading(false);
+            }, 850);
         }
+    }
+
+    /**
+     * Flips page back to the dormant scrying mirror.
+     */
+    function flipPageToFront() {
+        pageRightContainer.classList.add("page-flipping");
+        setTimeout(() => {
+            pageRevealedGuide.classList.add("hidden");
+            pageFrontIdle.classList.remove("hidden");
+        }, 400);
+        setTimeout(() => {
+            pageRightContainer.classList.remove("page-flipping");
+        }, 850);
     }
 
     /**
      * Renders the synthesized progression guide.
      */
     function renderGuide(guide) {
-        emptyState.classList.add("hidden");
-        guideView.classList.remove("hidden");
-
         // Header
         const targetStr = guide.target_quantity > 1 ? `${guide.target_quantity}x ` : "";
         goalTitle.innerText = `${targetStr}${guide.goal_name}`;
@@ -254,9 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Motivational Tip
         tipText.innerHTML = formatTextWithWaypoints(guide.motivational_tip || "");
-
-        // Scroll to results smoothly
-        guideView.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     /**
@@ -264,9 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     function formatTextWithWaypoints(text) {
         if (!text) return "";
-        // Replace markdown bold **text**
         let formatted = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        // Replace waypoint codes `[&...]` or [&...] with interactive copy badge
         formatted = formatted.replace(/`?(\[&[A-Za-z0-9+/=]+\])`?/g, (match, wp) => {
             return `<span class="wp-badge" onclick="copyWaypoint('${wp}', this)" title="Click to copy waypoint code">${wp}</span>`;
         });
@@ -294,7 +291,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/'/g, "&#039;");
     }
 
-    // Global copy waypoint function
     window.copyWaypoint = (code, element) => {
         navigator.clipboard.writeText(code);
         const originalText = element.innerText;

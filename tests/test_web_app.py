@@ -33,8 +33,8 @@ class TestPrioryWebApp(unittest.TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
-        self.assertIn("PROJECT PRIORY", html)
-        self.assertIn("Live Account Snapshot", html)
+        self.assertIn("PRIORY GRIMOIRE", html)
+        self.assertIn("Account Essence Snapshot", html)
 
     def test_api_status(self):
         """Verifies that /api/status returns knowledge graph and wallet telemetry."""

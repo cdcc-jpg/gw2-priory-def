@@ -3,198 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Priory — GW2 Semantic Reasoning Explorer</title>
-    <meta name="description" content="Neuro-symbolic knowledge layer and progression copilot for Guild Wars 2 legendary acquisitions.">
+    <title>The Priory Grimoire — Guild Wars 2 Semantic Reasoning Tome</title>
+    <meta name="description" content="An enchanted knowledge grimoire and neuro-symbolic reasoning engine for Guild Wars 2 legendary acquisitions.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
-    <!-- Top System Telemetry Bar -->
-    <header class="priory-header">
-        <div class="header-container">
-            <div class="brand">
-                <span class="brand-icon">🏛️</span>
+<body class="grimoire-body">
+    <!-- Mystic Ambient Top Bar -->
+    <header class="tome-header">
+        <div class="tome-header-content">
+            <div class="tome-brand">
+                <span class="tome-sigil">🏛️</span>
                 <div>
-                    <h1 class="brand-title">PROJECT PRIORY</h1>
-                    <p class="brand-subtitle">Neuro-Symbolic Reasoning Engine for Guild Wars 2</p>
+                    <h1 class="tome-brand-title">THE PRIORY GRIMOIRE</h1>
+                    <p class="tome-brand-subtitle">Durmand Priory Archives • Neuro-Symbolic Scrying Mirror</p>
                 </div>
             </div>
-            <div class="system-status-pills" id="system-status-pills">
-                <div class="status-pill" id="pill-triples">
-                    <span class="pill-dot"></span>
-                    <span class="pill-label">Knowledge Graph:</span>
-                    <span class="pill-value" id="val-triples">Loading...</span>
+            <div class="telemetry-badges">
+                <div class="telemetry-badge" id="pill-triples">
+                    <span class="badge-dot"></span>
+                    <span class="badge-lbl">Knowledge Graph:</span>
+                    <span class="badge-val" id="val-triples">10,191 Triples</span>
                 </div>
-                <div class="status-pill" id="pill-llm">
-                    <span class="pill-label">LLM:</span>
-                    <span class="pill-value" id="val-llm">Detecting...</span>
+                <div class="telemetry-badge" id="pill-llm">
+                    <span class="badge-lbl">Oracle:</span>
+                    <span class="badge-val" id="val-llm">Google Gemini</span>
                 </div>
-                <div class="status-pill" id="pill-account">
-                    <span class="pill-label">Account:</span>
-                    <span class="pill-value" id="val-account">Connecting...</span>
+                <div class="telemetry-badge" id="pill-account">
+                    <span class="badge-lbl">Seeker's Seal:</span>
+                    <span class="badge-val" id="val-account">Live Account</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="main-layout">
-        <!-- Sidebar / Live Account Telemetry Panel -->
-        <aside class="sidebar">
-            <div class="card account-card">
-                <div class="card-header">
-                    <h2>Live Account Snapshot</h2>
-                    <button class="btn-icon" id="btn-refresh-account" title="Refresh Live Account Snapshot">🔄</button>
-                </div>
-                <div class="account-stats-grid">
-                    <div class="stat-box">
-                        <span class="stat-number" id="stat-armory">-</span>
-                        <span class="stat-title">Armory Unlocks</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-number" id="stat-materials">-</span>
-                        <span class="stat-title">Tracked Materials</span>
-                    </div>
-                </div>
+    <!-- The 3D Grimoire Stage -->
+    <main class="grimoire-viewport">
+        <div class="grimoire-book-wrapper">
+            <div class="grimoire-book" id="grimoire-book">
+                <!-- Book Spine / Bookmark Ribbon -->
+                <div class="book-spine"></div>
+                <div class="bookmark-ribbon" title="Bookmark of the Scholar"></div>
 
-                <div class="wallet-section">
-                    <h3>Currencies & Limits</h3>
-                    <div class="wallet-list" id="wallet-list">
-                        <div class="wallet-item">
-                            <span class="curr-name">✨ Astral Acclaim</span>
-                            <span class="curr-val" id="curr-aa">-</span>
-                        </div>
-                        <div class="wallet-item">
-                            <span class="curr-name">⚡ Volatile Magic</span>
-                            <span class="curr-val" id="curr-vm">-</span>
-                        </div>
-                        <div class="wallet-item">
-                            <span class="curr-name">🔮 Spirit Shards</span>
-                            <span class="curr-val" id="curr-ss">-</span>
-                        </div>
-                        <div class="wallet-item">
-                            <span class="curr-name">🌿 Laurels</span>
-                            <span class="curr-val" id="curr-laurels">-</span>
-                        </div>
-                        <div class="wallet-item">
-                            <span class="curr-name">🏛️ Provisioner Tokens</span>
-                            <span class="curr-val" id="curr-pt">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="api-key-form">
-                    <label for="input-api-key">Custom GW2 API Key (Optional)</label>
-                    <div class="input-with-button">
-                        <input type="password" id="input-api-key" placeholder="Paste API key...">
-                        <button class="btn-secondary" id="btn-apply-key">Apply</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Semantic Queries -->
-            <div class="card quick-prompts-card">
-                <div class="card-header">
-                    <h2>Sample Queries</h2>
-                </div>
-                <div class="quick-prompts-list">
-                    <button class="prompt-chip" data-query="Which 2 legendaries can I quickly craft?">⚡ Which 2 legendaries can I quickly craft?</button>
-                    <button class="prompt-chip" data-query="How do I craft Twilight?">⚔️ How do I craft Twilight?</button>
-                    <button class="prompt-chip" data-query="How do I craft Eternity?">✨ How do I craft Eternity?</button>
-                    <button class="prompt-chip" data-query="What do I need for Aurene's Bite (Zhaitan Variant)?">🐉 Aurene's Bite (Zhaitan Variant)</button>
-                    <button class="prompt-chip" data-query="How do I craft WvW Legendary Armor?">🛡️ WvW Legendary Armor</button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Reasoning & Conversation Center -->
-        <section class="content-area">
-            <!-- Search / Query Form Bar -->
-            <div class="query-card">
-                <form id="query-form" class="query-form">
-                    <div class="query-input-wrapper">
-                        <span class="query-icon">💬</span>
-                        <input 
-                            type="text" 
-                            id="query-input" 
-                            class="query-input" 
-                            placeholder="Ask any question (e.g. 'How do I craft Twilight?', 'Which legendary am I closest to?')..." 
-                            autocomplete="off"
-                            required
-                        >
-                        <button type="submit" class="btn-primary" id="btn-submit-query">
-                            <span id="btn-text">Reason & Solve</span>
-                            <span class="spinner hidden" id="btn-spinner"></span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Dynamic Output Container -->
-            <div id="results-container" class="results-container">
-                <!-- Placeholder State -->
-                <div class="empty-state" id="empty-state">
-                    <div class="empty-icon">📖</div>
-                    <h2>Enter a query or select a sample above</h2>
-                    <p>The Priory sandwich orchestrates formal OWL 2 DL graph queries, live GW2 API account snapshots, and deterministic delta math into actionable in-game progression plans.</p>
-                </div>
-
-                <!-- Guide View Container (Populated via JS) -->
-                <div id="guide-view" class="guide-view hidden">
-                    <!-- Top Goal Banner -->
-                    <div class="guide-hero-banner">
-                        <div class="hero-header">
-                            <div>
-                                <span class="hero-badge">OPTIMAL PROGRESSION GUIDE</span>
-                                <h2 class="hero-title" id="guide-goal-title">Twilight</h2>
-                                <p class="hero-summary" id="guide-executive-summary">Your progression plan.</p>
+                <!-- LEFT PAGE: The Inscription of Intent -->
+                <div class="book-page page-left">
+                    <div class="parchment-texture"></div>
+                    <div class="page-content">
+                        <div class="page-ornament-top">✦ ═ Chapter I: Inscription of Intent ═ ✦</div>
+                        
+                        <!-- Account & Wallet Essence Seals -->
+                        <div class="essence-seals-box">
+                            <div class="essence-header">
+                                <h3>Account Essence Snapshot</h3>
+                                <button class="btn-sigil-refresh" id="btn-refresh-account" title="Refresh Live Account snapshot">🔄</button>
                             </div>
-                            <div class="hero-readiness">
-                                <div class="readiness-gauge">
-                                    <span class="readiness-val" id="guide-readiness-val">72%</span>
-                                    <span class="readiness-lbl">Readiness</span>
+                            <div class="essence-metrics">
+                                <div class="essence-metric">
+                                    <span class="metric-num" id="stat-armory">-</span>
+                                    <span class="metric-lbl">Armory Legendaries</span>
                                 </div>
-                                <button class="btn-chatcode" id="btn-copy-chatcode" title="Copy in-game chat code">
-                                    <span id="chatcode-text">[&AgErZgAA]</span>
-                                    <span class="copy-icon">📋</span>
-                                </button>
+                                <div class="essence-metric">
+                                    <span class="metric-num" id="stat-materials">-</span>
+                                    <span class="metric-lbl">Tracked Materials</span>
+                                </div>
                             </div>
+                            <div class="currency-orbs" id="currency-orbs">
+                                <div class="currency-orb" title="Astral Acclaim">
+                                    <span class="orb-icon">✨</span>
+                                    <span class="orb-val" id="curr-aa">-</span>
+                                    <span class="orb-lbl">Acclaim</span>
+                                </div>
+                                <div class="currency-orb" title="Volatile Magic">
+                                    <span class="orb-icon">⚡</span>
+                                    <span class="orb-val" id="curr-vm">-</span>
+                                    <span class="orb-lbl">Volatile</span>
+                                </div>
+                                <div class="currency-orb" title="Spirit Shards">
+                                    <span class="orb-icon">🔮</span>
+                                    <span class="orb-val" id="curr-ss">-</span>
+                                    <span class="orb-lbl">Shards</span>
+                                </div>
+                                <div class="currency-orb" title="Laurels">
+                                    <span class="orb-icon">🌿</span>
+                                    <span class="orb-val" id="curr-laurels">-</span>
+                                    <span class="orb-lbl">Laurels</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Query Inscription Form -->
+                        <div class="inscription-form-section">
+                            <label class="inscription-label" for="query-input">Inscribe what your heart desires:</label>
+                            <form id="query-form" class="inscription-form">
+                                <div class="inkwell-input-wrapper">
+                                    <span class="quill-icon">✒️</span>
+                                    <input 
+                                        type="text" 
+                                        id="query-input" 
+                                        class="inkwell-input" 
+                                        placeholder="e.g. 'How do I craft Twilight?', 'Which 2 legendaries can I quickly craft?'..." 
+                                        autocomplete="off" 
+                                        required
+                                    >
+                                </div>
+                                <button type="submit" class="btn-invoke-grimoire" id="btn-submit-query">
+                                    <span id="btn-text">Turn Page & Reveal Truth 📖</span>
+                                    <span class="spell-spinner hidden" id="btn-spinner"></span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Sample Incantations (Quick Chips) -->
+                        <div class="sample-incantations">
+                            <span class="incantations-title">Ancient Incantations:</span>
+                            <div class="incantations-chips">
+                                <button class="incantation-chip" data-query="Which 2 legendaries can I quickly craft?">⚡ Fastest 2 Legendaries</button>
+                                <button class="incantation-chip" data-query="How do I craft Twilight?">⚔️ Craft Twilight</button>
+                                <button class="incantation-chip" data-query="How do I craft Eternity?">✨ Forge Eternity</button>
+                                <button class="incantation-chip" data-query="What do I need for Aurene's Bite (Zhaitan Variant)?">🐉 Zhaitan Greatsword Variant</button>
+                                <button class="incantation-chip" data-query="How do I craft WvW Legendary Armor?">🛡️ WvW Mistforged Armor</button>
+                            </div>
+                        </div>
+
+                        <div class="page-footer-page-num">~ Page I ~</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT PAGE CONTAINER (Supports 3D Page Turn) -->
+                <div class="book-page page-right" id="page-right-container">
+                    <div class="parchment-texture"></div>
+
+                    <!-- FRONT: Dormant Scrying Mirror -->
+                    <div class="page-face page-face-front" id="page-front-idle">
+                        <div class="page-content mirror-dormant-content">
+                            <div class="page-ornament-top">✦ ═ Chapter II: The Scrying Mirror ═ ✦</div>
+
+                            <div class="scrying-mirror-circle">
+                                <div class="mirror-sigil-ring"></div>
+                                <div class="mirror-core">
+                                    <span class="mirror-symbol">🔮</span>
+                                    <h2 class="mirror-heading">The Mirror Awaits</h2>
+                                    <p class="mirror-instruction">Inscribe your query upon the left parchment, and turn the page to reveal the mathematical path forward.</p>
+                                </div>
+                            </div>
+
+                            <div class="lore-parchment-quote">
+                                <blockquote>
+                                    "Knowledge is the greatest treasure of Tyria. Ground your journey in the sacred laws of the graph before spending a single coin."
+                                </blockquote>
+                                <cite>— Master Archivist of the Durmand Priory</cite>
+                            </div>
+
+                            <div class="page-footer-page-num">~ Page II ~</div>
                         </div>
                     </div>
 
-                    <!-- Strategic Recommendations -->
-                    <div class="card recommendations-card" id="recommendations-card">
-                        <h3>💡 Strategic Recommendations & Currencies</h3>
-                        <ul class="rec-list" id="rec-list"></ul>
-                    </div>
+                    <!-- BACK / REVEALED: The Manifested Progression Guide -->
+                    <div class="page-face page-face-revealed hidden" id="page-revealed-guide">
+                        <div class="page-content guide-scrollable-content">
+                            <div class="page-ornament-top">✦ ═ Manifestation of Desire ═ ✦</div>
 
-                    <!-- 5-Phase Master Crafting Roadmap -->
-                    <div class="card roadmap-card" id="roadmap-card">
-                        <h3>🗺️ 5-Phase Master Crafting Roadmap</h3>
-                        <div class="roadmap-timeline" id="roadmap-timeline"></div>
-                    </div>
+                            <!-- Goal Header Banner -->
+                            <div class="manifest-hero-banner">
+                                <div class="manifest-title-row">
+                                    <div>
+                                        <span class="manifest-badge">OPTIMAL PROGRESSION GUIDE</span>
+                                        <h2 class="manifest-goal-name" id="guide-goal-title">Twilight</h2>
+                                        <p class="manifest-summary" id="guide-executive-summary">Your progression plan.</p>
+                                    </div>
+                                    <div class="manifest-seal-box">
+                                        <div class="readiness-seal">
+                                            <span class="seal-pct" id="guide-readiness-val">72%</span>
+                                            <span class="seal-lbl">Readiness</span>
+                                        </div>
+                                        <button class="btn-chatcode" id="btn-copy-chatcode" title="Copy in-game chat code">
+                                            <span id="chatcode-text">[&AgErZgAA]</span>
+                                            <span class="copy-icon">📋</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <!-- Actionable Session Checklist -->
-                    <div class="card checklist-card" id="checklist-card">
-                        <h3>📋 Actionable Session Checklist</h3>
-                        <div class="checklist-grid" id="checklist-grid"></div>
-                    </div>
+                            <!-- Turn Back Button -->
+                            <div class="page-flip-bar">
+                                <button class="btn-turn-back" id="btn-turn-back">⮌ Inscribe New Query</button>
+                            </div>
 
-                    <!-- Material Delta Summary Table -->
-                    <div class="card materials-card" id="materials-card">
-                        <h3>📦 Remaining Material Delta</h3>
-                        <div class="materials-tags" id="materials-tags"></div>
-                    </div>
+                            <!-- Strategic Recommendations -->
+                            <div class="tome-card" id="recommendations-card">
+                                <h3>💡 Strategic Recommendations & Currencies</h3>
+                                <ul class="tome-rec-list" id="rec-list"></ul>
+                            </div>
 
-                    <!-- Priory Tip Footer -->
-                    <div class="priory-tip-banner" id="priory-tip-banner">
-                        <span class="tip-icon">💡</span>
-                        <span id="tip-text">Paste waypoint chat codes (e.g. [&BKgDAAA=]) into in-game chat to instantly open your map and teleport directly to vendors!</span>
+                            <!-- 5-Phase Master Roadmap -->
+                            <div class="tome-card" id="roadmap-card">
+                                <h3>🗺️ 5-Phase Master Crafting Roadmap</h3>
+                                <div class="tome-roadmap-timeline" id="roadmap-timeline"></div>
+                            </div>
+
+                            <!-- Actionable Session Checklist -->
+                            <div class="tome-card" id="checklist-card">
+                                <h3>📋 Actionable Session Checklist</h3>
+                                <div class="tome-checklist-grid" id="checklist-grid"></div>
+                            </div>
+
+                            <!-- Material Shortages Delta -->
+                            <div class="tome-card" id="materials-card">
+                                <h3>📦 Remaining Material Delta</h3>
+                                <div class="tome-materials-tags" id="materials-tags"></div>
+                            </div>
+
+                            <!-- Priory Tip Banner -->
+                            <div class="tome-tip-banner" id="priory-tip-banner">
+                                <span class="tip-icon">💡</span>
+                                <span id="tip-text">Paste waypoint chat codes (e.g. [&BKgDAAA=]) into in-game chat to instantly open your map and teleport directly to vendors!</span>
+                            </div>
+
+                            <div class="page-footer-page-num">~ Revealed by the Priory Graph ~</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <script src="/static/js/app.js"></script>
