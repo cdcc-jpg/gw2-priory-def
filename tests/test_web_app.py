@@ -33,7 +33,7 @@ class TestPrioryWebApp(unittest.TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
-        self.assertIn("PRIORY GRIMOIRE", html)
+        self.assertIn("Priory Grimoire", html)
         self.assertIn("Inscription of Intent", html)
 
     def test_api_status(self):

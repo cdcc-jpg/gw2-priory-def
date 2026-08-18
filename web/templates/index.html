@@ -11,150 +11,157 @@
 </head>
 <body>
 
-    <!-- Floating ambient particles -->
     <canvas id="particles"></canvas>
 
-    <!-- The one and only Book -->
-    <div class="scene">
+    <div class="scene" id="scene">
+        <!-- Magical aura that pulses behind the book -->
+        <div class="book-aura" id="book-aura"></div>
+
         <div class="book" id="book">
 
-            <!-- Left cover (leather, already open flat) -->
+            <!-- 3D cover — left -->
             <div class="cover cover-left">
-                <div class="cover-inner"></div>
-            </div>
-
-            <!-- Spine -->
-            <div class="spine">
-                <span class="spine-title">THE PRIORY GRIMOIRE</span>
-            </div>
-
-            <!-- LEFT PAGE — The Inscription -->
-            <div class="page page-left">
-                <div class="page-grain"></div>
-                <div class="page-body">
-
-                    <div class="chapter-header">— Chapter I —<br><em>Inscription of Intent</em></div>
-
-                    <div class="essence-block">
-                        <div class="essence-row">
-                            <span class="essence-label">Armory</span>
-                            <span class="essence-value" id="stat-armory">—</span>
-                        </div>
-                        <div class="essence-row">
-                            <span class="essence-label">Materials</span>
-                            <span class="essence-value" id="stat-materials">—</span>
-                        </div>
-                        <div class="essence-row">
-                            <span class="essence-label">Liquid Gold</span>
-                            <span class="essence-value" id="stat-gold">—</span>
-                        </div>
-                        <div class="essence-row">
-                            <span class="essence-label">Spirit Shards</span>
-                            <span class="essence-value" id="stat-shards">—</span>
+                <div class="cover-face">
+                    <div class="cover-border">
+                        <div class="cover-corner tl">✦</div>
+                        <div class="cover-corner tr">✦</div>
+                        <div class="cover-corner bl">✦</div>
+                        <div class="cover-corner br">✦</div>
+                        <div class="cover-crest">
+                            <span class="crest-glyph">🏛️</span>
                         </div>
                     </div>
+                </div>
+                <div class="cover-edge cover-edge-bottom"></div>
+            </div>
 
-                    <form id="query-form" class="query-form" autocomplete="off">
-                        <label class="query-label">Inscribe thy desire:</label>
-                        <textarea id="query-input" class="query-input" rows="3"
+            <!-- Page stack left (visible edge) -->
+            <div class="page-stack stack-left"></div>
+
+            <!-- LEFT PAGE -->
+            <div class="page page-left">
+                <div class="page-grain"></div>
+                <div class="page-aged-edge"></div>
+                <div class="page-body">
+                    <div class="ch">— Chapter I —<br><em>Inscription of Intent</em></div>
+
+                    <div class="sep">⟡ ──────── ⟡</div>
+
+                    <div class="essence">
+                        <div class="e-row"><span class="e-lbl">Legendary Armory</span><span class="e-val" id="stat-armory">—</span></div>
+                        <div class="e-row"><span class="e-lbl">Materials Tracked</span><span class="e-val" id="stat-materials">—</span></div>
+                        <div class="e-row"><span class="e-lbl">Liquid Gold</span><span class="e-val" id="stat-gold">—</span></div>
+                        <div class="e-row"><span class="e-lbl">Spirit Shards</span><span class="e-val" id="stat-shards">—</span></div>
+                    </div>
+
+                    <form id="query-form" autocomplete="off">
+                        <label class="q-label">Inscribe thy desire upon the page:</label>
+                        <textarea id="query-input" class="q-input" rows="3"
                             placeholder="e.g. Which 2 legendaries can I quickly craft?"></textarea>
-                        <button type="submit" class="btn-reveal" id="btn-submit">
+                        <button type="submit" class="btn-turn" id="btn-submit">
                             <span id="btn-label">Turn the Page ✦</span>
                             <span id="btn-spinner" class="spinner hidden"></span>
                         </button>
                     </form>
 
-                    <div class="quick-spells">
-                        <button class="spell" data-q="Which 2 legendaries can I quickly craft?">⚡ Fastest 2</button>
-                        <button class="spell" data-q="How do I craft Twilight?">⚔ Twilight</button>
-                        <button class="spell" data-q="How do I craft Eternity?">✨ Eternity</button>
-                        <button class="spell" data-q="How do I craft WvW Legendary Armor?">🛡 WvW Armor</button>
+                    <div class="spells">
+                        <button class="sp" data-q="Which 2 legendaries can I quickly craft?">⚡ Fastest 2</button>
+                        <button class="sp" data-q="How do I craft Twilight?">⚔ Twilight</button>
+                        <button class="sp" data-q="How do I craft Eternity?">✨ Eternity</button>
+                        <button class="sp" data-q="How do I craft WvW Legendary Armor?">🛡 WvW Armor</button>
                     </div>
 
-                    <div class="page-num">— I —</div>
+                    <div class="pn">— I —</div>
                 </div>
             </div>
 
-            <!-- RIGHT SIDE — The turning page -->
-            <div class="page-turn-zone">
+            <!-- 3D SPINE -->
+            <div class="spine-3d">
+                <div class="spine-face spine-front">
+                    <div class="spine-band"></div>
+                    <div class="spine-band"></div>
+                    <div class="spine-band"></div>
+                    <div class="spine-band"></div>
+                    <div class="spine-band"></div>
+                </div>
+            </div>
 
-                <!-- The page that physically flips (front = idle, back = blank) -->
+            <!-- RIGHT: turning page + underneath results -->
+            <div class="flip-zone">
                 <div class="turning-page" id="turning-page">
-                    <div class="turn-face turn-front">
+                    <div class="tp-face tp-front">
                         <div class="page-grain"></div>
-                        <div class="page-body idle-mirror">
-                            <div class="chapter-header">— Chapter II —<br><em>The Scrying Mirror</em></div>
-                            <div class="mirror">
-                                <div class="mirror-ring"></div>
+                        <div class="page-aged-edge edge-right"></div>
+                        <div class="page-body idle">
+                            <div class="ch">— Chapter II —<br><em>The Scrying Mirror</em></div>
+                            <div class="sep">⟡ ──────── ⟡</div>
+                            <div class="mirror-wrap">
+                                <div class="mirror-outer-ring"></div>
+                                <div class="mirror-inner-ring"></div>
                                 <div class="mirror-glass">
-                                    <span class="mirror-glyph">🔮</span>
+                                    <div class="mirror-shimmer"></div>
+                                    <span class="mirror-icon">🔮</span>
+                                </div>
+                                <div class="mirror-runes">
+                                    <span>⚝</span><span>᛭</span><span>✧</span><span>⚝</span>
+                                    <span>᛭</span><span>✧</span><span>⚝</span><span>᛭</span>
                                 </div>
                             </div>
-                            <p class="mirror-whisper">The mirror awaits your inscription.<br>Write upon the left page, then turn.</p>
-                            <blockquote class="lore-quote">
-                                "Knowledge is the greatest treasure. Ground your journey in the sacred laws of the graph before spending a single coin."
-                                <cite>— Steward Gixx</cite>
+                            <p class="mirror-text">Inscribe your desire upon the left page,<br>then turn to reveal truth.</p>
+                            <blockquote class="lore">
+                                "Knowledge is the greatest treasure of Tyria. Ground your journey in the sacred laws of the graph before spending a single coin."
+                                <cite>— Steward Gixx, Durmand Priory</cite>
                             </blockquote>
-                            <div class="page-num">— II —</div>
+                            <div class="pn">— II —</div>
                         </div>
                     </div>
-                    <div class="turn-face turn-back">
+                    <div class="tp-face tp-back">
                         <div class="page-grain"></div>
                     </div>
                 </div>
 
-                <!-- The page UNDERNEATH that is revealed (the results) -->
+                <!-- Results page (revealed under the flip) -->
                 <div class="page page-under" id="page-results">
                     <div class="page-grain"></div>
-                    <div class="page-body results-body" id="results-body">
+                    <div class="page-aged-edge edge-right"></div>
+                    <div class="page-body results" id="results-body">
+                        <div class="ch" id="results-ch">— Manifestation of Desire —</div>
+                        <div class="sep">⟡ ──────── ⟡</div>
 
-                        <div class="chapter-header" id="results-chapter">— Manifestation —</div>
-
-                        <!-- Goal banner -->
-                        <div class="result-hero" id="result-hero">
-                            <h2 class="hero-name" id="hero-name">Twilight</h2>
-                            <div class="hero-meta">
-                                <span class="hero-readiness" id="hero-readiness">72%</span>
-                                <button class="chatcode-btn" id="chatcode-btn" title="Copy chat code">[&AgErZgAA]</button>
+                        <div class="r-hero" id="r-hero">
+                            <h2 class="r-name" id="r-name">Twilight</h2>
+                            <div class="r-meta">
+                                <span class="r-pct" id="r-pct">72%</span>
+                                <button class="r-cc" id="r-cc" title="Copy">[&AgErZgAA]</button>
                             </div>
                         </div>
-                        <p class="result-summary" id="result-summary"></p>
+                        <p class="r-sum" id="r-sum"></p>
 
-                        <!-- Recommendations -->
-                        <div class="result-section" id="sec-recs">
-                            <h3>💡 Recommendations</h3>
-                            <ul id="rec-list"></ul>
-                        </div>
+                        <div class="r-sec" id="sec-recs"><h3>💡 Recommendations</h3><ul id="rec-list"></ul></div>
+                        <div class="r-sec" id="sec-roadmap"><h3>🗺 Master Roadmap</h3><ol id="roadmap-list"></ol></div>
+                        <div class="r-sec" id="sec-checklist"><h3>📋 Session Checklist</h3><div id="ck-list"></div></div>
+                        <div class="r-sec" id="sec-mats"><h3>📦 Materials Needed</h3><div class="mt" id="mt"></div></div>
 
-                        <!-- Roadmap -->
-                        <div class="result-section" id="sec-roadmap">
-                            <h3>🗺 Master Roadmap</h3>
-                            <ol id="roadmap-list"></ol>
-                        </div>
-
-                        <!-- Checklist -->
-                        <div class="result-section" id="sec-checklist">
-                            <h3>📋 Session Checklist</h3>
-                            <div id="checklist-list"></div>
-                        </div>
-
-                        <!-- Materials -->
-                        <div class="result-section" id="sec-materials">
-                            <h3>📦 Materials Still Needed</h3>
-                            <div class="mat-tags" id="mat-tags"></div>
-                        </div>
-
-                        <div class="page-num">— Revealed —</div>
+                        <div class="pn">— Revealed by the Priory —</div>
                     </div>
-
-                    <!-- Turn-back strip -->
-                    <button class="btn-turn-back" id="btn-turn-back">↩ New query</button>
+                    <button class="btn-back" id="btn-back">↩ New Inscription</button>
                 </div>
             </div>
 
-            <!-- Right cover -->
+            <!-- Page stack right -->
+            <div class="page-stack stack-right"></div>
+
+            <!-- 3D cover — right -->
             <div class="cover cover-right">
-                <div class="cover-inner"></div>
+                <div class="cover-face">
+                    <div class="cover-border">
+                        <div class="cover-corner tl">✦</div>
+                        <div class="cover-corner tr">✦</div>
+                        <div class="cover-corner bl">✦</div>
+                        <div class="cover-corner br">✦</div>
+                    </div>
+                </div>
+                <div class="cover-edge cover-edge-bottom"></div>
             </div>
         </div>
     </div>
