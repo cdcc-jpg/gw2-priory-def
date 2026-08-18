@@ -94,6 +94,18 @@ class TestAccountRanker(unittest.TestCase):
         self.assertGreater(rankings[0].readiness_pct, 30.0)
 
 
+    def test_speed_biased_gen2_ranking(self):
+        """Verifies that a speed query ranks Gen 2.5 shard-based legendaries (Ipos, Eureka) ahead of Gen 2.0 40h collection legendaries (Astralaria, Nevermore)."""
+        account = AccountState(
+            materials={19721: 100, 19675: 30}
+        )
+        rankings = self.ranker.rank_all_legendaries(account, top_n=5, filter_query="Which Gen 2 legendary can I quickly craft")
+        self.assertGreater(len(rankings), 0)
+        # Top choice must be a shard crafting precursor (0.5h effort), NOT a 40h collection hunt
+        self.assertIn("Shard", rankings[0].precursor_archetype)
+        self.assertLessEqual(rankings[0].estimated_gameplay_hours, 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()
 

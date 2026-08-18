@@ -1,0 +1,68 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+# ==============================================================================
+# Expansion Mastery Tracks & Legendary Vendor Prerequisites
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Mastery Tracks
+# ------------------------------------------------------------------------------
+priory:track_exalted a priory:MasteryTrack, owl:NamedIndividual ;
+    rdfs:label "Exalted Lore"@en ;
+    priory:expansion "Heart of Thorns"@en ;
+    priory:masteryId 1 .
+
+priory:track_itzel a priory:MasteryTrack, owl:NamedIndividual ;
+    rdfs:label "Itzel Lore"@en ;
+    priory:expansion "Heart of Thorns"@en ;
+    priory:masteryId 2 .
+
+priory:track_nuhoch a priory:MasteryTrack, owl:NamedIndividual ;
+    rdfs:label "Nuhoch Lore"@en ;
+    priory:expansion "Heart of Thorns"@en ;
+    priory:masteryId 3 .
+
+priory:track_arborstone a priory:MasteryTrack, owl:NamedIndividual ;
+    rdfs:label "Arborstone Revitalization"@en ;
+    priory:expansion "End of Dragons"@en ;
+    priory:masteryId 4 .
+
+priory:track_astral_ward a priory:MasteryTrack, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Tier"@en ;
+    priory:expansion "Secrets of the Obscure"@en ;
+    priory:masteryId 5 .
+
+# ------------------------------------------------------------------------------
+# 2. Mastery Prerequisites on Items & Vendors
+# ------------------------------------------------------------------------------
+
+# --- Gift of Tarir (Exalted Mastery lvl 2: Exalted Acceptance) ---
+item:vendor_tarir priory:requiresMasteryTrack priory:track_exalted ;
+    priory:requiredMasteryLevel 2 ;
+    priory:masteryName "Exalted Acceptance (Level 2)"@en .
+
+# --- Gift of the Fleet (Itzel Mastery lvl 1: Itzel Language) ---
+item:vendor_fleet priory:requiresMasteryTrack priory:track_itzel ;
+    priory:requiredMasteryLevel 1 ;
+    priory:masteryName "Itzel Language (Level 1)"@en .
+
+# --- Gift of the Chak (Nuhoch Mastery lvl 2: Nuhoch Proving) ---
+item:vendor_chak priory:requiresMasteryTrack priory:track_nuhoch ;
+    priory:requiredMasteryLevel 2 ;
+    priory:masteryName "Nuhoch Proving (Level 2)"@en .
+
+# --- Leivas Vendor (EoD Mastery lvl 3: Commercial Hub) ---
+item:vendor_leivas priory:requiresMasteryTrack priory:track_arborstone ;
+    priory:requiredMasteryLevel 3 ;
+    priory:masteryName "Commercial Hub (Level 3)"@en .
+
+# --- Lyhr Vendor (SotO Mastery lvl 2: Astral Ward Flight) ---
+item:vendor_lyhr priory:requiresMasteryTrack priory:track_astral_ward ;
+    priory:requiredMasteryLevel 2 ;
+    priory:masteryName "Astral Ward Flight (Level 2)"@en .

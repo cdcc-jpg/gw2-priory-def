@@ -270,13 +270,23 @@ class GuideGenerator:
                 f"Selecting **{top_choice.name}** immediately gives you its Precursor and Gift for **0 gold**."
             )
 
-        # Leaderboard items
+        # Speed / quickness analysis note
+        is_speed_prompt = any(w in prompt_lower for w in ["quick", "fast", "speed", "least effort", "instant", "soon"])
+        if is_speed_prompt:
+            recs.append(
+                f"⚡ **Speed Analysis:** **{top_choice.name}** uses **{top_choice.precursor_archetype}** "
+                f"(~{top_choice.estimated_gameplay_hours}h gameplay effort), making it dramatically faster to craft "
+                f"than Gen 2.0 narrative collection legendaries (Astralaria, Nevermore, HOPE, Chuka and Champawat) which require ~40 hours of open-world tasks."
+            )
+
+        # Leaderboard items with precursor archetype and calendar days
         recs.append("📊 **Closest Legendaries Leaderboard:**")
         for i, item in enumerate(rankings[:5], 1):
             kit_tag = " [🎁 Bank Kit Ready]" if item.starter_kit_eligible else ""
+            tg_tag = f" | ⏳ ~{item.calendar_day_gates}d gate" if item.calendar_day_gates > 0 else ""
             recs.append(
                 f"   **#{i} {item.name}** ({item.subtype or 'Item'}): **{item.readiness_pct}% Ready** "
-                f"| Est. Cost: ~{item.estimated_remaining_gold}g{kit_tag}"
+                f"| Est. Cost: ~{item.estimated_remaining_gold}g | [{item.precursor_archetype}]{tg_tag}{kit_tag}"
             )
 
         # Build dynamic time-budget checklist (Strictly within player's session time budget)

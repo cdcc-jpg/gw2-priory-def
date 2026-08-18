@@ -1,0 +1,59 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+# ==============================================================================
+# Real-World Time-Gates, Daily Cooldowns & Weekly Rate Limits
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Daily Ascended Refinement Cooldowns (Max 1 Per Day Per Account)
+# ------------------------------------------------------------------------------
+
+# --- Lump of Mithrilium (Deldrimor Steel Ingot) ---
+item:46736 priory:dailyCraftingLimit 1 ;
+    rdfs:label "Lump of Mithrilium"@en ;
+    priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Deldrimor Steel Ingot)."@en .
+
+# --- Glob of Elder Spirit Residue (Spiritwood Plank) ---
+item:46737 priory:dailyCraftingLimit 1 ;
+    rdfs:label "Glob of Elder Spirit Residue"@en ;
+    priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Spiritwood Plank)."@en .
+
+# --- Spool of Thick Elonian Cord (Elonian Leather Square) ---
+item:46742 priory:dailyCraftingLimit 1 ;
+    rdfs:label "Spool of Thick Elonian Cord"@en ;
+    priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Elonian Leather Square)."@en .
+
+# --- Spool of Silk Weaving Thread (Bolt of Damask) ---
+item:46744 priory:dailyCraftingLimit 1 ;
+    rdfs:label "Spool of Silk Weaving Thread"@en ;
+    priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Bolt of Damask)."@en .
+
+# --- Charged Quartz Crystal (Place of Power Infusion) ---
+item:43773 priory:dailyCraftingLimit 1 ;
+    rdfs:label "Charged Quartz Crystal"@en ;
+    priory:cooldownNote "Account daily limit: 1 Quartz Crystal charged at a Place of Power per calendar day."@en .
+
+# ------------------------------------------------------------------------------
+# 2. Weekly & Daily Vendor Purchase Limits
+# ------------------------------------------------------------------------------
+
+# --- Antique Summoning Stones (Leivas in Arborstone) ---
+item:vendor_leivas_ass a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Leivas Antique Summoning Stones Weekly Discount"@en ;
+    priory:weeklyVendorLimit 5 ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:nearestWaypoint "[&BEwMAAA=]" ;
+    skos:definition "Sells up to 5 discounted Antique Summoning Stones per account per calendar week for Imperial Favors and Laurels."@en .
+
+# --- Provisioner Tokens (Major City Faction Provisioners) ---
+item:vendor_provisioner_daily a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Faction Provisioner Daily Exchanges"@en ;
+    priory:dailyCraftingLimit 31 ;
+    skos:definition "Up to 31 Provisioner Tokens can be obtained daily across Central Tyria and Expansion Provisioner vendors."@en .

@@ -68,6 +68,21 @@ priory:Armor a owl:Class ;
     rdfs:label "Armor Piece"@en ;
     rdfs:comment "Wearable armor piece classified by weight (Heavy, Medium, Light) and slot (Helm, Chest, etc.)."@en .
 
+priory:LightArmor a owl:Class ;
+    rdfs:subClassOf priory:Armor ;
+    rdfs:label "Light Armor"@en ;
+    rdfs:comment "Armor wearable by light armor professions (Elementalist, Mesmer, Necromancer) crafted via Tailor."@en .
+
+priory:MediumArmor a owl:Class ;
+    rdfs:subClassOf priory:Armor ;
+    rdfs:label "Medium Armor"@en ;
+    rdfs:comment "Armor wearable by medium armor professions (Engineer, Ranger, Thief) crafted via Leatherworker."@en .
+
+priory:HeavyArmor a owl:Class ;
+    rdfs:subClassOf priory:Armor ;
+    rdfs:label "Heavy Armor"@en ;
+    rdfs:comment "Armor wearable by heavy armor professions (Guardian, Revenant, Warrior) crafted via Armorsmith."@en .
+
 priory:LegendaryArmor a owl:Class ;
     rdfs:subClassOf priory:Armor, priory:LegendaryItem ;
     rdfs:label "Legendary Armor"@en ;

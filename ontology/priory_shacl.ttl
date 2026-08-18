@@ -12,7 +12,7 @@
 priory:ItemShape a sh:NodeShape ;
     sh:targetClass priory:Item, priory:LegendaryWeapon, priory:PrecursorWeapon,
                    priory:CraftingMaterial, priory:GiftItem, priory:LegendarySigil, priory:LegendaryRune,
-                   priory:Armor, priory:LegendaryArmor, priory:Trinket, priory:LegendaryTrinket ;
+                   priory:Armor, priory:LightArmor, priory:MediumArmor, priory:HeavyArmor, priory:LegendaryArmor, priory:Trinket, priory:LegendaryTrinket ;
     sh:property [
         sh:path rdfs:label ;
         sh:minCount 1 ;

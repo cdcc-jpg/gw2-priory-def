@@ -50,6 +50,8 @@ class OptimalCraftingPlan(BaseModel):
     is_already_owned: bool
     estimated_total_gold_cost: float
     precursor_strategy: Optional[str] = None
+    precursor_archetype: str = "Standard Crafting"
+    calendar_day_gates: int = 0
     clover_strategy: List[CloverStrategyOption] = Field(default_factory=list)
     t6_strategies: List[str] = Field(default_factory=list)
     bottlenecks: List[str] = Field(default_factory=list)
@@ -372,6 +374,27 @@ class PathSolver:
             })
             budget -= meta_time
 
+        # Query Precursor Archetype from Knowledge Graph
+        arch_query = """
+        SELECT ?ptype ?ptag ?hours WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  priory:hasPrecursorType ?ptype .
+            OPTIONAL { ?ptype priory:archetypeTag ?ptag }
+            OPTIONAL { ?ptype priory:estimatedGameplayHours ?hours }
+        } LIMIT 1
+        """
+        arch_res = self.store.query(arch_query, init_bindings={"gw2Id": Literal(diff_report.goal_item_id)})
+        prec_archetype = "Standard Crafting"
+        if arch_res:
+            row = arch_res[0]
+            prec_archetype = str(row.get("ptag") or row.get("ptype", "")).split("#")[-1].split("/")[-1]
+
+        # Calculate calendar day gates
+        cal_days = 0
+        for mat_name, qty in missing.items():
+            if any(asc in mat_name for asc in ["Deldrimor", "Spiritwood", "Elonian Leather", "Damask", "Mithrilium", "Elder Spirit", "Charged Quartz"]):
+                cal_days = max(cal_days, qty)
+
         # Generate 5-Phase Step-by-Step Master Roadmap
         master_roadmap = self.generate_master_roadmap(diff_report, account)
 
@@ -382,6 +405,8 @@ class PathSolver:
             is_already_owned=diff_report.is_fully_satisfied,
             estimated_total_gold_cost=total_gold,
             precursor_strategy=precursor_strat,
+            precursor_archetype=prec_archetype,
+            calendar_day_gates=cal_days,
             clover_strategy=clover_options,
             t6_strategies=t6_strats,
             bottlenecks=bottlenecks,
@@ -401,6 +426,21 @@ class PathSolver:
                 if any(kw.lower() in lbl for kw in keywords):
                     return sub
             return None
+
+        # Query Archetype from Graph
+        arch_query = """
+        SELECT ?ptype ?ptag ?hours WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  priory:hasPrecursorType ?ptype .
+            OPTIONAL { ?ptype priory:archetypeTag ?ptag }
+            OPTIONAL { ?ptype priory:estimatedGameplayHours ?hours }
+        } LIMIT 1
+        """
+        arch_res = self.store.query(arch_query, init_bindings={"gw2Id": Literal(diff_report.goal_item_id)})
+        prec_archetype = ""
+        if arch_res:
+            row = arch_res[0]
+            prec_archetype = str(row.get("ptag") or row.get("ptype", ""))
 
         # Phase 1: Precursor Journey
         prec_node = find_sub(["precursor", "the mechanism", "the lexicon", "dusk", "dawn", "zap", "spark", "legend", "tooth of frostfang", "rodgort's flame", "the energizer", "chaos gun", "the bard", "howl", "venom", "storm", "the lover", "the colossus", "kamohoali'i", "carcharias", "frenzy", "aurene's", "experimental envoy", "refined envoy", "astral ward"])
@@ -427,6 +467,50 @@ class PathSolver:
                     description=f"Withdraw choice chest from your bank to immediately receive {prec_node.label} for 0 gold!",
                     is_completed=False
                 ))
+            elif "ShardCrafting" in prec_archetype or "Shard" in prec_archetype or "the lexicon" in prec_node.label.lower():
+                p1_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="Unlock Precursor Recipes (Vol. 1)",
+                    description="Visit Grandmaster Craftsman Hobbs in Lion's Arch [&BBAEAAA=] to purchase the precursor crafting recipe book.",
+                    waypoint="[&BBAEAAA=]",
+                    zone_name="Lion's Arch",
+                    npc_name="Grandmaster Craftsman Hobbs"
+                ))
+                p1_steps.append(MilestoneStep(
+                    step_number=2,
+                    title=f"Craft 290x Shards of {diff_report.goal_item_name}",
+                    description=f"Craft 290x Shards at level 450 crafting discipline using Ascended ingots/planks, Mithril, and Elder Wood.",
+                    is_completed=False
+                ))
+                p1_steps.append(MilestoneStep(
+                    step_number=3,
+                    title=f"Forge Precursor: {prec_node.label.split('(')[0].strip()}",
+                    description=f"Combine 290x Shards + Tribute to the Arts + Ascended materials to craft {prec_node.label.split('(')[0].strip()}.",
+                    is_completed=False
+                ))
+            elif "CollectionHunt" in prec_archetype or "Scavenger" in prec_archetype:
+                p1_steps.append(MilestoneStep(
+                    step_number=1,
+                    title="Complete Tier 1–4 Scavenger Collections",
+                    description="Visit Grandmaster Craftsman Hobbs in Lion's Arch [&BBAEAAA=] to unlock Vol. 1. Complete open-world events, jumping puzzles, and crafting tasks (~40h active gameplay).",
+                    waypoint="[&BBAEAAA=]",
+                    zone_name="Lion's Arch",
+                    npc_name="Grandmaster Craftsman Hobbs"
+                ))
+                p1_steps.append(MilestoneStep(
+                    step_number=2,
+                    title=f"Craft Precursor: {prec_node.label.split('(')[0].strip()}",
+                    description=f"Craft {prec_node.label.split('(')[0].strip()} at level 450 crafting station upon collection completion.",
+                    is_completed=False
+                ))
+            elif "Tradable" in prec_archetype:
+                p1_steps.append(MilestoneStep(
+                    step_number=1,
+                    title=f"Acquire {prec_node.label.split('(')[0].strip()}",
+                    description=f"Purchase {prec_node.label.split('(')[0].strip()} directly from Trading Post (instant) or craft via Hobbs Tier 1–3 crafting collections [&BBAEAAA=].",
+                    waypoint="[&BBAEAAA=]",
+                    zone_name="Lion's Arch"
+                ))
             else:
                 p1_steps.append(MilestoneStep(
                     step_number=1,
@@ -438,8 +522,8 @@ class PathSolver:
                 ))
                 p1_steps.append(MilestoneStep(
                     step_number=2,
-                    title=f"Craft Precursor: {prec_node.label}",
-                    description=f"Craft {prec_node.label} at level 450/500 crafting station using refined Ascended materials and weapon shards.",
+                    title=f"Craft Precursor: {prec_node.label.split('(')[0].strip()}",
+                    description=f"Craft {prec_node.label.split('(')[0].strip()} at level 450/500 crafting station using refined Ascended materials.",
                     is_completed=False
                 ))
         else:
@@ -525,6 +609,10 @@ class PathSolver:
         else:
             mast_label = mast_node.label if mast_node else ""
             if "Maguuma" in mast_label:
+                tarir_warn = " [⚠️ Requires Mastery: Exalted Acceptance Lvl 2]" if account.masteries.get(1, 0) < 2 and account.masteries else ""
+                fleet_warn = " [⚠️ Requires Mastery: Itzel Language Lvl 1]" if account.masteries.get(2, 0) < 1 and account.masteries else ""
+                chak_warn = " [⚠️ Requires Mastery: Nuhoch Proving Lvl 2]" if account.masteries.get(3, 0) < 2 and account.masteries else ""
+
                 p3_steps.append(MilestoneStep(
                     step_number=1,
                     title="100% Heart of Thorns Map Completion",
@@ -539,8 +627,8 @@ class PathSolver:
                 ))
                 p3_steps.append(MilestoneStep(
                     step_number=3,
-                    title="Purchase Gifts of Tarir, Fleet, and Chak",
-                    description="Exchange map currencies: Aurillium at Tarir [&BNYHAAA=], Airship Parts at Verdant Brink [&BO8FAAA=], and Ley-Line Sparks at Tangled Depths [&BPUHAAA=].",
+                    title=f"Purchase Gifts of Tarir, Fleet, and Chak{tarir_warn or fleet_warn or chak_warn}",
+                    description=f"Exchange map currencies: Aurillium at Tarir [&BNYHAAA=]{tarir_warn}, Airship Parts at Verdant Brink [&BO8FAAA=]{fleet_warn}, and Ley-Line Sparks at Tangled Depths [&BPUHAAA=]{chak_warn}.",
                     waypoint="[&BNYHAAA=]",
                     zone_name="Auric Basin"
                 ))
@@ -559,6 +647,7 @@ class PathSolver:
                     npc_name="Primeval Dynasty Historian"
                 ))
             elif "Cantha" in mast_label:
+                eod_warn = " [⚠️ Requires Mastery: Arborstone Commercial Hub Lvl 3]" if account.masteries.get(4, 0) < 3 and account.masteries else ""
                 p3_steps.append(MilestoneStep(
                     step_number=1,
                     title="100% End of Dragons Map Completion",
@@ -566,8 +655,8 @@ class PathSolver:
                 ))
                 p3_steps.append(MilestoneStep(
                     step_number=2,
-                    title="Gather Antique Summoning Stones & Pure Jade",
-                    description="Exchange Imperial Favor and complete Dragon's End meta with Leivas in Arborstone [&BEwMAAA=].",
+                    title=f"Gather Antique Summoning Stones & Pure Jade{eod_warn}",
+                    description=f"Exchange Imperial Favor and complete Dragon's End meta with Leivas in Arborstone [&BEwMAAA=]{eod_warn}.",
                     waypoint="[&BEwMAAA=]",
                     zone_name="Arborstone",
                     npc_name="Leivas"

@@ -1,0 +1,86 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+# ==============================================================================
+# Precursor Archetype Classifications for All Legendary Items
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Generation 2.0 (The Four Majors — Extensive 40h+ Scavenger Collections)
+# ------------------------------------------------------------------------------
+item:76158 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Astralaria (Axe)
+item:71383 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Nevermore (Staff)
+item:72713 priory:hasPrecursorType priory:CollectionHuntPrecursor . # HOPE (Pistol)
+item:75207 priory:hasPrecursorType priory:CollectionHuntPrecursor . # HOPE (Pistol alt)
+item:78556 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Chuka and Champawat (Short Bow)
+item:78052 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Chuka and Champawat (Short Bow alt)
+
+# ------------------------------------------------------------------------------
+# Generation 2.5 (Shard-Crafted Precursors — Instant Shard Crafting at Station)
+# ------------------------------------------------------------------------------
+item:86098 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Binding of Ipos (Focus)
+item:86675 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Binding of Ipos (Focus alt)
+item:87109 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Claw of the Khan-Ur (Dagger)
+item:87687 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Claw of the Khan-Ur / Verdarach
+item:79562 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Eureka (Mace) / Shooshadoo
+item:79802 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Shooshadoo (Shield) / Eureka
+item:80488 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The HMS Divinity (Rifle)
+item:86303 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The HMS Divinity (Rifle alt)
+item:81206 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Flames of War / The Shining Blade
+item:81957 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Shining Blade (Sword)
+item:81839 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Sharur (Hammer)
+item:82791 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Sharur (Hammer alt)
+item:88576 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Xiuquatl (Scepter)
+item:88955 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Xiuquatl (Scepter alt)
+item:89854 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Pharus (Longbow)
+item:90551 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Exordium (Greatsword)
+item:91876 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Verdarach (Warhorn alt)
+
+# ------------------------------------------------------------------------------
+# Generation 1 (Tradable on Trading Post or Crafted via Hobbs Tier 1-3)
+# ------------------------------------------------------------------------------
+item:30689 priory:hasPrecursorType priory:TradablePrecursor . # Twilight (Greatsword)
+item:30699 priory:hasPrecursorType priory:TradablePrecursor . # Sunrise (Greatsword)
+item:30688 priory:hasPrecursorType priory:TradablePrecursor . # Bolt (Sword)
+item:30687 priory:hasPrecursorType priory:TradablePrecursor . # Incinerator (Dagger)
+item:30684 priory:hasPrecursorType priory:TradablePrecursor . # Frostfang (Axe)
+item:30686 priory:hasPrecursorType priory:TradablePrecursor . # The Bifrost (Staff)
+item:30692 priory:hasPrecursorType priory:TradablePrecursor . # Rodgort (Torch)
+item:30690 priory:hasPrecursorType priory:TradablePrecursor . # The Juggernaut (Hammer)
+item:30695 priory:hasPrecursorType priory:TradablePrecursor . # Quip (Pistol)
+item:30691 priory:hasPrecursorType priory:TradablePrecursor . # The Minstrel (Focus)
+item:30693 priory:hasPrecursorType priory:TradablePrecursor . # Howler (Warhorn)
+item:30694 priory:hasPrecursorType priory:TradablePrecursor . # Frenzy (Harpoon Gun)
+item:30696 priory:hasPrecursorType priory:TradablePrecursor . # Meteorlogicus (Scepter)
+item:30697 priory:hasPrecursorType priory:TradablePrecursor . # The Dreamer (Short Bow)
+item:30698 priory:hasPrecursorType priory:TradablePrecursor . # Kudzu (Longbow)
+item:30700 priory:hasPrecursorType priory:TradablePrecursor . # The Predator (Rifle)
+item:30701 priory:hasPrecursorType priory:TradablePrecursor . # The Flameseeker Prophecies (Shield)
+item:30702 priory:hasPrecursorType priory:TradablePrecursor . # Kamohoali'i Kotaki (Spear)
+item:30703 priory:hasPrecursorType priory:TradablePrecursor . # Carcharias (Trident)
+item:30704 priory:hasPrecursorType priory:TradablePrecursor . # The Moot (Mace)
+
+# ------------------------------------------------------------------------------
+# Generation 3 (Aurene Variants — Fast Crafting from Hydrocatalytic Reagents)
+# ------------------------------------------------------------------------------
+item:96221 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Bite (Greatsword)
+item:95675 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Fang (Sword)
+item:95684 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Rending (Axe)
+item:97165 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Claw (Dagger)
+item:96652 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Wisdom (Scepter)
+item:96028 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Insight (Staff)
+item:97077 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Breath (Torch)
+item:96203 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Voice (Warhorn)
+item:95808 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Weight (Hammer)
+item:97594 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Argument (Pistol)
+item:97783 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Flight (Short Bow)
+item:96356 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Gaze (Focus)
+item:95612 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Wing (Shield)
+item:97374 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Tail (Rifle)
+item:96937 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Scale (Mace)
+item:95843 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Persuasion (Longbow)

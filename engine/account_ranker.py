@@ -24,6 +24,9 @@ class LegendaryRankingItem(BaseModel):
     starter_kit_eligible: bool = False
     starter_kit_name: Optional[str] = None
     precursor_status: str = "Missing"
+    precursor_archetype: str = "Standard Crafting"
+    estimated_gameplay_hours: float = 0.5
+    calendar_day_gates: int = 0
     missing_materials_count: int = 0
     top_missing_items: List[str] = Field(default_factory=list)
     estimated_remaining_gold: float = 0.0
@@ -195,8 +198,9 @@ class AccountRanker:
                     if precursor_status == "Missing":
                         precursor_status = f"Need {ing_label}"
 
-            # 4. Calculate approximate remaining gold cost
+            # 4. Calculate approximate remaining gold cost and calendar day gates
             est_gold = 0.0
+            cal_days = 0
             for mat_name, qty in report.summary_missing_materials.items():
                 if "Icy Runestone" in mat_name:
                     est_gold += qty * 1.0  # 1g vendor price
@@ -214,12 +218,38 @@ class AccountRanker:
                 else:
                     est_gold += qty * 0.25
 
+                if any(asc in mat_name for asc in ["Deldrimor", "Spiritwood", "Elonian Leather", "Damask", "Mithrilium", "Elder Spirit", "Charged Quartz"]):
+                    cal_days = max(cal_days, qty)
+
             # If precursor is missing and NOT in starter kit, add typical Gen 1 TP precursor price (~150-250g)
             if not starter_kit_eligible and "Need" in precursor_status:
                 est_gold += 200.0
 
-            # 5. Compute Adjusted Readiness Score
-            # If player has starter kit for this weapon, boost readiness significantly
+            # 5. Query Precursor Archetype & Gameplay Hours from Knowledge Graph
+            arch_query = """
+            SELECT ?ptype ?ptag ?hours WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      priory:hasPrecursorType ?ptype .
+                OPTIONAL { ?ptype priory:archetypeTag ?ptag }
+                OPTIONAL { ?ptype priory:estimatedGameplayHours ?hours }
+            } LIMIT 1
+            """
+            arch_res = self.store.query(arch_query, init_bindings={"gw2Id": Literal(item_id)})
+            prec_arch = "Standard Crafting"
+            gameplay_hours = 0.5
+            if arch_res:
+                row = arch_res[0]
+                prec_arch = str(row["ptag"]) if row.get("ptag") else str(row.get("ptype", "")).split("#")[-1].split("/")[-1]
+                if row.get("hours"):
+                    try:
+                        gameplay_hours = float(row.get("hours"))
+                    except Exception:
+                        pass
+            elif starter_kit_eligible:
+                prec_arch = "Starter Kit Choice — Instant (0g)"
+                gameplay_hours = 0.0
+
+            # 6. Compute Adjusted Readiness Score
             effective_readiness = report.overall_readiness_pct
             if starter_kit_eligible:
                 effective_readiness = max(effective_readiness, 55.0)
@@ -244,24 +274,39 @@ class AccountRanker:
                 starter_kit_eligible=starter_kit_eligible,
                 starter_kit_name=starter_kit_name,
                 precursor_status=precursor_status,
+                precursor_archetype=prec_arch,
+                estimated_gameplay_hours=gameplay_hours,
+                calendar_day_gates=cal_days,
                 missing_materials_count=sum(report.summary_missing_materials.values()),
                 top_missing_items=top_missing,
                 estimated_remaining_gold=round(est_gold, 1)
             ))
 
-        # Sort:
-        # 1. Starter kit eligible first (True first)
-        # 2. Has expanded recipe DAG (missing_materials_count > 1 first)
-        # 3. Readiness % desc
-        # 4. Remaining gold asc
-        rankings.sort(
-            key=lambda x: (
-                x.starter_kit_eligible,
-                x.missing_materials_count > 1,
-                x.readiness_pct,
-                -x.estimated_remaining_gold
-            ),
-            reverse=True
-        )
+        # Check if speed / quickness was requested in query
+        is_speed_query = False
+        if filter_query and any(w in filter_query.lower() for w in ["quick", "fast", "speed", "least effort", "instant", "soon"]):
+            is_speed_query = True
+
+        if is_speed_query:
+            # Sort with low gameplay hours and low calendar days taking priority over 40h collection hunts
+            rankings.sort(
+                key=lambda x: (
+                    x.starter_kit_eligible,
+                    -x.estimated_gameplay_hours,
+                    x.readiness_pct,
+                    -x.estimated_remaining_gold
+                ),
+                reverse=True
+            )
+        else:
+            rankings.sort(
+                key=lambda x: (
+                    x.starter_kit_eligible,
+                    x.missing_materials_count > 1,
+                    x.readiness_pct,
+                    -x.estimated_remaining_gold
+                ),
+                reverse=True
+            )
 
         return rankings[:top_n]

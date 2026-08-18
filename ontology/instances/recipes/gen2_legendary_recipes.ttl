@@ -260,14 +260,14 @@ item:87689 a owl:NamedIndividual,
     rdfs:label "Shard of the Khan-Ur"@en ;
     priory:gw2Id 87689 .
 
-item:88955 a owl:NamedIndividual,
+item:88576 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
     rdfs:label "Xiuquatl"@en ;
     skos:altLabel "Gen 2 Scepter"@en,
         "Gen 2 Xiuquatl"@en,
         "Gen Two Scepter"@en,
         "Generation 2 Scepter"@en ;
-    priory:gw2Id 88955 ;
+    priory:gw2Id 88576 ;
     priory:hasRarity rarity:Legendary ;
     priory:hasWeaponType weapon:Scepter ;
     priory:isAccountBound true ;
@@ -703,7 +703,7 @@ recipe:forge_xiuquatl a priory:MysticForgeRecipe ;
         recipe:req_xiuquatl_trib,
         recipe:req_xiuquatl_wgift ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:88955 .
+    priory:producesItem item:88576 .
 
 recipe:forge_xiuquatl_gift a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of Xiuquatl"@en ;

@@ -208,11 +208,43 @@ class GW2ApiClient:
             except Exception:
                 pass
 
+            # 7. Account Achievements (Collections & Narrative Unlocks)
+            achievements = {}
+            completed_achievements = set()
+            try:
+                ach_resp = await client.get(f"{self.BASE_URL}/account/achievements")
+                if ach_resp.status_code == 200:
+                    ach_data = ach_resp.json()
+                    for ach in ach_data:
+                        a_id = ach.get("id")
+                        if a_id:
+                            achievements[a_id] = ach.get("current", 0)
+                            if ach.get("done", False):
+                                completed_achievements.add(a_id)
+            except Exception:
+                pass
+
+            # 8. Account Masteries (Expansion Unlocks & Levels)
+            masteries = {}
+            try:
+                mast_resp = await client.get(f"{self.BASE_URL}/account/masteries")
+                if mast_resp.status_code == 200:
+                    mast_data = mast_resp.json()
+                    for mast in mast_data:
+                        m_id = mast.get("id")
+                        if m_id:
+                            masteries[m_id] = mast.get("level", 0)
+            except Exception:
+                pass
+
             return AccountState(
                 materials=materials,
                 bank=bank,
                 inventory=inventory,
                 wallet=wallet,
                 legendary_armory=legendary_armory,
-                disciplines=disciplines
+                disciplines=disciplines,
+                achievements=achievements,
+                completed_achievements=completed_achievements,
+                masteries=masteries
             )

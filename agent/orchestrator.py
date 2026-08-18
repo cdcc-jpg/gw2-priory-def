@@ -56,11 +56,15 @@ class PrioryChatSession:
 
         # 3. Dynamic routing based on Top LLM's semantic GoalType classification
         if resolved_goal.goal_type == GoalType.COMPARATIVE_RANKING:
+            filter_q = resolved_goal.category_filter or ""
+            if any(w in user_prompt.lower() for w in ["quick", "fast", "speed", "least effort", "instant", "soon"]):
+                filter_q = f"{filter_q} quickly".strip()
+
             rankings = self.orchestrator.ranker.rank_all_legendaries(
                 account=self.account_state,
                 tp_prices=live_tp_prices,
                 top_n=5,
-                filter_query=resolved_goal.category_filter
+                filter_query=filter_q
             )
             top_optimal_plan = None
             if rankings:

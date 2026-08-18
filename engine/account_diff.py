@@ -20,6 +20,9 @@ class AccountState:
     wallet: Dict[int, int] = field(default_factory=dict)
     legendary_armory: Dict[int, int] = field(default_factory=dict)
     disciplines: Dict[str, int] = field(default_factory=dict)
+    achievements: Dict[int, int] = field(default_factory=dict)
+    completed_achievements: Set[int] = field(default_factory=set)
+    masteries: Dict[int, int] = field(default_factory=dict)
 
     def total_item_count(self, item_id: int) -> int:
         """Aggregates an item's count across materials, bank, bags, and legendary armory."""

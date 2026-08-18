@@ -78,10 +78,15 @@ class PrioryGraphStore:
                 "Ensure gw2-priory-ref repository is cloned."
             )
 
-        # 2. Load Core Ontology Schema
+        # 2. Load Ontology Schemas (Core and Application Schemas)
         core_ontology = self.def_repo_path / "ontology" / "priory_core.ttl"
         if core_ontology.exists():
             self.graph.parse(core_ontology, format="turtle")
+
+        schemas_dir = self.def_repo_path / "ontology" / "schemas"
+        if schemas_dir.exists():
+            for ttl_file in schemas_dir.glob("*.ttl"):
+                self.graph.parse(ttl_file, format="turtle")
 
         # 3. Load Instances (Recursively from ontology/instances/**/*.ttl)
         instances_dir = self.def_repo_path / "ontology" / "instances"
