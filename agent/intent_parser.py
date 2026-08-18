@@ -33,6 +33,10 @@ class PlayerGoalIntent(BaseModel):
         default=None,
         description="Generation, expansion, slot, or weapon type facet if mentioned (e.g. 'Gen 1', 'Gen 2', 'Gen 3', 'Core', 'Heart of Thorns', 'Path of Fire', 'End of Dragons', 'Secrets of the Obscure', 'Janthir Wilds', 'Armor', 'Trinket', 'Upgrade', 'Spear', 'Greatsword')."
     )
+    prefer_speed: bool = Field(
+        default=False,
+        description="Set to true if the player explicitly asks to craft quickly, fast, with least effort, or minimal time investment."
+    )
     target_quantity: int = Field(default=1, description="The desired number of items (e.g. 1, 2, 4).")
     time_budget_minutes: int = Field(default=120, description="Available playtime in minutes.")
     excluded_game_modes: List[str] = Field(default_factory=list, description="Game modes to avoid (e.g. WvW, PvP, Raids).")
@@ -49,6 +53,7 @@ class ResolvedGoal(BaseModel):
     resolved_item_id: Optional[int] = None
     resolved_item_name: Optional[str] = None
     category_filter: Optional[str] = None
+    prefer_speed: bool = False
     target_quantity: int = 1
     chat_code: Optional[str] = None
 
@@ -65,7 +70,8 @@ class IntentParser:
         "   - 'EXPLORATORY_DISCOVERY': Select this when the player wants to browse or find items with specific attributes.\n\n"
         "2. target_item_name: Name of the specific item if goal_type is SPECIFIC_ITEM, else null.\n"
         "3. category_filter: Any mentioned generation ('Gen 1', 'Gen 2', 'Gen 3'), expansion ('Heart of Thorns', 'Path of Fire', 'End of Dragons', 'Secrets of the Obscure', 'Janthir Wilds'), or category ('Armor', 'Trinket', 'Upgrade', 'Spear', 'Greatsword'), else null.\n"
-        "4. target_quantity, time_budget_minutes, excluded_game_modes, preferred_game_modes, exhausted_sources, liquid_gold_budget."
+        "4. prefer_speed: Set to true if the player wants a fast/quick recommendation, least effort, or lowest time investment (e.g. 'quickly', 'fast', 'fastest', 'least effort'), else false.\n"
+        "5. target_quantity, time_budget_minutes, excluded_game_modes, preferred_game_modes, exhausted_sources, liquid_gold_budget."
     )
 
     def __init__(self, semantic_query_service: SemanticQueryService, llm_client: Optional[BaseLLMClient] = None):
@@ -96,6 +102,7 @@ class IntentParser:
                 intent=intent,
                 goal_type=GoalType.COMPARATIVE_RANKING,
                 category_filter=intent.category_filter,
+                prefer_speed=intent.prefer_speed,
                 target_quantity=intent.target_quantity
             )
 

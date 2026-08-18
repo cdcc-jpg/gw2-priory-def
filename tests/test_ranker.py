@@ -99,11 +99,12 @@ class TestAccountRanker(unittest.TestCase):
         account = AccountState(
             materials={19721: 100, 19675: 30}
         )
-        rankings = self.ranker.rank_all_legendaries(account, top_n=5, filter_query="Which Gen 2 legendary can I quickly craft")
+        rankings = self.ranker.rank_all_legendaries(account, top_n=5, filter_query="Gen 2", prefer_speed=True)
         self.assertGreater(len(rankings), 0)
         # Top choice must be a shard crafting precursor (0.5h effort), NOT a 40h collection hunt
         self.assertIn("Shard", rankings[0].precursor_archetype)
         self.assertLessEqual(rankings[0].estimated_gameplay_hours, 1.0)
+
     def test_global_speed_query_no_empty_rankings(self):
         """Verifies that asking 'Which legendary item can I quickly craft' returns all top legendary candidates without empty results."""
         account = AccountState(
@@ -118,6 +119,15 @@ class TestAccountRanker(unittest.TestCase):
         self.assertGreater(len(rankings), 0)
         self.assertEqual(len(rankings), 5)
         self.assertLessEqual(rankings[0].estimated_gameplay_hours, 1.0)
+
+    def test_orchestrator_speed_query(self):
+        """Verifies that asking 'Which generation 2 legendary can I quickly craft' through orchestrator uses LLM intent parser prefer_speed."""
+        mock_llm = RuleBasedMockLLMClient()
+        orchestrator = PrioryAgentOrchestrator(graph_store=self.store, llm_client=mock_llm)
+        account = AccountState(materials={19721: 100, 19675: 30})
+        session = orchestrator.create_session(account_state=account)
+        guide = session.send_message("Which generation 2 legendary can I quickly craft")
+        self.assertTrue(any("Speed Analysis" in r for r in guide.strategic_recommendations))
 
 
 if __name__ == "__main__":

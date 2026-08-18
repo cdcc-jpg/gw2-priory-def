@@ -111,6 +111,8 @@ class RuleBasedMockLLMClient(BaseLLMClient):
                 cat_filter = term
                 break
 
+        prefer_speed = any(w in p_lower for w in ["quick", "quickly", "fast", "fastest", "speed", "least effort", "instant", "soon"])
+
         # Instantiate target schema dynamically
         fields = schema.model_fields.keys()
         data: Dict[str, Any] = {}
@@ -120,6 +122,8 @@ class RuleBasedMockLLMClient(BaseLLMClient):
             data["target_item_name"] = None if is_comparative else goal_item
         if "category_filter" in fields:
             data["category_filter"] = cat_filter
+        if "prefer_speed" in fields:
+            data["prefer_speed"] = prefer_speed
         if "goal_item_query" in fields:
             data["goal_item_query"] = cat_filter or goal_item
         if "is_ranking_query" in fields:

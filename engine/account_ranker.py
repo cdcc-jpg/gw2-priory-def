@@ -105,65 +105,20 @@ class AccountRanker:
         rankings: List[LegendaryRankingItem] = []
 
         is_speed_query = prefer_speed
-        clean_filter = filter_query or ""
-        speed_words = ["quick", "quickly", "fast", "fastest", "speed", "speedy", "least effort", "instant", "soon"]
-        if any(w in clean_filter.lower() for w in speed_words):
-            is_speed_query = True
-            for w in speed_words:
-                clean_filter = re.sub(r'\b' + re.escape(w) + r'\b', '', clean_filter, flags=re.IGNORECASE)
-            clean_filter = clean_filter.strip()
 
-        # Filter by generation, expansion, or category if requested
-        domain_facets = False
-        norm_terms = []
-        fq = clean_filter.lower().strip()
-        if fq:
-            if any(t in fq for t in ["gen 1", "generation 1", "gen one", "core"]):
-                norm_terms.extend(["gen 1", "generation 1", "gen one"])
-                domain_facets = True
-            elif any(t in fq for t in ["gen 2", "generation 2", "gen two", "heart of thorns", "hot"]):
-                norm_terms.extend(["gen 2", "generation 2", "gen two", "hot", "maguuma"])
-                domain_facets = True
-            elif any(t in fq for t in ["gen 3", "generation 3", "gen three", "aurene", "end of dragons", "eod"]):
-                norm_terms.extend(["gen 3", "generation 3", "gen three", "aurene", "dragon"])
-                domain_facets = True
-            elif any(t in fq for t in ["soto", "secrets of the obscure", "obsidian"]):
-                norm_terms.extend(["soto", "secrets of the obscure", "obsidian", "open world"])
-                domain_facets = True
-            elif any(t in fq for t in ["janthir", "janthir wilds", "jw", "spear"]):
-                norm_terms.extend(["janthir", "klobjarne", "spear"])
-                domain_facets = True
-            elif any(t in fq for t in ["envoy", "raid", "insights"]):
-                norm_terms.extend(["envoy", "raid", "insights"])
-                domain_facets = True
-            elif "armor" in fq:
-                norm_terms.extend(["armor", "helm", "pauldrons", "breastplate", "gauntlets", "tassets", "greaves", "mask", "shoulderguards", "jerkin", "vambraces", "leggings", "boots", "hood", "mantle", "vestments", "gloves", "pants", "shoes"])
-                domain_facets = True
-            elif any(t in fq for t in ["trinket", "ring", "accessory", "amulet"]):
-                norm_terms.extend(["aurora", "vision", "coalescence", "conflux", "transcendence", "regalia", "accessory", "ring", "amulet", "trinket"])
-                domain_facets = True
-            elif any(t in fq for t in ["backpack", "back"]):
-                norm_terms.extend(["ad infinitum", "the ascension", "warbringer", "backpack"])
-                domain_facets = True
-            elif any(t in fq for t in ["upgrade", "sigil", "rune", "relic"]):
-                norm_terms.extend(["sigil", "rune", "relic", "upgrade"])
-                domain_facets = True
-            else:
-                stopwords = {"legendary", "item", "items", "weapon", "weapons", "craft", "crafting", "which", "what", "can", "i", "a", "an", "the"}
-                non_stop = [w for w in re.findall(r'\w+', fq) if w not in stopwords]
-                if non_stop:
-                    norm_terms = [fq] + non_stop
-                    domain_facets = True
-
-        if domain_facets and norm_terms:
-            filtered_legs = []
-            for leg in legendaries:
-                lbl = leg["label"].lower()
-                wt = (leg.get("weaponType") or "").lower()
-                alts = leg.get("altLabels", set())
-                if any(term in lbl or term in wt or any(term in a for a in alts) for term in norm_terms):
-                    filtered_legs.append(leg)
-            legendaries = filtered_legs
+        # Filter by generation, expansion, slot, or weapon facet if requested by the Top LLM
+        if filter_query:
+            fq = filter_query.lower().strip()
+            if fq and fq not in ["legendary", "item", "items", "weapon", "weapons", "all"]:
+                filtered_legs = []
+                for leg in legendaries:
+                    lbl = leg["label"].lower()
+                    wt = (leg.get("weaponType") or "").lower()
+                    alts = leg.get("altLabels", set())
+                    if fq in lbl or fq in wt or any(fq in a for a in alts) or any(a in fq for a in alts if len(a) >= 3):
+                        filtered_legs.append(leg)
+                if filtered_legs:
+                    legendaries = filtered_legs
 
         # Default baseline price fallbacks for leaf materials (if no live TP feed)
         prices = tp_prices or {
@@ -311,11 +266,6 @@ class AccountRanker:
                 top_missing_items=top_missing,
                 estimated_remaining_gold=round(est_gold, 1)
             ))
-
-        # Check if speed / quickness was requested in query
-        is_speed_query = False
-        if filter_query and any(w in filter_query.lower() for w in ["quick", "fast", "speed", "least effort", "instant", "soon"]):
-            is_speed_query = True
 
         if is_speed_query:
             # Sort with low gameplay hours and low calendar days taking priority over 40h collection hunts
