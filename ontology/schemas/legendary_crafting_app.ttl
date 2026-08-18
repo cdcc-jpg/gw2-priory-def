@@ -57,7 +57,22 @@ priory:RaidEnvoyPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:N
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "Raid Envoy Collection Precursor"@en ;
     priory:archetypeTag "Raid Progression — Spirit Vale / Salvation Pass"@en ;
+    priory:estimatedGameplayHours 15.0 ;
     skos:definition "Ascended Envoy armor precursor earned from Heart of Thorns raid collections I & II."@en .
+
+priory:WvWRankPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:PrecursorAcquisitionScheme ;
+    skos:prefLabel "WvW Rank & Skirmish Precursor"@en ;
+    priory:archetypeTag "WvW Progression — Skirmish Tickets & Rank"@en ;
+    priory:estimatedGameplayHours 25.0 ;
+    skos:definition "Ascended Triumphant or Mistforged armor precursor unlocked via WvW Skirmish Claim Tickets and WvW rank milestones."@en .
+
+priory:PvPRankPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:PrecursorAcquisitionScheme ;
+    skos:prefLabel "PvP League & Shards Precursor"@en ;
+    priory:archetypeTag "PvP Progression — League Tickets & Shards of Glory"@en ;
+    priory:estimatedGameplayHours 20.0 ;
+    skos:definition "Ascended Ardent Glorious or Mistforged Glorious armor precursor unlocked via PvP League Tickets and Ascended Shards of Glory."@en .
 
 priory:ObsidianArmorPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;

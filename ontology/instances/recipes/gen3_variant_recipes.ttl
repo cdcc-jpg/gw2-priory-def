@@ -1,0 +1,40 @@
+@prefix : <https://priory.gw2/def/> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+# ==============================================================================
+# GEN 3 ELDER DRAGON VARIANT RECIPES (Mystic Forge)
+# ==============================================================================
+
+# Reagent Declarations
+item:96000 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Memory of Aurene" ;
+    priory:gw2Id 96000 ;
+    priory:isAccountBound false .
+
+item:96221 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Bite" ;
+    priory:gw2Id 96221 ;
+    priory:isAccountBound true .
+
+item:46733 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Dragonite Ingot" ;
+    priory:gw2Id 46733 ;
+    priory:isAccountBound true .
+
+
+# Zhaitan Bite Variant Recipe
+# Base Aurene's Bite + 100 Memories of Aurene + 10 Dragonite Ingots + 2500 Research Notes
+priory:Recipe_AureneBite_Zhaitan a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Aurene's Bite (Zhaitan Variant)" ;
+    priory:producesItem item:96001 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:96221 ; priory:requiredQuantity 1 ] , # Aurene's Bite
+        [ a priory:IngredientRequirement ; priory:requiresItem item:96000 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:IngredientRequirement ; priory:requiresItem item:46733 ; priory:requiredQuantity 10 ] . # Dragonite Ingot

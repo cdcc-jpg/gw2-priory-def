@@ -1,0 +1,134 @@
+@prefix : <https://priory.gw2/def/> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+# ==============================================================================
+# AURENE ELDER DRAGON VARIANT SKINS (96 Facet Weapons)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Elder Dragon Facet Taxonomy (SKOS Concept Scheme)
+# ------------------------------------------------------------------------------
+priory:ElderDragonFacetScheme a skos:ConceptScheme ;
+    rdfs:label "Elder Dragon Facet Skin Variant Scheme"@en ;
+    skos:definition "Taxonomy of the 6 Elder Dragon legendary skin variants unlockable on Generation 3 Aurene weapons."@en .
+
+priory:DragonFacet a owl:Class ;
+    rdfs:label "Elder Dragon Facet"@en .
+
+priory:ZhaitanFacet a priory:DragonFacet, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:ElderDragonFacetScheme ;
+    skos:prefLabel "Zhaitan Variant"@en ;
+    priory:dragonName "Zhaitan" ;
+    skos:definition "Death-themed Elder Dragon variant unlocked via the Shadow of the Dragon collection in Arborstone."@en .
+
+priory:MordremothFacet a priory:DragonFacet, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:ElderDragonFacetScheme ;
+    skos:prefLabel "Mordremoth Variant"@en ;
+    priory:dragonName "Mordremoth" ;
+    skos:definition "Plant and mind-themed Elder Dragon variant unlocked via the Heart of Maguuma dragon collection."@en .
+
+priory:KralkatorrikFacet a priory:DragonFacet, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:ElderDragonFacetScheme ;
+    skos:prefLabel "Kralkatorrik Variant"@en ;
+    priory:dragonName "Kralkatorrik" ;
+    skos:definition "Crystal and torment-themed Elder Dragon variant unlocked via the Crystal Oasis and Dragonfall collection."@en .
+
+priory:PrimordusFacet a priory:DragonFacet, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:ElderDragonFacetScheme ;
+    skos:prefLabel "Primordus Variant"@en ;
+    priory:dragonName "Primordus" ;
+    skos:definition "Fire and lava-themed Elder Dragon variant unlocked via the Ring of Fire collection."@en .
+
+priory:JormagFacet a priory:DragonFacet, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:ElderDragonFacetScheme ;
+    skos:prefLabel "Jormag Variant"@en ;
+    priory:dragonName "Jormag" ;
+    skos:definition "Ice and frost-themed Elder Dragon variant unlocked via the Shiverpeaks dragon collection."@en .
+
+priory:SooWonFacet a priory:DragonFacet, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:ElderDragonFacetScheme ;
+    skos:prefLabel "Soo-Won Variant"@en ;
+    priory:dragonName "Soo-Won" ;
+    skos:definition "Water and depth-themed Elder Dragon variant unlocked via the Dragon's End meta collection."@en .
+
+
+# ------------------------------------------------------------------------------
+# 2. Representative Aurene Variant Weapons (Exemplars across Facets)
+# ------------------------------------------------------------------------------
+
+# Zhaitan Variants
+item:96001 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Bite (Zhaitan Variant)" ;
+    priory:gw2Id 96001 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
+    priory:hasDragonFacet priory:ZhaitanFacet ;
+    priory:baseLegendaryItem item:96221 ;  # Aurene's Bite
+    priory:producedBy priory:Recipe_AureneBite_Zhaitan ;
+    skos:altLabel "Zhaitan's Bite", "Zhaitan Greatsword", "Gen 3 Zhaitan Variant" ;
+    skos:definition "Legendary Greatsword skin variant channeling the power of the Elder Dragon Zhaitan." .
+
+item:96002 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Fang (Zhaitan Variant)" ;
+    priory:gw2Id 96002 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Sword> ;
+    priory:hasDragonFacet priory:ZhaitanFacet ;
+    priory:baseLegendaryItem item:95675 ;
+    skos:altLabel "Zhaitan's Fang", "Zhaitan Sword" .
+
+# Mordremoth Variants
+item:96003 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Rending (Mordremoth Variant)" ;
+    priory:gw2Id 96003 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Axe> ;
+    priory:hasDragonFacet priory:MordremothFacet ;
+    priory:baseLegendaryItem item:95684 ;
+    skos:altLabel "Mordremoth's Rending", "Mordremoth Axe" .
+
+# Kralkatorrik Variants
+item:96004 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Insight (Kralkatorrik Variant)" ;
+    priory:gw2Id 96004 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
+    priory:hasDragonFacet priory:KralkatorrikFacet ;
+    priory:baseLegendaryItem item:96028 ;
+    skos:altLabel "Kralkatorrik's Insight", "Kralkatorrik Staff" .
+
+# Primordus Variants
+item:96005 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Weight (Primordus Variant)" ;
+    priory:gw2Id 96005 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Hammer> ;
+    priory:hasDragonFacet priory:PrimordusFacet ;
+    priory:baseLegendaryItem item:95808 ;
+    skos:altLabel "Primordus's Weight", "Primordus Hammer" .
+
+# Jormag Variants
+item:96006 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Wisdom (Jormag Variant)" ;
+    priory:gw2Id 96006 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
+    priory:hasDragonFacet priory:JormagFacet ;
+    priory:baseLegendaryItem item:96652 ;
+    skos:altLabel "Jormag's Wisdom", "Jormag Scepter" .
+
+# Soo-Won Variants
+item:96007 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Flight (Soo-Won Variant)" ;
+    priory:gw2Id 96007 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/ShortBow> ;
+    priory:hasDragonFacet priory:SooWonFacet ;
+    priory:baseLegendaryItem item:97783 ;
+    skos:altLabel "Soo-Won's Flight", "Soo-Won Short Bow" .

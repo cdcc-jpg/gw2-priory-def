@@ -15,6 +15,9 @@ from engine.graph_store import PrioryGraphStore
 from engine.account_diff import AccountDiffReport, AccountState
 
 
+import datetime
+
+
 class MilestoneStep(BaseModel):
     step_number: int
     title: str
@@ -52,6 +55,9 @@ class OptimalCraftingPlan(BaseModel):
     precursor_strategy: Optional[str] = None
     precursor_archetype: str = "Standard Crafting"
     calendar_day_gates: int = 0
+    estimated_completion_days: int = 0
+    estimated_completion_date: Optional[str] = None
+    primary_time_gate_bottleneck: Optional[str] = None
     clover_strategy: List[CloverStrategyOption] = Field(default_factory=list)
     t6_strategies: List[str] = Field(default_factory=list)
     bottlenecks: List[str] = Field(default_factory=list)
@@ -236,6 +242,14 @@ class PathSolver:
                     f"Combine 50x T5 materials + 1x T6 material + 5x Crystalline Dust + 5x Philosopher's Stones in the Mystic Forge for high-yield T6 output."
                 )
 
+            # Wizard's Vault Astral Acclaim
+            aa_amount = account.wallet.get(68, 0)
+            if aa_amount >= 9:
+                t6_strats.append(
+                    f"✨ **Wizard's Vault Acclaim ({aa_amount} available):** "
+                    f"Claim up to {min(aa_amount // 9, 20)}x Mystic Clovers (9 AA each) and Heavy Crafting Bags (10 AA each) directly from the Wizard's Vault for 0 gold."
+                )
+
             # Laurel Merchant
             laurel_amount = account.wallet.get(3, 0)
             if laurel_amount >= 1:
@@ -389,11 +403,48 @@ class PathSolver:
             row = arch_res[0]
             prec_archetype = str(row.get("ptag") or row.get("ptype", "")).split("#")[-1].split("/")[-1]
 
-        # Calculate calendar day gates
+        # Calculate calendar day gates & longitudinal completion date
         cal_days = 0
+        primary_bottleneck = None
+
         for mat_name, qty in missing.items():
             if any(asc in mat_name for asc in ["Deldrimor", "Spiritwood", "Elonian Leather", "Damask", "Mithrilium", "Elder Spirit", "Charged Quartz"]):
-                cal_days = max(cal_days, qty)
+                if qty > cal_days:
+                    cal_days = qty
+                    primary_bottleneck = f"Ascended Daily Refinement Limit (1 {mat_name}/day)"
+            elif "Provisioner Token" in mat_name or "Gift of Craftsmanship" in mat_name:
+                tokens_needed = qty * (50 if "Gift of Craftsmanship" in mat_name else 1)
+                days_needed = (tokens_needed + 2) // 3  # Assuming 3 provisioner trades/day
+                if days_needed > cal_days:
+                    cal_days = days_needed
+                    primary_bottleneck = f"Faction Provisioner Tokens (3/day limit — {tokens_needed} tokens needed)"
+            elif "Druid" in mat_name or "Wayfarer" in mat_name:
+                if 16 > cal_days:
+                    cal_days = 16
+                    primary_bottleneck = "Wayfarer's Henge (16-day Druid Runestone daily time gate)"
+            elif "Fractal Research Page" in mat_name:
+                pages_needed = qty
+                days_needed = (pages_needed + 2) // 3
+                if days_needed > cal_days:
+                    cal_days = days_needed
+                    primary_bottleneck = f"Fractal Daily Research Pages (3/day limit — {pages_needed} pages needed)"
+            elif "WvW Skirmish Claim Ticket" in mat_name:
+                tickets_needed = qty
+                days_needed = int((tickets_needed / 365.0) * 7.0)
+                if days_needed > cal_days:
+                    cal_days = days_needed
+                    primary_bottleneck = f"WvW Skirmish Claim Tickets (365/week cap — {tickets_needed} tickets needed)"
+            elif "Legendary Insight" in mat_name:
+                li_needed = qty
+                days_needed = int((li_needed / 25.0) * 7.0)
+                if days_needed > cal_days:
+                    cal_days = days_needed
+                    primary_bottleneck = f"Legendary Insights (25/week Raid cap — {li_needed} LI needed)"
+
+        completion_date = None
+        if cal_days > 0:
+            target_dt = datetime.date.today() + datetime.timedelta(days=cal_days)
+            completion_date = target_dt.strftime("%B %d, %Y")
 
         # Generate 5-Phase Step-by-Step Master Roadmap
         master_roadmap = self.generate_master_roadmap(diff_report, account)
@@ -407,6 +458,9 @@ class PathSolver:
             precursor_strategy=precursor_strat,
             precursor_archetype=prec_archetype,
             calendar_day_gates=cal_days,
+            estimated_completion_days=cal_days,
+            estimated_completion_date=completion_date,
+            primary_time_gate_bottleneck=primary_bottleneck,
             clover_strategy=clover_options,
             t6_strategies=t6_strats,
             bottlenecks=bottlenecks,

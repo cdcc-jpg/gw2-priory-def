@@ -84,3 +84,57 @@ item:95612 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Win
 item:97374 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Tail (Rifle)
 item:96937 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Scale (Mace)
 item:95843 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Persuasion (Longbow)
+
+# ------------------------------------------------------------------------------
+# Eternity (Special Double-Legendary Mystic Forge Combination)
+# ------------------------------------------------------------------------------
+item:30689 priory:hasPrecursorType priory:TradablePrecursor . # Eternity (Combines Sunrise & Twilight)
+
+# ------------------------------------------------------------------------------
+# WvW Competitive Legendary Armors (Triumphant Hero's & Mistforged)
+# ------------------------------------------------------------------------------
+item:803841 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Warplate (Heavy Chest)
+item:801451 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Pauldrons (Heavy Shoulders)
+item:805571 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Faceguard (Heavy Helm)
+item:801951 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Gauntlets (Heavy Gloves)
+item:802771 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Legplates (Heavy Legs)
+item:805781 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Wargreaves (Heavy Boots)
+
+item:802481 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Jerkin (Medium Chest)
+item:801311 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Shoulderguards (Medium Shoulders)
+item:801611 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Mask (Medium Helm)
+item:802521 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Vambraces (Medium Gloves)
+item:802811 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Leggings (Medium Legs)
+item:805901 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Boots (Medium Boots)
+
+item:803561 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Vestments (Light Chest)
+item:802441 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Mantle (Light Shoulders)
+item:804121 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Hood (Light Helm)
+item:801881 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Wristguards (Light Gloves)
+item:804551 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Pants (Light Legs)
+item:803241 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Shoes (Light Boots)
+
+# ------------------------------------------------------------------------------
+# PvP Competitive Legendary Armors (Ardent Glorious & Mistforged)
+# ------------------------------------------------------------------------------
+item:806121 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Breastplate (Heavy Chest)
+item:803451 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Pauldrons (Heavy Shoulders)
+item:805121 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Helm (Heavy Helm)
+item:804351 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Gauntlets (Heavy Gloves)
+item:802611 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Legguards (Heavy Legs)
+item:805091 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Greaves (Heavy Boots)
+
+item:806341 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Jerkin (Medium Chest)
+item:803211 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Shoulderguards (Medium Shoulders)
+item:804891 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Mask (Medium Helm)
+item:803881 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Vambraces (Medium Gloves)
+item:802731 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Leggings (Medium Legs)
+item:805621 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Boots (Medium Boots)
+
+item:806551 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Vestments (Light Chest)
+item:803321 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Mantle (Light Shoulders)
+item:804981 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Hood (Light Helm)
+item:803991 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Gloves (Light Gloves)
+item:802891 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Pants (Light Legs)
+item:805741 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Shoes (Light Boots)
+

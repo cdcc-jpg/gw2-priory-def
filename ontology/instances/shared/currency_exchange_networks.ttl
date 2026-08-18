@@ -1,0 +1,97 @@
+@prefix : <https://priory.gw2/def/> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# ==============================================================================
+# CURRENCY EXCHANGE & CONVERSION NETWORKS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Volatile Magic Trophy Shipments (LWS4 / Dragonfall)
+# ------------------------------------------------------------------------------
+priory:Exchange_VolatileMagic_TrophyShipment a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Volatile Magic for Trophy Shipment" ;
+    priory:vendorName "Volatile Magic Collector (Dragonfall [&BNoLAAA=], Mistlock Sanctuary)" ;
+    priory:producesItem priory:Item_89141 ; # Trophy Shipment
+    priory:outputQuantity 1 ;
+    priory:estimatedT6Yield 15 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 5040 ; priory:requiredQuantity 250 ] , # Volatile Magic
+        [ a priory:IngredientRequirement ; priory:requiresGold 1.0 ] ;
+    skos:definition "Exchange 250 Volatile Magic and 1 gold for a Trophy Shipment yielding ~15 T6 fine materials on average." .
+
+# ------------------------------------------------------------------------------
+# 2. Wizard's Vault Astral Acclaim Exchanges
+# ------------------------------------------------------------------------------
+priory:Exchange_AstralAcclaim_MysticClover a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Astral Acclaim for Mystic Clover" ;
+    priory:vendorName "Wizard's Vault (Direct Claim)" ;
+    priory:producesItem priory:Item_19675 ; # Mystic Clover
+    priory:outputQuantity 1 ;
+    priory:seasonalCap 20 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 68 ; priory:requiredQuantity 9 ] ; # Astral Acclaim
+    skos:definition "Cheapest and guaranteed source of Mystic Clovers: 9 Astral Acclaim per clover up to 20 per season." .
+
+priory:Exchange_AstralAcclaim_HeavyCraftingBag a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Astral Acclaim for Heavy Crafting Bag" ;
+    priory:vendorName "Wizard's Vault (Direct Claim)" ;
+    priory:producesItem priory:Item_89141_Alt ; # Heavy Crafting Bag
+    priory:outputQuantity 1 ;
+    priory:estimatedT6Yield 3 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 68 ; priory:requiredQuantity 10 ] ; # Astral Acclaim
+    skos:definition "Exchange 10 Astral Acclaim for a Heavy Crafting Bag yielding 3 Tier 6 fine crafting materials." .
+
+priory:Exchange_AstralAcclaim_BagOfCoins a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Astral Acclaim for 1 Gold (Bag of Coins)" ;
+    priory:vendorName "Wizard's Vault (Direct Claim)" ;
+    priory:producesGold 1.0 ;
+    priory:seasonalCap 90 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 68 ; priory:requiredQuantity 6 ] ; # Astral Acclaim
+    skos:definition "Convert 6 Astral Acclaim into 1 liquid gold coin (up to 90 cheap bags per season)." .
+
+# ------------------------------------------------------------------------------
+# 3. Laurel Vendor Exchanges
+# ------------------------------------------------------------------------------
+priory:Exchange_Laurel_HeavyCraftingBag a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Laurels for Heavy Crafting Bag" ;
+    priory:vendorName "Laurel Merchant (Lion's Arch [&BBAEAAA=])" ;
+    priory:producesItem priory:Item_89141_Alt ;
+    priory:outputQuantity 1 ;
+    priory:estimatedT6Yield 3 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 3 ; priory:requiredQuantity 1 ] ; # Laurels
+    skos:definition "Exchange 1 Laurel for a Heavy Crafting Bag containing 3 random T6 fine materials." .
+
+# ------------------------------------------------------------------------------
+# 4. Fractal Relic & Magnetite Shard Clover Exchanges
+# ------------------------------------------------------------------------------
+priory:Exchange_Fractal_MysticClover a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Fractal Relics for Mystic Clover" ;
+    priory:vendorName "BUY-2046 (Fractal of the Mists)" ;
+    priory:producesItem priory:Item_19675 ; # Mystic Clover
+    priory:outputQuantity 1 ;
+    priory:dailyCap 2 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 7 ; priory:requiredQuantity 150 ] , # Fractal Relics
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 23 ; priory:requiredQuantity 3 ] ,  # Spirit Shards
+        [ a priory:IngredientRequirement ; priory:requiresItem priory:Item_19976 ; priory:requiredQuantity 1 ] , # Mystic Coin
+        [ a priory:IngredientRequirement ; priory:requiresItem priory:Item_19721 ; priory:requiredQuantity 2 ] ; # Glob of Ectoplasm
+    skos:definition "Daily discounted Mystic Clover vendor trade: 2 per day at BUY-2046." .
+
+priory:Exchange_Raid_MysticClover a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Exchange Magnetite Shards for Mystic Clover" ;
+    priory:vendorName "Basic Magnetite Exchange (Aerodrome [&BPUHAAA=])" ;
+    priory:producesItem priory:Item_19675 ;
+    priory:outputQuantity 1 ;
+    priory:weeklyCap 10 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 28 ; priory:requiredQuantity 30 ] , # Magnetite Shards
+        [ a priory:IngredientRequirement ; priory:requiresGold 2.0 ] ;
+    skos:definition "Weekly discounted Mystic Clover trade: 10 per week for 30 Magnetite Shards + 2g." .

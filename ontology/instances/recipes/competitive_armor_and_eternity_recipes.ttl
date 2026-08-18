@@ -1,0 +1,255 @@
+@prefix : <https://priory.gw2/def/> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+# ==============================================================================
+# COMPETITIVE ARMOR & ETERNITY RECIPES
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. ETERNITY (Mystic Forge Greatsword Combination)
+# ------------------------------------------------------------------------------
+
+item:30689 priory:producedBy priory:Recipe_Eternity .
+
+priory:Recipe_Eternity a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Eternity" ;
+    priory:producesItem item:30689 ;  # Eternity
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        priory:Req_Eternity_Sunrise ,
+        priory:Req_Eternity_Twilight ,
+        priory:Req_Eternity_Dust ,
+        priory:Req_Eternity_Stone .
+
+priory:Req_Eternity_Sunrise a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:30703 ;  # Sunrise
+    priory:requiredQuantity 1 .
+
+priory:Req_Eternity_Twilight a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:30704 ;  # Twilight
+    priory:requiredQuantity 1 .
+
+priory:Req_Eternity_Dust a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:24277 ;  # Pile of Crystalline Dust
+    priory:requiredQuantity 5 .
+
+priory:Req_Eternity_Stone a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:20799 ;  # Philosopher's Stone
+    priory:requiredQuantity 10 .
+
+
+# ------------------------------------------------------------------------------
+# 2. COMPETITIVE GIFTS & BASE REAGENTS
+# ------------------------------------------------------------------------------
+
+# Base Reagent Declarations
+item:73248 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Memory of Battle" ;
+    priory:gw2Id 73248 ;
+    priory:isAccountBound true .
+
+item:71581 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "WvW Skirmish Claim Ticket" ;
+    priory:gw2Id 71581 ;
+    priory:isAccountBound true .
+
+item:79895 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ascended Shard of Glory" ;
+    priory:gw2Id 79895 ;
+    priory:isAccountBound true .
+
+item:78902 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "PvP League Ticket" ;
+    priory:gw2Id 78902 ;
+    priory:isAccountBound true .
+
+item:79900 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Star of Glory" ;
+    priory:gw2Id 79900 ;
+    priory:isAccountBound true .
+
+item:80894 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Legendary Spike" ;
+    priory:gw2Id 80894 ;
+    priory:isAccountBound true .
+
+
+# WvW Gift of War Prosperity
+item:80850 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of War Prosperity" ;
+    priory:gw2Id 80850 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_GiftOfWarProsperity .
+
+priory:Recipe_GiftOfWarProsperity a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of War Prosperity" ;
+    priory:producesItem item:80850 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 15 ] ,  # Mystic Clover
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19629 ; priory:requiredQuantity 1 ] ,  # Gift of Condensed Might (or Gift of Might)
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19628 ; priory:requiredQuantity 1 ] .  # Gift of Condensed Magic (or Gift of Magic)
+
+# WvW Gift of War Dedication
+item:80851 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of War Dedication" ;
+    priory:gw2Id 80851 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_GiftOfWarDedication .
+
+priory:Recipe_GiftOfWarDedication a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of War Dedication" ;
+    priory:producesItem item:80851 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:73248 ; priory:requiredQuantity 250 ] , # Memory of Battle
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80894 ; priory:requiredQuantity 10 ] .  # Legendary Spike
+
+# WvW Gift of War Prowess
+item:80852 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of War Prowess" ;
+    priory:gw2Id 80852 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_GiftOfWarProwess .
+
+priory:Recipe_GiftOfWarProwess a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Purchase Gift of War Prowess" ;
+    priory:producesItem item:80852 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:71581 ; priory:requiredQuantity 1095 ] . # WvW Skirmish Claim Ticket
+
+
+# PvP Gift of Tournament Prosperity
+item:80860 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Tournament Prosperity" ;
+    priory:gw2Id 80860 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_GiftOfTournamentProsperity .
+
+priory:Recipe_GiftOfTournamentProsperity a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of Tournament Prosperity" ;
+    priory:producesItem item:80860 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 15 ] ,  # Mystic Clover
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19629 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19628 ; priory:requiredQuantity 1 ] .
+
+# PvP Gift of Tournament Dedication
+item:80861 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Tournament Dedication" ;
+    priory:gw2Id 80861 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_GiftOfTournamentDedication .
+
+priory:Recipe_GiftOfTournamentDedication a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of Tournament Dedication" ;
+    priory:producesItem item:80861 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79895 ; priory:requiredQuantity 400 ] , # Ascended Shards of Glory
+        [ a priory:IngredientRequirement ; priory:requiresItem item:78902 ; priory:requiredQuantity 100 ] , # PvP League Tickets
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79900 ; priory:requiredQuantity 1 ] .   # Star of Glory
+
+# PvP Gift of Tournament Prowess
+item:80862 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Tournament Prowess" ;
+    priory:gw2Id 80862 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_GiftOfTournamentProwess .
+
+priory:Recipe_GiftOfTournamentProwess a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Purchase Gift of Tournament Prowess" ;
+    priory:producesItem item:80862 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:78902 ; priory:requiredQuantity 100 ] . # PvP League Tickets
+
+
+# ------------------------------------------------------------------------------
+# 3. WvW LEGENDARY ARMOR RECIPES (Sample Exemplars: Chest, Helm, Boots)
+# ------------------------------------------------------------------------------
+
+item:803841 priory:producedBy priory:Recipe_TriumphantWarplate .
+
+priory:Recipe_TriumphantWarplate a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Warplate" ;
+    priory:producesItem item:803841 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+item:802481 priory:producedBy priory:Recipe_TriumphantJerkin .
+
+priory:Recipe_TriumphantJerkin a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Jerkin" ;
+    priory:producesItem item:802481 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+item:803561 priory:producedBy priory:Recipe_TriumphantVestments .
+
+priory:Recipe_TriumphantVestments a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Vestments" ;
+    priory:producesItem item:803561 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+# ------------------------------------------------------------------------------
+# 4. PvP LEGENDARY ARMOR RECIPES
+# ------------------------------------------------------------------------------
+
+item:806121 priory:producedBy priory:Recipe_ArdentBreastplate .
+
+priory:Recipe_ArdentBreastplate a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Breastplate" ;
+    priory:producesItem item:806121 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+item:806341 priory:producedBy priory:Recipe_ArdentJerkin .
+
+priory:Recipe_ArdentJerkin a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Jerkin" ;
+    priory:producesItem item:806341 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+item:806551 priory:producedBy priory:Recipe_ArdentVestments .
+
+priory:Recipe_ArdentVestments a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Vestments" ;
+    priory:producesItem item:806551 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .

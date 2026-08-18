@@ -106,6 +106,16 @@ class GuideGenerator:
                 if t_strat not in recommendations:
                     recommendations.append(t_strat)
 
+        # Longitudinal calendar completion date projection
+        if optimal_plan and getattr(optimal_plan, "estimated_completion_date", None):
+            cal_date = optimal_plan.estimated_completion_date
+            cal_days = optimal_plan.estimated_completion_days
+            b_neck = optimal_plan.primary_time_gate_bottleneck or "Daily Time Gates"
+            recommendations.append(
+                f"⏳ **Calendar Projection (~{cal_days} days | Target: {cal_date}):** "
+                f"Earliest completion date based on {b_neck}."
+            )
+
         # Domain note on spears if non-existent spear was referenced
         if any(term in (intent.user_playstyle_notes or "").lower() or term in (goal.resolved_item_name or "").lower() for term in ["tier two spear", "tier 2 spear", "gen 2 spear", "generation 2 spear"]):
             recommendations.append(
