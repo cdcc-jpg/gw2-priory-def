@@ -104,7 +104,16 @@ python3 priory_cli.py
 python3 priory_cli.py "I want to craft 2 legendary sigils tonight. I have 90 mins."
 ```
 
-### 3. Run the Automated Test Suite
+### 3. Run the Lightweight Web GUI (Developer Explorer)
+> [!NOTE]
+> **Architectural Decision:** This lightweight Flask interface (`web/app.py`, `run_web.py`) serves as a temporary developer GUI and conversational playground for the neuro-symbolic semantic layer before full integration into the main *gw2priory* frontend website.
+
+```bash
+python3 run_web.py
+# Open your browser at http://127.0.0.1:5001
+```
+
+### 4. Run the Automated Test Suite
 ```bash
 python3 -m unittest discover tests
 ```
@@ -141,7 +150,12 @@ gw2-priory-def/
 ├── ingestion/                   # Data Ingestion Bridges
 │   ├── gw2_api.py               # Official ArenaNet REST API Client (v2)
 │   └── smw_client.py            # Complete 7-archetype Semantic MediaWiki crawler
-├── tests/                       # Automated Unit Test Suites (14 tests)
+├── web/                         # Lightweight Developer Web GUI (Flask)
+│   ├── app.py                   # Flask server & REST API
+│   ├── templates/index.html     # Semantic GUI template
+│   └── static/                  # Vanilla CSS & JS controller
+├── tests/                       # Automated Unit Test Suites (40 tests)
+├── run_web.py                   # Web GUI runner script
 ├── priory_cli.py                # Interactive CLI runner
 ├── CHANGELOG.md                 # Project version changelog
 └── README.md                    # Project overview

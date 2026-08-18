@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Lightweight Flask Web GUI & Reasoning Explorer (`web/app.py`, `run_web.py`):**
+  - **Architectural Decision:** Created a lightweight standalone Flask interface and REST API as a temporary developer GUI / demo playground for the neuro-symbolic semantic layer prior to future integration into the main *gw2priory* frontend website.
+  - Implemented responsive Tyrian scholar dark theme (`web/static/css/style.css`) with interactive waypoint chat code copy badges, live account snapshot telemetry (materials, armory unlocks, wallet currencies), 5-phase master roadmap timelines, and real-time query reasoning.
+  - Added test suite coverage in [`tests/test_web_app.py`](./tests/test_web_app.py).
 - **Live Wizard's Vault Shop & Sold-Out Status Ingestion:**
   - Integrated `GET /v2/account/wizardsvault/listings` into [`ingestion/gw2_api.py`](./ingestion/gw2_api.py) and added `WizardVaultListing` dataclass to [`engine/account_diff.py`](./engine/account_diff.py).
   - Tracks individual seasonal item purchase limits and remaining quotas (`wizards_vault_remaining`, `is_wizards_vault_sold_out`).
