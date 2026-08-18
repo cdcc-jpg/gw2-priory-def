@@ -3,169 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Priory Grimoire</title>
+    <title>The Priory Grimoire — Guild Wars 2 Legendary Tome</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;800&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
+<body class="gw2-desk-env">
 
+    <!-- Ambient Floating Arcane Particles -->
     <canvas id="particles"></canvas>
 
+    <!-- Scholar's Alchemical Desk Ambient Glows -->
+    <div class="candle-glow candle-left"></div>
+    <div class="candle-glow candle-right"></div>
+
+    <!-- Main 3D Scene Viewport -->
     <div class="scene" id="scene">
-        <!-- Magical aura that pulses behind the book -->
+        
+        <!-- Arcane Aura behind the Tome -->
         <div class="book-aura" id="book-aura"></div>
 
-        <div class="book" id="book">
+        <!-- THE GW2 LEGENDARY GRIMOIRE -->
+        <div class="book-stage">
+            
+            <!-- Bookmarks Ribbon Bar (Side Tabs) -->
+            <div class="tome-tabs" id="tome-tabs">
+                <button class="tome-tab active" data-page-index="0" id="tab-inscribe" title="Chapter I: Inscription">
+                    <span class="tab-icon">✒️</span>
+                    <span class="tab-label">Inscription</span>
+                </button>
+                <div class="saved-recipes-tabs" id="saved-recipes-tabs">
+                    <!-- Dynamic Recipe Tabs inserted here -->
+                </div>
+            </div>
 
-            <!-- 3D cover — left -->
-            <div class="cover cover-left">
-                <div class="cover-face">
-                    <div class="cover-border">
-                        <div class="cover-corner tl">✦</div>
-                        <div class="cover-corner tr">✦</div>
-                        <div class="cover-corner bl">✦</div>
-                        <div class="cover-corner br">✦</div>
-                        <div class="cover-crest">
-                            <span class="crest-glyph">🏛️</span>
+            <!-- The 3D Book Structure -->
+            <div class="grimoire-tome" id="grimoire-tome">
+                
+                <!-- Bottom Hanging Red Silk Ribbon Bookmarks (Iconic GW2 Book Feature) -->
+                <div class="hanging-ribbon ribbon-1"></div>
+                <div class="hanging-ribbon ribbon-2"></div>
+                <div class="hanging-ribbon ribbon-3"></div>
+
+                <!-- Leather Covers -->
+                <div class="cover cover-left">
+                    <div class="leather-face">
+                        <div class="leather-filigree"></div>
+                    </div>
+                </div>
+                <div class="cover cover-right">
+                    <div class="leather-face">
+                        <div class="leather-filigree"></div>
+                    </div>
+                </div>
+
+                <!-- Page Stacks (Visible 3D paper depth) -->
+                <div class="stack-left"></div>
+                <div class="stack-right"></div>
+
+                <!-- Central 3D Binding Spine with Leather Ribs -->
+                <div class="spine-binding">
+                    <div class="spine-crease"></div>
+                    <div class="spine-rib"></div>
+                    <div class="spine-rib"></div>
+                    <div class="spine-rib"></div>
+                    <div class="spine-rib"></div>
+                </div>
+
+                <!-- DYNAMIC TWO-PAGE SPREAD -->
+                <div class="pages-spread" id="pages-spread">
+                    
+                    <!-- LEFT PAGE CONTAINER -->
+                    <div class="page-sheet page-left" id="page-left-content">
+                        <div class="parchment-grain"></div>
+                        <div class="ink-vignette"></div>
+                        <div class="page-inner" id="left-page-body">
+                            <!-- Injected dynamically based on active page -->
                         </div>
                     </div>
-                </div>
-                <div class="cover-edge cover-edge-bottom"></div>
-            </div>
 
-            <!-- Page stack left (visible edge) -->
-            <div class="page-stack stack-left"></div>
-
-            <!-- LEFT PAGE -->
-            <div class="page page-left">
-                <div class="page-grain"></div>
-                <div class="page-aged-edge"></div>
-                <div class="page-body">
-                    <div class="ch">— Chapter I —<br><em>Inscription of Intent</em></div>
-
-                    <div class="sep">⟡ ──────── ⟡</div>
-
-                    <div class="essence">
-                        <div class="e-row"><span class="e-lbl">Legendary Armory</span><span class="e-val" id="stat-armory">—</span></div>
-                        <div class="e-row"><span class="e-lbl">Materials Tracked</span><span class="e-val" id="stat-materials">—</span></div>
-                        <div class="e-row"><span class="e-lbl">Liquid Gold</span><span class="e-val" id="stat-gold">—</span></div>
-                        <div class="e-row"><span class="e-lbl">Spirit Shards</span><span class="e-val" id="stat-shards">—</span></div>
-                    </div>
-
-                    <form id="query-form" autocomplete="off">
-                        <label class="q-label">Inscribe thy desire upon the page:</label>
-                        <textarea id="query-input" class="q-input" rows="3"
-                            placeholder="e.g. Which 2 legendaries can I quickly craft?"></textarea>
-                        <button type="submit" class="btn-turn" id="btn-submit">
-                            <span id="btn-label">Turn the Page ✦</span>
-                            <span id="btn-spinner" class="spinner hidden"></span>
-                        </button>
-                    </form>
-
-                    <div class="spells">
-                        <button class="sp" data-q="Which 2 legendaries can I quickly craft?">⚡ Fastest 2</button>
-                        <button class="sp" data-q="How do I craft Twilight?">⚔ Twilight</button>
-                        <button class="sp" data-q="How do I craft Eternity?">✨ Eternity</button>
-                        <button class="sp" data-q="How do I craft WvW Legendary Armor?">🛡 WvW Armor</button>
-                    </div>
-
-                    <div class="pn">— I —</div>
-                </div>
-            </div>
-
-            <!-- 3D SPINE -->
-            <div class="spine-3d">
-                <div class="spine-face spine-front">
-                    <div class="spine-band"></div>
-                    <div class="spine-band"></div>
-                    <div class="spine-band"></div>
-                    <div class="spine-band"></div>
-                    <div class="spine-band"></div>
-                </div>
-            </div>
-
-            <!-- RIGHT: turning page + underneath results -->
-            <div class="flip-zone">
-                <div class="turning-page" id="turning-page">
-                    <div class="tp-face tp-front">
-                        <div class="page-grain"></div>
-                        <div class="page-aged-edge edge-right"></div>
-                        <div class="page-body idle">
-                            <div class="ch">— Chapter II —<br><em>The Scrying Mirror</em></div>
-                            <div class="sep">⟡ ──────── ⟡</div>
-                            <div class="mirror-wrap">
-                                <div class="mirror-outer-ring"></div>
-                                <div class="mirror-inner-ring"></div>
-                                <div class="mirror-glass">
-                                    <div class="mirror-shimmer"></div>
-                                    <span class="mirror-icon">🔮</span>
-                                </div>
-                                <div class="mirror-runes">
-                                    <span>⚝</span><span>᛭</span><span>✧</span><span>⚝</span>
-                                    <span>᛭</span><span>✧</span><span>⚝</span><span>᛭</span>
-                                </div>
-                            </div>
-                            <p class="mirror-text">Inscribe your desire upon the left page,<br>then turn to reveal truth.</p>
-                            <blockquote class="lore">
-                                "Knowledge is the greatest treasure of Tyria. Ground your journey in the sacred laws of the graph before spending a single coin."
-                                <cite>— Steward Gixx, Durmand Priory</cite>
-                            </blockquote>
-                            <div class="pn">— II —</div>
+                    <!-- RIGHT PAGE CONTAINER -->
+                    <div class="page-sheet page-right" id="page-right-content">
+                        <div class="parchment-grain"></div>
+                        <div class="ink-vignette"></div>
+                        <div class="page-inner" id="right-page-body">
+                            <!-- Injected dynamically based on active page -->
                         </div>
                     </div>
-                    <div class="tp-face tp-back">
-                        <div class="page-grain"></div>
-                    </div>
-                </div>
 
-                <!-- Results page (revealed under the flip) -->
-                <div class="page page-under" id="page-results">
-                    <div class="page-grain"></div>
-                    <div class="page-aged-edge edge-right"></div>
-                    <div class="page-body results" id="results-body">
-                        <div class="ch" id="results-ch">— Manifestation of Desire —</div>
-                        <div class="sep">⟡ ──────── ⟡</div>
-
-                        <div class="r-hero" id="r-hero">
-                            <h2 class="r-name" id="r-name">Twilight</h2>
-                            <div class="r-meta">
-                                <span class="r-pct" id="r-pct">72%</span>
-                                <button class="r-cc" id="r-cc" title="Copy">[&AgErZgAA]</button>
-                            </div>
+                    <!-- 3D FLIPPING LEAF OVERLAY (For Page Turn Animation) -->
+                    <div class="flipper-leaf hidden" id="flipper-leaf">
+                        <div class="flipper-face flipper-front" id="flipper-front">
+                            <div class="parchment-grain"></div>
+                            <div class="flipper-content" id="flipper-front-content"></div>
                         </div>
-                        <p class="r-sum" id="r-sum"></p>
-
-                        <div class="r-sec" id="sec-recs"><h3>💡 Recommendations</h3><ul id="rec-list"></ul></div>
-                        <div class="r-sec" id="sec-roadmap"><h3>🗺 Master Roadmap</h3><ol id="roadmap-list"></ol></div>
-                        <div class="r-sec" id="sec-checklist"><h3>📋 Session Checklist</h3><div id="ck-list"></div></div>
-                        <div class="r-sec" id="sec-mats"><h3>📦 Materials Needed</h3><div class="mt" id="mt"></div></div>
-
-                        <div class="pn">— Revealed by the Priory —</div>
+                        <div class="flipper-face flipper-back" id="flipper-back">
+                            <div class="parchment-grain"></div>
+                            <div class="flipper-content" id="flipper-back-content"></div>
+                        </div>
                     </div>
-                    <button class="btn-back" id="btn-back">↩ New Inscription</button>
+
                 </div>
-            </div>
 
-            <!-- Page stack right -->
-            <div class="page-stack stack-right"></div>
-
-            <!-- 3D cover — right -->
-            <div class="cover cover-right">
-                <div class="cover-face">
-                    <div class="cover-border">
-                        <div class="cover-corner tl">✦</div>
-                        <div class="cover-corner tr">✦</div>
-                        <div class="cover-corner bl">✦</div>
-                        <div class="cover-corner br">✦</div>
+                <!-- BOTTOM PAGE NAVIGATION BAR -->
+                <div class="tome-nav-footer">
+                    <button class="btn-page-nav" id="btn-prev-page" title="Previous Page">
+                        <span class="nav-arrow">⮜</span> Previous Page
+                    </button>
+                    <div class="page-counter-badge" id="page-counter-display">
+                        Chapter I • Page 1 of 1
                     </div>
+                    <button class="btn-page-nav" id="btn-next-page" title="Next Page">
+                        Next Page <span class="nav-arrow">⮞</span>
+                    </button>
                 </div>
-                <div class="cover-edge cover-edge-bottom"></div>
+
             </div>
         </div>
+
     </div>
 
+    <!-- Hidden audio/sound triggers can be added if desired -->
     <script src="/static/js/app.js"></script>
 </body>
 </html>
