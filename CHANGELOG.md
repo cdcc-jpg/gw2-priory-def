@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Live Wizard's Vault Shop & Sold-Out Status Ingestion:**
+  - Integrated `GET /v2/account/wizardsvault/listings` into [`ingestion/gw2_api.py`](./ingestion/gw2_api.py) and added `WizardVaultListing` dataclass to [`engine/account_diff.py`](./engine/account_diff.py).
+  - Tracks individual seasonal item purchase limits and remaining quotas (`wizards_vault_remaining`, `is_wizards_vault_sold_out`).
+  - Enhanced [`engine/path_solver.py`](./engine/path_solver.py) to dynamically detect sold-out seasonal items (e.g. 20/20 Mystic Clovers claimed) and automatically fall back to BUY-2046 Fractal daily vendors, Raid vendors, or Mystic Forge recipes.
 - **100% Domain Coverage for Legendary Acquisition Modeling (10,191 Triples):**
   - **Competitive WvW & PvP Legendary Armor Sets (36 pieces):** Created [`ontology/instances/legendaries/competitive_legendary_armors.ttl`](./ontology/instances/legendaries/competitive_legendary_armors.ttl) and [`ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl`](./ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl) modeling all 18 WvW (*Triumphant Hero's / Mistforged*) and 18 PvP (*Ardent Glorious / Mistforged*) armor pieces with *Gift of War/Tournament Prosperity, Dedication, Prowess*, *WvW Skirmish Claim Tickets*, and *Ascended Shards of Glory*.
   - **Eternity Mystic Forge Greatsword Combination:** Modeled full dual-DAG traversal where *Eternity (`30689`)* consumes two completed legendary greatswords (*Sunrise `30703`* + *Twilight `30704`* + 5 Crystalline Dust + 10 Philosopher's Stones).

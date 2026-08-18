@@ -12,6 +12,28 @@ from engine.graph_store import PrioryGraphStore
 
 
 @dataclass
+class WizardVaultListing:
+    """Represents a Wizard's Vault shop listing with purchase status."""
+    id: int
+    item_id: int
+    item_count: int = 1
+    listing_type: str = "Normal"
+    cost: int = 0
+    purchased: int = 0
+    purchase_limit: Optional[int] = None
+
+    @property
+    def remaining_purchases(self) -> int:
+        if self.purchase_limit is None:
+            return 999999
+        return max(0, self.purchase_limit - self.purchased)
+
+    @property
+    def is_sold_out(self) -> bool:
+        return self.purchase_limit is not None and self.purchased >= self.purchase_limit
+
+
+@dataclass
 class AccountState:
     """Represents a player's live account snapshot from the GW2 API."""
     materials: Dict[int, int] = field(default_factory=dict)
@@ -23,6 +45,7 @@ class AccountState:
     achievements: Dict[int, int] = field(default_factory=dict)
     completed_achievements: Set[int] = field(default_factory=set)
     masteries: Dict[int, int] = field(default_factory=dict)
+    wizards_vault_listings: Dict[int, WizardVaultListing] = field(default_factory=dict)
 
     def total_item_count(self, item_id: int) -> int:
         """Aggregates an item's count across materials, bank, bags, and legendary armory."""
@@ -40,6 +63,20 @@ class AccountState:
     def has_legendary_unlocked(self, item_id: int) -> bool:
         """Returns True if the item is unlocked in the Legendary Armory."""
         return self.legendary_armory.get(item_id, 0) > 0
+
+    def wizards_vault_remaining(self, item_id: int) -> Optional[int]:
+        """Returns the number of remaining purchases for a Wizard's Vault item, or None if not listed."""
+        listing = self.wizards_vault_listings.get(item_id)
+        if listing:
+            return listing.remaining_purchases
+        return None
+
+    def is_wizards_vault_sold_out(self, item_id: int) -> bool:
+        """Returns True if the item is listed in the Wizard's Vault and sold out."""
+        listing = self.wizards_vault_listings.get(item_id)
+        if listing:
+            return listing.is_sold_out
+        return False
 
 
 @dataclass

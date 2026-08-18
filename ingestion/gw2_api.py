@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import httpx
-from engine.account_diff import AccountState
+from engine.account_diff import AccountState, WizardVaultListing
 
 CACHE_DIR = Path(__file__).parent.parent / "data" / "cache"
 
@@ -237,6 +237,28 @@ class GW2ApiClient:
             except Exception:
                 pass
 
+            # 9. Wizard's Vault Listings (Seasonal Rewards & Purchase Limits)
+            wizards_vault_listings = {}
+            try:
+                wv_resp = await client.get(f"{self.BASE_URL}/account/wizardsvault/listings")
+                if wv_resp.status_code == 200:
+                    wv_data = wv_resp.json()
+                    for listing in wv_data:
+                        l_id = listing.get("id")
+                        i_id = listing.get("item_id")
+                        if i_id:
+                            wizards_vault_listings[i_id] = WizardVaultListing(
+                                id=l_id,
+                                item_id=i_id,
+                                item_count=listing.get("item_count", 1),
+                                listing_type=listing.get("type", "Normal"),
+                                cost=listing.get("cost", 0),
+                                purchased=listing.get("purchased", 0),
+                                purchase_limit=listing.get("purchase_limit")
+                            )
+            except Exception:
+                pass
+
             return AccountState(
                 materials=materials,
                 bank=bank,
@@ -246,5 +268,6 @@ class GW2ApiClient:
                 disciplines=disciplines,
                 achievements=achievements,
                 completed_achievements=completed_achievements,
-                masteries=masteries
+                masteries=masteries,
+                wizards_vault_listings=wizards_vault_listings
             )

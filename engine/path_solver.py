@@ -134,7 +134,12 @@ class PathSolver:
         clovers_needed = missing.get("Mystic Clover", 0)
 
         if clovers_needed > 0:
-            vault_available = "WizardVault" not in exhausted
+            wv_clovers_remaining = account.wizards_vault_remaining(19675)
+            vault_available = (
+                "WizardVault" not in exhausted
+                and not account.is_wizards_vault_sold_out(19675)
+                and (wv_clovers_remaining is None or wv_clovers_remaining > 0)
+            )
             clover_query = """
             SELECT ?path ?pathLabel ?curr ?currNotation ?currLabel ?currQty ?npc ?zone ?waypoint ?def WHERE {
                 ?item priory:gw2Id 19675 ;
@@ -161,15 +166,17 @@ class PathSolver:
 
                 if "Wizard" in p_label or "Astral" in p_def:
                     if vault_available:
-                        clovers_from_vault = min(clovers_needed, 20)
-                        clover_options.append(CloverStrategyOption(
-                            source_name=p_label,
-                            clovers_obtainable=clovers_from_vault,
-                            estimated_gold_cost=0.0,
-                            required_currencies={curr_label: clovers_from_vault * unit_cost},
-                            time_gate_note="Seasonal limit (20 clovers per refresh)",
-                            recommended=True
-                        ))
+                        max_vault_cap = wv_clovers_remaining if wv_clovers_remaining is not None else 20
+                        clovers_from_vault = min(clovers_needed, max_vault_cap)
+                        if clovers_from_vault > 0:
+                            clover_options.append(CloverStrategyOption(
+                                source_name=p_label,
+                                clovers_obtainable=clovers_from_vault,
+                                estimated_gold_cost=0.0,
+                                required_currencies={curr_label: clovers_from_vault * unit_cost},
+                                time_gate_note=f"Seasonal limit ({clovers_from_vault} available in Vault)",
+                                recommended=True
+                            ))
                 elif "Fractal" in p_label:
                     if "Fractals" not in excluded:
                         clover_options.append(CloverStrategyOption(
@@ -244,11 +251,19 @@ class PathSolver:
 
             # Wizard's Vault Astral Acclaim
             aa_amount = account.wallet.get(68, 0)
-            if aa_amount >= 9:
-                t6_strats.append(
-                    f"✨ **Wizard's Vault Acclaim ({aa_amount} available):** "
-                    f"Claim up to {min(aa_amount // 9, 20)}x Mystic Clovers (9 AA each) and Heavy Crafting Bags (10 AA each) directly from the Wizard's Vault for 0 gold."
-                )
+            wv_clovers_rem = account.wizards_vault_remaining(19675)
+            if aa_amount >= 9 and "WizardVault" not in excluded and "WizardVault" not in exhausted:
+                if wv_clovers_rem is not None and wv_clovers_rem == 0:
+                    t6_strats.append(
+                        f"✨ **Wizard's Vault Acclaim ({aa_amount} available):** "
+                        f"Wizard's Vault Mystic Clovers are **sold out** for this season. You can still spend Acclaim on Heavy Crafting Bags (10 AA each) or Gold Bags."
+                    )
+                else:
+                    max_clovers = min(aa_amount // 9, wv_clovers_rem if wv_clovers_rem is not None else 20)
+                    t6_strats.append(
+                        f"✨ **Wizard's Vault Acclaim ({aa_amount} available):** "
+                        f"Claim up to {max_clovers}x Mystic Clovers (9 AA each) and Heavy Crafting Bags (10 AA each) directly from the Wizard's Vault for 0 gold."
+                    )
 
             # Laurel Merchant
             laurel_amount = account.wallet.get(3, 0)
