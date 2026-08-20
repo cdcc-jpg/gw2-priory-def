@@ -93,3 +93,14 @@ item:76839 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
     skos:definition "Guaranteed salvage from Ascended weapons or armor. Used for Ad Infinitum and Legendary Armor gifts."@en .
+
+# ------------------------------------------------------------------------------
+# 5. Faction Provisioners
+# ------------------------------------------------------------------------------
+currency:ProvisionerToken a priory:Currency, skos:Concept, owl:NamedIndividual ;
+    rdfs:label "Provisioner Token"@en ;
+    skos:prefLabel "Provisioner Token"@en ;
+    skos:notation "35" ;
+    priory:gw2Id 35 ;
+    skos:definition "Account currency earned by bartering crafted equipment with Faction Provisioners across Tyria. Used to purchase Gifts of Craftsmanship."@en .
+

@@ -16,6 +16,7 @@ class GoalType(str, Enum):
     """Semantic classification of player intent."""
     SPECIFIC_ITEM = "SPECIFIC_ITEM"              # Targeting a specific item (e.g. 'Twilight', 'Aurene's Bite', '2 Legendary Sigils')
     COMPARATIVE_RANKING = "COMPARATIVE_RANKING"  # Comparative query (e.g. 'What am I closest to?', 'How far am I to a Gen 3?', 'What should I craft?')
+    ACQUISITION_DISCOVERY = "ACQUISITION_DISCOVERY" # Inquiring how to farm/acquire materials/currencies (e.g. 'How do I farm Mystic Clovers?')
     EXPLORATORY_DISCOVERY = "EXPLORATORY_DISCOVERY" # Exploratory search across the knowledge graph
 
 
@@ -23,11 +24,19 @@ class PlayerGoalIntent(BaseModel):
     """Structured intent and constraint parameters extracted from natural language by the Top LLM."""
     goal_type: GoalType = Field(
         default=GoalType.SPECIFIC_ITEM,
-        description="The primary nature of the player's request: SPECIFIC_ITEM (if targeting a concrete named item), COMPARATIVE_RANKING (if asking what they are closest to, how far they are from a category/generation, seeking recommendations, or requesting a leaderboard), or EXPLORATORY_DISCOVERY."
+        description="The primary nature of the player's request: SPECIFIC_ITEM (concrete named item craft), COMPARATIVE_RANKING (closest/leaderboard), ACQUISITION_DISCOVERY (asking how to farm or acquire a material/currency like Clovers), or EXPLORATORY_DISCOVERY."
     )
     target_item_name: Optional[str] = Field(
         default=None,
-        description="The specific item name if the player specified one (e.g. 'Twilight', 'Aurene's Bite', 'The Moot', 'Legendary Sigil'). None if asking about a category/generation."
+        description="The specific item name if the player specified one (e.g. 'Twilight', 'Aurene's Bite', 'The Moot', 'Mystic Clover', 'Legendary Sigil')."
+    )
+    is_acquisition_query: bool = Field(
+        default=False,
+        description="Set to true if the player is asking how to farm, collect, or acquire materials/currencies rather than crafting a final legendary end-product."
+    )
+    facet_name: Optional[str] = Field(
+        default=None,
+        description="Elder dragon facet variant if mentioned (e.g. 'Zhaitan', 'Mordremoth', 'Kralkatorrik', 'Primordus', 'Jormag', 'Soo-Won')."
     )
     category_filter: Optional[str] = Field(
         default=None,
@@ -53,6 +62,8 @@ class ResolvedGoal(BaseModel):
     resolved_item_id: Optional[int] = None
     resolved_item_name: Optional[str] = None
     category_filter: Optional[str] = None
+    is_acquisition_query: bool = False
+    facet_name: Optional[str] = None
     prefer_speed: bool = False
     target_quantity: int = 1
     chat_code: Optional[str] = None
@@ -137,9 +148,13 @@ class IntentParser:
 
         return ResolvedGoal(
             intent=intent,
-            goal_type=GoalType.SPECIFIC_ITEM,
+            goal_type=intent.goal_type,
             resolved_item_id=resolved_item_id,
             resolved_item_name=resolved_item_name,
+            category_filter=intent.category_filter,
+            is_acquisition_query=intent.is_acquisition_query or intent.goal_type == GoalType.ACQUISITION_DISCOVERY,
+            facet_name=intent.facet_name,
+            prefer_speed=intent.prefer_speed,
             target_quantity=target_quantity,
             chat_code=chat_code
         )

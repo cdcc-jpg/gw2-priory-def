@@ -7,7 +7,7 @@ engaging, personalized, and actionable in-game progression guides with zero hall
 from __future__ import annotations
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
-from agent.intent_parser import ResolvedGoal
+from agent.intent_parser import ResolvedGoal, GoalType
 from engine.account_diff import AccountDiffReport
 from agent.llm_client import BaseLLMClient, get_default_llm_client
 
@@ -20,6 +20,7 @@ class ActionStep(BaseModel):
     game_mode: str
     description: str
     chat_code: Optional[str] = None
+    assigned_character: Optional[str] = None
 
 
 class PersonalizedGuide(BaseModel):
@@ -30,6 +31,7 @@ class PersonalizedGuide(BaseModel):
     readiness_percentage: int
     executive_summary: str
     strategic_recommendations: List[str]
+    character_recommendations: List[str] = Field(default_factory=list)
     master_roadmap_phases: List[str] = Field(default_factory=list)
     session_checklist: List[ActionStep]
     missing_materials_summary: Dict[str, int]
@@ -142,8 +144,35 @@ class GuideGenerator:
                 f"✅ **Provisioner Tokens Ready:** Your account has enough Provisioner Tokens (or Gifts of Craftsmanship) to fulfill this requirement immediately!"
             )
 
+        # Elder Dragon Facet Skin Variant recommendations
+        if getattr(goal, "facet_name", None):
+            facet = goal.facet_name
+            recommendations.append(
+                f"🐉 **{facet} Dragon Facet Skin Transmutation:** "
+                f"To unlock the {facet} variant skin for **{goal_display}**, combine the base weapon with "
+                f"**100x Memory of Aurene**, **10x Dragonite Ingot**, and **2,500x Research Notes** in the Mystic Forge at Miyani `[&BBAEAAA=]`."
+            )
+
+        # Acquisition Discovery (e.g. Farming Mystic Clovers without gambling)
+        if getattr(goal, "is_acquisition_query", False) or goal.goal_type == GoalType.ACQUISITION_DISCOVERY:
+            recommendations.append(
+                f"🏛️ **Multi-Source Acquisition Routing for {goal_display}:**"
+            )
+            recommendations.append(
+                f"  1. ✨ **Wizard's Vault:** Exchange Astral Acclaim (cheapest & 0 gold, 9 AA per Clover)."
+            )
+            recommendations.append(
+                f"  2. 🔮 **Fractals of the Mists (BUY-2046):** Buy 2/day for 150 Fractal Relics + 1 Mystic Coin + 3 Ecto in the Mistlock Sanctuary / Lion's Arch `[&BBAEAAA=]`."
+            )
+            recommendations.append(
+                f"  3. ⚔️ **Raid / Strike Vendors:** Exchange Magnetite Shards / Prophet Shards weekly."
+            )
+            recommendations.append(
+                f"  4. 🎲 **Mystic Forge Recipe (31% yield rate):** 10x Mystic Coins + 10x Ectoplasm + 10x Obsidian Shards + 10x Mystic Crystals."
+            )
+
         # Mystic Clover strategy with exhausted awareness
-        if "Mystic Clover" in missing_mats:
+        if "Mystic Clover" in missing_mats and not getattr(goal, "is_acquisition_query", False):
             clovers_needed = missing_mats["Mystic Clover"]
             if "WizardVault" in exhausted:
                 recommendations.append(
@@ -211,7 +240,8 @@ class GuideGenerator:
                 for s in phase.milestone_steps:
                     wp_str = f" `[{s.waypoint}]`" if s.waypoint else ""
                     npc_str = f" ({s.npc_name})" if s.npc_name else ""
-                    master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{wp_str}: {s.description}")
+                    char_str = f" 👤 [Character: {s.assigned_character}]" if s.assigned_character else ""
+                    master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{char_str}{wp_str}: {s.description}")
 
         summary = (
             f"Here is your personalized progression plan for **{goal_display}** "
@@ -222,6 +252,13 @@ class GuideGenerator:
             "💡 **Priory Tip:** Paste waypoint chat codes (e.g. [&BKgDAAA=]) into in-game chat to instantly open your map and teleport directly to vendors!"
         )
 
+        char_recs = []
+        if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
+            for phase in optimal_plan.master_roadmap:
+                for s in phase.milestone_steps:
+                    if s.assigned_character:
+                        char_recs.append(f"Crafting **{s.title}**: Switch to character **{s.assigned_character}**")
+
         return PersonalizedGuide(
             goal_name=goal.resolved_item_name,
             target_quantity=target_qty,
@@ -229,6 +266,7 @@ class GuideGenerator:
             readiness_percentage=readiness,
             executive_summary=summary,
             strategic_recommendations=recommendations,
+            character_recommendations=char_recs,
             master_roadmap_phases=master_roadmap_formatted,
             session_checklist=checklist,
             missing_materials_summary=missing_mats,
@@ -361,7 +399,8 @@ class GuideGenerator:
                 for s in phase.milestone_steps:
                     wp_str = f" `[{s.waypoint}]`" if s.waypoint else ""
                     npc_str = f" ({s.npc_name})" if s.npc_name else ""
-                    master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{wp_str}: {s.description}")
+                    char_str = f" 👤 [Character: {s.assigned_character}]" if s.assigned_character else ""
+                    master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{char_str}{wp_str}: {s.description}")
 
         summary = (
             f"Based on your live account snapshot (including your materials and bank starter kits), "
@@ -373,6 +412,18 @@ class GuideGenerator:
         else:
             tip = f"💡 **Priory Tip:** Remember to convert your daily Astral Acclaim into Mystic Clovers from the Wizard's Vault to save over ~100g in crafting costs!"
 
+        char_recs = []
+        if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
+            for phase in optimal_plan.master_roadmap:
+                for s in phase.milestone_steps:
+                    if s.assigned_character:
+                        char_recs.append(f"Crafting **{s.title}**: Switch to character **{s.assigned_character}**")
+
+        if top_choice.name == "The Moot":
+            char_recs.append("Best Character: **Kerling** (Level 80 Guardian) — Holds **Weaponsmith 500** active & can wield Maces directly!")
+        elif top_choice.name == "The Predator":
+            char_recs.append("Best Character: **Legacy Of Harathi** (Level 80 Warrior) — Holds **Huntsman 500** active & can wield Rifles directly!")
+
         return PersonalizedGuide(
             goal_name=f"Closest: {top_choice.name}",
             target_quantity=1,
@@ -380,6 +431,7 @@ class GuideGenerator:
             readiness_percentage=readiness,
             executive_summary=summary,
             strategic_recommendations=recs,
+            character_recommendations=char_recs,
             master_roadmap_phases=master_roadmap_formatted,
             session_checklist=checklist,
             missing_materials_summary={mat.split("x ")[1]: int(mat.split("x ")[0]) for mat in top_choice.top_missing_items if "x " in mat},

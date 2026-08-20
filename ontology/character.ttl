@@ -1,0 +1,508 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix armor: <https://priory.gw2/ref/armor/> .
+@prefix slot: <https://priory.gw2/ref/slot/> .
+@prefix profession: <https://priory.gw2/ref/profession/> .
+@prefix race: <https://priory.gw2/ref/race/> .
+
+<https://priory.gw2/def/character> a owl:Ontology ;
+    rdfs:label "Project Priory Character & Ephemeral State Ontology"@en ;
+    rdfs:comment "Formal OWL 2 DL schema and SKOS concept schemes defining player character entities, crafting disciplines, gear loadouts, and bag inventory states."@en ;
+    owl:versionInfo "0.1.0" .
+
+# ==============================================================================
+# Class Hierarchy (TBox)
+# ==============================================================================
+
+priory:Character a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Player Character"@en ;
+    rdfs:comment "A specific player character belonging to a Guild Wars 2 account."@en .
+
+priory:CharacterDiscipline a owl:Class ;
+    rdfs:label "Character Crafting Discipline"@en ;
+    rdfs:comment "A crafting discipline learned by a character, including rating (0-500) and active status."@en .
+
+priory:EquipmentTab a owl:Class ;
+    rdfs:label "Character Equipment Tab"@en ;
+    rdfs:comment "An equipment tab configuration containing a full loadout of weapons, armor, trinkets, and upgrades."@en .
+
+priory:EquippedItem a owl:Class ;
+    rdfs:label "Equipped Item Assignment"@en ;
+    rdfs:comment "An item equipped in a specific character equipment slot (weapons, armor, trinkets, relics) with stat prefix, upgrades, and infusions."@en .
+
+priory:BuildTab a owl:Class ;
+    rdfs:label "Character Build Tab"@en ;
+    rdfs:comment "A build template tab containing selected core/elite specializations, traits, and slotted skills."@en .
+
+priory:SpecializationSlot a owl:Class ;
+    rdfs:label "Build Specialization Slot"@en ;
+    rdfs:comment "A specialization line in a build tab with selected major and minor traits."@en .
+
+priory:CharacterAttributes a owl:Class ;
+    rdfs:label "Character Combat Attributes"@en ;
+    rdfs:comment "Primary, secondary, and derived combat attributes of a character."@en .
+
+priory:InventoryBag a owl:Class ;
+    rdfs:label "Character Inventory Bag"@en ;
+    rdfs:comment "A bag container equipped in a character inventory slot."@en .
+
+priory:InventoryItem a owl:Class ;
+    rdfs:label "Inventory Item Stack"@en ;
+    rdfs:comment "An item stack held inside a character inventory bag."@en .
+
+# ==============================================================================
+# Object Properties
+# ==============================================================================
+
+priory:hasProfession a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has profession"@en ;
+    rdfs:comment "Points to the SKOS Concept representing the character's core profession."@en .
+
+priory:hasRace a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has race"@en ;
+    rdfs:comment "Points to the SKOS Concept representing the character's playable race."@en .
+
+priory:hasCraftingDiscipline a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range priory:CharacterDiscipline ;
+    rdfs:label "has crafting discipline"@en ;
+    rdfs:comment "Links a character to their learned crafting disciplines."@en .
+
+priory:discipline a owl:ObjectProperty ;
+    rdfs:domain priory:CharacterDiscipline ;
+    rdfs:range skos:Concept ;
+    rdfs:label "discipline concept"@en ;
+    rdfs:comment "The SKOS discipline concept (e.g. discipline:Weaponsmith, discipline:Armorsmith)."@en .
+
+priory:hasEquipmentTab a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range priory:EquipmentTab ;
+    rdfs:label "has equipment tab"@en ;
+    rdfs:comment "Links a character to their equipment loadout tabs."@en .
+
+priory:hasBuildTab a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range priory:BuildTab ;
+    rdfs:label "has build tab"@en ;
+    rdfs:comment "Links a character to their build template tabs."@en .
+
+priory:hasSpecializationSlot a owl:ObjectProperty ;
+    rdfs:domain priory:BuildTab ;
+    rdfs:range priory:SpecializationSlot ;
+    rdfs:label "has specialization slot"@en ;
+    rdfs:comment "Links a build tab to one of its 3 specialization slots."@en .
+
+priory:hasSpecialization a owl:ObjectProperty ;
+    rdfs:domain priory:SpecializationSlot ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has specialization"@en ;
+    rdfs:comment "Points to the core or elite specialization SKOS concept."@en .
+
+priory:hasAttributes a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range priory:CharacterAttributes ;
+    rdfs:label "has combat attributes"@en ;
+    rdfs:comment "Links a character to their combat attribute profile."@en .
+
+priory:equippedItem a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:Character priory:EquipmentTab) ] ;
+    rdfs:range priory:EquippedItem ;
+    rdfs:label "equipped item"@en ;
+    rdfs:comment "Links a character or equipment tab to an equipped gear item."@en .
+
+priory:inSlot a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:EquippedItem priory:InventoryBag) ] ;
+    rdfs:range skos:Concept ;
+    rdfs:label "in slot"@en ;
+    rdfs:comment "Points to the SKOS equipment slot concept (e.g. slot:WeaponSlotMainHand1, slot:Helm)."@en .
+
+priory:item a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:EquippedItem priory:InventoryItem) ] ;
+    rdfs:range priory:Item ;
+    rdfs:label "item"@en ;
+    rdfs:comment "Points to the canonical game item individual."@en .
+
+priory:hasStatCombination a owl:ObjectProperty ;
+    rdfs:domain priory:EquippedItem ;
+    rdfs:range skos:Concept ;
+    rdfs:label "has stat combination"@en ;
+    rdfs:comment "Points to the item prefix stat combination (e.g. Berserker's, Viper's, Celestial)."@en .
+
+priory:slottedUpgrade a owl:ObjectProperty ;
+    rdfs:domain priory:EquippedItem ;
+    rdfs:range priory:Item ;
+    rdfs:label "slotted upgrade"@en ;
+    rdfs:comment "Links an equipped piece to a slotted Rune, Sigil, or Relic upgrade."@en .
+
+priory:slottedInfusion a owl:ObjectProperty ;
+    rdfs:domain priory:EquippedItem ;
+    rdfs:range priory:Item ;
+    rdfs:label "slotted infusion"@en ;
+    rdfs:comment "Links an equipped piece to a slotted Agony or Stat Infusion."@en .
+
+priory:hasInventoryBag a owl:ObjectProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range priory:InventoryBag ;
+    rdfs:label "has inventory bag"@en ;
+    rdfs:comment "Links a character to an equipped inventory bag."@en .
+
+priory:containsItem a owl:ObjectProperty ;
+    rdfs:domain priory:InventoryBag ;
+    rdfs:range priory:InventoryItem ;
+    rdfs:label "contains item"@en ;
+    rdfs:comment "Links an inventory bag to an item stack contained within it."@en .
+
+priory:usesArmorWeight a owl:ObjectProperty ;
+    rdfs:domain skos:Concept ;
+    rdfs:range skos:Concept ;
+    rdfs:label "uses armor weight"@en ;
+    rdfs:comment "Declares the armor weight class (Heavy, Medium, Light) usable by a profession."@en .
+
+priory:canEquipWeaponType a owl:ObjectProperty ;
+    rdfs:domain skos:Concept ;
+    rdfs:range skos:Concept ;
+    rdfs:label "can equip weapon type"@en ;
+    rdfs:comment "Declares the weapon types (Greatsword, Sword, Staff, etc.) equipable by a profession."@en .
+
+# ==============================================================================
+# Datatype Properties
+# ==============================================================================
+
+priory:characterName a owl:DatatypeProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range xsd:string ;
+    rdfs:label "character name"@en .
+
+priory:characterLevel a owl:DatatypeProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range xsd:integer ;
+    rdfs:label "character level (1-80)"@en .
+
+priory:playtimeHours a owl:DatatypeProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range xsd:integer ;
+    rdfs:label "character playtime in hours"@en .
+
+priory:creationDate a owl:DatatypeProperty ;
+    rdfs:domain priory:Character ;
+    rdfs:range xsd:string ;
+    rdfs:label "character creation date"@en .
+
+priory:craftingRating a owl:DatatypeProperty ;
+    rdfs:domain priory:CharacterDiscipline ;
+    rdfs:range xsd:integer ;
+    rdfs:label "crafting rating (0-500)"@en .
+
+priory:isActive a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:CharacterDiscipline priory:EquipmentTab priory:BuildTab) ] ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is active flag"@en .
+
+priory:tabIndex a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:EquipmentTab priory:BuildTab) ] ;
+    rdfs:range xsd:integer ;
+    rdfs:label "tab index number"@en .
+
+priory:tabName a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:EquipmentTab priory:BuildTab) ] ;
+    rdfs:range xsd:string ;
+    rdfs:label "tab display name"@en .
+
+priory:isEliteSpecialization a owl:DatatypeProperty ;
+    rdfs:domain priory:SpecializationSlot ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is elite specialization"@en .
+
+priory:selectedMajorTrait1 a owl:DatatypeProperty ;
+    rdfs:domain priory:SpecializationSlot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "selected major trait tier 1 ID"@en .
+
+priory:selectedMajorTrait2 a owl:DatatypeProperty ;
+    rdfs:domain priory:SpecializationSlot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "selected major trait tier 2 ID"@en .
+
+priory:selectedMajorTrait3 a owl:DatatypeProperty ;
+    rdfs:domain priory:SpecializationSlot ;
+    rdfs:range xsd:integer ;
+    rdfs:label "selected major trait tier 3 ID"@en .
+
+priory:healSkillId a owl:DatatypeProperty ;
+    rdfs:domain priory:BuildTab ;
+    rdfs:range xsd:integer ;
+    rdfs:label "slotted heal skill ID"@en .
+
+priory:utility1SkillId a owl:DatatypeProperty ;
+    rdfs:domain priory:BuildTab ;
+    rdfs:range xsd:integer ;
+    rdfs:label "slotted utility skill 1 ID"@en .
+
+priory:utility2SkillId a owl:DatatypeProperty ;
+    rdfs:domain priory:BuildTab ;
+    rdfs:range xsd:integer ;
+    rdfs:label "slotted utility skill 2 ID"@en .
+
+priory:utility3SkillId a owl:DatatypeProperty ;
+    rdfs:domain priory:BuildTab ;
+    rdfs:range xsd:integer ;
+    rdfs:label "slotted utility skill 3 ID"@en .
+
+priory:eliteSkillId a owl:DatatypeProperty ;
+    rdfs:domain priory:BuildTab ;
+    rdfs:range xsd:integer ;
+    rdfs:label "slotted elite skill ID"@en .
+
+priory:bindingStatus a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:EquippedItem priory:InventoryItem) ] ;
+    rdfs:range xsd:string ;
+    rdfs:label "binding status"@en .
+
+priory:itemSkinId a owl:DatatypeProperty ;
+    rdfs:domain priory:EquippedItem ;
+    rdfs:range xsd:integer ;
+    rdfs:label "transmuted skin ID"@en .
+
+# --- Primary & Secondary Combat Attributes ---
+priory:power a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Power attribute"@en .
+priory:precision a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Precision attribute"@en .
+priory:toughness a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Toughness attribute"@en .
+priory:vitality a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Vitality attribute"@en .
+priory:concentration a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Concentration attribute"@en .
+priory:conditionDamage a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Condition Damage attribute"@en .
+priory:expertise a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Expertise attribute"@en .
+priory:ferocity a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Ferocity attribute"@en .
+priory:healingPower a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Healing Power attribute"@en .
+priory:armorRating a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Total Armor Rating"@en .
+priory:maxHealth a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:integer ; rdfs:label "Maximum Health Pool"@en .
+priory:criticalChancePercent a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:decimal ; rdfs:label "Critical Strike Chance %"@en .
+priory:criticalDamagePercent a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:decimal ; rdfs:label "Critical Damage Ferocity %"@en .
+priory:boonDurationPercent a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:decimal ; rdfs:label "Boon Duration %"@en .
+priory:conditionDurationPercent a owl:DatatypeProperty ; rdfs:domain priory:CharacterAttributes ; rdfs:range xsd:decimal ; rdfs:label "Condition Duration %"@en .
+
+priory:slotIndex a owl:DatatypeProperty ;
+    rdfs:domain priory:InventoryItem ;
+    rdfs:range xsd:integer ;
+    rdfs:label "bag slot index"@en .
+
+priory:itemQuantity a owl:DatatypeProperty ;
+    rdfs:domain priory:InventoryItem ;
+    rdfs:range xsd:integer ;
+    rdfs:label "stack quantity"@en .
+
+# ==============================================================================
+# Controlled Vocabularies: Professions & Taxonomies (SKOS)
+# ==============================================================================
+
+# Armor Weight Concepts
+armor:Heavy a skos:Concept ; skos:exactMatch armor:HeavyArmor ; skos:prefLabel "Heavy Armor"@en .
+armor:Medium a skos:Concept ; skos:exactMatch armor:MediumArmor ; skos:prefLabel "Medium Armor"@en .
+armor:Light a skos:Concept ; skos:exactMatch armor:LightArmor ; skos:prefLabel "Light Armor"@en .
+
+armor:HeavyArmor a skos:Concept ; skos:prefLabel "Heavy Armor"@en .
+armor:MediumArmor a skos:Concept ; skos:prefLabel "Medium Armor"@en .
+armor:LightArmor a skos:Concept ; skos:prefLabel "Light Armor"@en .
+
+priory:ProfessionScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Profession Taxonomy"@en ;
+    skos:prefLabel "Profession Scheme"@en .
+
+profession:Guardian a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Guardian"@en ;
+    priory:usesArmorWeight armor:HeavyArmor, armor:Heavy ;
+    priory:canEquipWeaponType weapon:Greatsword, weapon:Hammer, weapon:Mace, weapon:Scepter, weapon:Sword, weapon:Focus, weapon:Shield, weapon:Torch, weapon:Staff, weapon:Spear, weapon:Longbow, weapon:Pistol .
+
+profession:Warrior a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Warrior"@en ;
+    priory:usesArmorWeight armor:HeavyArmor, armor:Heavy ;
+    priory:canEquipWeaponType weapon:Axe, weapon:Dagger, weapon:Mace, weapon:Pistol, weapon:Sword, weapon:Greatsword, weapon:Hammer, weapon:Longbow, weapon:Rifle, weapon:Shield, weapon:Warhorn, weapon:Staff, weapon:Spear .
+
+profession:Revenant a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Revenant"@en ;
+    priory:usesArmorWeight armor:HeavyArmor, armor:Heavy ;
+    priory:canEquipWeaponType weapon:Mace, weapon:Sword, weapon:Scepter, weapon:Axe, weapon:Shield, weapon:Greatsword, weapon:Hammer, weapon:ShortBow, weapon:Staff, weapon:Spear .
+
+profession:Engineer a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Engineer"@en ;
+    priory:usesArmorWeight armor:MediumArmor, armor:Medium ;
+    priory:canEquipWeaponType weapon:Pistol, weapon:Sword, weapon:Mace, weapon:Shield, weapon:Rifle, weapon:ShortBow, weapon:Hammer, weapon:Spear .
+
+profession:Ranger a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Ranger"@en ;
+    priory:usesArmorWeight armor:MediumArmor, armor:Medium ;
+    priory:canEquipWeaponType weapon:Axe, weapon:Dagger, weapon:Sword, weapon:Mace, weapon:Torch, weapon:Warhorn, weapon:Greatsword, weapon:Longbow, weapon:ShortBow, weapon:Staff, weapon:Hammer, weapon:Spear .
+
+profession:Thief a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Thief"@en ;
+    priory:usesArmorWeight armor:MediumArmor, armor:Medium ;
+    priory:canEquipWeaponType weapon:Dagger, weapon:Pistol, weapon:Sword, weapon:Axe, weapon:ShortBow, weapon:Rifle, weapon:Staff, weapon:Scepter, weapon:Spear .
+
+profession:Elementalist a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Elementalist"@en ;
+    priory:usesArmorWeight armor:LightArmor, armor:Light ;
+    priory:canEquipWeaponType weapon:Dagger, weapon:Scepter, weapon:Pistol, weapon:Sword, weapon:Focus, weapon:Staff, weapon:Hammer, weapon:Warhorn, weapon:Spear .
+
+profession:Mesmer a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Mesmer"@en ;
+    priory:usesArmorWeight armor:LightArmor, armor:Light ;
+    priory:canEquipWeaponType weapon:Axe, weapon:Dagger, weapon:Scepter, weapon:Sword, weapon:Focus, weapon:Pistol, weapon:Shield, weapon:Torch, weapon:Greatsword, weapon:Staff, weapon:Rifle, weapon:Spear .
+
+profession:Necromancer a skos:Concept ;
+    skos:inScheme priory:ProfessionScheme ;
+    skos:prefLabel "Necromancer"@en ;
+    priory:usesArmorWeight armor:LightArmor, armor:Light ;
+    priory:canEquipWeaponType weapon:Axe, weapon:Dagger, weapon:Pistol, weapon:Scepter, weapon:Sword, weapon:Focus, weapon:Torch, weapon:Warhorn, weapon:Greatsword, weapon:Staff, weapon:Spear .
+
+# ==============================================================================
+# Controlled Vocabularies: Playable Races (SKOS)
+# ==============================================================================
+
+priory:RaceScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Playable Races Taxonomy"@en ;
+    skos:prefLabel "Race Scheme"@en .
+
+race:Human a skos:Concept ; skos:inScheme priory:RaceScheme ; skos:prefLabel "Human"@en .
+race:Charr a skos:Concept ; skos:inScheme priory:RaceScheme ; skos:prefLabel "Charr"@en .
+race:Norn a skos:Concept ; skos:inScheme priory:RaceScheme ; skos:prefLabel "Norn"@en .
+race:Asura a skos:Concept ; skos:inScheme priory:RaceScheme ; skos:prefLabel "Asura"@en .
+race:Sylvari a skos:Concept ; skos:inScheme priory:RaceScheme ; skos:prefLabel "Sylvari"@en .
+
+# ==============================================================================
+# Controlled Vocabularies: Equipment Slots (SKOS)
+# ==============================================================================
+
+priory:SlotScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Equipment & Bag Slots Taxonomy"@en ;
+    skos:prefLabel "Slot Scheme"@en .
+
+slot:WeaponSlotMainHand1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Main-Hand 1"@en .
+slot:WeaponSlotOffHand1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Off-Hand 1"@en .
+slot:WeaponSlotMainHand2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Main-Hand 2"@en .
+slot:WeaponSlotOffHand2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Off-Hand 2"@en .
+slot:WeaponSlotAquatic1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Aquatic Weapon 1"@en .
+slot:WeaponSlotAquatic2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Aquatic Weapon 2"@en .
+
+slot:Helm a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Head / Helm"@en .
+slot:Shoulders a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Shoulders"@en .
+slot:Coat a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Chest / Coat"@en .
+slot:Gloves a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Gloves / Hands"@en .
+slot:Leggings a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Leggings / Legs"@en .
+slot:Boots a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Boots / Feet"@en .
+slot:HelmAquatic a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Aquatic Headgear"@en .
+
+slot:Amulet a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Amulet"@en .
+slot:Ring1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Ring 1"@en .
+slot:Ring2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Ring 2"@en .
+slot:Accessory1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Accessory 1"@en .
+slot:Accessory2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Accessory 2"@en .
+slot:Backpack a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Back Item"@en .
+slot:Relic a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Relic"@en .
+
+slot:Bag0 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 0 (Backpack)"@en .
+slot:Bag1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 1"@en .
+slot:Bag2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 2"@en .
+slot:Bag3 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 3"@en .
+slot:Bag4 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 4"@en .
+slot:Bag5 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 5"@en .
+slot:Bag6 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 6"@en .
+slot:Bag7 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 7"@en .
+slot:Bag8 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 8"@en .
+slot:Bag9 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Inventory Bag Slot 9"@en .
+
+# ==============================================================================
+# Controlled Vocabularies: Item Stat Combinations (SKOS)
+# ==============================================================================
+
+priory:StatCombinationScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Equipment Stat Combinations Taxonomy"@en ;
+    skos:prefLabel "Stat Combination Scheme"@en .
+
+priory:Berserker a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Berserker's"@en .
+priory:Viper a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Viper's"@en .
+priory:Celestial a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Celestial"@en .
+priory:Marauder a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Marauder"@en .
+priory:Harrier a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Harrier's"@en .
+priory:Diviner a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Diviner's"@en .
+priory:Minstrel a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Minstrel's"@en .
+priory:Trailblazer a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Trailblazer's"@en .
+priory:Assassin a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Assassin's"@en .
+priory:Ritualist a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Ritualist's"@en .
+priory:Dragon a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Dragon's"@en .
+priory:Knight a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Knight's"@en .
+priory:Cavalier a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Cavalier's"@en .
+priory:Sinister a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Sinister"@en .
+priory:Grieving a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Grieving"@en .
+
+# ==============================================================================
+# Controlled Vocabularies: Elite & Core Specializations (SKOS)
+# ==============================================================================
+
+priory:SpecializationScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Profession Specializations Taxonomy"@en ;
+    skos:prefLabel "Specialization Scheme"@en .
+
+# Guardian
+priory:Dragonhunter a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Dragonhunter"@en ; priory:isEliteSpecialization true .
+priory:Firebrand a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Firebrand"@en ; priory:isEliteSpecialization true .
+priory:Willbender a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Willbender"@en ; priory:isEliteSpecialization true .
+
+# Warrior
+priory:BerserkerSpec a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Berserker"@en ; priory:isEliteSpecialization true .
+priory:Spellbreaker a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Spellbreaker"@en ; priory:isEliteSpecialization true .
+priory:Bladesworn a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Bladesworn"@en ; priory:isEliteSpecialization true .
+
+# Revenant
+priory:Herald a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Herald"@en ; priory:isEliteSpecialization true .
+priory:Renegade a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Renegade"@en ; priory:isEliteSpecialization true .
+priory:Vindicator a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Vindicator"@en ; priory:isEliteSpecialization true .
+
+# Engineer
+priory:Scrapper a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Scrapper"@en ; priory:isEliteSpecialization true .
+priory:Holosmith a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Holosmith"@en ; priory:isEliteSpecialization true .
+priory:Mechanist a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Mechanist"@en ; priory:isEliteSpecialization true .
+
+# Ranger
+priory:Druid a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Druid"@en ; priory:isEliteSpecialization true .
+priory:Soulbeast a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Soulbeast"@en ; priory:isEliteSpecialization true .
+priory:Untamed a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Untamed"@en ; priory:isEliteSpecialization true .
+
+# Thief
+priory:Daredevil a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Daredevil"@en ; priory:isEliteSpecialization true .
+priory:Deadeye a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Deadeye"@en ; priory:isEliteSpecialization true .
+priory:Specter a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Specter"@en ; priory:isEliteSpecialization true .
+
+# Elementalist
+priory:Tempest a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Tempest"@en ; priory:isEliteSpecialization true .
+priory:Weaver a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Weaver"@en ; priory:isEliteSpecialization true .
+priory:Catalyst a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Catalyst"@en ; priory:isEliteSpecialization true .
+
+# Mesmer
+priory:Chronomancer a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Chronomancer"@en ; priory:isEliteSpecialization true .
+priory:Mirage a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Mirage"@en ; priory:isEliteSpecialization true .
+priory:Virtuoso a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Virtuoso"@en ; priory:isEliteSpecialization true .
+
+# Necromancer
+priory:Reaper a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Reaper"@en ; priory:isEliteSpecialization true .
+priory:Scourge a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Scourge"@en ; priory:isEliteSpecialization true .
+priory:Harbinger a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Harbinger"@en ; priory:isEliteSpecialization true .
+

@@ -15,8 +15,11 @@ class TestOntologyAndSHACL(unittest.TestCase):
         """Validates that all ontology schemas, reference vocabularies, and instances conform to SHACL shapes."""
         data_graph = rdflib.Graph()
 
-        # 1. Load Core Schema
+        # 1. Load Core & Character Schemas
         data_graph.parse(DEF_REPO / "ontology" / "priory_core.ttl", format="turtle")
+        char_schema = DEF_REPO / "ontology" / "character.ttl"
+        if char_schema.exists():
+            data_graph.parse(char_schema, format="turtle")
 
         # 2. Load Reference Vocabularies from gw2-priory-ref
         for ttl in (REF_REPO / "vocab").glob("*.ttl"):
@@ -29,6 +32,8 @@ class TestOntologyAndSHACL(unittest.TestCase):
         # 4. Load SHACL Shapes
         shacl_graph = rdflib.Graph()
         shacl_graph.parse(DEF_REPO / "ontology" / "priory_shacl.ttl", format="turtle")
+        for ttl in (DEF_REPO / "ontology" / "shapes").glob("*.ttl"):
+            shacl_graph.parse(ttl, format="turtle")
 
         # Validate
         conforms, results_graph, results_text = pyshacl.validate(

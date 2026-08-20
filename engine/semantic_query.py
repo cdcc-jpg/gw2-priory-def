@@ -18,11 +18,16 @@ from engine.graph_store import (
     PRIORY_REF,
     ITEM,
     RECIPE,
+    CHARACTER,
     WEAPON,
     RARITY,
     DISCIPLINE,
     GAMEMODE,
-    CURRENCY
+    CURRENCY,
+    ARMOR,
+    SLOT,
+    PROFESSION,
+    RACE
 )
 
 SKOS = rdflib.SKOS
@@ -341,3 +346,299 @@ class SemanticQueryService:
                 "synonyms": [s.strip() for s in r.get("synonyms", "").split(",") if s.strip()]
             }
         return vocab
+
+    # ==========================================================================
+    # Ephemeral Character State Reasoning & Capability Queries
+    # ==========================================================================
+
+    def find_capable_crafting_characters(self, discipline: str, min_rating: int = 0) -> List[Dict[str, Any]]:
+        """Queries which character(s) on the account satisfy a recipe's discipline and rating requirement."""
+        clean_disc = discipline.strip().lower()
+        sparql = """
+        SELECT DISTINCT ?charUri ?charName ?charLevel ?profLabel ?discipline ?rating ?isActive WHERE {
+            ?charUri a priory:Character ;
+                     priory:characterName ?charName ;
+                     priory:hasCraftingDiscipline ?cd .
+            OPTIONAL { ?charUri priory:characterLevel ?charLevel }
+            OPTIONAL { 
+                ?charUri priory:hasProfession ?prof . 
+                OPTIONAL { ?prof skos:prefLabel ?profLabel }
+            }
+            ?cd priory:discipline ?discipline ;
+                priory:craftingRating ?rating .
+            OPTIONAL { ?cd priory:isActive ?isActive }
+            FILTER (?rating >= ?minRating)
+            FILTER (LCASE(STRAFTER(STR(?discipline), "ref/discipline/")) = ?discLower || LCASE(STR(?discipline)) = ?discLower)
+        } ORDER BY DESC(?isActive) DESC(?rating)
+        """
+        return self.store.query(sparql, init_bindings={"minRating": Literal(min_rating), "discLower": Literal(clean_disc)})
+
+    def check_item_character_equipability(self, character_name: str, item_id: int) -> Dict[str, Any]:
+        """Validates if a character can equip an item via SKOS weapon/armor taxonomies without hardcoding."""
+        sparql = """
+        SELECT DISTINCT ?charName ?profLabel ?itemLabel ?itemType ?armorWeight ?weaponType ?profArmor ?profWeapon WHERE {
+            ?char a priory:Character ;
+                  priory:characterName ?charName ;
+                  priory:hasProfession ?prof .
+            OPTIONAL { ?prof skos:prefLabel ?profLabel }
+            ?item priory:gw2Id ?gw2Id ;
+                  rdfs:label ?itemLabel .
+            OPTIONAL { ?item a ?itemType . FILTER (?itemType != owl:NamedIndividual && ?itemType != priory:Item) }
+            OPTIONAL { 
+                { ?item priory:hasArmorWeight ?armorWeight }
+                UNION { ?item a priory:HeavyArmor . BIND(armor:HeavyArmor AS ?armorWeight) }
+                UNION { ?item a priory:MediumArmor . BIND(armor:MediumArmor AS ?armorWeight) }
+                UNION { ?item a priory:LightArmor . BIND(armor:LightArmor AS ?armorWeight) }
+            }
+            OPTIONAL { ?item priory:hasWeaponType ?weaponType }
+            OPTIONAL { 
+                ?prof priory:usesArmorWeight ?profArmor .
+                FILTER (?profArmor = ?armorWeight || EXISTS { ?armorWeight skos:broader+ ?profArmor } || EXISTS { ?armorWeight skos:exactMatch ?profArmor } || EXISTS { ?profArmor skos:exactMatch ?armorWeight })
+            }
+            OPTIONAL { 
+                ?prof priory:canEquipWeaponType ?profWeapon .
+                FILTER (?profWeapon = ?weaponType || EXISTS { ?weaponType skos:broader+ ?profWeapon } || EXISTS { ?weaponType skos:exactMatch ?profWeapon } || EXISTS { ?profWeapon skos:exactMatch ?weaponType })
+            }
+            FILTER (STR(?charName) = ?charNameStr)
+        } LIMIT 1
+        """
+        res = self.store.query(sparql, init_bindings={"charNameStr": Literal(character_name), "gw2Id": Literal(item_id)})
+        if not res:
+            return {
+                "character_name": character_name,
+                "item_id": item_id,
+                "can_equip": False,
+                "reason": "Character or item not found in knowledge graph."
+            }
+
+        info = res[0]
+        armor_wt = info.get("armorWeight")
+        weapon_tp = info.get("weaponType")
+        prof_armor = info.get("profArmor")
+        prof_weapon = info.get("profWeapon")
+        prof_name = info.get("profLabel", "Unknown Profession")
+        item_name = info.get("itemLabel", f"Item {item_id}")
+
+        if armor_wt:
+            can_equip = bool(prof_armor)
+            weight_name = str(armor_wt).split("/")[-1]
+            reason = f"{prof_name} can wear {weight_name}" if can_equip else f"{prof_name} cannot wear {weight_name}"
+        elif weapon_tp:
+            can_equip = bool(prof_weapon)
+            w_name = str(weapon_tp).split("/")[-1]
+            reason = f"{prof_name} can wield {w_name}" if can_equip else f"{prof_name} cannot wield {w_name}"
+        else:
+            # Universal item (Trinket, Relic, Backpack, Upgrade)
+            can_equip = True
+            reason = f"Universal equipment equipable by {prof_name}"
+
+        return {
+            "character_name": character_name,
+            "profession": prof_name,
+            "item_id": item_id,
+            "item_name": item_name,
+            "can_equip": can_equip,
+            "reason": reason
+        }
+
+    def find_character_item_locations(self, item_id: int) -> List[Dict[str, Any]]:
+        """Queries which characters hold an item in their inventory bags and the exact slot."""
+        sparql = """
+        SELECT DISTINCT ?charName ?charLevel ?profLabel ?bagSlot ?slotIndex ?quantity WHERE {
+            ?char a priory:Character ;
+                  priory:characterName ?charName ;
+                  priory:hasInventoryBag ?bag .
+            OPTIONAL { ?char priory:characterLevel ?charLevel }
+            OPTIONAL { ?char priory:hasProfession ?prof . ?prof skos:prefLabel ?profLabel }
+            ?bag priory:inSlot ?bagSlot ;
+                 priory:containsItem ?inv .
+            ?inv priory:item ?item ;
+                 priory:itemQuantity ?quantity .
+            OPTIONAL { ?inv priory:slotIndex ?slotIndex }
+            ?item priory:gw2Id ?gw2Id .
+        } ORDER BY ?charName ?bagSlot ?slotIndex
+        """
+        results = self.store.query(sparql, init_bindings={"gw2Id": Literal(item_id)})
+        locations = []
+        for r in results:
+            bag_name = str(r["bagSlot"]).split("/")[-1]
+            locations.append({
+                "character_name": r["charName"],
+                "character_level": r.get("charLevel", 80),
+                "profession": r.get("profLabel", "Unknown"),
+                "bag_slot": bag_name,
+                "slot_index": r.get("slotIndex", 0),
+                "quantity": int(r.get("quantity", 1))
+            })
+        return locations
+
+    def get_character_semantic_context(self, character_name: Optional[str] = None) -> str:
+        """Serializes hydrated character knowledge into Markdown facts for LLM prompts sorted by playtime."""
+        chars_query = """
+        SELECT DISTINCT ?char ?charName ?charLevel ?profLabel ?raceLabel ?playtime ?created WHERE {
+            ?char a priory:Character ;
+                  priory:characterName ?charName ;
+                  priory:hasProfession ?prof ;
+                  priory:hasRace ?race .
+            OPTIONAL { ?char priory:characterLevel ?charLevel }
+            OPTIONAL { ?char priory:playtimeHours ?playtime }
+            OPTIONAL { ?char priory:creationDate ?created }
+            OPTIONAL { ?prof skos:prefLabel ?profLabel }
+            OPTIONAL { ?race skos:prefLabel ?raceLabel }
+        } ORDER BY DESC(?playtime)
+        """
+        chars = self.store.query(chars_query)
+        if character_name:
+            chars = [c for c in chars if str(c["charName"]).lower() == character_name.lower()]
+
+        if not chars:
+            return "No character profiles currently hydrated in knowledge graph."
+
+        lines = ["### Account Character Profiles (Ephemeral Semantic Graph)"]
+        for c in chars:
+            c_uri = URIRef(c["char"])
+            c_name = c["charName"]
+            lvl = c.get("charLevel", 80)
+            prof = c.get("profLabel", "Unknown Profession")
+            race = c.get("raceLabel", "Unknown Race")
+            pt = c.get("playtime")
+            pt_str = f" | ⏱️ {pt} hours playtime" if pt is not None else ""
+            lines.append(f"\n- **Character: {c_name}** (Level {lvl} {race} {prof}{pt_str})")
+
+            # Crafting disciplines
+            disc_query = """
+            SELECT DISTINCT ?discipline ?rating ?isActive WHERE {
+                ?char priory:hasCraftingDiscipline ?cd .
+                ?cd priory:discipline ?discipline ;
+                    priory:craftingRating ?rating .
+                OPTIONAL { ?cd priory:isActive ?isActive }
+            } ORDER BY DESC(?rating)
+            """
+            discs = self.store.query(disc_query, init_bindings={"char": c_uri})
+            if discs:
+                disc_strs = [
+                    f"{str(d['discipline']).split('/')[-1]} {d['rating']}{' (Active)' if d.get('isActive') else ' (Inactive)'}"
+                    for d in discs
+                ]
+                lines.append(f"  * **Crafting Disciplines:** {', '.join(disc_strs)}")
+
+            # Equipped gear with stat combinations and upgrades
+            gear_query = """
+            SELECT DISTINCT ?slot ?itemLabel ?itemId ?statPrefix ?upgradeLabel WHERE {
+                ?char priory:equippedItem ?eq .
+                ?eq priory:inSlot ?slot ;
+                    priory:item ?item .
+                ?item priory:gw2Id ?itemId ;
+                      rdfs:label ?itemLabel .
+                OPTIONAL { ?eq priory:hasStatCombination ?stat . ?stat skos:prefLabel ?statPrefix }
+                OPTIONAL { ?eq priory:slottedUpgrade ?upg . ?upg rdfs:label ?upgradeLabel }
+            }
+            """
+            gear = self.store.query(gear_query, init_bindings={"char": c_uri})
+            if gear:
+                gear_items = []
+                for g in gear[:8]:
+                    prefix = f" [{g['statPrefix']}]" if g.get("statPrefix") else ""
+                    upg = f" ({g['upgradeLabel']})" if g.get("upgradeLabel") else ""
+                    gear_items.append(f"{str(g['slot']).split('/')[-1]}: {g['itemLabel']}{prefix}{upg}")
+                lines.append(f"  * **Equipped Items:** {'; '.join(gear_items)}")
+
+            # Active Build Specializations
+            build_query = """
+            SELECT DISTINCT ?tabIdx ?spec WHERE {
+                ?char priory:hasBuildTab ?bt .
+                ?bt priory:isActive true ;
+                    priory:tabIndex ?tabIdx ;
+                    priory:hasSpecializationSlot ?ss .
+                ?ss priory:hasSpecialization ?spec .
+            }
+            """
+            specs = self.store.query(build_query, init_bindings={"char": c_uri})
+            if specs:
+                spec_labels = [str(s["spec"]).split("/")[-1] for s in specs]
+                lines.append(f"  * **Active Build Specializations:** {', '.join(spec_labels)}")
+
+        return "\n".join(lines)
+
+    def find_characters_by_specialization(self, spec_name: str) -> List[Dict[str, Any]]:
+        """Finds all characters running a specific core or elite specialization in any build tab."""
+        sparql = """
+        SELECT DISTINCT ?charName ?charLevel ?profLabel ?tabIndex ?isActive WHERE {
+            ?char a priory:Character ;
+                  priory:characterName ?charName ;
+                  priory:hasBuildTab ?bt .
+            OPTIONAL { ?char priory:characterLevel ?charLevel }
+            OPTIONAL { ?char priory:hasProfession ?prof . ?prof skos:prefLabel ?profLabel }
+            ?bt priory:tabIndex ?tabIndex ;
+                priory:hasSpecializationSlot ?ss .
+            OPTIONAL { ?bt priory:isActive ?isActive }
+            ?ss priory:hasSpecialization ?spec .
+            FILTER (CONTAINS(LCASE(STR(?spec)), LCASE(?specQuery)))
+        } ORDER BY ?charName ?tabIndex
+        """
+        return self.store.query(sparql, init_bindings={"specQuery": Literal(spec_name.lower())})
+
+    def find_equipped_legendaries_across_characters(self) -> List[Dict[str, Any]]:
+        """Locates all legendary items currently equipped on any character across the account."""
+        sparql = """
+        SELECT DISTINCT ?charName ?profLabel ?slotName ?itemLabel ?itemId WHERE {
+            ?char a priory:Character ;
+                  priory:characterName ?charName ;
+                  priory:equippedItem ?eq .
+            OPTIONAL { ?char priory:hasProfession ?prof . ?prof skos:prefLabel ?profLabel }
+            ?eq priory:inSlot ?slot ;
+                priory:item ?item .
+            ?item a priory:LegendaryItem ;
+                  priory:gw2Id ?itemId ;
+                  rdfs:label ?itemLabel .
+            BIND(STRAFTER(STR(?slot), "slot/") AS ?slotName)
+        } ORDER BY ?charName ?slotName
+        """
+        return self.store.query(sparql)
+
+    # ==========================================================================
+    # MCP (Model Context Protocol) Tool Handlers
+    # ==========================================================================
+
+    def handle_mcp_character_crafting(self, discipline: str, min_rating: int = 0) -> Dict[str, Any]:
+        """MCP Tool Handler: priory_character_crafting."""
+        capable = self.find_capable_crafting_characters(discipline, min_rating)
+        return {
+            "requested_discipline": discipline,
+            "min_rating": min_rating,
+            "capable_character_count": len(capable),
+            "capable_characters": [
+                {
+                    "character_name": c["charName"],
+                    "character_level": c.get("charLevel", 80),
+                    "profession": c.get("profLabel", "Unknown"),
+                    "discipline": str(c["discipline"]).split("/")[-1],
+                    "crafting_rating": c["rating"],
+                    "is_active": c.get("isActive", True)
+                }
+                for c in capable
+            ]
+        }
+
+    def handle_mcp_character_equipability(self, character_name: str, item_id: int) -> Dict[str, Any]:
+        """MCP Tool Handler: priory_character_equipability."""
+        return self.check_item_character_equipability(character_name, item_id)
+
+    def handle_mcp_character_inventory(self, item_id: int) -> Dict[str, Any]:
+        """MCP Tool Handler: priory_character_inventory."""
+        locations = self.find_character_item_locations(item_id)
+        total_held = sum(loc["quantity"] for loc in locations)
+        return {
+            "item_id": item_id,
+            "total_quantity_in_character_bags": total_held,
+            "holding_characters_count": len(set(loc["character_name"] for loc in locations)),
+            "locations": locations
+        }
+
+    def handle_mcp_character_summary(self, character_name: Optional[str] = None) -> Dict[str, Any]:
+        """MCP Tool Handler: priory_character_summary."""
+        context = self.get_character_semantic_context(character_name)
+        return {
+            "character_name_filter": character_name,
+            "semantic_markdown_profile": context
+        }

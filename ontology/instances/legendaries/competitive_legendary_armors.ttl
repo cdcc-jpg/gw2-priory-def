@@ -6,6 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix item: <https://priory.gw2/id/item/> .
+@prefix armor: <https://priory.gw2/ref/armor/> .
 
 # ==============================================================================
 # COMPETITIVE LEGENDARY ARMORS (WvW & PvP)
@@ -16,148 +17,166 @@
 # ------------------------------------------------------------------------------
 
 # Heavy Armor
-item:803841 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803841 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Warplate" ;
     priory:gw2Id 803841 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Warplate", "WvW Legendary Chest", "Heavy WvW Armor", "Triumphant Warplate" ;
     skos:definition "WvW Legendary Heavy Chest Armor forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:801451 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:801451 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Pauldrons" ;
     priory:gw2Id 801451 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Pauldrons", "WvW Legendary Shoulders", "Heavy WvW Armor" .
 
-item:805571 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805571 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Faceguard" ;
     priory:gw2Id 805571 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Faceguard", "WvW Legendary Helm", "Heavy WvW Armor" .
 
-item:801951 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:801951 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Gauntlets" ;
     priory:gw2Id 801951 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Gauntlets", "WvW Legendary Gloves", "Heavy WvW Armor" .
 
-item:802771 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802771 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Legplates" ;
     priory:gw2Id 802771 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Legplates", "WvW Legendary Pants", "Heavy WvW Armor" .
 
-item:805781 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805781 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Wargreaves" ;
     priory:gw2Id 805781 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Wargreaves", "WvW Legendary Boots", "Heavy WvW Armor" .
 
 # Medium Armor
-item:802481 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802481 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Jerkin" ;
     priory:gw2Id 802481 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Jerkin", "WvW Legendary Medium Chest", "Medium WvW Armor" .
 
-item:801311 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:801311 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Shoulderguards" ;
     priory:gw2Id 801311 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Shoulderguards", "WvW Legendary Medium Shoulders", "Medium WvW Armor" .
 
-item:801611 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:801611 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Mask" ;
     priory:gw2Id 801611 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Mask", "WvW Legendary Medium Helm", "Medium WvW Armor" .
 
-item:802521 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802521 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Vambraces" ;
     priory:gw2Id 802521 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Vambraces", "WvW Legendary Medium Gloves", "Medium WvW Armor" .
 
-item:802811 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802811 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Leggings" ;
     priory:gw2Id 802811 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Leggings", "WvW Legendary Medium Pants", "Medium WvW Armor" .
 
-item:805901 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805901 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Boots" ;
     priory:gw2Id 805901 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Boots", "WvW Legendary Medium Boots", "Medium WvW Armor" .
 
 # Light Armor
-item:803561 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803561 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Vestments" ;
     priory:gw2Id 803561 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Vestments", "WvW Legendary Light Chest", "Light WvW Armor" .
 
-item:802441 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802441 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Mantle" ;
     priory:gw2Id 802441 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Mantle", "WvW Legendary Light Shoulders", "Light WvW Armor" .
 
-item:804121 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:804121 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Hood" ;
     priory:gw2Id 804121 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Hood", "WvW Legendary Light Helm", "Light WvW Armor" .
 
-item:801881 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:801881 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Wristguards" ;
     priory:gw2Id 801881 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Wristguards", "WvW Legendary Light Gloves", "Light WvW Armor" .
 
-item:804551 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:804551 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Pants" ;
     priory:gw2Id 804551 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Triumphant Hero's Pants", "WvW Legendary Light Pants", "Light WvW Armor" .
 
-item:803241 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803241 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Shoes" ;
     priory:gw2Id 803241 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
@@ -169,148 +188,166 @@ item:803241 a priory:LegendaryArmor, owl:NamedIndividual ;
 # ------------------------------------------------------------------------------
 
 # Heavy Armor
-item:806121 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:806121 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Breastplate" ;
     priory:gw2Id 806121 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Breastplate", "PvP Legendary Chest", "Heavy PvP Armor" ;
     skos:definition "PvP Legendary Heavy Chest Armor forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:803451 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803451 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Pauldrons" ;
     priory:gw2Id 803451 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Pauldrons", "PvP Legendary Shoulders", "Heavy PvP Armor" .
 
-item:805121 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805121 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Helm" ;
     priory:gw2Id 805121 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Helm", "PvP Legendary Helm", "Heavy PvP Armor" .
 
-item:804351 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:804351 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Gauntlets" ;
     priory:gw2Id 804351 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Gauntlets", "PvP Legendary Gloves", "Heavy PvP Armor" .
 
-item:802611 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802611 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Legguards" ;
     priory:gw2Id 802611 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Legguards", "PvP Legendary Pants", "Heavy PvP Armor" .
 
-item:805091 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805091 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Greaves" ;
     priory:gw2Id 805091 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Greaves", "PvP Legendary Boots", "Heavy PvP Armor" .
 
 # Medium Armor
-item:806341 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:806341 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Jerkin" ;
     priory:gw2Id 806341 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Jerkin", "PvP Legendary Medium Chest", "Medium PvP Armor" .
 
-item:803211 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803211 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Shoulderguards" ;
     priory:gw2Id 803211 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Shoulderguards", "PvP Legendary Medium Shoulders", "Medium PvP Armor" .
 
-item:804891 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:804891 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Mask" ;
     priory:gw2Id 804891 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Mask", "PvP Legendary Medium Helm", "Medium PvP Armor" .
 
-item:803881 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803881 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Vambraces" ;
     priory:gw2Id 803881 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Vambraces", "PvP Legendary Medium Gloves", "Medium PvP Armor" .
 
-item:802731 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802731 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Leggings" ;
     priory:gw2Id 802731 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Leggings", "PvP Legendary Medium Pants", "Medium PvP Armor" .
 
-item:805621 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805621 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Boots" ;
     priory:gw2Id 805621 ;
+    priory:hasArmorWeight armor:MediumArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Boots", "PvP Legendary Medium Boots", "Medium PvP Armor" .
 
 # Light Armor
-item:806551 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:806551 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Vestments" ;
     priory:gw2Id 806551 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Vestments", "PvP Legendary Light Chest", "Light PvP Armor" .
 
-item:803321 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803321 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Mantle" ;
     priory:gw2Id 803321 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Mantle", "PvP Legendary Light Shoulders", "Light PvP Armor" .
 
-item:804981 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:804981 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Hood" ;
     priory:gw2Id 804981 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Hood", "PvP Legendary Light Helm", "Light PvP Armor" .
 
-item:803991 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:803991 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Gloves" ;
     priory:gw2Id 803991 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Gloves", "PvP Legendary Light Gloves", "Light PvP Armor" .
 
-item:802891 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:802891 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Pants" ;
     priory:gw2Id 802891 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Pants", "PvP Legendary Light Pants", "Light PvP Armor" .
 
-item:805741 a priory:LegendaryArmor, owl:NamedIndividual ;
+item:805741 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Shoes" ;
     priory:gw2Id 805741 ;
+    priory:hasArmorWeight armor:LightArmor ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;

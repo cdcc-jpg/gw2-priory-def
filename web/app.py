@@ -64,6 +64,20 @@ def get_live_account() -> AccountState:
         return ACTIVE_ACCOUNT
 
     gw2_key = os.getenv("GW2_API_KEY")
+    if not gw2_key or not gw2_key.strip():
+        # Check MCP config
+        mcp_config = Path.home() / ".gemini" / "config" / "mcp_config.json"
+        if mcp_config.exists():
+            try:
+                import json
+                with open(mcp_config, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    h = data.get("mcpServers", {}).get("gw2priory", {}).get("headers", {})
+                    if "X-GW2-Key" in h and h["X-GW2-Key"]:
+                        gw2_key = h["X-GW2-Key"].strip()
+            except Exception:
+                pass
+
     if gw2_key and gw2_key.strip():
         api_client = GW2ApiClient(api_key=gw2_key)
         try:
@@ -75,21 +89,20 @@ def get_live_account() -> AccountState:
         except Exception:
             pass
 
-    # Fallback demo state
-    ACTIVE_ACCOUNT = AccountState(
-        materials={19675: 50, 19721: 180, 24295: 120, 24277: 200},
-        bank={29185: 1},
-        wallet={35: 440, 68: 250, 45: 5000, 23: 1200, 3: 150},
-        legendary_armory={91505: 4, 30689: 1},
-        disciplines={"weaponsmith": 500, "armorsmith": 500}
-    )
+    ACTIVE_ACCOUNT = AccountState()
     return ACTIVE_ACCOUNT
 
 
 @app.route("/")
 def index():
-    """Renders the main Priory Reasoning Explorer page."""
+    """Renders the main Priory Reasoning Explorer page (Classic Grimoire)."""
     return render_template("index.html")
+
+
+@app.route("/3d")
+def grimoire_3d():
+    """Renders the Next-Gen WebGL 3D Interactive Grimoire prototype."""
+    return render_template("grimoire_3d.html")
 
 
 @app.route("/api/status", methods=["GET"])

@@ -36,6 +36,15 @@ class TestPrioryWebApp(unittest.TestCase):
         self.assertIn("Priory Grimoire", html)
         self.assertIn("pages-spread", html)
 
+    def test_grimoire_3d_page(self):
+        """Verifies that the Next-Gen WebGL 3D Grimoire page renders successfully."""
+        response = self.client.get("/3d")
+        self.assertEqual(response.status_code, 200)
+        html = response.get_data(as_text=True)
+        self.assertIn("The Priory Grimoire", html)
+        self.assertIn("webgl-container", html)
+        self.assertIn("grimoire_3d.js", html)
+
     def test_api_status(self):
         """Verifies that /api/status returns knowledge graph and wallet telemetry."""
         response = self.client.get("/api/status")

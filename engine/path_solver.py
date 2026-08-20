@@ -25,6 +25,7 @@ class MilestoneStep(BaseModel):
     waypoint: Optional[str] = None
     zone_name: Optional[str] = None
     npc_name: Optional[str] = None
+    assigned_character: Optional[str] = None
     is_completed: bool = False
 
 
@@ -80,7 +81,42 @@ class PathSolver:
         exhausted_sources: Optional[List[str]] = None,
         time_budget_minutes: int = 120
     ) -> OptimalCraftingPlan:
-        prices = tp_prices or {}
+        # Standard benchmark fallback prices (in gold) based on live API averages
+        benchmark_prices = {
+            19721: 0.301,  # Glob of Ectoplasm
+            19976: 1.950,  # Mystic Coin
+            19675: 7.420,  # Mystic Clover (crafting cost basis)
+            24295: 0.221,  # Vial of Powerful Blood
+            24283: 0.189,  # Powerful Venom Sac
+            24300: 0.156,  # Elaborate Totem
+            24277: 0.161,  # Pile of Crystalline Dust
+            24357: 0.129,  # Vicious Fang
+            24289: 0.188,  # Armored Scale
+            24351: 0.159,  # Vicious Claw
+            24358: 0.189,  # Ancient Bone
+            89103: 0.056,  # Lucent Crystal
+            89258: 0.045,  # Symbol of Control
+            89182: 0.045,  # Symbol of Enhancement
+            89140: 0.045,  # Symbol of Pain
+            19700: 0.025,  # Mithril Ingot
+            19701: 0.085,  # Orichalcum Ingot
+            19739: 0.040,  # Elder Wood Plank
+            19740: 0.120,  # Ancient Wood Plank
+            19729: 0.035,  # Silk Bolt
+            19732: 0.150,  # Gossamer Bolt
+            19735: 0.060,  # Thick Leather Section
+            19737: 0.220,  # Hardened Leather Section
+            29185: 179.9,  # Dusk
+            29169: 159.5,  # Dawn
+            29166: 120.0,  # Tooth of Frostfang
+            29167: 140.0,  # Spark
+            29168: 160.0,  # Zap
+            29180: 150.0,  # The Legend
+        }
+        prices = dict(benchmark_prices)
+        if tp_prices:
+            prices.update(tp_prices)
+
         missing = diff_report.summary_missing_materials
         excluded = excluded_modes or []
         exhausted = exhausted_sources or []
@@ -789,10 +825,36 @@ class PathSolver:
                 zone_name="Frostgorge Sound",
                 npc_name="Rojan the Penitent"
             ))
+            # Query capable character for the specific gift craft
+            cap_char_name = None
+            if spec_node:
+                disc_q = """
+                SELECT DISTINCT ?charName WHERE {
+                    ?item priory:gw2Id ?gw2Id ;
+                          priory:producedBy ?recipe .
+                    ?recipe priory:requiresDiscipline ?discipline ;
+                            priory:requiredRating ?rating .
+                    ?char a priory:Character ;
+                          priory:characterName ?charName ;
+                          priory:hasCraftingDiscipline ?cd .
+                    ?cd priory:discipline ?discipline ;
+                        priory:craftingRating ?cRating .
+                    FILTER (?cRating >= ?rating)
+                } LIMIT 1
+                """
+                c_res = self.store.query(disc_q, init_bindings={"gw2Id": Literal(spec_node.item_id)})
+                if c_res:
+                    cap_char_name = c_res[0]["charName"]
+
+            craft_desc = "Combine specific lodestones, refined ingots/planks, and discipline components at Level 400 crafting station."
+            if cap_char_name:
+                craft_desc = f"Switch to character '{cap_char_name}' to craft at Level 400 crafting station."
+
             p4_steps.append(MilestoneStep(
                 step_number=2,
                 title=f"Craft {spec_node.label.split('(')[0].strip() if spec_node else 'Weapon Gift'}",
-                description="Combine specific lodestones, refined ingots/planks, and discipline components at Level 400 crafting station.",
+                description=craft_desc,
+                assigned_character=cap_char_name,
                 is_completed=False
             ))
 

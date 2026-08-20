@@ -1,0 +1,205 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+
+# ==============================================================================
+# SHACL Shapes for Character State & Ephemeral Hydration Layer
+# ==============================================================================
+
+priory:CharacterShape a sh:NodeShape ;
+    sh:targetClass priory:Character ;
+    sh:property [
+        sh:path priory:characterName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Character must have exactly one characterName string." ;
+    ] ;
+    sh:property [
+        sh:path priory:characterLevel ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 80 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Character level must be an integer between 1 and 80." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasProfession ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Character must have exactly one profession concept IRI." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasRace ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Character must have exactly one race concept IRI." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasCraftingDiscipline ;
+        sh:node priory:CharacterDisciplineShape ;
+        sh:message "Character disciplines must conform to CharacterDisciplineShape." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasEquipmentTab ;
+        sh:node priory:EquipmentTabShape ;
+        sh:message "Equipment tabs must conform to EquipmentTabShape." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasBuildTab ;
+        sh:node priory:BuildTabShape ;
+        sh:message "Build tabs must conform to BuildTabShape." ;
+    ] ;
+    sh:property [
+        sh:path priory:equippedItem ;
+        sh:node priory:EquippedItemShape ;
+        sh:message "Equipped items must conform to EquippedItemShape." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasInventoryBag ;
+        sh:node priory:InventoryBagShape ;
+        sh:message "Inventory bags must conform to InventoryBagShape." ;
+    ] .
+
+priory:EquipmentTabShape a sh:NodeShape ;
+    sh:targetClass priory:EquipmentTab ;
+    sh:property [
+        sh:path priory:tabIndex ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Equipment tab must have an integer tabIndex." ;
+    ] ;
+    sh:property [
+        sh:path priory:isActive ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Equipment tab must specify isActive boolean." ;
+    ] ;
+    sh:property [
+        sh:path priory:equippedItem ;
+        sh:node priory:EquippedItemShape ;
+        sh:message "Equipped items in tab must conform to EquippedItemShape." ;
+    ] .
+
+priory:BuildTabShape a sh:NodeShape ;
+    sh:targetClass priory:BuildTab ;
+    sh:property [
+        sh:path priory:tabIndex ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Build tab must have an integer tabIndex." ;
+    ] ;
+    sh:property [
+        sh:path priory:isActive ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Build tab must specify isActive boolean." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasSpecializationSlot ;
+        sh:node priory:SpecializationSlotShape ;
+        sh:message "Specialization slots must conform to SpecializationSlotShape." ;
+    ] .
+
+priory:SpecializationSlotShape a sh:NodeShape ;
+    sh:targetClass priory:SpecializationSlot ;
+    sh:property [
+        sh:path priory:hasSpecialization ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Specialization must point to a concept IRI." ;
+    ] .
+
+priory:CharacterDisciplineShape a sh:NodeShape ;
+    sh:targetClass priory:CharacterDiscipline ;
+    sh:property [
+        sh:path priory:discipline ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "CharacterDiscipline must specify a discipline concept IRI." ;
+    ] ;
+    sh:property [
+        sh:path priory:craftingRating ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 500 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "craftingRating must be an integer between 0 and 500." ;
+    ] ;
+    sh:property [
+        sh:path priory:isActive ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "isActive must be a boolean flag." ;
+    ] .
+
+priory:EquippedItemShape a sh:NodeShape ;
+    sh:targetClass priory:EquippedItem ;
+    sh:property [
+        sh:path priory:inSlot ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Equipped item must specify a slot IRI." ;
+    ] ;
+    sh:property [
+        sh:path priory:item ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Equipped item must link to an Item IRI." ;
+    ] .
+
+priory:InventoryBagShape a sh:NodeShape ;
+    sh:targetClass priory:InventoryBag ;
+    sh:property [
+        sh:path priory:inSlot ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Inventory bag must specify a bag slot IRI." ;
+    ] ;
+    sh:property [
+        sh:path priory:containsItem ;
+        sh:node priory:InventoryItemShape ;
+        sh:message "Contained items must conform to InventoryItemShape." ;
+    ] .
+
+priory:InventoryItemShape a sh:NodeShape ;
+    sh:targetClass priory:InventoryItem ;
+    sh:property [
+        sh:path priory:item ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "InventoryItem must specify an Item IRI." ;
+    ] ;
+    sh:property [
+        sh:path priory:itemQuantity ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "itemQuantity must be an integer >= 1." ;
+    ] ;
+    sh:property [
+        sh:path priory:slotIndex ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "slotIndex must be a non-negative integer." ;
+    ] .

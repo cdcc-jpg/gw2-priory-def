@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Priory Grimoire 3D — WebGL Interactive Tome</title>
+    
+    <!-- Authentic Guild Wars 2 Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- 3D Prototype Stylesheet -->
+    <link rel="stylesheet" href="/static/css/grimoire_3d.css">
+</head>
+<body class="grimoire-3d-body">
+
+    <!-- 3D WebGL Canvas Viewport -->
+    <div id="webgl-container"></div>
+
+    <!-- Atmospheric Vignette Overlay -->
+    <div class="screen-vignette"></div>
+
+    <!-- HUD OVERLAY LAYER -->
+    <div class="hud-layer" id="hud-layer">
+        
+        <!-- TOP CONTROL BAR -->
+        <header class="hud-top-bar">
+            <div class="hud-brand">
+                <div>
+                    <h1 class="hud-brand-title">The Priory Grimoire</h1>
+                    <div class="hud-brand-badge">Next-Gen WebGL 3D Prototype • PBR Shading</div>
+                </div>
+            </div>
+
+            <div class="hud-top-actions">
+                <!-- Camera Preset Switcher -->
+                <div class="camera-mode-pill">
+                    <button class="cam-btn active" data-mode="reading" id="cam-reading" title="Reading Perspective">Reading</button>
+                    <button class="cam-btn" data-mode="inspect" id="cam-inspect" title="Close Page Inspection">Inspect</button>
+                    <button class="cam-btn" data-mode="astrolabe" id="cam-astrolabe" title="Scrying Matrix Focus">Scrying</button>
+                    <button class="cam-btn" data-mode="orbit" id="cam-orbit" title="Free 3D Camera Orbit">Free Orbit</button>
+                </div>
+
+                <!-- Classic Version Switcher -->
+                <a href="/" class="btn-switch-classic" title="Return to Classic 2.5D Tome">
+                    Classic View
+                </a>
+
+                <!-- Audio Toggle -->
+                <button class="audio-toggle-3d" id="audio-toggle-3d" title="Toggle Ambient Audio">Sound Off</button>
+            </div>
+        </header>
+
+        <!-- TOP RIBBON TABS (Chapter Navigation) -->
+        <nav class="grimoire-tabs-bar" id="grimoire-tabs-bar">
+            <button class="tome-tab-3d active" id="tab-3d-inscribe" data-index="0">
+                Inscription
+            </button>
+            <div class="saved-tabs-container" id="saved-tabs-container">
+                <!-- Dynamic Legendary tabs added here -->
+            </div>
+        </nav>
+
+        <!-- FLOATING QUERY DRAWER / INSCRIPTION BAR -->
+        <div class="floating-inscribe-panel" id="inscribe-panel">
+            <div class="inscribe-panel-header">
+                <span class="inscribe-header-title">Inscribe Intent</span>
+                <span class="inscribe-account-badge" id="account-essence-badge">Syncing Essence...</span>
+            </div>
+            
+            <form class="inscribe-input-row" id="form-inscribe-3d">
+                <input type="text" id="input-query-3d" class="inscribe-text-input" placeholder="Inscribe thy goal... e.g. 'How do I craft Twilight?', 'Fastest 2 Legendaries'..." autocomplete="off">
+                <button type="submit" class="btn-inscribe-forge" id="btn-forge-3d">
+                    <span id="forge-btn-text">Forge Truth</span>
+                    <span id="forge-spinner" class="spinner-3d hidden"></span>
+                </button>
+            </form>
+
+            <div class="quick-spells-chips">
+                <button type="button" class="spell-chip" data-q="Which 2 legendaries can I quickly craft?">Fastest 2 Legendaries</button>
+                <button type="button" class="spell-chip" data-q="How do I craft Twilight?">Craft Twilight</button>
+                <button type="button" class="spell-chip" data-q="How do I craft Sunrise?">Craft Sunrise</button>
+                <button type="button" class="spell-chip" data-q="How do I craft Eternity?">Forge Eternity</button>
+                <button type="button" class="spell-chip" data-q="How do I craft WvW Legendary Armor?">WvW Armor</button>
+            </div>
+        </div>
+
+        <!-- BOTTOM PAGE CONTROLLER -->
+        <footer class="hud-bottom-bar">
+            <button class="btn-turn-page prev" id="btn-prev-3d" title="Previous Page (Left Arrow)">
+                ‹ Previous Page
+            </button>
+            
+            <div class="page-indicator-pill" id="page-indicator-3d">
+                Chapter I • Inscription • Spread 1 of 1
+            </div>
+
+            <button class="btn-turn-page next" id="btn-next-3d" title="Next Page (Right Arrow)">
+                Next Page ›
+            </button>
+        </footer>
+
+        <!-- INSTRUCTIONAL HINT -->
+        <div class="interaction-hint">
+            <span>Drag to rotate • Scroll to zoom • Click book edges or use Left/Right arrows to turn pages</span>
+        </div>
+
+        <!-- FLOATING COPY BADGE -->
+        <div class="copy-badge hidden" id="copy-badge">Copied to clipboard</div>
+    </div>
+
+    <!-- AUDIO ELEMENTS -->
+    <audio id="sfx-page-turn" preload="auto"><source src="/static/audio/page-turn.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-forge-chime" preload="auto"><source src="/static/audio/forge-chime.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-quill" preload="auto"><source src="/static/audio/quill-scratch.mp3" type="audio/mpeg"></audio>
+
+    <!-- THREE.JS & POST-PROCESSING LIBRARIES (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- 3D GRIMOIRE MAIN CONTROLLER -->
+    <script src="/static/js/grimoire_3d.js"></script>
+</body>
+</html>

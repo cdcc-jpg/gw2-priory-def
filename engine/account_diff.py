@@ -46,6 +46,7 @@ class AccountState:
     completed_achievements: Set[int] = field(default_factory=set)
     masteries: Dict[int, int] = field(default_factory=dict)
     wizards_vault_listings: Dict[int, WizardVaultListing] = field(default_factory=dict)
+    characters: List[Dict[str, Any]] = field(default_factory=list)
 
     def total_item_count(self, item_id: int) -> int:
         """Aggregates an item's count across materials, bank, bags, and legendary armory."""
@@ -112,8 +113,14 @@ class AccountDiffEngine:
     def __init__(self, graph_store: PrioryGraphStore):
         self.store = graph_store
 
-    def compute_diff(self, goal_item_id: int, account: AccountState, target_quantity: int = 1) -> AccountDiffReport:
-        """Recursively evaluates the delta between the goal item's recipe DAG and the account."""
+    def compute_diff(
+        self,
+        goal_item_id: int,
+        account: AccountState,
+        target_quantity: int = 1,
+        is_acquisition_query: bool = False
+    ) -> AccountDiffReport:
+        """Recursively parses crafting DAG and computes account missing delta."""
         item_meta = self.store.get_item_by_id(goal_item_id)
         goal_name = item_meta["label"] if item_meta else f"Item {goal_item_id}"
 
@@ -136,14 +143,15 @@ class AccountDiffEngine:
 
         # Calculate exact tree units owned vs needed across all branches
         total_owned_units, total_needed_units = self._calculate_tree_units(root_node)
-        if root_node.is_satisfied:
+        if root_node.is_satisfied and not is_acquisition_query:
             readiness = 100.0
         else:
             readiness = max(0.0, min(100.0, (total_owned_units / max(1, total_needed_units)) * 100.0))
 
         is_fully_satisfied = (
-            root_node.is_satisfied or 
-            (len(summary_missing) == 0 and len(missing_currencies) == 0 and len(missing_disciplines) == 0)
+            (root_node.is_satisfied or 
+            (len(summary_missing) == 0 and len(missing_currencies) == 0 and len(missing_disciplines) == 0))
+            and not is_acquisition_query
         )
 
         return AccountDiffReport(
@@ -353,6 +361,25 @@ class AccountDiffEngine:
                 disc_name = disc_uri.split("/")[-1].lower() if disc_uri else "unknown"
                 req_rating = int(row.get("requiredRating", 0)) if row.get("requiredRating") is not None else 0
                 player_rating = account.disciplines.get(disc_name, 0)
+
+                # Cross-check with hydrated character graphs if available
+                char_query = """
+                SELECT DISTINCT ?charName ?rating ?isActive WHERE {
+                    ?char priory:characterName ?charName ;
+                          priory:hasCraftingDiscipline ?cd .
+                    ?cd priory:discipline ?discipline ;
+                        priory:craftingRating ?rating .
+                    OPTIONAL { ?cd priory:isActive ?isActive }
+                    FILTER (?rating >= ?reqRating)
+                } ORDER BY DESC(?isActive) DESC(?rating) LIMIT 1
+                """
+                capable_chars = self.store.query(char_query, init_bindings={"discipline": URIRef(disc_uri), "reqRating": Literal(req_rating)}) if disc_uri else []
+
+                if capable_chars:
+                    best_char = capable_chars[0]
+                    c_rating = int(best_char.get("rating", 0))
+                    if c_rating >= req_rating:
+                        continue  # Satisfied by character in knowledge graph!
 
                 if player_rating < req_rating:
                     missing.append({

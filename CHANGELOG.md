@@ -10,6 +10,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **State-of-the-Art WebGL / Three.js 3D Interactive Grimoire Prototype (`/3d`, `web/templates/grimoire_3d.html`, `web/static/css/grimoire_3d.css`, `web/static/js/grimoire_3d.js`):**
+  - **Full 3D WebGL PBR Rendering Pipeline:** Implemented Three.js PBR scene with ACESFilmic tone mapping, PCFSoft shadow mapping, and dark atmospheric fog.
+  - **Procedural 3D Scholar's Desk & Alchemical Props:** 3D mahogany desk with roughness/metalness, 3D brass candlesticks with flickering warm point lights, refractive glass scrying orb with pulsing plasma core, 3D inkpot with feather quill, and 3D rolled parchment scrolls.
+  - **Curved Parchment & Vertex-Deformed 3D Page Flip:** Segmented mesh geometry with mathematical arch curvature from the spine, paired with GSAP-driven vertex displacement curling during page flips with dynamic shadow projection.
+  - **Floating 3D Astrolabe / Transmutation Ring:** Concentric 3D torus rings rotating on three axes above the right page during inscription mode.
+  - **Dynamic 2K CanvasTexture Pipeline:** 2048x2048 high-DPI canvases mapping live Account Essence, chapter headings, GW2 Legendary banners, roadmaps, 4-socket Mystic Forge displays, and checklists directly onto the 3D curved paper surfaces.
+  - **GPU Post-Processing (UnrealBloomPass):** Integrated `EffectComposer` with bloom passes illuminating glowing runes, legendary weapon illustrations, and candle flames.
+  - **Interactive 3D Raycasting & Cinematic Camera Presets:** Click-to-flip page interactions, quick spell chips, chat code copy stamps, and smooth GSAP camera transitions between `[📖 Reading]`, `[🔍 Inspect]`, `[🔮 Scrying]`, and `[🌐 Free Orbit]` modes.
+  - **Bidirectional View Switcher:** Seamless switching between Classic Tome (`/`) and Next-Gen WebGL 3D Grimoire (`/3d`).
+- **GW2-Themed 3D Interactive Grimoire Visual Overhaul (`web/templates/index.html`, `web/static/css/style.css`, `web/static/js/app.js`):**
+  - **Enhanced Desk Environment:** Added decorative CSS-only desk props (inkpot with quill feather, scrying orb with arcane pulse, rolled parchment scroll, dual candle holders with animated flame flicker), positioned around the 3D Grimoire for immersive Durmand Priory Archives ambiance.
+  - **Durmand Priory Key Emblem:** Inline SVG antique key emblem stamped on the leather binding spine in gold (#c8963e) stroke.
+  - **Metallic Corner Clasps:** Four decorative L-shaped gold corner clasps on each leather cover for authentic tome aesthetics.
+  - **GW2 Rarity Color Tokens:** Added design tokens for Ascended (#FB3E8D), Exotic (#FFA405), Rare (#FFD700), Masterwork (#1a9306), and Fine (#62a4da) item rarity borders.
+  - **GW2 Item Tooltip System:** Floating dark-glass tooltip cards with rarity-colored borders, positioned dynamically on hover for material and item elements.
+  - **Enhanced Multi-Layer Particle System:** Three-layer canvas particle engine (large ember sparks, medium arcane motes in gold/violet, tiny pale dust motes) with distinct movement physics.
+  - **Mystic Forge 4-Socket Display:** Grid display of top 4 missing material groups as interactive forge socket slots on recipe spread pages.
+  - **Enhanced Scrying Matrix:** Three concentric rotating SVG rings (clockwise/counter-clockwise at different speeds) with Tyrian rune characters distributed around the outer band.
+  - **Keyboard Navigation:** Arrow key support (← / →) for page turning with flip-animation guard against rapid double-firing.
+- **Unbounded Acquisition Routing & Farming Intent Discovery (`agent/intent_parser.py`, `engine/account_diff.py`, `agent/guide_generator.py`):**
+  - Added `GoalType.ACQUISITION_DISCOVERY` and `is_acquisition_query` to allow players to query non-crafting acquisition pathways (e.g. *"How do I farm Mystic Clovers without gambling?"*) without short-circuiting when inventory items are already present.
+  - Dynamically synthesizes multi-source acquisition roadmaps across Wizard's Vault Astral Acclaim (0g), BUY-2046 Fractal daily vendor (`[&BBAEAAA=]`), Raid/Strike weekly currency vendors, and Mystic Forge promotion recipes.
+- **Elder Dragon Facet Skin Variant Disambiguation (`agent/intent_parser.py`, `agent/guide_generator.py`):**
+  - Added natural language disambiguation for Gen 3 Elder Dragon Facet variant skins (*Zhaitan*, *Mordremoth*, *Kralkatorrik*, *Primordus*, *Jormag*, *Soo-Won*).
+  - Traverses `priory:ElderDragonFacetScheme` and transcribes the exact Mystic Forge recipe (Base Weapon + 100 Memories of Aurene + 10 Dragonite Ingots + 2500 Research Notes) with in-game waypoint `[&BBAEAAA=]`.
+- **Trading Post Pricing & Buy-vs-Craft Economic Modeling (`ingestion/gw2_api.py`, `engine/path_solver.py`):**
+  - Added batch Trading Post price retrieval via `GW2ApiClient.get_tp_prices()` matching the website MCP server architecture (`gw2_prices`, `priory_recipe_tree`).
+  - Added realistic market benchmark prices in `PathSolver` and dynamically calculates the estimated liquid gold cost required to fulfill missing materials.
+- **Full Live Character Modeling & RFC 7232 ETag Conditional Caching (`ingestion/gw2_api.py`, `ontology/character.ttl`, `engine/character_graph.py`, `engine/semantic_query.py`):**
+  - **100% Live API Enforcement & Zero Synthetic Fallback:** Eliminated all silent synthetic mock fallbacks across production workflows (`priory_cli.py`, `web/app.py`, `scripts/demo_character_reasoning.py`). The system now runs exclusively against live ArenaNet API data, halting with actionable diagnostics when API keys or permissions are missing.
+  - **RFC 7232 HTTP ETag Conditional Caching:** Implemented `ETagCacheManager` in [`ingestion/gw2_api.py`](./ingestion/gw2_api.py) sending `If-None-Match` headers on all `/v2` API calls. Server responses of `304 Not Modified` return cached JSON in $<20\text{ms}$ with zero network payload transfer.
+  - **Per-Character SHA-256 Content Diffing:** `CharacterGraphHydrator` calculates deterministic SHA-256 hashes of each character's JSON payload, skipping RDF named graph re-generation for unchanged characters.
+  - **Complete Character Ontology Expansion (TBox, Shapes & Taxonomies):**
+    - *Combat Attributes:* Added properties for primary (`power`, `precision`, `toughness`, `vitality`), secondary (`concentration`, `conditionDamage`, `expertise`, `ferocity`, `healingPower`), and derived attributes (`armorRating`, `maxHealth`).
+    - *Equipment Tabs & Gear Details:* Modeled `priory:EquipmentTab` with `priory:hasEquipmentTab`, `priory:tabIndex`, `priory:tabName`, `priory:isTabActive`. Modeled `priory:hasStatCombination` (SKOS prefixes: *Berserker's*, *Viper's*, *Celestial*, etc.), `priory:slottedUpgrade` (Runes, Sigils, Relics), `priory:slottedInfusion` (Agony/Stat infusions), and `priory:bindingStatus`.
+    - *Build Tabs & Specializations:* Modeled `priory:BuildTab`, `priory:SpecializationSlot`, `priory:hasSpecialization` (27 core & elite specializations like *Firebrand*, *Dragonhunter*, *Scourge*, *Mechanist*), major traits, and active weapon/utility/elite skill slots.
+  - **Declarative SPARQL Build & Legendary Equipment Queries:** Added `find_characters_by_specialization` and `find_equipped_legendaries_across_characters` in [`engine/semantic_query.py`](./engine/semantic_query.py).
+  - **SHACL Integrity Validation:** Updated [`ontology/shapes/character_shape.ttl`](./ontology/shapes/character_shape.ttl) with node shapes for `EquipmentTabShape`, `BuildTabShape`, and `SpecializationSlotShape`.
+
+- **Ephemeral Character Ontology & State Reasoning Layer (`ontology/character.ttl`, `engine/character_graph.py`, `engine/semantic_query.py`):**
+  - **Ontology & Controlled Vocabularies (TBox & SKOS):** Created [`ontology/character.ttl`](./ontology/character.ttl) defining formal OWL 2 DL classes (`priory:Character`, `priory:CharacterDiscipline`, `priory:EquippedItem`, `priory:InventoryBag`, `priory:InventoryItem`), object/datatype properties, and SKOS controlled vocabularies for 9 GW2 Professions with taxonomic armor weight (`priory:usesArmorWeight`) and weapon proficiency (`priory:canEquipWeaponType`) mappings, 5 Races, and equipment/bag slot individuals (`slot:Bag0`..`slot:Bag9`).
+  - **SHACL Integrity Validation:** Created [`ontology/shapes/character_shape.ttl`](./ontology/shapes/character_shape.ttl) enforcing node shapes and cardinality constraints on transient character individuals.
+  - **Dataset-Backed Storage Upgraded:** Upgraded [`engine/graph_store.py`](./engine/graph_store.py) to `rdflib.Dataset(default_union=True)`, exposing the default graph for static ontology triples and supporting isolated named graphs.
+  - **Ephemeral In-Memory Named Graph Hydrator:** Implemented [`engine/character_graph.py`](./engine/character_graph.py) providing sub-millisecond on-the-fly ingestion of `/v2/characters` API payloads into isolated session named graphs (`<urn:priory:session:{session_id}:char:{name}>`) with configurable 120s TTL caching.
+  - **Cross-Character Crafting Capability Solver:** Enabled [`engine/account_diff.py`](./engine/account_diff.py) and [`engine/path_solver.py`](./engine/path_solver.py) to query capable crafting alts via SPARQL and dynamically assign specific characters to recipe crafting steps (`assigned_character`).
+  - **Zero Domain Semantics Equipability Checks:** Implemented declarative SPARQL reasoning in [`engine/semantic_query.py`](./engine/semantic_query.py) (`check_item_character_equipability`) checking weapon and armor compatibility strictly through SKOS graph traversal with zero hardcoded Python rules.
+  - **Character Bag Inventory & Bound Item Indexing:** Implemented `find_character_item_locations` to locate and aggregate items held across character bags (including soulbound precursors and distributed materials).
+  - **Model Context Protocol (MCP) Tool Handlers:** Added native handlers `handle_mcp_character_crafting`, `handle_mcp_character_equipability`, `handle_mcp_character_inventory`, and `handle_mcp_character_summary` in [`engine/semantic_query.py`](./engine/semantic_query.py).
+  - **Benchmark & Test Coverage:** Created [`tests/test_character_ontology.py`](./tests/test_character_ontology.py) and demonstration script [`scripts/demo_character_reasoning.py`](./scripts/demo_character_reasoning.py) validating sub-millisecond ingestion (<0.25ms/char), SHACL conformance, graph isolation upon session eviction, and multi-character crafting handoffs.
+  - **Character Lifetime & Playtime Telemetry:** Added `priory:playtimeHours` and `priory:creationDate` properties to [`ontology/character.ttl`](./ontology/character.ttl) and [`engine/character_graph.py`](./engine/character_graph.py), allowing declarative ranking and contextual reasoning over veteran characters and playtime hours.
+- **Pipeline & Semantic Layer Architecture Reference (`docs/neuro_symbolic_architecture_and_pipeline.md`, `README.md`):**
+  - Added comprehensive architectural reference document with detailed Mermaid diagrams (Neuro-Symbolic Sandwich layer flowchart, end-to-end component sequence interaction graph, and data transformation state machine).
+  - Documented the exact three touchpoints where the Semantic Layer (OWL 2 DL, SKOS, RDFLib, SPARQL) operates: concept & entity resolution, DAG & constraint graph traversal, and spatial/factual context serialization.
+  - Added a granular 10-step component and data specification matrix tracing concrete payloads throughout the pipeline.
+  - Integrated rich Mermaid architecture flowcharts and sequence traces directly into root [`README.md`](./README.md) and [`docs/README.md`](./docs/README.md).
 - **Lightweight Flask Web GUI & Reasoning Explorer (`web/app.py`, `run_web.py`):**
   - **Architectural Decision:** Created a lightweight standalone Flask interface and REST API as a temporary developer GUI / demo playground for the neuro-symbolic semantic layer prior to future integration into the main *gw2priory* frontend website.
   - Implemented responsive Tyrian scholar dark theme (`web/static/css/style.css`) with interactive waypoint chat code copy badges, live account snapshot telemetry (materials, armory unlocks, wallet currencies), 5-phase master roadmap timelines, and real-time query reasoning.

@@ -9,13 +9,14 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import rdflib
-from rdflib import Graph, Literal, Namespace, URIRef
+from rdflib import Dataset, Graph, Literal, Namespace, URIRef
 from rdflib.plugins.sparql import prepareQuery
 
 PRIORY = Namespace("https://priory.gw2/def/")
 PRIORY_REF = Namespace("https://priory.gw2/ref/")
 ITEM = Namespace("https://priory.gw2/id/item/")
 RECIPE = Namespace("https://priory.gw2/id/recipe/")
+CHARACTER = Namespace("https://priory.gw2/id/character/")
 WEAPON = Namespace("https://priory.gw2/ref/weapon/")
 RARITY = Namespace("https://priory.gw2/ref/rarity/")
 DISCIPLINE = Namespace("https://priory.gw2/ref/discipline/")
@@ -24,16 +25,21 @@ CURRENCY = Namespace("https://priory.gw2/ref/currency/")
 ARMOR = Namespace("https://priory.gw2/ref/armor/")
 SLOT = Namespace("https://priory.gw2/ref/slot/")
 ITEMTYPE = Namespace("https://priory.gw2/ref/itemtype/")
+PROFESSION = Namespace("https://priory.gw2/ref/profession/")
+RACE = Namespace("https://priory.gw2/ref/race/")
 
 DEFAULT_NAMESPACES = {
     "priory": PRIORY,
     "priory-ref": PRIORY_REF,
     "item": ITEM,
     "recipe": RECIPE,
+    "character": CHARACTER,
     "weapon": WEAPON,
     "armor": ARMOR,
     "slot": SLOT,
     "itemtype": ITEMTYPE,
+    "profession": PROFESSION,
+    "race": RACE,
     "rarity": RARITY,
     "discipline": DISCIPLINE,
     "gamemode": GAMEMODE,
@@ -46,10 +52,11 @@ DEFAULT_NAMESPACES = {
 
 
 class PrioryGraphStore:
-    """In-memory RDF Graph Store powered by RDFLib with SPARQL 1.1 support."""
+    """In-memory RDF Graph Store powered by RDFLib Dataset with SPARQL 1.1 and Named Graph support."""
 
     def __init__(self, ref_repo_path: Optional[Path] = None, def_repo_path: Optional[Path] = None):
-        self.graph = Graph()
+        self.dataset = Dataset(default_union=True)
+        self.graph = self.dataset.default_graph
         self.ref_repo_path = ref_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-ref")
         self.def_repo_path = def_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-def")
         self._loaded = False
@@ -58,10 +65,11 @@ class PrioryGraphStore:
 
     def _bind_namespaces(self) -> None:
         for prefix, ns in DEFAULT_NAMESPACES.items():
+            self.dataset.bind(prefix, ns)
             self.graph.bind(prefix, ns)
 
     def load_all(self) -> int:
-        """Loads all schemas, reference vocabularies, and instances into the graph once."""
+        """Loads all schemas, reference vocabularies, character models, and instances into the graph once."""
         if self._loaded:
             return len(self.graph)
 
@@ -78,10 +86,14 @@ class PrioryGraphStore:
                 "Ensure gw2-priory-ref repository is cloned."
             )
 
-        # 2. Load Ontology Schemas (Core and Application Schemas)
+        # 2. Load Ontology Schemas (Core, Character, and Application Schemas)
         core_ontology = self.def_repo_path / "ontology" / "priory_core.ttl"
         if core_ontology.exists():
             self.graph.parse(core_ontology, format="turtle")
+
+        character_ontology = self.def_repo_path / "ontology" / "character.ttl"
+        if character_ontology.exists():
+            self.graph.parse(character_ontology, format="turtle")
 
         schemas_dir = self.def_repo_path / "ontology" / "schemas"
         if schemas_dir.exists():
@@ -98,9 +110,9 @@ class PrioryGraphStore:
         return len(self.graph) - total_triples_before
 
     def query(self, sparql_str: str, init_bindings: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
-        """Executes a SPARQL query against the graph and returns list of dict results."""
+        """Executes a SPARQL query against the graph/dataset and returns list of dict results."""
         q = prepareQuery(sparql_str, initNs=DEFAULT_NAMESPACES)
-        results = self.graph.query(q, initBindings=init_bindings or {})
+        results = self.dataset.query(q, initBindings=init_bindings or {})
         
         output = []
         for row in results:

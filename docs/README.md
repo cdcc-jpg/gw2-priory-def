@@ -29,3 +29,9 @@ This documentation suite provides a complete, no-assumed-knowledge technical bre
    * Formal catalog of all Object and Datatype Properties.
    * Reference tables of all SKOS Concept Schemes and URI namespaces.
    * SHACL integrity shapes reference.
+
+5. [📊 Pipeline & Semantic Touchpoints Reference](file:///Users/clementd/Documents/GitHub/gw2-priory-def/docs/neuro_symbolic_architecture_and_pipeline.md)
+   * Visual diagrams of the Neuro-Symbolic Sandwich pipeline.
+   * End-to-end component sequence interaction graphs.
+   * Detailed breakdown of the 3 Semantic Layer touchpoints (resolution, graph traversal, and factual serialization).
+   * Granular 10-step component and data transformation matrix.

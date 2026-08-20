@@ -10,5 +10,6 @@ from web.app import app
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5001))
-    print(f"🏛️ Starting Project Priory Web GUI on http://127.0.0.1:{port}")
-    app.run(host="127.0.0.1", port=port, debug=False)
+    host = os.getenv("HOST", "0.0.0.0")
+    print(f"Starting Project Priory Web GUI on http://127.0.0.1:{port} and http://{host}:{port}")
+    app.run(host=host, port=port, debug=False)

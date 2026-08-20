@@ -21,6 +21,20 @@
     <!-- Main 3D Scene Viewport -->
     <div class="scene" id="scene">
         
+        <div class="top-nav-controls">
+            <a href="/3d" class="btn-switch-prototype" title="Switch to Full WebGL 3D Real-Time Grimoire">
+                <strong>Launch 3D WebGL Grimoire</strong>
+            </a>
+            <button class="audio-toggle" id="audio-toggle" title="Toggle ambient sound">Sound Off</button>
+        </div>
+
+        <!-- Desk Environment Props -->
+        <div class="desk-prop inkpot-quill"></div>
+        <div class="desk-prop scrying-orb"></div>
+        <div class="desk-prop desk-scroll"></div>
+        <div class="desk-prop candle-holder candle-holder-left"></div>
+        <div class="desk-prop candle-holder candle-holder-right"></div>
+
         <!-- Arcane Aura behind the Tome -->
         <div class="book-aura" id="book-aura"></div>
 
@@ -30,7 +44,6 @@
             <!-- Bookmarks Ribbon Bar (Side Tabs) -->
             <div class="tome-tabs" id="tome-tabs">
                 <button class="tome-tab active" data-page-index="0" id="tab-inscribe" title="Chapter I: Inscription">
-                    <span class="tab-icon">✒️</span>
                     <span class="tab-label">Inscription</span>
                 </button>
                 <div class="saved-recipes-tabs" id="saved-recipes-tabs">
@@ -50,11 +63,21 @@
                 <div class="cover cover-left">
                     <div class="leather-face">
                         <div class="leather-filigree"></div>
+                        <!-- Corner Clasps -->
+                        <div class="corner-clasp top-left"></div>
+                        <div class="corner-clasp top-right"></div>
+                        <div class="corner-clasp bottom-left"></div>
+                        <div class="corner-clasp bottom-right"></div>
                     </div>
                 </div>
                 <div class="cover cover-right">
                     <div class="leather-face">
                         <div class="leather-filigree"></div>
+                        <!-- Corner Clasps -->
+                        <div class="corner-clasp top-left"></div>
+                        <div class="corner-clasp top-right"></div>
+                        <div class="corner-clasp bottom-left"></div>
+                        <div class="corner-clasp bottom-right"></div>
                     </div>
                 </div>
 
@@ -64,6 +87,12 @@
 
                 <!-- Central 3D Binding Spine with Leather Ribs -->
                 <div class="spine-binding">
+                    <!-- Priory Key Emblem -->
+                    <svg class="priory-key-emblem" width="24" height="50" viewBox="0 0 24 50" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="12" cy="10" rx="8" ry="6" fill="none" stroke="#c8963e" stroke-width="2" />
+                        <line x1="12" y1="16" x2="12" y2="44" stroke="#c8963e" stroke-width="2" />
+                        <path d="M 12 36 L 18 36 L 18 40 L 12 40 M 12 40 L 18 40 L 18 44 L 12 44" fill="none" stroke="#c8963e" stroke-width="2" />
+                    </svg>
                     <div class="spine-crease"></div>
                     <div class="spine-rib"></div>
                     <div class="spine-rib"></div>
@@ -78,6 +107,7 @@
                     <div class="page-sheet page-left" id="page-left-content">
                         <div class="parchment-grain"></div>
                         <div class="ink-vignette"></div>
+                        <div class="coffee-stain"></div>
                         <div class="page-inner" id="left-page-body">
                             <!-- Injected dynamically based on active page -->
                         </div>
@@ -87,6 +117,7 @@
                     <div class="page-sheet page-right" id="page-right-content">
                         <div class="parchment-grain"></div>
                         <div class="ink-vignette"></div>
+                        <div class="coffee-stain"></div>
                         <div class="page-inner" id="right-page-body">
                             <!-- Injected dynamically based on active page -->
                         </div>
@@ -118,13 +149,22 @@
                         Next Page <span class="nav-arrow">⮞</span>
                     </button>
                 </div>
+                
+                <div class="kb-hint">Use ← → arrow keys to turn pages</div>
 
             </div>
         </div>
 
     </div>
 
+    <!-- Hidden audio elements -->
+    <audio id="sfx-page-turn" preload="auto"><source src="/static/audio/page-turn.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-forge-chime" preload="auto"><source src="/static/audio/forge-chime.mp3" type="audio/mpeg"></audio>
+    <audio id="sfx-quill" preload="auto"><source src="/static/audio/quill-scratch.mp3" type="audio/mpeg"></audio>
+
     <!-- Hidden audio/sound triggers can be added if desired -->
     <script src="/static/js/app.js"></script>
+
+    <div class="gw2-tooltip hidden" id="gw2-tooltip"></div>
 </body>
 </html>

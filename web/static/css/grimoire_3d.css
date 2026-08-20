@@ -1,0 +1,487 @@
+/* ==============================================================================
+   PROJECT PRIORY — NEXT-GEN WEBGL 3D GRIMOIRE DESIGN SYSTEM (HUD & OVERLAYS)
+   Dark gothic glassmorphism, gold filigree trim, Guild Wars 2 typography,
+   and responsive camera control HUD.
+   ============================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --gold-primary: #c8963e;
+  --gold-bright:  #ffd478;
+  --gold-glow:    rgba(200, 150, 62, 0.4);
+  --purple-arcane:#9d5bd2;
+  --purple-glow:  rgba(157, 91, 210, 0.4);
+  --bg-dark:      #080604;
+  --panel-glass:  rgba(14, 10, 18, 0.85);
+  --panel-border: rgba(200, 150, 62, 0.35);
+
+  --font-title:   'Cinzel Decorative', serif;
+  --font-head:    'Cinzel', serif;
+  --font-hand:    'Caveat', cursive;
+  --font-body:    'IM Fell English', serif;
+  --font-mono:    'JetBrains Mono', monospace;
+}
+
+html, body.grimoire-3d-body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  font-family: var(--font-body);
+  color: #f0e6d6;
+  user-select: none;
+}
+
+/* ── WebGL Canvas Viewport ─────────────────────────────────────────────────── */
+#webgl-container {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Screen Vignette Overlay ─────────────────────────────────────────────────── */
+.screen-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(circle at center, transparent 55%, rgba(6, 4, 3, 0.7) 90%, rgba(3, 2, 1, 0.95) 100%);
+}
+
+/* ── HUD Overlay Layer ───────────────────────────────────────────────────────── */
+.hud-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 24px;
+}
+
+/* ── TOP CONTROL BAR ─────────────────────────────────────────────────────────── */
+.hud-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel-glass);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.hud-brand-emblem {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+.hud-brand-title {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  color: var(--gold-bright);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px var(--gold-glow);
+  line-height: 1.1;
+}
+
+.hud-brand-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #b0a0c0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hud-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Camera Mode Pill Selector */
+.camera-mode-pill {
+  display: flex;
+  background: var(--panel-glass);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 3px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.cam-btn {
+  background: transparent;
+  border: none;
+  color: #c0b0a0;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 5px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.cam-btn:hover {
+  color: #fff;
+}
+
+.cam-btn.active {
+  background: linear-gradient(135deg, var(--gold-primary) 0%, #8c5d15 100%);
+  color: #fff;
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* Classic Mode Switcher */
+.btn-switch-classic {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel-glass);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  color: var(--gold-bright);
+  text-decoration: none;
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  transition: transform 0.2s, filter 0.2s, border-color 0.2s;
+}
+
+.btn-switch-classic:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+  border-color: var(--gold-bright);
+}
+
+/* Audio Toggle */
+.audio-toggle-3d {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--panel-glass);
+  border: 1px solid var(--panel-border);
+  color: var(--gold-bright);
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  transition: filter 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.audio-toggle-3d:hover {
+  filter: brightness(1.2);
+  border-color: var(--gold-bright);
+}
+
+.audio-toggle-3d.active {
+  color: #ffd700;
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+/* ── TOP RIBBON TABS (Chapter Bookmarks) ──────────────────────────────────────── */
+.grimoire-tabs-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  pointer-events: auto;
+  align-self: center;
+  max-width: 900px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.grimoire-tabs-bar::-webkit-scrollbar { display: none; }
+
+.tome-tab-3d {
+  background: linear-gradient(180deg, #3d2250 0%, #20102d 100%);
+  color: #e0d0f0;
+  border: 1px solid rgba(157, 91, 210, 0.4);
+  border-radius: 6px 6px 0 0;
+  padding: 6px 14px;
+  font-family: var(--font-head);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.5);
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.tome-tab-3d:hover {
+  transform: translateY(-2px);
+  border-color: var(--purple-arcane);
+}
+
+.tome-tab-3d.active {
+  background: linear-gradient(180deg, var(--gold-primary) 0%, #7a4f10 100%);
+  color: #fff;
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.saved-tabs-container {
+  display: flex;
+  gap: 6px;
+}
+
+/* ── FLOATING INSCRIBE PANEL ─────────────────────────────────────────────────── */
+.floating-inscribe-panel {
+  align-self: center;
+  width: 100%;
+  max-width: 820px;
+  background: var(--panel-glass);
+  border: 1.5px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 12px 18px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 0 15px rgba(200, 150, 62, 0.15);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  margin-bottom: 8px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.floating-inscribe-panel:focus-within {
+  border-color: var(--gold-bright);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 20px var(--gold-glow);
+}
+
+.inscribe-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inscribe-header-title {
+  font-family: var(--font-hand);
+  font-size: 1.15rem;
+  color: var(--gold-bright);
+}
+
+.inscribe-account-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #a89bb8;
+  background: rgba(0,0,0,0.4);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.inscribe-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.inscribe-text-input {
+  flex: 1;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(200, 150, 62, 0.3);
+  border-radius: 6px;
+  padding: 9px 14px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: #fff;
+  line-height: 1.4;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.inscribe-text-input:focus {
+  outline: none;
+  border-color: var(--gold-bright);
+  background: rgba(0,0,0,0.7);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+
+.btn-inscribe-forge {
+  background: linear-gradient(135deg, var(--gold-primary) 0%, #8f5f14 100%);
+  color: #fff;
+  border: 1px solid var(--gold-bright);
+  border-radius: 6px;
+  padding: 9px 18px;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: filter 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.btn-inscribe-forge:hover {
+  filter: brightness(1.18);
+  transform: translateY(-1px);
+}
+
+.btn-inscribe-forge:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.quick-spells-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.spell-chip {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200, 150, 62, 0.25);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: var(--font-hand);
+  font-size: 0.92rem;
+  color: #d8cbbf;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.spell-chip:hover {
+  background: rgba(200, 150, 62, 0.15);
+  border-color: var(--gold-bright);
+  color: #fff;
+}
+
+/* ── BOTTOM HUD BAR ──────────────────────────────────────────────────────────── */
+.hud-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
+  max-width: 900px;
+  width: 100%;
+  align-self: center;
+}
+
+.btn-turn-page {
+  background: var(--panel-glass);
+  border: 1.5px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s, filter 0.2s, border-color 0.2s;
+}
+
+.btn-turn-page:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+  border-color: var(--gold-bright);
+}
+
+.btn-turn-page:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-indicator-pill {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-bright);
+  text-shadow: 0 0 8px var(--gold-glow);
+  background: var(--panel-glass);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 6px 18px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* ── INSTRUCTIONAL HINT ──────────────────────────────────────────────────────── */
+.interaction-hint {
+  align-self: center;
+  font-size: 0.7rem;
+  color: rgba(200, 150, 62, 0.6);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ── COPY BADGE ──────────────────────────────────────────────────────────────── */
+.copy-badge {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--gold-primary), #8f5f14);
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 15px var(--gold-glow);
+  z-index: 1000;
+  animation: badgeSlide 0.3s ease-out;
+}
+
+@keyframes badgeSlide {
+  from { transform: translate(-50%, -15px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.spinner-3d {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hidden { display: none !important; }
+
+@media (max-width: 860px) {
+  .hud-top-actions .camera-mode-pill { display: none; }
+  .floating-inscribe-panel { max-width: 95vw; }
+}

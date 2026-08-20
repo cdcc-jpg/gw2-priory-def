@@ -15,6 +15,7 @@ from engine.graph_store import PrioryGraphStore
 from engine.account_diff import AccountDiffEngine, AccountState, AccountDiffReport
 from engine.path_solver import PathSolver, OptimalCraftingPlan
 from engine.semantic_query import SemanticQueryService
+from engine.character_graph import CharacterGraphHydrator
 from engine.account_ranker import AccountRanker
 from agent.llm_client import BaseLLMClient, get_default_llm_client
 from agent.intent_parser import IntentParser, ResolvedGoal
@@ -40,6 +41,10 @@ class PrioryChatSession:
         live_tp_prices: Optional[Dict[int, float]] = None
     ) -> PersonalizedGuide:
         """Processes a follow-up user prompt with multi-turn session awareness."""
+        # 0. Hydrate character graphs if present
+        if self.account_state and self.account_state.characters:
+            self.orchestrator.hydrator.hydrate_characters(self.account_state.characters)
+
         # 1. Format conversation context
         context_str = None
         if self.history:
@@ -96,7 +101,8 @@ class PrioryChatSession:
         diff_report = self.orchestrator.diff_engine.compute_diff(
             goal_item_id=resolved_goal.resolved_item_id,
             account=self.account_state,
-            target_quantity=resolved_goal.target_quantity
+            target_quantity=resolved_goal.target_quantity,
+            is_acquisition_query=resolved_goal.is_acquisition_query
         )
 
         # 3. Path Solver Optimization (respecting exhausted sources and time budgets)
@@ -139,6 +145,7 @@ class PrioryAgentOrchestrator:
         self.store.load_all()
 
         self.semantic_service = SemanticQueryService(self.store)
+        self.hydrator = CharacterGraphHydrator(self.store)
         self.diff_engine = AccountDiffEngine(self.store)
         self.ranker = AccountRanker(self.store, self.diff_engine)
         self.solver = PathSolver(self.store)

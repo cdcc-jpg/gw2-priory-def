@@ -98,7 +98,39 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if gold_match:
             gold_budget = int(gold_match.group(1))
 
-        # Determine comparative vs specific goal
+        # Extract goal item name
+        goal_item = None
+        for item in ["twilight", "sunrise", "eternity", "kudzu", "the moot", "the juggernaut", "bolt", "incinerator",
+                     "legendary sigil", "legendary rune", "sigil", "rune", "conflux", "coalescence", "ad infinitum", "vision", "aurora",
+                     "aurene's weight", "aurene's bite", "aurene's argument", "aurene's claw", "aurene's fang",
+                     "mystic clover", "mystic coin", "ectoplasm", "t6", "provisioner token"]:
+            if item in p_lower:
+                if item == "sigil":
+                    goal_item = "Legendary Sigil"
+                elif item == "rune":
+                    goal_item = "Legendary Rune"
+                else:
+                    goal_item = item.title()
+                break
+
+        if not goal_item:
+            goal_item = "Twilight"
+
+        # Extract dragon facet variants
+        facet_name = None
+        for facet in ["zhaitan", "mordremoth", "kralkatorrik", "primordus", "jormag", "soo-won"]:
+            if facet in p_lower:
+                facet_name = facet.title()
+                break
+
+        # Extract acquisition / farming intent
+        is_acquisition = any(k in p_lower for k in [
+            "how do i farm", "how to farm", "ways to get", "where can i get", "where to get",
+            "how to acquire", "farm clovers", "need mystic clovers", "without gambling",
+            "without the mystic forge", "how to get"
+        ])
+
+        # Determine comparative vs specific vs acquisition goal
         is_comparative = any(k in p_lower for k in [
             "closest", "which legendary", "what legendary", "rank all", "what should i craft",
             "what to craft", "leaderboard", "rank", "how far", "how close", "where am i",
@@ -117,9 +149,18 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         fields = schema.model_fields.keys()
         data: Dict[str, Any] = {}
         if "goal_type" in fields:
-            data["goal_type"] = "COMPARATIVE_RANKING" if (is_comparative or (cat_filter and goal_item == "Twilight")) else "SPECIFIC_ITEM"
+            if is_comparative or (cat_filter and not any(k in p_lower for k in ["twilight", "sigil", "rune", "aurene's", "bolt", "moot", "juggernaut", "kudzu", "sunrise", "eternity", "clover"])):
+                data["goal_type"] = "COMPARATIVE_RANKING"
+            elif is_acquisition:
+                data["goal_type"] = "ACQUISITION_DISCOVERY"
+            else:
+                data["goal_type"] = "SPECIFIC_ITEM"
         if "target_item_name" in fields:
             data["target_item_name"] = None if is_comparative else goal_item
+        if "is_acquisition_query" in fields:
+            data["is_acquisition_query"] = is_acquisition
+        if "facet_name" in fields:
+            data["facet_name"] = facet_name
         if "category_filter" in fields:
             data["category_filter"] = cat_filter
         if "prefer_speed" in fields:
