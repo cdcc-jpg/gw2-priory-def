@@ -1,0 +1,192 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+
+# ==============================================================================
+# Grandmaster Hobbs: Dusk Precursor Crafting Collections (Tiers 1, 2, and 3)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# TIER 1: The Experimental Nightsword
+# ------------------------------------------------------------------------------
+
+# --- Dusk Experiment (GW2 ID: 71850) ---
+item:71850 a priory:PrecursorWeapon, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Dusk Experiment"@en ;
+    priory:gw2Id 71850 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_dusk_experiment ;
+    priory:requiresMasteryTier priory:mastery_revered_antiquarian ;
+    priory:acquiredVia priory:col_dusk_vol1 ;
+    rdfs:comment "First-tier experimental greatsword precursor crafted after completing the Dusk I collection."@en .
+
+# --- Spirit of the Dusk Experiment (GW2 ID: 75037) ---
+item:75037 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Spirit of the Dusk Experiment"@en ;
+    priory:gw2Id 75037 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    rdfs:comment "Acquired by salvaging the Dusk Experiment with a salvage kit. Essential component for Tier 2."@en .
+
+# --- Recipe: Craft Dusk Experiment ---
+recipe:craft_dusk_experiment a priory:DisciplineRecipe, owl:NamedIndividual ;
+    rdfs:label "Craft Dusk Experiment"@en ;
+    priory:producesItem item:71850 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiredRating 450 ;
+    priory:requiresMasteryTier priory:mastery_revered_antiquarian ;
+    rdfs:comment "Crafted at Weaponsmithing rating 450 using Essence of the End, Experimental Nightsword Blade, Experimental Nightsword Hilt, and Legendary Inscription."@en .
+
+# --- Dusk Tier 1 Collection Journey ---
+priory:col_dusk_vol1 a priory:AchievementCollectionPath, owl:NamedIndividual ;
+    rdfs:label "Dusk I: The Experimental Nightsword"@en ;
+    priory:targetItem item:71850 ;
+    priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
+    priory:zoneName "Lion's Arch"@en ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresMasteryTier priory:mastery_revered_antiquarian ;
+    skos:definition "First-tier precursor collection unlocked via Revered Antiquarian Central Tyria Mastery."@en .
+
+# ------------------------------------------------------------------------------
+# TIER 2: The Perfected Nightsword
+# ------------------------------------------------------------------------------
+
+# --- Perfected Nightsword (GW2 ID: 76081) ---
+item:76081 a priory:PrecursorWeapon, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Perfected Nightsword"@en ;
+    priory:gw2Id 76081 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_perfected_nightsword ;
+    priory:requiresMasteryTier priory:mastery_magister_of_legends ;
+    priory:acquiredVia priory:col_dusk_vol2 ;
+    rdfs:comment "Second-tier perfected greatsword precursor crafted after completing the Dusk II collection."@en .
+
+# --- Spirit of the Perfected Nightsword (GW2 ID: 74483) ---
+item:74483 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Spirit of the Perfected Nightsword"@en ;
+    priory:gw2Id 74483 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    rdfs:comment "Acquired by salvaging the Perfected Nightsword. Essential component for forging the final precursor Dusk."@en .
+
+# --- Recipe: Craft Perfected Nightsword ---
+recipe:craft_perfected_nightsword a priory:DisciplineRecipe, owl:NamedIndividual ;
+    rdfs:label "Craft Perfected Nightsword"@en ;
+    priory:producesItem item:76081 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiredRating 450 ;
+    priory:requiresMasteryTier priory:mastery_magister_of_legends ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:75037 ; # Spirit of the Dusk Experiment
+        priory:requiredQuantity 1
+    ] ;
+    rdfs:comment "Crafted at Weaponsmithing rating 450 using Spirit of the Dusk Experiment, Expertise in Nightsword Crafting, Jar of Luminesce Polish, and Prismatic Lodestone."@en .
+
+# --- Dusk Tier 2 Collection Journey ---
+priory:col_dusk_vol2 a priory:AchievementCollectionPath, owl:NamedIndividual ;
+    rdfs:label "Dusk II: The Perfected Nightsword"@en ;
+    priory:targetItem item:76081 ;
+    priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
+    priory:zoneName "Lion's Arch"@en ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresMasteryTier priory:mastery_magister_of_legends ;
+    skos:definition "Second-tier precursor collection unlocked via Magister of Legends Central Tyria Mastery."@en .
+
+# ------------------------------------------------------------------------------
+# TIER 3: Dusk (Final Precursor)
+# ------------------------------------------------------------------------------
+
+# --- Dusk (GW2 ID: 29185) Precursor Collection Linkage ---
+item:29185 a priory:PrecursorWeapon, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Dusk"@en ;
+    priory:gw2Id 29185 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:hasPrecursorType priory:TradablePrecursor ;
+    priory:producedBy recipe:craft_dusk_tier3 ;
+    priory:requiresMasteryTier priory:mastery_historian_of_the_armaments ;
+    priory:acquiredVia priory:col_dusk_vol3 .
+
+# --- Gloominator (GW2 ID: 73618) ---
+item:73618 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Gloominator"@en ;
+    priory:gw2Id 73618 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    rdfs:comment "Arcane sensor gizmo used to capture 27 ambient glooms across Tyria and Fractals of the Mists."@en .
+
+# --- Essence of Gloom (GW2 ID: 76377) ---
+item:76377 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Essence of Gloom"@en ;
+    priory:gw2Id 76377 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    rdfs:comment "Rewarded from the Chest of Gloom upon completing the Dusk III achievement collection."@en .
+
+# --- Mirror of the Night (GW2 ID: 75878) ---
+item:75878 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mirror of the Night"@en ;
+    priory:gw2Id 75878 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    rdfs:comment "Polished dark mirror crafted for the final forging of Dusk."@en .
+
+# --- Dimensional Destabilizer (GW2 ID: 74895) ---
+item:74895 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Dimensional Destabilizer"@en ;
+    priory:gw2Id 74895 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true ;
+    rdfs:comment "Rift stabilization gizmo crafted with Mystic Binding Agents and Globs of Dark Matter for Dusk."@en .
+
+# --- Recipe: Craft Dusk (Tier 3) ---
+recipe:craft_dusk_tier3 a priory:DisciplineRecipe, owl:NamedIndividual ;
+    rdfs:label "Craft Dusk (Tier 3 Collection)"@en ;
+    priory:producesItem item:29185 ;
+    priory:outputQuantity 1 ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiredRating 500 ;
+    priory:requiresMasteryTier priory:mastery_historian_of_the_armaments ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:76377 ; # Essence of Gloom
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:74483 ; # Spirit of the Perfected Nightsword
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:75878 ; # Mirror of the Night
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:74895 ; # Dimensional Destabilizer
+        priory:requiredQuantity 1
+    ] ;
+    rdfs:comment "Final Weaponsmith 500 precursor recipe producing Dusk, requiring Central Tyria Mastery Tier 3: Historian of the Armaments."@en .
+
+# --- Dusk Tier 3 Collection Journey ---
+priory:col_dusk_vol3 a priory:AchievementCollectionPath, owl:NamedIndividual ;
+    rdfs:label "Dusk III: Dusk"@en ;
+    priory:targetItem item:29185 ;
+    priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
+    priory:zoneName "Lion's Arch"@en ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresMasteryTier priory:mastery_historian_of_the_armaments ;
+    skos:definition "Third-tier precursor collection unlocked via Historian of the Armaments Central Tyria Mastery."@en .

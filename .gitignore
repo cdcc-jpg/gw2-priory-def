@@ -38,3 +38,7 @@ htmlcov/
 # Local binaries and archives
 bin/
 *.tgz
+
+# Local cache and scratch
+scratch/
+data/cache/http_etags.json

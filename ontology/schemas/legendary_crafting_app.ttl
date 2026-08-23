@@ -114,11 +114,43 @@ priory:MasteryTrack a owl:Class ;
     rdfs:label "Mastery Track"@en ;
     rdfs:comment "An expansion account mastery progression track."@en .
 
+priory:MasteryTier a owl:Class ;
+    rdfs:label "Mastery Tier / Level"@en ;
+    rdfs:comment "An individual tier or level within a mastery track."@en .
+
+priory:MasteryLevel a owl:Class ;
+    rdfs:label "Mastery Level"@en ;
+    owl:equivalentClass priory:MasteryTier ;
+    rdfs:comment "Alias for Mastery Tier."@en .
+
 priory:requiresMasteryTrack a owl:ObjectProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range priory:MasteryTrack ;
     rdfs:label "requires mastery track"@en ;
     rdfs:comment "Specifies the mastery track required to purchase an item or unlock a vendor exchange."@en .
+
+priory:requiresMasteryTier a owl:ObjectProperty ;
+    rdfs:domain owl:Thing ;
+    rdfs:range priory:MasteryTier ;
+    rdfs:label "requires mastery tier"@en ;
+    rdfs:comment "Specifies the specific mastery tier required for an item, recipe, or collection."@en .
+
+priory:belongsToTrack a owl:ObjectProperty ;
+    rdfs:domain priory:MasteryTier ;
+    rdfs:range priory:MasteryTrack ;
+    rdfs:label "belongs to track"@en ;
+    rdfs:comment "Connects a mastery tier to its parent mastery track."@en .
+
+priory:hasMasteryTier a owl:ObjectProperty ;
+    owl:inverseOf priory:belongsToTrack ;
+    rdfs:domain priory:MasteryTrack ;
+    rdfs:range priory:MasteryTier ;
+    rdfs:label "has mastery tier"@en .
+
+priory:masteryTier a owl:DatatypeProperty ;
+    rdfs:domain priory:MasteryTier ;
+    rdfs:range xsd:integer ;
+    rdfs:label "mastery tier index"@en .
 
 priory:requiredMasteryLevel a owl:DatatypeProperty ;
     rdfs:domain owl:Thing ;
@@ -135,11 +167,35 @@ priory:maxArmoryCapacity a owl:DatatypeProperty ;
     rdfs:label "maximum armory capacity"@en ;
     rdfs:comment "Maximum number of copies of this item type that can be stored and utilized in the Legendary Armory (1 for 2H weapons, 2 for 1H/offhand, 4 for Sigils, 6 for Runes)."@en .
 
+priory:armoryMaxCap a owl:DatatypeProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:integer ;
+    rdfs:label "armory maximum capacity"@en ;
+    owl:equivalentProperty priory:maxArmoryCapacity ;
+    rdfs:comment "Maximum useful copies of a legendary item in the Legendary Armory."@en .
+
 # ------------------------------------------------------------------------------
 # 5. Achievement & Narrative Collection Grounding
 # ------------------------------------------------------------------------------
+priory:Achievement a owl:Class ;
+    rdfs:label "Achievement"@en ;
+    rdfs:comment "An in-game Guild Wars 2 achievement tracked via /v2/account/achievements."@en .
+
+priory:requiresAchievement a owl:ObjectProperty ;
+    rdfs:domain owl:Thing ;
+    rdfs:range priory:Achievement ;
+    rdfs:label "requires achievement"@en ;
+    rdfs:comment "Specifies an achievement that must be completed to unlock an item, collection, or vendor exchange."@en .
+
+priory:achievementId a owl:DatatypeProperty ;
+    rdfs:domain priory:Achievement ;
+    rdfs:range xsd:integer ;
+    rdfs:label "GW2 achievement ID"@en ;
+    rdfs:comment "The numeric GW2 API achievement ID."@en .
+
 priory:associatedAchievementId a owl:DatatypeProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range xsd:integer ;
     rdfs:label "associated GW2 achievement ID"@en ;
     rdfs:comment "The official in-game GW2 API achievement ID tied to unlocking this crafting recipe or item."@en .
+

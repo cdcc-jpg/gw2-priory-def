@@ -1,0 +1,248 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix region: <https://priory.gw2/ref/region/> .
+@prefix zone: <https://priory.gw2/ref/zone/> .
+
+region:CoreTyriaRegionScheme a skos:ConceptScheme ;
+    skos:prefLabel "Core Tyria Regions"@en .
+
+region:Kryta a skos:Concept ;
+    skos:inScheme region:CoreTyriaRegionScheme ;
+    skos:prefLabel "Kryta"@en .
+
+region:Ascalon a skos:Concept ;
+    skos:inScheme region:CoreTyriaRegionScheme ;
+    skos:prefLabel "Ascalon"@en .
+
+region:Shiverpeaks a skos:Concept ;
+    skos:inScheme region:CoreTyriaRegionScheme ;
+    skos:prefLabel "Shiverpeak Mountains"@en .
+
+region:MaguumaJungle a skos:Concept ;
+    skos:inScheme region:CoreTyriaRegionScheme ;
+    skos:prefLabel "Maguuma Jungle"@en .
+
+region:RuinsOfOrr a skos:Concept ;
+    skos:inScheme region:CoreTyriaRegionScheme ;
+    skos:prefLabel "Ruins of Orr"@en .
+
+zone:Queensdale a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Queensdale"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:KessexHills a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Kessex Hills"@en ;
+    priory:zoneLevel 15 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:GendarranFields a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Gendarran Fields"@en ;
+    priory:zoneLevel 25 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:HarathiHinterlands a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Harathi Hinterlands"@en ;
+    priory:zoneLevel 35 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:BloodtideCoast a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Bloodtide Coast"@en ;
+    priory:zoneLevel 45 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Skimmer for water traversal" .
+
+zone:SouthsunCove a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Southsun Cove"@en ;
+    priory:zoneLevel 80 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:mountRecommendation "Skyscale for verticality" .
+
+zone:LionsArch a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Lion's Arch"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "No mount needed" .
+
+zone:DivinitysReach a skos:Concept ;
+    skos:broader region:Kryta ;
+    skos:prefLabel "Divinity's Reach"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "No mount needed" .
+
+zone:PlainsOfAshford a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Plains of Ashford"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:DiessaPlateau a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Diessa Plateau"@en ;
+    priory:zoneLevel 15 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:FieldsOfRuin a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Fields of Ruin"@en ;
+    priory:zoneLevel 30 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:IronMarches a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Iron Marches"@en ;
+    priory:zoneLevel 50 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Springer for terrain" .
+
+zone:BlazeridgeSteppes a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Blazeridge Steppes"@en ;
+    priory:zoneLevel 40 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:FireheartRise a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Fireheart Rise"@en ;
+    priory:zoneLevel 60 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:mountRecommendation "Springer for terrain" .
+
+zone:BlackCitadel a skos:Concept ;
+    skos:broader region:Ascalon ;
+    skos:prefLabel "Black Citadel"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "No mount needed" .
+
+zone:WayfarerFoothills a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Wayfarer Foothills"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:SnowdenDrifts a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Snowden Drifts"@en ;
+    priory:zoneLevel 15 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:LornarsPass a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Lornar's Pass"@en ;
+    priory:zoneLevel 25 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Springer for terrain" .
+
+zone:DredgehauntCliffs a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Dredgehaunt Cliffs"@en ;
+    priory:zoneLevel 40 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Springer for terrain" .
+
+zone:TimberlineFalls a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Timberline Falls"@en ;
+    priory:zoneLevel 50 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Skyscale greatly speeds vista collection" .
+
+zone:FrostgorgeSound a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Frostgorge Sound"@en ;
+    priory:zoneLevel 70 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:mountRecommendation "Skimmer for water traversal" .
+
+zone:Hoelbrak a skos:Concept ;
+    skos:broader region:Shiverpeaks ;
+    skos:prefLabel "Hoelbrak"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "No mount needed" .
+
+zone:CaledonForest a skos:Concept ;
+    skos:broader region:MaguumaJungle ;
+    skos:prefLabel "Caledon Forest"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:MetricaProvince a skos:Concept ;
+    skos:broader region:MaguumaJungle ;
+    skos:prefLabel "Metrica Province"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:BrisbanWildlands a skos:Concept ;
+    skos:broader region:MaguumaJungle ;
+    skos:prefLabel "Brisban Wildlands"@en ;
+    priory:zoneLevel 15 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:mountRecommendation "Raptor canyon leap useful" .
+
+zone:MountMaelstrom a skos:Concept ;
+    skos:broader region:MaguumaJungle ;
+    skos:prefLabel "Mount Maelstrom"@en ;
+    priory:zoneLevel 60 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:mountRecommendation "Skyscale greatly speeds vista collection" .
+
+zone:TheGrove a skos:Concept ;
+    skos:broader region:MaguumaJungle ;
+    skos:prefLabel "The Grove"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "No mount needed" .
+
+zone:RataSum a skos:Concept ;
+    skos:broader region:MaguumaJungle ;
+    skos:prefLabel "Rata Sum"@en ;
+    priory:zoneLevel 1 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:mountRecommendation "No mount needed" .
+
+zone:StraitsOfDevastation a skos:Concept ;
+    skos:broader region:RuinsOfOrr ;
+    skos:prefLabel "Straits of Devastation"@en ;
+    priory:zoneLevel 70 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:mountRecommendation "Skimmer for water traversal" .
+
+zone:MalchorsLeap a skos:Concept ;
+    skos:broader region:RuinsOfOrr ;
+    skos:prefLabel "Malchor's Leap"@en ;
+    priory:zoneLevel 75 ;
+    priory:explorationDifficulty "Very Hard" ;
+    priory:mountRecommendation "Skyscale greatly speeds vista collection" .
+
+zone:CursedShore a skos:Concept ;
+    skos:broader region:RuinsOfOrr ;
+    skos:prefLabel "Cursed Shore"@en ;
+    priory:zoneLevel 80 ;
+    priory:explorationDifficulty "Very Hard" ;
+    priory:mountRecommendation "Skyscale greatly speeds vista collection" .

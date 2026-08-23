@@ -32,3 +32,14 @@ All AI agents and contributors working on this repository must adhere to the fol
   * `engine/`: Triple store management, SPARQL queries, graph solvers, and account diff calculator.
   * `agent/`: LLM prompt orchestration, intent parsing, neuro-symbolic sandwich pipelines.
 * Ensure type safety with Pydantic / TypedDicts where appropriate.
+
+---
+
+## 4. Multi-Agent Orchestration & Subagent Delegation Protocol
+* **Lead Agent Role:** The primary agent operates as the Lead Architect & Orchestrator.
+* **Parallel Workstream Decomposition:** When tackling multi-file features, ontology extensions, engine solvers, or full-stack refactors, the lead agent MUST:
+  1. Decompose the task into discrete, decoupled parallel workstreams (e.g. Ontology Schema & Vocab Builder, Instance Graph Builder, Engine & API Builder, SHACL Validator, Test Suite Builder).
+  2. Define specialized subagents using `define_subagent` equipped with write tools and strict role-specific system prompts enforcing repository guidelines.
+  3. Dispatch them concurrently using `invoke_subagent` with high-reasoning models (`Model: "pro"` or `"inherit"`).
+  4. Coordinate asynchronous deliverables, resolve cross-file dependencies, and run centralized automated verification (e.g. SHACL constraint validation and unit test suites) before reporting results.
+

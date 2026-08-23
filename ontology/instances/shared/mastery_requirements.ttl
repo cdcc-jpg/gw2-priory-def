@@ -38,6 +38,36 @@ priory:track_astral_ward a priory:MasteryTrack, owl:NamedIndividual ;
     priory:expansion "Secrets of the Obscure"@en ;
     priory:masteryId 5 .
 
+priory:track_central_tyria_crafting a priory:MasteryTrack, owl:NamedIndividual ;
+    rdfs:label "Legendary Crafting"@en ;
+    priory:expansion "Central Tyria"@en ;
+    priory:masteryId 10 ;
+    priory:hasMasteryTier priory:mastery_revered_antiquarian,
+                          priory:mastery_magister_of_legends,
+                          priory:mastery_historian_of_the_armaments .
+
+# --- Central Tyria Legendary Crafting Mastery Tiers ---
+priory:mastery_revered_antiquarian a priory:MasteryTier, owl:NamedIndividual ;
+    rdfs:label "Revered Antiquarian Tier 1"@en ;
+    priory:belongsToTrack priory:track_central_tyria_crafting ;
+    priory:masteryTier 1 ;
+    skos:prefLabel "Revered Antiquarian"@en ;
+    skos:definition "Central Tyria Legendary Crafting Tier 1: Grants access to first-tier Legendary Precursor crafting collections and recipes from Grandmaster Craftsman Hobbs."@en .
+
+priory:mastery_magister_of_legends a priory:MasteryTier, owl:NamedIndividual ;
+    rdfs:label "Magister of Legends Tier 2"@en ;
+    priory:belongsToTrack priory:track_central_tyria_crafting ;
+    priory:masteryTier 2 ;
+    skos:prefLabel "Magister of Legends"@en ;
+    skos:definition "Central Tyria Legendary Crafting Tier 2: Grants access to second-tier Legendary Precursor crafting collections."@en .
+
+priory:mastery_historian_of_the_armaments a priory:MasteryTier, owl:NamedIndividual ;
+    rdfs:label "Historian of the Armaments Tier 3"@en ;
+    priory:belongsToTrack priory:track_central_tyria_crafting ;
+    priory:masteryTier 3 ;
+    skos:prefLabel "Historian of the Armaments"@en ;
+    skos:definition "Central Tyria Legendary Crafting Tier 3: Grants access to third-tier Legendary Precursor crafting collections, enabling the forging of precursor weapons."@en .
+
 # ------------------------------------------------------------------------------
 # 2. Mastery Prerequisites on Items & Vendors
 # ------------------------------------------------------------------------------
@@ -66,3 +96,59 @@ item:vendor_leivas priory:requiresMasteryTrack priory:track_arborstone ;
 item:vendor_lyhr priory:requiresMasteryTrack priory:track_astral_ward ;
     priory:requiredMasteryLevel 2 ;
     priory:masteryName "Astral Ward Flight (Level 2)"@en .
+
+# --- Grandmaster Craftsman Hobbs (Central Tyria Mastery Tier 1-4) ---
+item:vendor_hobbs a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Grandmaster Craftsman Hobbs"@en ;
+    priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
+    priory:zoneName "Lion's Arch"@en ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresMasteryTrack priory:track_central_tyria_crafting ;
+    priory:requiredMasteryLevel 1 ;
+    priory:masteryName "Revered Antiquarian (Tier 1)"@en ;
+    skos:definition "Sells Tier 1-4 Legendary Precursor collection manuals and recipes in Lion's Arch."@en .
+
+# ------------------------------------------------------------------------------
+# 3. Legendary Achievement Prerequisites
+# ------------------------------------------------------------------------------
+
+# --- Prismatic Champion's Regalia (Seasons of the Dragons: ach 5900) ---
+priory:ach_seasons_of_dragons a priory:Achievement, owl:NamedIndividual ;
+    rdfs:label "Current Events: Seasons of the Dragons"@en ;
+    priory:achievementId 5900 ;
+    skos:definition "Complete all 24 Return To Living World Season 2, 3, 4 and Icebrood Saga meta-achievements."@en .
+
+item:95380 priory:requiresAchievement priory:ach_seasons_of_dragons .
+
+# --- Ad Infinitum IV: Upper Bounds (ach 2451) ---
+priory:ach_ad_infinitum_4 a priory:Achievement, owl:NamedIndividual ;
+    rdfs:label "Ad Infinitum IV: Upper Bounds"@en ;
+    priory:achievementId 2451 ;
+    skos:definition "Complete the fourth and final tier of the Fractal Legendary Backpack collection."@en .
+
+item:77474 priory:requiresAchievement priory:ach_ad_infinitum_4 .
+
+# --- The Ascension IV: League Professional (ach 2973) ---
+priory:ach_the_ascension_4 a priory:Achievement, owl:NamedIndividual ;
+    rdfs:label "The Ascension IV: League Professional"@en ;
+    priory:achievementId 2973 ;
+    skos:definition "Complete the final tier of the PvP League Legendary Backpack collection."@en .
+
+item:79895 priory:requiresAchievement priory:ach_the_ascension_4 .
+
+# --- Aurora: Awakening (ach 3717) ---
+priory:ach_aurora_awakening a priory:Achievement, owl:NamedIndividual ;
+    rdfs:label "Aurora: Awakening"@en ;
+    priory:achievementId 3717 ;
+    skos:definition "Complete the meta-collection across all 6 Living World Season 3 map achievements."@en .
+
+item:81908 priory:requiresAchievement priory:ach_aurora_awakening .
+
+# --- Vision: Awakening (ach 4658) ---
+priory:ach_vision_awakening a priory:Achievement, owl:NamedIndividual ;
+    rdfs:label "Vision: Awakening"@en ;
+    priory:achievementId 4658 ;
+    skos:definition "Complete the meta-collection across all 6 Living World Season 4 map achievements."@en .
+
+item:91048 priory:requiresAchievement priory:ach_vision_awakening .
+

@@ -91,7 +91,8 @@ class PrioryChatSession:
                 user_prompt=user_prompt,
                 time_budget_minutes=resolved_goal.intent.time_budget_minutes,
                 optimal_plan=top_optimal_plan,
-                target_quantity=resolved_goal.target_quantity
+                target_quantity=resolved_goal.target_quantity,
+                account_state=self.account_state
             )
             self.history.append({"role": "user", "content": user_prompt})
             self.history.append({"role": "assistant", "content": guide.executive_summary})
@@ -105,15 +106,44 @@ class PrioryChatSession:
             is_acquisition_query=resolved_goal.is_acquisition_query
         )
 
-        # 3. Path Solver Optimization (respecting exhausted sources and time budgets)
-        optimal_plan = self.orchestrator.solver.solve_optimal_path(
-            diff_report=diff_report,
-            account=self.account_state,
-            tp_prices=live_tp_prices,
-            excluded_modes=resolved_goal.intent.excluded_game_modes,
-            exhausted_sources=resolved_goal.intent.exhausted_sources,
-            time_budget_minutes=resolved_goal.intent.time_budget_minutes
-        )
+        # 3. Path Solver Optimization (using dedicated Twilight solver for item 30704)
+        if resolved_goal.resolved_item_id == 30704:
+            from engine.twilight_journey_solver import TwilightJourneySolver
+            twilight_solver = TwilightJourneySolver(self.orchestrator.store)
+
+            wv_exhausted = (
+                getattr(resolved_goal, "wizards_vault_exhausted", False)
+                or getattr(resolved_goal.intent, "wizards_vault_exhausted", False)
+                or "WizardVault" in resolved_goal.intent.exhausted_sources
+                or ("vault" in user_prompt.lower() and any(k in user_prompt.lower() for k in ["bought", "exhausted", "completed", "claimed", "done", "finished"]))
+                or "already bought" in user_prompt.lower()
+            )
+            opt_cost = (
+                getattr(resolved_goal, "optimization_target", None) == "cheapest_gold"
+                or getattr(resolved_goal.intent, "optimization_target", None) == "cheapest_gold"
+                or getattr(resolved_goal, "prefer_cheap", False)
+                or getattr(resolved_goal.intent, "prefer_cheap", False)
+                or any(k in user_prompt.lower() for k in ["cheapest", "least gold", "lowest cost", "cheapest gold", "minimum gold", "save gold", "cheapest route", "cheapest path"])
+                or True
+            )
+
+            optimal_plan = twilight_solver.solve_twilight_journey(
+                diff_report=diff_report,
+                account=self.account_state,
+                tp_prices=live_tp_prices,
+                time_budget_minutes=resolved_goal.intent.time_budget_minutes,
+                wizards_vault_exhausted=wv_exhausted,
+                optimize_for_cost=opt_cost
+            )
+        else:
+            optimal_plan = self.orchestrator.solver.solve_optimal_path(
+                diff_report=diff_report,
+                account=self.account_state,
+                tp_prices=live_tp_prices,
+                excluded_modes=resolved_goal.intent.excluded_game_modes,
+                exhausted_sources=resolved_goal.intent.exhausted_sources,
+                time_budget_minutes=resolved_goal.intent.time_budget_minutes
+            )
 
         # 4. Semantic Subgraph Context Extraction
         semantic_context = self.orchestrator.semantic_service.get_item_semantic_context_for_llm(resolved_goal.resolved_item_id)
@@ -123,7 +153,8 @@ class PrioryChatSession:
             goal=resolved_goal,
             diff_report=diff_report,
             semantic_context=semantic_context,
-            optimal_plan=optimal_plan
+            optimal_plan=optimal_plan,
+            account_state=self.account_state
         )
 
         # Save to history

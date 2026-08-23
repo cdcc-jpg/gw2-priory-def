@@ -1,10 +1,88 @@
 # End-to-End Data Flow & Reasoning Trace
 
-This document details the exact lifecycle of a player request as it flows through every subsystem of Project Priory, providing concrete JSON payloads, mathematical state transitions, and sequence diagrams.
+This document details the exact lifecycle of player requests as they flow through every subsystem of Project Priory, providing concrete sequence diagrams, JSON payloads, mathematical state transitions, and spatial graph context.
 
 ---
 
-## 1. Complete End-to-End Sequence Diagram
+## 1. End-to-End Information Flow Overview (Direct Recipe Query Trace)
+
+### Scenario: *"Get me the recipe I need to follow to craft Twilight."*
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 👤 User
+    participant Orch as 🎛️ Orchestrator<br/>(agent/orchestrator.py)
+    participant TopLLM as 🧠 Top LLM<br/>(agent/intent_parser.py)
+    participant SQS as 🔮 SemanticQueryService<br/>(engine/semantic_query.py)
+    participant KG as 📚 Knowledge Graph (RDF/OWL/SKOS)<br/>(engine/graph_store.py)
+    participant Diff as ⚙️ AccountDiffEngine<br/>(engine/account_diff.py)
+    participant Solver as ⏱️ PathSolver<br/>(engine/path_solver.py)
+    participant BotLLM as ✍️ Bottom LLM<br/>(agent/guide_generator.py)
+
+    User->>Orch: "Get me the recipe I need to follow to craft Twilight."
+    
+    rect rgb(230, 245, 255)
+    Note over Orch,TopLLM: Layer 1: Natural Language Intent Parsing
+    Orch->>TopLLM: Prompt + Pydantic Schema (PlayerGoalIntent)
+    TopLLM-->>Orch: PlayerGoalIntent(target="Twilight", qty=1, type=DIRECT_TARGET)
+    end
+
+    rect rgb(245, 235, 250)
+    Note over Orch,KG: Layer 2: Semantic Entity Resolution & Taxonomy Grounding
+    Orch->>SQS: resolve_entity_by_text("Twilight")
+    SQS->>KG: SPARQL: Match rdfs:label & skos:altLabel
+    KG-->>SQS: item:30704 (Legendary Greatsword, chatCode: [&AgErZgAA])
+    SQS-->>Orch: ResolvedGoal(item_id=30704, name="Twilight", qty=1)
+    end
+
+    rect rgb(235, 250, 235)
+    Note over Orch,Solver: Layer 3: Deterministic Graph Traversal & Delta Math
+    Orch->>Diff: compute_diff(goal_item_id=30704, qty=1, account_state)
+    Diff->>KG: SPARQL: Recursive producedBy & hasIngredientRequirement DAG
+    KG-->>Diff: Full 5-tier ingredient tree + discipline rules
+    Diff-->>Orch: AccountDiffReport (owned vs. missing materials & wallet currencies)
+    Orch->>Solver: solve_optimal_path(diff_report, account_state, tp_prices)
+    Solver->>KG: SPARQL: Query substitute sources, milestones & time-gates
+    KG-->>Solver: Milestone vendors, alternative currency exchanges
+    Solver-->>Orch: OptimalCraftingPlan (5-phase roadmap, total gold cost, time-gates)
+    end
+
+    rect rgb(255, 245, 230)
+    Note over Orch,BotLLM: Layer 4: Spatial Context & Grounded Synthesis
+    Orch->>SQS: get_item_semantic_context_for_llm(30704)
+    SQS->>KG: SPARQL: Fetch NPCs, zones, and waypoint chat codes
+    KG-->>SQS: Subgraph (Miyani [&BBAEAAA=], Rojan [&BHsBAAA=])
+    SQS-->>Orch: Grounded semantic facts block
+    Orch->>BotLLM: Verified Facts + Optimal Plan + Pydantic Schema (PersonalizedGuide)
+    BotLLM-->>Orch: Structured JSON (PersonalizedGuide)
+    Orch->>User: Formatted Guide with Roadmap, Checklists & Chat Codes
+    end
+```
+
+#### Step-by-Step Flow Breakdown
+1. **Top LLM Intent Parsing (`agent/intent_parser.py`):**
+   * Parses the user prompt into typed `PlayerGoalIntent(target_entity="Twilight", target_quantity=1, goal_type=GoalType.DIRECT_TARGET)`.
+2. **Semantic Entity Resolution (`engine/semantic_query.py`):**
+   * Executes SPARQL over `PrioryGraphStore` matching `rdfs:label` and `skos:altLabel`.
+   * Resolves text `"Twilight"` to canonical IRI `item:30704` (GW2 ID `30704`, Chat Code `[&AgErZgAA]`, `rarity:Legendary`, `weapon:Greatsword`).
+3. **Deterministic Recipe DAG Traversal & Account Delta (`engine/account_diff.py`):**
+   * Traverses `recipe:forge_twilight` recursively down to raw leaves (*Dusk*, *Gift of Fortune*, *Gift of Mastery*, *Gift of Twilight*).
+   * Cross-references live `AccountState` (materials, bank, wallet, armory unlock status).
+   * Computes exact missing materials, currency requirements (Spirit Shards, Karma), and discipline skill requirements (Weaponsmith 400, Armorsmith 400).
+4. **Multi-Criteria Route Optimization & Milestones (`engine/path_solver.py`):**
+   * Formulates the authentic **5-Phase Master Roadmap** (*Phase 1: Precursor Journey*, *Phase 2: Mystic Fortune/Tribute*, *Phase 3: Tyrian Mastery*, *Phase 4: Specific Weapon Gift*, *Phase 5: Final Mystic Forge Assembly*).
+   * Calculates live Trading Post costs for tradeable missing components.
+5. **Spatial Context Extraction (`engine/semantic_query.py`):**
+   * Queries spatial milestone vendor individuals: **Miyani** (`[&BBAEAAA=]`), **Rojan the Penitent** (`[&BHsBAAA=]`), and **Grandmaster Hobbs** (`[&BBAEAAA=]`).
+6. **Bottom LLM Grounded Synthesis (`agent/guide_generator.py`):**
+   * Synthesizes the finalized, hallucination-free progression guide with formatted roadmap, copyable chat codes, and checklists.
+
+---
+
+## 2. Complex Multi-Constraint Sequence & Payload Trace
+
+### Scenario: *"I want to craft 2 legendary sigils tonight. I have 90 mins."*
 
 ```mermaid
 sequenceDiagram

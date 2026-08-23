@@ -1,0 +1,257 @@
+@prefix : <https://priory.gw2/def/> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+
+# ==============================================================================
+# ETERNITY COMMERCIAL LOOP & POST-FORGE BINDING ARCHITECTURE
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Legendary Greatswords (Eternity, Sunrise, Twilight)
+# ------------------------------------------------------------------------------
+
+item:30689 a priory:LegendaryWeapon, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Eternity"@en ;
+    skos:altLabel "Gen 1 Greatsword"@en,
+        "Gen 1 Legendary Greatsword"@en,
+        "Gen One Greatsword"@en,
+        "Generation 1 Greatsword"@en,
+        "Generation One Greatsword"@en ;
+    priory:gw2Id 30689 ;
+    priory:chatCode "[&AgExZwAA]" ;
+    priory:chatLink "[&AgExZwAA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    priory:isAccountBound false ;
+    priory:armoryMaxCap 1 ;
+    priory:producedBy recipe:recipe_forge_eternity_unbound, recipe:recipe_forge_eternity_bound ;
+    rdfs:comment "Generation 1 Legendary Greatsword formed by uniting Twilight and Sunrise. When forged from crafted/unbound precursors and weapons, Eternity is tradeable and unbound, enabling the Eternity Commercial Loop on the Black Lion Trading Post."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Eternity> .
+
+item:30703 a priory:LegendaryWeapon, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Sunrise"@en ;
+    skos:altLabel "Gen 1 Greatsword"@en,
+        "Gen 1 Legendary Greatsword"@en,
+        "Gen One Greatsword"@en,
+        "Generation 1 Greatsword"@en,
+        "The Legendary Greatsword"@en ;
+    priory:gw2Id 30703 ;
+    priory:chatCode "[&AgEvZwAA]" ;
+    priory:chatLink "[&AgEvZwAA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    priory:isAccountBound false ;
+    priory:armoryMaxCap 1 ;
+    rdfs:comment "Generation 1 Legendary Greatsword representing the light of day. Forged from Dawn, Gift of Mastery, Gift of Fortune, and Gift of Sunrise. Tradeable until bound to the account armory."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sunrise> .
+
+item:30704 a priory:LegendaryWeapon, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Twilight"@en ;
+    skos:altLabel "Gen 1 Greatsword"@en,
+        "Gen 1 Legendary Greatsword"@en,
+        "Gen One Greatsword"@en,
+        "Generation 1 Greatsword"@en,
+        "The Legendary Greatsword"@en ;
+    priory:gw2Id 30704 ;
+    priory:chatCode "[&AgErZgAA]" ;
+    priory:chatLink "[&AgErZgAA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Greatsword> ;
+    priory:isAccountBound false ;
+    priory:armoryMaxCap 1 ;
+    rdfs:comment "Generation 1 Legendary Greatsword representing the darkness of night. Forged from Dusk, Gift of Mastery, Gift of Fortune, and Gift of Twilight. Tradeable until bound to the account armory."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Twilight> .
+
+
+# ------------------------------------------------------------------------------
+# 2. Armory-Bound Memories (Post-Forge Binding Mechanism)
+# ------------------------------------------------------------------------------
+
+item:94875 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Memory of Twilight"@en ;
+    skos:altLabel "Twilight Memory"@en ;
+    priory:gw2Id 94875 ;
+    priory:chatCode "[&AgFucwEA]" ;
+    priory:chatLink "[&AgFucwEA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    rdfs:comment "An armory-bound trophy granted when Twilight is bound to your Legendary Armory. Used in the Mystic Forge to craft an Account Bound Eternity."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Memory_of_Twilight> .
+
+item:94917 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Memory of Sunrise"@en ;
+    skos:altLabel "Sunrise Memory"@en ;
+    priory:gw2Id 94917 ;
+    priory:chatCode "[&AgGdcwEA]" ;
+    priory:chatLink "[&AgGdcwEA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    rdfs:comment "An armory-bound trophy granted when Sunrise is bound to your Legendary Armory. Used in the Mystic Forge to craft an Account Bound Eternity."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Memory_of_Sunrise> .
+
+
+# ------------------------------------------------------------------------------
+# 3. Forge Catalysts & Crafting Materials
+# ------------------------------------------------------------------------------
+
+item:19732 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Crystalline Dust"@en ;
+    skos:altLabel "Pile of Crystalline Dust"@en ;
+    priory:gw2Id 19732 ;
+    priory:chatCode "[&AgFsEwAA]" ;
+    priory:chatLink "[&AgFsEwAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    rdfs:comment "Tier 6 fine crafting material used as catalyst in Mystic Forge recipes."@en .
+
+item:19970 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mystic Coin"@en ;
+    skos:altLabel "Mystic Coins"@en ;
+    priory:gw2Id 19970 ;
+    priory:chatCode "[&AgEITgAA]" ;
+    priory:chatLink "[&AgEITgAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    rdfs:comment "Mystic Forge catalyst currency used in high-tier exotic and legendary transmutations."@en .
+
+item:19976 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mystic Coin"@en ;
+    skos:altLabel "Mystic Coins"@en ;
+    priory:gw2Id 19976 ;
+    priory:chatCode "[&AgEITgAA]" ;
+    priory:chatLink "[&AgEITgAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+
+# ------------------------------------------------------------------------------
+# 4. Mystic Forge Eternity Recipes
+# ------------------------------------------------------------------------------
+
+# Unbound Eternity Forge Recipe (Twilight + Sunrise + 5 Crystalline Dust + 10 Mystic Coins -> Eternity)
+recipe:recipe_forge_eternity_unbound a priory:MysticForgeRecipe, priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Eternity (Unbound)"@en ;
+    priory:producesItem item:30689 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        recipe:req_eternity_unbound_twilight ,
+        recipe:req_eternity_unbound_sunrise ,
+        recipe:req_eternity_unbound_dust ,
+        recipe:req_eternity_unbound_coins ;
+    rdfs:comment "Mystic Forge recipe combining crafted Twilight and Sunrise with 5 Crystalline Dust and 10 Mystic Coins to produce a tradeable, unbound Eternity for the commercial loop."@en .
+
+recipe:req_eternity_unbound_twilight a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:30704 ;  # Twilight
+    priory:requiredQuantity 1 .
+
+recipe:req_eternity_unbound_sunrise a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:30703 ;  # Sunrise
+    priory:requiredQuantity 1 .
+
+recipe:req_eternity_unbound_dust a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19732 ;  # Crystalline Dust
+    priory:requiredQuantity 5 .
+
+recipe:req_eternity_unbound_coins a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19970 ;  # Mystic Coins
+    priory:requiredQuantity 10 .
+
+
+# Account Bound Eternity Forge Recipe (Memory of Twilight + Memory of Sunrise + 5 Crystalline Dust + 10 Mystic Coins -> Eternity Account Bound)
+recipe:recipe_forge_eternity_bound a priory:MysticForgeRecipe, priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Eternity (Account Bound)"@en ;
+    priory:producesItem item:30689 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        recipe:req_eternity_bound_twilight ,
+        recipe:req_eternity_bound_sunrise ,
+        recipe:req_eternity_bound_dust ,
+        recipe:req_eternity_bound_coins ;
+    rdfs:comment "Mystic Forge recipe combining Memory of Twilight and Memory of Sunrise with 5 Crystalline Dust and 10 Mystic Coins to produce an account-bound Eternity for the Legendary Armory."@en .
+
+recipe:req_eternity_bound_twilight a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:94875 ;  # Memory of Twilight
+    priory:requiredQuantity 1 .
+
+recipe:req_eternity_bound_sunrise a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:94917 ;  # Memory of Sunrise
+    priory:requiredQuantity 1 .
+
+recipe:req_eternity_bound_dust a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19732 ;  # Crystalline Dust
+    priory:requiredQuantity 5 .
+
+recipe:req_eternity_bound_coins a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:19970 ;  # Mystic Coins
+    priory:requiredQuantity 10 .
+
+
+# ------------------------------------------------------------------------------
+# 5. Invisible Bags & Safe Boxes (priory:SafeStagingBag Architecture)
+# ------------------------------------------------------------------------------
+
+item:67390 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "20-Slot Invisible Bag"@en ;
+    skos:altLabel "Invisible Bag"@en,
+        "20 Slot Invisible Bag"@en ;
+    priory:gw2Id 67390 ;
+    priory:chatCode "[&AgG5VAAA]" ;
+    priory:chatLink "[&AgG5VAAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:bagSlots 20 ;
+    rdfs:comment "A 20-slot inventory bag whose items are hidden from vendors, immune to deposit all materials, and never affected by inventory compacting. Essential for safe staging of high-value unbound legendaries and precursors during the Eternity loop."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Invisible_Bag> .
+
+item:9594 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "20 Slot Safe Box"@en ;
+    skos:altLabel "Safe Box"@en,
+        "20-Slot Safe Box"@en ;
+    priory:gw2Id 9594 ;
+    priory:chatCode "[&AgF6JQAA]" ;
+    priory:chatLink "[&AgF6JQAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:bagSlots 20 ;
+    rdfs:comment "A 20-slot safe box crafted by Armorsmiths whose contents will not be sold to vendors or moved during inventory sorting."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Safe_Box> .
+
+item:9584 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "20 Slot Invisible Pack"@en ;
+    skos:altLabel "Invisible Pack"@en,
+        "20-Slot Invisible Pack"@en ;
+    priory:gw2Id 9584 ;
+    priory:chatCode "[&AgFwJQAA]" ;
+    priory:chatLink "[&AgFwJQAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:bagSlots 20 ;
+    rdfs:comment "A 20-slot invisible pack crafted by Leatherworkers whose contents are protected from accidental sale, sorting, and deposit actions."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Invisible_Pack> .
+
+item:8948 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "20 Slot Invisible Bag"@en ;
+    skos:altLabel "Invisible Bag (Tailor)"@en ;
+    priory:gw2Id 8948 ;
+    priory:chatCode "[&AgH0IgAA]" ;
+    priory:chatLink "[&AgH0IgAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:bagSlots 20 ;
+    rdfs:comment "A 20-slot invisible bag crafted by Tailors whose contents remain locked in position and hidden from vendors."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Invisible_Bag> .

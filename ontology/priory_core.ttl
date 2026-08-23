@@ -251,6 +251,65 @@ priory:TimeGate a owl:Class ;
     skos:definition "Limits the frequency or quantity of crafting/purchasing per unit time."@en ;
     rdfs:comment "Limits the frequency or quantity of crafting/purchasing per unit time."@en .
 
+priory:ItemBuff a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Item Buff / Booster"@en ;
+    rdfs:comment "A consumable booster, guild tavern buff, or enhancement that accelerates gameplay or reward track progression."@en .
+
+# --- Convenience Gizmos & VIP Lounges ---
+
+priory:ConvenienceGizmo a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Convenience Gizmo"@en ;
+    skos:altLabel "Gizmo"@en, "Utility Gizmo"@en ;
+    rdfs:comment "An account utility gizmo, infinite salvage tool, or VIP teleportation pass."@en .
+
+priory:VIPLoungePass a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "VIP Lounge Pass"@en ;
+    skos:altLabel "Passkey"@en, "Lounge Scroll"@en, "Bastion Pass"@en ;
+    rdfs:comment "A permanent or reusable pass providing unlimited access to exclusive lounges and bastion hubs with complete amenities."@en .
+
+priory:InfiniteSalvageItem a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "Infinite Salvage-o-Matic"@en ;
+    skos:altLabel "Salvage-o-Matic"@en, "Infinite Salvage Kit"@en ;
+    rdfs:comment "An infinite-use salvage kit powered by account copper/silver or karma."@en .
+
+priory:PermanentContract a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "Permanent Contract"@en ;
+    skos:altLabel "Permanent Service Contract"@en, "Express Contract"@en ;
+    rdfs:comment "A permanent, unlimited-use contract granting instant portable access to banking, trading post, merchant, or styling services from anywhere."@en .
+
+priory:CurrencyConverter a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "Currency Converter / Gobbler"@en ;
+    skos:altLabel "Converter"@en, "Gobbler"@en, "Material Converter"@en ;
+    rdfs:comment "A portable exchanger or gobbler consuming crafting materials, karma, or map currencies in exchange for reward containers and boosts."@en .
+
+priory:PortalTome a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "Portal Tome / Teleporter"@en ;
+    skos:altLabel "Teleportation Scroll"@en, "Portal Tome"@en, "Portal Scroll"@en ;
+    rdfs:comment "A reusable tome, scroll, or stone that transports players to specific Living World or expansion zones."@en .
+
+priory:AccountStorageUpgrade a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "Account Storage Upgrade"@en ;
+    skos:altLabel "Storage Upgrade"@en, "Account Expansion"@en ;
+    rdfs:comment "An account-wide upgrade expanding shared inventory slots, bank tab capacity, or material storage limit."@en .
+
+priory:SafeStagingBag a owl:Class ;
+    rdfs:subClassOf priory:ConvenienceGizmo ;
+    rdfs:label "Safe Staging Bag / Invisible Bag / Safe Box"@en ;
+    skos:altLabel "Invisible Bag"@en, "Safe Box"@en, "Invisible Pack"@en, "Safe Staging Bag"@en ;
+    rdfs:comment "An inventory bag or safe box whose contents are immune to vendor selling, deposit all materials, and auto-compaction, used for staging valuable legendary precursors and unbound items."@en .
+
+priory:LoungeFeature a owl:Class ;
+    rdfs:label "Lounge Amenity / Feature"@en ;
+    rdfs:comment "An amenity, service, or portal feature available within a VIP Lounge or hub."@en .
+
 # ==============================================================================
 # Object Properties (Verbs / Verb Phrases)
 # ==============================================================================
@@ -364,6 +423,22 @@ priory:hasTimeGate a owl:ObjectProperty ;
     rdfs:range priory:TimeGate ;
     rdfs:label "has time gate"@en .
 
+priory:acceleratedBy a owl:ObjectProperty ;
+    rdfs:domain priory:AcquisitionPath ;
+    rdfs:range priory:ItemBuff ;
+    rdfs:label "accelerated by"@en ;
+    rdfs:comment "Specifies consumable boosters, guild tavern enhancements, or account buffs that accelerate progression on this acquisition path."@en .
+
+priory:hasFeature a owl:ObjectProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:label "has feature / amenity"@en ;
+    rdfs:comment "Specifies an amenity, portal, or convenience feature provided by this item or lounge."@en .
+
+priory:hasLoungeFeature a owl:ObjectProperty ;
+    rdfs:subPropertyOf priory:hasFeature ;
+    rdfs:label "has lounge amenity"@en ;
+    rdfs:comment "Specifies a VIP lounge service or amenity available at this lounge hub."@en .
+
 # ==============================================================================
 # Datatype Properties (Noun Phrases / Booleans)
 # ==============================================================================
@@ -382,6 +457,13 @@ priory:chatCode a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
     rdfs:range xsd:string ;
     rdfs:label "In-game Chat Link Code"@en .
+
+priory:chatLink a owl:DatatypeProperty ;
+    rdfs:subPropertyOf priory:chatCode ;
+    owl:equivalentProperty priory:chatCode ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:string ;
+    rdfs:label "In-game Chat Link Code (alias)"@en .
 
 priory:requiredQuantity a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
@@ -416,12 +498,77 @@ priory:expectedYieldRate a owl:DatatypeProperty ;
     rdfs:range xsd:decimal ;
     rdfs:label "expected yield probability rate"@en .
 
+priory:duration a owl:DatatypeProperty ;
+    rdfs:domain priory:ItemBuff ;
+    rdfs:range xsd:string ;
+    rdfs:label "buff duration"@en .
+
+priory:accelerationMultiplier a owl:DatatypeProperty ;
+    rdfs:domain priory:ItemBuff ;
+    rdfs:range xsd:string ;
+    rdfs:label "acceleration multiplier rate"@en .
+
+# --- Convenience Gizmo & VIP Lounge Properties ---
+
+priory:salvageCostPerUse a owl:DatatypeProperty ;
+    rdfs:domain priory:InfiniteSalvageItem ;
+    rdfs:range xsd:integer ;
+    rdfs:label "salvage cost per use (copper)"@en ;
+    rdfs:comment "Cost in copper coins per salvage action."@en .
+
+priory:salvageRarityRate a owl:DatatypeProperty ;
+    rdfs:domain priory:InfiniteSalvageItem ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "salvage rare material rate"@en ;
+    rdfs:comment "Percentage probability of obtaining rarer materials (0.0 to 1.0)."@en .
+
+priory:salvageUpgradeRate a owl:DatatypeProperty ;
+    rdfs:domain priory:InfiniteSalvageItem ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "salvage upgrade recovery rate"@en ;
+    rdfs:comment "Percentage probability of recovering upgrades or charm/symbol conversion rate (0.0 to 1.0)."@en .
+
+priory:hasCraftingStations a owl:DatatypeProperty ;
+    rdfs:domain priory:VIPLoungePass ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has all crafting stations"@en .
+
+priory:hasMysticForge a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VIPLoungePass priory:ConvenienceGizmo) ] ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has Mystic Forge access"@en .
+
+priory:hasBank a owl:DatatypeProperty ;
+    rdfs:domain priory:VIPLoungePass ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has bank and guild bank access"@en .
+
+priory:hasTradingPost a owl:DatatypeProperty ;
+    rdfs:domain priory:VIPLoungePass ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has Black Lion Trading Post access"@en .
+
+priory:hasVendor a owl:DatatypeProperty ;
+    rdfs:domain priory:VIPLoungePass ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has merchants and armor repair vendors"@en .
+
+priory:hasInstantReturn a owl:DatatypeProperty ;
+    rdfs:domain priory:VIPLoungePass ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "has instant return to previous open world map"@en .
+
+priory:bagSlots a owl:DatatypeProperty ;
+    rdfs:domain priory:SafeStagingBag ;
+    rdfs:range xsd:integer ;
+    rdfs:label "bag slot capacity"@en .
+
 # --- Spatial & Waypoint Navigation Properties ---
 
 priory:vendorNPC a owl:DatatypeProperty ;
-    rdfs:domain priory:VendorExchangePath ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
     rdfs:range xsd:string ;
-    rdfs:label "Vendor NPC Name"@en .
+    rdfs:label "Vendor / Relevant NPC Name"@en .
 
 priory:zoneName a owl:DatatypeProperty ;
     rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
@@ -429,7 +576,7 @@ priory:zoneName a owl:DatatypeProperty ;
     rdfs:label "Map / Zone Name"@en .
 
 priory:waypointName a owl:DatatypeProperty ;
-    rdfs:domain priory:VendorExchangePath ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
     rdfs:range xsd:string ;
     rdfs:label "Waypoint Name"@en .
 
@@ -474,6 +621,68 @@ weapon:Spear a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader w
 weapon:HarpoonGun a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:AquaticWeapon ; skos:prefLabel "Harpoon Gun"@en .
 weapon:Trident a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:AquaticWeapon ; skos:prefLabel "Trident"@en .
 
+# --- Exploration & Spatial Navigation ---
+priory:ExplorationZone a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Exploration Zone"@en ;
+    rdfs:comment "A geographic zone in Core Tyria contributing to Gift of Exploration map completion."@en .
+
+priory:FarmingLocation a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Farming Location"@en ;
+    rdfs:comment "An in-game location optimized for farming specific materials or currencies."@en .
+
+priory:DungeonPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Dungeon Path Acquisition"@en ;
+    skos:altLabel "dungeon"@en, "dungeon run"@en, "dungeon path"@en ;
+    skos:definition "Acquiring items or tokens by completing specific dungeon explorable paths."@en .
+
+priory:OpenWorldFarmPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Open World Farming"@en ;
+    skos:altLabel "farm"@en, "grind"@en, "meta event"@en, "RIBA"@en ;
+    skos:definition "Acquiring materials through open world meta events, champion trains, or material node farming."@en .
+
+priory:MysticForgePromotionPath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Mystic Forge Material Promotion"@en ;
+    skos:altLabel "promote"@en, "forge promote"@en, "transmute"@en ;
+    skos:definition "Using the Mystic Forge to upgrade lower-tier materials into higher-tier materials."@en .
+
+priory:requiresExpansion a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "requires expansion"@en ;
+    rdfs:comment "The expansion or living world season required to access this content."@en .
+
+priory:recommendedMount a owl:ObjectProperty ;
+    rdfs:range skos:Concept ;
+    rdfs:label "recommended mount"@en ;
+    rdfs:comment "The mount type that provides the greatest mobility advantage for this activity or zone."@en .
+
+priory:zoneLevel a owl:DatatypeProperty ;
+    rdfs:range xsd:integer ;
+    rdfs:label "zone minimum level"@en .
+
+priory:explorationDifficulty a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "exploration difficulty rating"@en .
+
+priory:farmingEfficiency a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "farming efficiency rating"@en ;
+    rdfs:comment "Approximate gold-per-hour or items-per-hour efficiency for this farming location."@en .
+
+priory:eventCadence a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "event cadence"@en ;
+    rdfs:comment "How frequently this event spawns or can be triggered (e.g. every 2 hours, on demand)."@en .
+
+priory:hasRegion a owl:ObjectProperty ;
+    rdfs:domain priory:ExplorationZone ;
+    rdfs:range skos:Concept ;
+    rdfs:label "belongs to region"@en .
+
 # ==============================================================================
 # Controlled Vocabularies: Rarity Tiers (SKOS)
 # ==============================================================================
@@ -490,3 +699,76 @@ rarity:Rare a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel 
 rarity:Exotic a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Exotic"@en .
 rarity:Ascended a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Ascended"@en .
 rarity:Legendary a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Legendary"@en .
+
+# ==============================================================================
+# Controlled Vocabularies: VIP Lounge Amenities (SKOS)
+# ==============================================================================
+
+priory:LoungeFeatureScheme a skos:ConceptScheme ;
+    rdfs:label "VIP Lounge Amenities and Features Taxonomy"@en ;
+    skos:prefLabel "Lounge Feature Scheme"@en .
+
+priory:FeatureCraftingStations a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "All Crafting Stations"@en ;
+    rdfs:comment "Access to all eight core crafting discipline stations."@en .
+
+priory:FeatureMysticForge a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Mystic Forge"@en ;
+    rdfs:comment "On-site Mystic Forge access."@en .
+
+priory:FeatureBank a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Bank and Guild Bank Access"@en ;
+    rdfs:comment "Access to Account Vault and Guild Bank storage."@en .
+
+priory:FeatureTradingPost a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Trading Post Agent"@en ;
+    rdfs:comment "Access to Black Lion Trading Post pickup and delivery merchants."@en .
+
+priory:FeatureVendor a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Merchants and Utility Vendors"@en ;
+    rdfs:comment "General merchants, laurels, crafting materials, and armor repair."@en .
+
+priory:FeatureInstantReturn a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Instant Return to Open World"@en ;
+    rdfs:comment "Special action skill or portal to instantly return to your exact previous location in the open world."@en .
+
+priory:FeatureFractalLobby a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Fractal Hub Portal & Vendors"@en ;
+    rdfs:comment "Direct portals and merchants for Fractals of the Mists (Mistlock Sanctuary)."@en .
+
+priory:FeatureWvWVendors a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "WvW Merchants & Siege Testing Arena"@en ;
+    rdfs:comment "World vs World siege merchants, tactics, and duel arena (Armistice Bastion)."@en .
+
+priory:FeatureFishing a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Fishing Waters & Jade Bot Workbench"@en ;
+    rdfs:comment "Exclusive fishing holes, bait vendors, and Jade Bot Workbench (Thousand Seas Pavilion)."@en .
+
+priory:FeatureStrikePortals a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Strike Mission & Raid Portals"@en ;
+    rdfs:comment "Direct launch portals to End of Dragons and expansion Strike Missions."@en .
+
+priory:FeatureStylist a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Hairstylist & Aesthetic Services"@en ;
+    rdfs:comment "Personal hairstylist and cosmetic appearance modification services."@en .
+
+priory:FeatureToolDelivery a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Tool Delivery Services"@en ;
+    rdfs:comment "Delivery services for infinite gathering tools and harvesting supplies."@en .
+
+priory:FeatureRepair a skos:Concept, priory:LoungeFeature ;
+    skos:inScheme priory:LoungeFeatureScheme ;
+    skos:prefLabel "Armor Repair Canister Service"@en ;
+    rdfs:comment "Instant portable armor repair and reinforcement services."@en .

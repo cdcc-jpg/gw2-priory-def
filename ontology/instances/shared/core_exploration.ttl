@@ -1,0 +1,56 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix mount: <https://priory.gw2/ref/mount/> .
+@prefix zone: <https://priory.gw2/ref/zone/> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+item:19677_ExplorationPath a priory:AchievementCollectionPath ;
+    rdfs:label "100% Core Tyria Map Completion" ;
+    priory:targetItem item:19677 ;
+    rdfs:comment "Requires completing all renown hearts, vistas, points of interest, and hero challenges in Core Tyria. Estimated: 16-21 hours for a fresh account, 8-12 hours with mounts." .
+
+zone:KrytaExploration a priory:ExplorationZone ;
+    rdfs:label "Kryta Map Completion" ;
+    priory:zoneName "Kryta" ;
+    priory:zoneLevel "1-80" ;
+    priory:nearestWaypoint "[&BO8AAAA=]" ;
+    priory:explorationDifficulty "Easy" ;
+    priory:recommendedMount mount:Raptor ;
+    rdfs:comment "Mostly flat terrain, estimated 3-4 hours. Raptor makes traversal very fast." .
+
+zone:AscalonExploration a priory:ExplorationZone ;
+    rdfs:label "Ascalon Map Completion" ;
+    priory:zoneName "Ascalon" ;
+    priory:zoneLevel "1-80" ;
+    priory:nearestWaypoint "[&BIABAAA=]" ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:recommendedMount mount:Raptor ;
+    rdfs:comment "Moderate difficulty with some elevation, estimated 3-4 hours. Watch out for enemy density." .
+
+zone:ShiverpeaksExploration a priory:ExplorationZone ;
+    rdfs:label "Shiverpeaks Map Completion" ;
+    priory:zoneName "Shiverpeaks" ;
+    priory:zoneLevel "1-80" ;
+    priory:nearestWaypoint "[&BUMBAAA=]" ;
+    priory:explorationDifficulty "Hard" ;
+    priory:recommendedMount mount:Skyscale ;
+    rdfs:comment "Significant verticality, Skyscale highly recommended. Estimated 4-5 hours." .
+
+zone:MaguumaExploration a priory:ExplorationZone ;
+    rdfs:label "Maguuma Jungle Map Completion" ;
+    priory:zoneName "Maguuma Jungle" ;
+    priory:zoneLevel "1-80" ;
+    priory:nearestWaypoint "[&BLsAAAA=]" ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:recommendedMount mount:Springer ;
+    rdfs:comment "Dense forests and uneven terrain, estimated 3-4 hours. Springer or Skyscale is helpful." .
+
+zone:OrrExploration a priory:ExplorationZone ;
+    rdfs:label "Ruins of Orr Map Completion" ;
+    priory:zoneName "Ruins of Orr" ;
+    priory:zoneLevel "70-80" ;
+    priory:nearestWaypoint "[&BBcDAAA=]" ;
+    priory:explorationDifficulty "Hard" ;
+    priory:recommendedMount mount:Skyscale ;
+    rdfs:comment "Hostile mobs, temple events gate some POIs. Complete Straits of Devastation during Temple of Balthazar event for simultaneous Obsidian Shard farming. Estimated 3-4 hours." .

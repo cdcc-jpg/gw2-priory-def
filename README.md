@@ -1,6 +1,10 @@
 # Project Priory (GW2 Semantic Layer & Neuro-Symbolic Engine)
 
-**Project Priory** is a semantic intelligence layer and personalized reasoning engine for *Guild Wars 2*.
+> **Project Priory** is a **Neuro-Symbolic Domain Semantic Layer and Knowledge Graph Engine** for *Guild Wars 2*.
+>
+> * **[`gw2-priory-def`](https://github.com/cdcc-jpg/gw2-priory-def)**: The **Domain Ontology & Schema Layer (OWL 2 DL TBox + SHACL)**, defining formal entity classes, dependency relations, and structural integrity rules.
+> * **[`gw2-priory-ref`](https://github.com/cdcc-jpg/gw2-priory-ref)**: The **Controlled Vocabulary & Reference Taxonomy Layer (SKOS)**, managing standardized concept schemes, hierarchies, and multilingual synonyms.
+> * **The Engine**: A **Deterministic Graph Solver & Neuro-Symbolic Agent Pipeline**, using SPARQL and graph traversal to ground LLM reasoning in verified semantic facts.
 
 By combining formal Semantic Web standards (**OWL 2 DL**, **SKOS**, **SHACL**, **SPARQL**) with live player account data (**GW2 REST API**) and deep game domain knowledge (**GW2 Semantic MediaWiki**), Priory powers a **neuro-symbolic sandwich architecture** that allows players to receive mathematically verified, highly personalized in-game itineraries and progression guidance.
 

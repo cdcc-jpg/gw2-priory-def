@@ -28,7 +28,29 @@ item:24310 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:gw2Id 24310 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false ;
-    priory:acquiredVia recipe:transmute_onyx_lodestone .
+    priory:acquiredVia recipe:OnyxCorePromotion, recipe:transmute_onyx_lodestone .
+
+recipe:OnyxCorePromotion a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge: Onyx Core Promotion to Onyx Lodestone"@en ;
+    priory:producesItem item:24310 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24309 ; # 2 Onyx Cores
+        priory:requiredQuantity 2
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19732 ; # 1 Crystalline Dust
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19663 ; # 1 Bottle of Elonian Wine
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 1 Philosopher's Stone
+        priory:requiredQuantity 1
+    ] .
 
 recipe:transmute_onyx_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
     rdfs:label "Mystic Forge: Onyx Lodestone Transmutation"@en ;
@@ -51,6 +73,24 @@ recipe:transmute_onyx_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual 
         priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] .
+
+item:19732 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Crystalline Dust"@en ;
+    priory:gw2Id 19732 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:19663 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bottle of Elonian Wine"@en ;
+    priory:gw2Id 19663 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:19665 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Philosopher's Stone"@en ;
+    priory:gw2Id 19665 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound true .
 
 # --- Molten Lodestone (24305) from Molten Cores (24304) ---
 item:24304 a priory:CraftingMaterial, owl:NamedIndividual ;

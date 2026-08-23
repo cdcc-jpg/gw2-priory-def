@@ -1,0 +1,249 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix mount: <https://priory.gw2/ref/mount/> .
+@prefix region: <https://priory.gw2/ref/region/> .
+@prefix zone: <https://priory.gw2/ref/zone/> .
+
+# =============================================================================
+# TWILIGHT JOURNEY WEB
+# Comprehensive acquisition network for the Gen 1 Legendary Greatsword, Twilight
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# SECTION 1: PRECURSOR DUSK — ALL 4 ACQUISITION PATHWAYS
+# -----------------------------------------------------------------------------
+
+# 1A. Trading Post Purchase Path
+item:29185_TradingPostPath a priory:TradingPostPurchasePath ;
+    rdfs:label "Trading Post Purchase of Dusk" ;
+    priory:targetItem item:29185 ;
+    rdfs:comment "Dusk is not account-bound and can be freely traded. Approximate price fluctuates based on market demand." .
+
+# 1B. Wizard's Vault Legendary Starter Kit
+item:WizardsVaultStarterKit a priory:ChoiceChest ;
+    rdfs:label "Legendary Weapon Starter Kit" ;
+    rdfs:comment "Contains choice of Gen 1 precursor weapons including Dusk." .
+
+item:29185_WizardsVaultPath a priory:VendorExchangePath ;
+    rdfs:label "Wizard's Vault Exchange for Dusk" ;
+    priory:targetItem item:29185 ;
+    priory:sourceItem item:WizardsVaultStarterKit ;
+    priory:requiresCurrency currency:AstralAcclaim ;
+    priory:requiredQuantity 1200 .
+
+# 1C. Grandmaster Hobbs Collection Journey
+item:29185_CollectionPath a priory:AchievementCollectionPath ;
+    rdfs:label "The Experimental Nightsword (Dusk Collection)" ;
+    priory:targetItem item:29185 ;
+    priory:vendorNPC "Grandmaster Craftsman Hobbs" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    rdfs:comment "Requires significant time investment (estimated 20-40 hours of gameplay). Encompasses Dusk I, II, and III." .
+
+# 1D. Mystic Forge Promotion (Gambling)
+recipe:DuskForgePromotion a priory:MysticForgeRecipe ;
+    rdfs:label "Mystic Forge Promotion (Dusk Gamble)" ;
+    priory:producesItem item:29185 ;
+    priory:outputQuantity 1 ;
+    priory:expectedYieldRate 0.02 ;
+    rdfs:comment "Promotes 4x Rare Greatswords into an Exotic/Precursor. RNG-dependent (approx 2% chance per attempt) and not recommended as a primary strategy." .
+
+# -----------------------------------------------------------------------------
+# SECTION 2: GIFT OF EXPLORATION — CORE TYRIA MAP COMPLETION
+# -----------------------------------------------------------------------------
+
+item:19677_ExplorationPath a priory:AchievementCollectionPath ;
+    rdfs:label "100% Core Tyria Map Completion" ;
+    priory:targetItem item:19677 ;
+    rdfs:comment "Requires completing all renown hearts, vistas, points of interest, and hero challenges in Core Tyria. Estimated: 16-21 hours for a fresh account, 8-12 hours with mounts." .
+
+# Region-specific Challenges and Tips are detailed in shared/core_exploration.ttl
+
+
+# -----------------------------------------------------------------------------
+# SECTION 3: OBSIDIAN SHARDS — ALL ACQUISITION VECTORS
+# -----------------------------------------------------------------------------
+
+# Obsidian Shard acquisition vectors are detailed in shared/obsidian_farming.ttl
+
+
+# -----------------------------------------------------------------------------
+# SECTION 4: GIFT OF BATTLE — WvW REWARD TRACK
+# -----------------------------------------------------------------------------
+
+item:19678_RewardTrackPath a priory:RewardTrackPath ;
+    rdfs:label "Gift of Battle Reward Track" ;
+    priory:targetItem item:19678 ;
+    priory:hasGameMode gamemode:WvWRewardTrack ;
+    priory:gameMode gamemode:WvW ;
+    priory:zoneName "Edge of the Mists / WvW Borderlands" ;
+    priory:acceleratedBy priory:ExperienceBooster, priory:GuildTavernEnhancement, priory:HeroicBooster ;
+    rdfs:comment "Estimated: 8.0 hours unboosted, ~4.5 hours with booster accelerations (Experience Booster, Guild Tavern WvW Tavern Enhancement +10%, Heroic Booster). EotM can be used for passive progress with less PvP pressure." .
+
+# -----------------------------------------------------------------------------
+# SECTION 5: BLOODSTONE SHARD — SPIRIT SHARD ECONOMY
+# -----------------------------------------------------------------------------
+
+item:19674_MiyaniPath a priory:VendorExchangePath ;
+    rdfs:label "Purchase Bloodstone Shard from Miyani" ;
+    priory:targetItem item:19674 ;
+    priory:vendorNPC "Miyani" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:waypointName "Trader's Forum Waypoint" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresCurrency currency:SpiritShard ;
+    priory:requiredQuantity 200 ;
+    rdfs:comment "Purchased from Miyani using 200 Spirit Shards in Lion's Arch [&BBAEAAA=]. Spirit Shards are gained from Tomes of Knowledge, post-80 level-ups, and periodic login rewards." .
+
+item:19674_SpiritShardComment a rdf:Statement ;
+    rdf:subject item:19674 ;
+    rdf:predicate rdfs:comment ;
+    rdf:object "Purchased from Miyani using 200 Spirit Shards [&BBAEAAA=]. Spirit Shards are gained from Tomes of Knowledge, post-80 level-ups, and periodic login rewards." .
+
+# -----------------------------------------------------------------------------
+# SECTION 6: MYSTIC CLOVERS — ALL 5 ACQUISITION VECTORS
+# -----------------------------------------------------------------------------
+
+# Mystic Clovers acquisition vectors are detailed in shared/clover_sources.ttl
+
+
+# -----------------------------------------------------------------------------
+# SECTION 7: T6 FINE MATERIALS — FARMING & CONVERSION NETWORKS
+# -----------------------------------------------------------------------------
+
+# T6 Fine Materials farming networks are detailed in shared/t6_conversions.ttl
+
+
+# -----------------------------------------------------------------------------
+# SECTION 8: GIFT OF TWILIGHT — CRAFTING DISCIPLINES & LODESTONES
+# -----------------------------------------------------------------------------
+
+# 8A. Gift of Metal (Weaponsmith 400)
+item:GiftOfMetal_Comment a rdf:Statement ;
+    rdf:subject recipe:GiftOfMetal ;
+    rdf:predicate rdfs:comment ;
+    rdf:object "Leveling Weaponsmith from 0 to 400 costs approximately 15-25 gold using crafting guides (gw2crafts.net). Crafting stations in Black Citadel [&BKgDAAA=], Lion's Arch [&BBAEAAA=]." .
+
+# 8B. Gift of Darkness (Armorsmith 400)
+item:GiftOfDarkness_Comment a rdf:Statement ;
+    rdf:subject recipe:GiftOfDarkness ;
+    rdf:predicate rdfs:comment ;
+    rdf:object "Leveling Armorsmith from 0 to 400 costs approximately 15-25 gold using crafting guides (gw2crafts.net). Crafting stations in Black Citadel [&BKgDAAA=], Lion's Arch [&BBAEAAA=]." .
+
+# 8C. Icy Runestones
+item:20799_Comment a rdf:Statement ;
+    rdf:subject item:20799 ;
+    rdf:predicate rdfs:comment ;
+    rdf:object "100 needed, purchased for 1 gold each (100 gold total). Significant flat gold sink." .
+
+# 8D. Onyx Lodestones
+item:24310_TradingPostPath a priory:TradingPostPurchasePath ;
+    rdfs:label "Trading Post Purchase of Onyx Lodestone" ;
+    priory:targetItem item:24310 ;
+    rdfs:comment "Direct purchase, expensive." .
+
+recipe:OnyxCorePromotion a priory:MysticForgeRecipe ;
+    rdfs:label "Mystic Forge: Onyx Core Promotion to Onyx Lodestone" ;
+    priory:producesItem item:24310 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24309 ; # 2 Onyx Cores
+        priory:requiredQuantity 2
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19732 ; # 1 Crystalline Dust
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19663 ; # 1 Bottle of Elonian Wine
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19665 ; # 1 Philosopher's Stone
+        priory:requiredQuantity 1
+    ] ;
+    rdfs:comment "2 Onyx Cores + 1 Crystalline Dust + 1 Bottle of Elonian Wine + 1 Philosopher's Stone -> 1 Onyx Lodestone." .
+
+recipe:OnyxLodestoneForge a priory:MysticForgeRecipe ;
+    rdfs:label "Onyx Lodestone Forge Promotion" ;
+    priory:producesItem item:24310 ;
+    priory:outputQuantity 1 ;
+    rdfs:comment "2 Onyx Cores + 1 Crystal + 1 Bottle of Elonian Wine + 1 Philosopher's Stone -> 1 Onyx Lodestone." .
+
+item:24310_TwilightArborPath a priory:OpenWorldFarmPath ;
+    rdfs:label "Twilight Arbor (Aetherpath) Farm" ;
+    priory:targetItem item:24310 ;
+    priory:zoneName "Caledon Forest" ;
+    priory:nearestWaypoint "[&BEEFAAA=]" ;
+    rdfs:comment "Aetherpath drops Onyx Cores." .
+
+item:24310_CrucibleOfEternityPath a priory:OpenWorldFarmPath ;
+    rdfs:label "Crucible of Eternity Farm" ;
+    priory:targetItem item:24310 ;
+    priory:zoneName "Mount Maelstrom" ;
+    priory:nearestWaypoint "[&BDoCAAA=]" ;
+    rdfs:comment "Drops Onyx Cores/Lodestones." .
+
+item:24310_OrrFarmPath a priory:OpenWorldFarmPath ;
+    rdfs:label "Orr Risen Farm" ;
+    priory:targetItem item:24310 ;
+    priory:zoneName "Ruins of Orr" ;
+    rdfs:comment "Risen enemies in Orr drop Onyx Cores." .
+
+# 8E. Superior Sigil of Force
+item:24615_Comment a rdf:Statement ;
+    rdf:subject item:24615 ;
+    rdf:predicate rdfs:comment ;
+    rdf:object "Can be purchased from Trading Post or salvaged from Exotic weapons." .
+
+# -----------------------------------------------------------------------------
+# SECTION 9: ECTOPLASM ECONOMY
+# -----------------------------------------------------------------------------
+
+item:19721_SalvagePath a priory:AcquisitionPath ;
+    rdfs:label "Salvaging Rare Equipment" ;
+    priory:targetItem item:19721 ;
+    rdfs:comment "Salvaging Rare (level 68+) equipment with Mystic/Silver-Fed Salvage Kit." .
+
+item:19721_TradingPostPath a priory:TradingPostPurchasePath ;
+    rdfs:label "Trading Post Purchase of Ectoplasm" ;
+    priory:targetItem item:19721 ;
+    rdfs:comment "Direct purchase from the Trading Post." .
+
+item:19721_SilverwastesPath a priory:OpenWorldFarmPath ;
+    rdfs:label "Silverwastes RIBA Meta Farm for Ectos" ;
+    priory:targetItem item:19721 ;
+    priory:zoneName "The Silverwastes" ;
+    priory:nearestWaypoint "[&BF8HAAA=]" ;
+    rdfs:comment "Rare drops from champion bags during the meta." .
+
+recipe:EctoGamble a priory:MysticForgeRecipe ;
+    rdfs:label "Mystic Forge Ecto Gamble" ;
+    priory:producesItem item:19721 ;
+    priory:outputQuantity 1 ;
+    rdfs:comment "NOT recommended." .
+
+# -----------------------------------------------------------------------------
+# SECTION 10: FINAL ASSEMBLY AT MYSTIC FORGE
+# -----------------------------------------------------------------------------
+
+recipe:TwilightFinalAssembly a priory:MysticForgeRecipe ;
+    rdfs:label "Twilight Final Assembly" ;
+    priory:producesItem item:30704 ;
+    priory:outputQuantity 1 ;
+    priory:zoneName "Lion's Arch" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    rdfs:comment "Insert: Dusk + Gift of Fortune + Gift of Mastery + Gift of Twilight at the Mystic Forge. The ceremonial final moment to craft Twilight." .

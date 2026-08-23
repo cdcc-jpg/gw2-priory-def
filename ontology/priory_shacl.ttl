@@ -12,7 +12,11 @@
 priory:ItemShape a sh:NodeShape ;
     sh:targetClass priory:Item, priory:LegendaryWeapon, priory:PrecursorWeapon,
                    priory:CraftingMaterial, priory:GiftItem, priory:LegendarySigil, priory:LegendaryRune,
-                   priory:Armor, priory:LightArmor, priory:MediumArmor, priory:HeavyArmor, priory:LegendaryArmor, priory:Trinket, priory:LegendaryTrinket ;
+                   priory:Armor, priory:LightArmor, priory:MediumArmor, priory:HeavyArmor, priory:LegendaryArmor,
+                   priory:Trinket, priory:LegendaryTrinket,
+                   priory:ConvenienceGizmo, priory:VIPLoungePass, priory:InfiniteSalvageItem,
+                   priory:PermanentContract, priory:CurrencyConverter, priory:PortalTome, priory:AccountStorageUpgrade,
+                   priory:SafeStagingBag ;
     sh:property [
         sh:path rdfs:label ;
         sh:minCount 1 ;
@@ -29,6 +33,34 @@ priory:ItemShape a sh:NodeShape ;
         sh:path priory:hasRarity ;
         sh:nodeKind sh:IRI ;
         sh:message "Item rarity must be an IRI pointing to a SKOS Rarity Concept." ;
+    ] .
+
+priory:ConvenienceGizmoShape a sh:NodeShape ;
+    sh:targetClass priory:ConvenienceGizmo, priory:VIPLoungePass, priory:InfiniteSalvageItem,
+                   priory:PermanentContract, priory:CurrencyConverter, priory:PortalTome, priory:AccountStorageUpgrade,
+                   priory:SafeStagingBag ;
+    sh:property [
+        sh:path [ sh:alternativePath ( priory:chatCode priory:chatLink ) ] ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Every Convenience Gizmo must have a chat link code." ;
+    ] .
+
+priory:VIPLoungePassShape a sh:NodeShape ;
+    sh:targetClass priory:VIPLoungePass ;
+    sh:property [
+        sh:path priory:hasFeature ;
+        sh:minCount 1 ;
+        sh:message "Every VIP Lounge Pass must declare at least one feature/amenity." ;
+    ] .
+
+priory:InfiniteSalvageShape a sh:NodeShape ;
+    sh:targetClass priory:InfiniteSalvageItem ;
+    sh:property [
+        sh:path priory:salvageCostPerUse ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "Infinite Salvage item must specify salvageCostPerUse." ;
     ] .
 
 priory:RecipeShape a sh:NodeShape ;

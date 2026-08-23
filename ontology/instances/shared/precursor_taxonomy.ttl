@@ -44,6 +44,7 @@ item:91876 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Verdarach (
 # ------------------------------------------------------------------------------
 # Generation 1 (Tradable on Trading Post or Crafted via Hobbs Tier 1-3)
 # ------------------------------------------------------------------------------
+item:29185 priory:hasPrecursorType priory:TradablePrecursor . # Dusk (Greatsword)
 item:30689 priory:hasPrecursorType priory:TradablePrecursor . # Twilight (Greatsword)
 item:30699 priory:hasPrecursorType priory:TradablePrecursor . # Sunrise (Greatsword)
 item:30688 priory:hasPrecursorType priory:TradablePrecursor . # Bolt (Sword)

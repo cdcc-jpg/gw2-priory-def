@@ -385,6 +385,24 @@ class PathSolver:
                         detail += f" [{waypoint}]"
                     bottlenecks.append(f"🏛️ **{mat_name}:** {definition or detail}.")
 
+        if diff_report.is_saturated:
+            bottlenecks.append(
+                f"🛡️ **Legendary Armory Saturated ({diff_report.armory_owned_count}/{diff_report.armory_max_cap} owned):** "
+                f"Your account already holds the maximum useful copies of {diff_report.goal_item_name} in your Legendary Armory."
+            )
+
+        if getattr(diff_report, "missing_achievements", None):
+            for ach in diff_report.missing_achievements:
+                bottlenecks.append(
+                    f"🏆 **Achievement Prerequisite Needed:** '{ach['title']}' (ID: {ach['id']}) — {ach['description'] or 'Required to unlock this legendary item.'}"
+                )
+
+        if getattr(diff_report, "missing_masteries", None):
+            for mast in diff_report.missing_masteries:
+                bottlenecks.append(
+                    f"🌟 **Mastery Rank Required:** {mast['track_label']} Level {mast['required_level']} ({mast['mastery_name']}) — Current: Level {mast['current_level']}."
+                )
+
         if diff_report.missing_disciplines:
             for d in diff_report.missing_disciplines:
                 bottlenecks.append(f"🔨 **{d['discipline'].capitalize()} Level {d['required_rating']}:** Required to craft weapon or upgrade gifts.")

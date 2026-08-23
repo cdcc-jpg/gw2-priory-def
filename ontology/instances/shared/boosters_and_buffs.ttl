@@ -1,0 +1,229 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix guild_enhancement: <https://priory.gw2/id/guild_enhancement/> .
+
+# ==============================================================================
+# Boosters, Gobblers, and Guild Tavern Enhancements
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Experience & Reward Track Boosters
+# ------------------------------------------------------------------------------
+
+# --- Experience Booster (GW2 ID: 2059) ---
+item:2059 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Experience Booster"@en ;
+    priory:gw2Id 2059 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    rdfs:comment "Grants +50% Experience in all game types and +50% WvW / PvP Reward Track gain for 2 hours."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Gem Store / Black Lion Chest Exchange"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 10000
+    ] .
+
+# --- Heroic Booster (GW2 ID: 42970) ---
+item:42970 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Heroic Booster"@en ;
+    priory:gw2Id 42970 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    rdfs:comment "Combines Experience and Item Booster benefits: +50% Experience gain, +50% WvW Reward Track gain, and +50% Karma gain for 2 hours."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Gem Store / Black Lion Chest Exchange"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 15000
+    ] .
+
+# --- Black Lion Booster (GW2 ID: 78954) ---
+item:78954 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Black Lion Booster"@en ;
+    priory:gw2Id 78954 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "30 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    rdfs:comment "Increases WvW reward track gain by 50%, karma gain by 50%, experience gain by 50%, and magic find by 50% for 30 minutes."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Black Lion Statuette Vendor Exchange"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 10000
+    ] .
+
+# --- Birthday Booster (GW2 ID: 49424) ---
+item:49424 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Birthday Booster"@en ;
+    priory:gw2Id 49424 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "24 hours" ;
+    priory:accelerationMultiplier "1.1" ;
+    rdfs:comment "Grants +100% Experience in all game types and +10% WvW / PvP Reward Track gain for 24 hours."@en ;
+    priory:acquiredVia [
+        a priory:AchievementCollectionPath ;
+        rdfs:label "Character Birthday Gift Delivery"@en
+    ] .
+
+# --- Celebration Booster (GW2 ID: 45005) ---
+item:45005 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Celebration Booster"@en ;
+    priory:gw2Id 45005 ;
+    priory:hasRarity rarity:Masterwork ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.1" ;
+    rdfs:comment "Grants +100% Experience in all game types and +10% WvW / PvP Reward Track gain for 1 hour."@en ;
+    priory:acquiredVia [
+        a priory:AchievementCollectionPath ;
+        rdfs:label "Achievement Milestone and Festival Rewards"@en
+    ] .
+
+# ------------------------------------------------------------------------------
+# 2. Festival & Material Conversion Gobblers
+# ------------------------------------------------------------------------------
+
+# --- Piece of Candy Corn (GW2 ID: 36041) ---
+item:36041 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Piece of Candy Corn"@en ;
+    priory:gw2Id 36041 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false ;
+    rdfs:comment "Halloween festival candy consumed by the Candy Corn Gobbler."@en ;
+    priory:acquiredVia [
+        a priory:TradingPostPurchasePath ;
+        rdfs:label "Trading Post Purchase of Candy Corn"@en
+    ] .
+
+# --- Candy Corn Gobbler (GW2 ID: 67037) ---
+item:67037 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Candy Corn Gobbler"@en ;
+    priory:gw2Id 67037 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "Variable (7-10 minutes per boost)" ;
+    priory:accelerationMultiplier "1.5" ;
+    rdfs:comment "Consumes 3x Piece of Candy Corn (item:36041) to grant random booster enhancements including Experience Booster and Karma Booster."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Gem Store Halloween Special"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 30000
+    ] .
+
+# --- Zhaitaffy Gobbler (GW2 ID: 67836) ---
+item:67836 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Zhaitaffy Gobbler"@en ;
+    priory:gw2Id 67836 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.25" ;
+    rdfs:comment "Converts Piece of Zhaitaffy into Dragon Bash festival buffs, providing bonus experience, karma, and magic find."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Gem Store Dragon Bash Special"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 30000
+    ] .
+
+# --- Snowflake Gobbler (GW2 ID: 79523) ---
+item:79523 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Snowflake Gobbler"@en ;
+    priory:gw2Id 79523 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.25" ;
+    rdfs:comment "Consumes Snowflakes to generate Wintersday Gifts or grant the Winter's Blessing enhancement (+25% XP, +25% Reward Track progress, +10% Karma)."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Wintersday Festival Vendor Exchange"@en ;
+        priory:requiresCurrency currency:Karma ;
+        priory:requiredQuantity 50000
+    ] .
+
+# --- Tome of Knowledge (GW2 ID: 19983) ---
+item:19983 a priory:Item, owl:NamedIndividual ;
+    rdfs:label "Tome of Knowledge"@en ;
+    priory:gw2Id 19983 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    rdfs:comment "Grants 1 character level or 1 Spirit Shard if consumed on a level 80 character. Sourced from WvW/PvP reward tracks, daily logins, and Wizard's Vault."@en ;
+    priory:acquiredVia [
+        a priory:RewardTrackPath ;
+        priory:hasGameMode gamemode:WvWRewardTrack ;
+        rdfs:label "WvW / PvP Reward Track Progression"@en
+    ] .
+
+# ------------------------------------------------------------------------------
+# 3. Guild Tavern Enhancements
+# ------------------------------------------------------------------------------
+
+guild_enhancement:wvw_track_10 a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Guild Tavern WvW Reward Track Enhancement"@en ;
+    priory:duration "Indefinite / 24 hours" ;
+    priory:accelerationMultiplier "1.1" ;
+    rdfs:comment "Provides +10% bonus to WvW Reward Track progress from the Guild Tavern Bartender in the Guild Hall."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Guild Tavern Bartender Free Enhancement"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 1
+    ] .
+
+guild_enhancement:karma_10 a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Guild Tavern Karma Enhancement"@en ;
+    priory:duration "Indefinite / 24 hours" ;
+    priory:accelerationMultiplier "1.1" ;
+    rdfs:comment "Provides +10% bonus to Karma gain from the Guild Tavern Bartender in the Guild Hall."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Guild Tavern Bartender Free Enhancement"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 1
+    ] .
+
+# ------------------------------------------------------------------------------
+# 4. Semantic Buff Aliases (Compatibility with Core Ontology Instances)
+# ------------------------------------------------------------------------------
+
+priory:WvWRewardTrackBooster a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "WvW Reward Track Booster"@en ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    rdfs:comment "Increases reward track progress in WvW by 50%."@en .
+
+priory:ExperienceBooster a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Experience Booster"@en ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    owl:sameAs item:2059 ;
+    rdfs:comment "Increases all experience gain by 50% and accelerates WvW reward track progression by 50%."@en .
+
+priory:GuildTavernEnhancement a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Guild Tavern WvW Tavern Enhancement +10%"@en ;
+    priory:duration "Indefinite" ;
+    priory:accelerationMultiplier "1.1" ;
+    owl:sameAs guild_enhancement:wvw_track_10 ;
+    rdfs:comment "Provides up to 10% bonus to WvW Reward Track progress from the Guild Tavern enhancement."@en .
+
+priory:HeroicBooster a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Heroic Booster"@en ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    owl:sameAs item:42970 ;
+    rdfs:comment "Combines Experience Booster and Item Booster effects; increases WvW reward track gain by 50% and bonus experience by 50%."@en .
+
+priory:KarmaBooster a priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Karma Booster"@en ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" ;
+    rdfs:comment "Increases all karma gain by 50%."@en .

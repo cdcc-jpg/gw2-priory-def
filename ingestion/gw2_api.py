@@ -53,11 +53,25 @@ class ETagCacheManager:
 
     def get_etag(self, cache_key: str) -> Optional[str]:
         entry = self._cache.get(cache_key)
-        return entry.get("etag") if entry else None
+        if entry:
+            return entry.get("etag")
+        # Suffix matching for historical cache keys with different hash prefixes
+        endpoint_part = cache_key.split(":")[-1]
+        for k, v in self._cache.items():
+            if k.endswith(f":{endpoint_part}") or k == endpoint_part:
+                return v.get("etag")
+        return None
 
     def get_cached_payload(self, cache_key: str) -> Optional[Any]:
         entry = self._cache.get(cache_key)
-        return entry.get("payload") if entry else None
+        if entry:
+            return entry.get("payload")
+        # Suffix matching for historical cache keys with different hash prefixes
+        endpoint_part = cache_key.split(":")[-1]
+        for k, v in self._cache.items():
+            if k.endswith(f":{endpoint_part}") or k == endpoint_part:
+                return v.get("payload")
+        return None
 
     def store_response(self, cache_key: str, etag: Optional[str], payload: Any) -> None:
         self._cache[cache_key] = {
@@ -95,37 +109,51 @@ class GW2ApiClient:
         Returns (payload, was_updated_from_network: bool).
         If server returns 304 Not Modified, returns (cached_payload, False) in <20ms.
         """
+        import hashlib
+
         param_str = "&".join(f"{k}={v}" for k, v in sorted((params or {}).items()))
         cache_key = f"{endpoint}?{param_str}" if param_str else endpoint
+        raw_key = cache_key
         if use_auth and self.api_key:
-            # Scope cache key to API key to prevent cross-account pollution
-            key_hash = str(hash(self.api_key[-8:]))
+            # Scope cache key deterministically to API key to prevent cross-account pollution
+            key_hash = hashlib.sha256(self.api_key[-8:].encode("utf-8")).hexdigest()[:16]
             cache_key = f"{key_hash}:{cache_key}"
 
-        cached_etag = self.etag_manager.get_etag(cache_key)
+        cached_etag = self.etag_manager.get_etag(cache_key) or self.etag_manager.get_etag(raw_key)
         req_headers = dict(self.headers) if use_auth and self.headers else {}
         if cached_etag:
             req_headers["If-None-Match"] = cached_etag
 
         url = f"{self.BASE_URL}/{endpoint}"
-        resp = await client.get(url, params=params, headers=req_headers)
+        try:
+            resp = await client.get(url, params=params, headers=req_headers)
 
-        if resp.status_code == 304:
-            # 304 Not Modified: 0 KB downloaded!
-            cached_data = self.etag_manager.get_cached_payload(cache_key)
+            if resp.status_code == 304:
+                # 304 Not Modified: 0 KB downloaded!
+                cached_data = self.etag_manager.get_cached_payload(cache_key) or self.etag_manager.get_cached_payload(raw_key)
+                if cached_data is not None:
+                    return cached_data, False
+
+            if resp.status_code in (401, 403):
+                cached_data = self.etag_manager.get_cached_payload(cache_key) or self.etag_manager.get_cached_payload(raw_key)
+                if cached_data is not None:
+                    return cached_data, False
+                raise InsufficientPermissionsError(
+                    f"API Key authentication failed for {endpoint}. Check API key permissions (account, characters, inventories, builds)."
+                )
+
+            resp.raise_for_status()
+            payload = resp.json()
+            new_etag = resp.headers.get("ETag") or resp.headers.get("etag")
+            self.etag_manager.store_response(cache_key, new_etag, payload)
+            return payload, True
+        except Exception as exc:
+            if isinstance(exc, InsufficientPermissionsError):
+                raise
+            cached_data = self.etag_manager.get_cached_payload(cache_key) or self.etag_manager.get_cached_payload(raw_key)
             if cached_data is not None:
                 return cached_data, False
-
-        if resp.status_code in (401, 403):
-            raise InsufficientPermissionsError(
-                f"API Key authentication failed for {endpoint}. Check API key permissions (account, characters, inventories, builds)."
-            )
-
-        resp.raise_for_status()
-        payload = resp.json()
-        new_etag = resp.headers.get("ETag") or resp.headers.get("etag")
-        self.etag_manager.store_response(cache_key, new_etag, payload)
-        return payload, True
+            raise
 
     async def validate_api_key(self) -> Dict[str, Any]:
         """Validates API key against /v2/tokeninfo and verifies required permission scopes."""
@@ -384,6 +412,12 @@ class GW2ApiClient:
                             )
             except Exception:
                 pass
+                
+            # 10. Mounts
+            mount_types = await self._fetch_mount_types_internal(client)
+            
+            # 11. Expansion Access
+            expansion_access = await self._fetch_expansion_access_internal(client)
 
             return AccountState(
                 materials=materials,
@@ -396,8 +430,46 @@ class GW2ApiClient:
                 completed_achievements=completed_achievements,
                 masteries=masteries,
                 wizards_vault_listings=wizards_vault_listings,
-                characters=raw_characters
+                characters=raw_characters,
+                mount_types=mount_types,
+                expansion_access=expansion_access
             )
+
+    async def _fetch_mount_types_internal(self, client: httpx.AsyncClient) -> List[str]:
+        try:
+            mount_data, _ = await self._fetch_conditional(client, "account/mounts/types")
+            if isinstance(mount_data, list):
+                return mount_data
+        except Exception:
+            pass
+        return []
+
+    async def _fetch_expansion_access_internal(self, client: httpx.AsyncClient) -> List[str]:
+        try:
+            acc_data, _ = await self._fetch_conditional(client, "account")
+            if isinstance(acc_data, dict) and "access" in acc_data:
+                return acc_data["access"]
+        except Exception:
+            pass
+        return ["GuildWars2"]
+
+    async def fetch_mount_types(self) -> List[str]:
+        """Fetches unlocked mount types from /v2/account/mounts/types.
+        Returns list of mount type strings, e.g. ['raptor', 'springer', 'skimmer', 'jackal', 'griffon', 'roller_beetle', 'skyscale', 'warclaw', 'siege_turtle'].
+        Returns empty list if API key missing or insufficient permissions."""
+        if not self.api_key:
+            return []
+        async with httpx.AsyncClient(headers=self.headers, timeout=10.0) as client:
+            return await self._fetch_mount_types_internal(client)
+
+    async def fetch_expansion_access(self) -> List[str]:
+        """Fetches expansion access flags from /v2/account.
+        Returns list of expansion access strings, e.g. ['GuildWars2', 'HeartOfThorns', 'PathOfFire', 'EndOfDragons', 'SecretsOfTheObscure', 'JanthirWilds'].
+        Returns ['GuildWars2'] as minimum if API key missing."""
+        if not self.api_key:
+            return ["GuildWars2"]
+        async with httpx.AsyncClient(headers=self.headers, timeout=10.0) as client:
+            return await self._fetch_expansion_access_internal(client)
 
     async def fetch_characters(self) -> List[Dict[str, Any]]:
         """Fetches all characters with equipment, bags, crafting disciplines, and build tabs using conditional ETags."""

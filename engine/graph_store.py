@@ -27,6 +27,10 @@ SLOT = Namespace("https://priory.gw2/ref/slot/")
 ITEMTYPE = Namespace("https://priory.gw2/ref/itemtype/")
 PROFESSION = Namespace("https://priory.gw2/ref/profession/")
 RACE = Namespace("https://priory.gw2/ref/race/")
+MOUNT = Namespace("https://priory.gw2/ref/mount/")
+REGION = Namespace("https://priory.gw2/ref/region/")
+ZONE = Namespace("https://priory.gw2/ref/zone/")
+GUILD_ENHANCEMENT = Namespace("https://priory.gw2/id/guild_enhancement/")
 
 DEFAULT_NAMESPACES = {
     "priory": PRIORY,
@@ -44,6 +48,10 @@ DEFAULT_NAMESPACES = {
     "discipline": DISCIPLINE,
     "gamemode": GAMEMODE,
     "currency": CURRENCY,
+    "guild_enhancement": GUILD_ENHANCEMENT,
+    "mount": MOUNT,
+    "region": REGION,
+    "zone": ZONE,
     "skos": rdflib.SKOS,
     "rdfs": rdflib.RDFS,
     "owl": rdflib.OWL,
@@ -100,7 +108,13 @@ class PrioryGraphStore:
             for ttl_file in schemas_dir.glob("*.ttl"):
                 self.graph.parse(ttl_file, format="turtle")
 
-        # 3. Load Instances (Recursively from ontology/instances/**/*.ttl)
+        # 3. Load Vocabularies from def if present (e.g. mounts, regions)
+        def_vocab_dir = self.def_repo_path / "ontology" / "vocab"
+        if def_vocab_dir.exists():
+            for ttl_file in def_vocab_dir.glob("*.ttl"):
+                self.graph.parse(ttl_file, format="turtle")
+
+        # 4. Load Instances (Recursively from ontology/instances/**/*.ttl)
         instances_dir = self.def_repo_path / "ontology" / "instances"
         if instances_dir.exists():
             for ttl_file in instances_dir.rglob("*.ttl"):

@@ -161,6 +161,142 @@ class TestAgentPipeline(unittest.TestCase):
         total_roadmap_time = sum(s.get("est_time_mins", 0) for s in plan.step_by_step_roadmap)
         self.assertLessEqual(total_roadmap_time, 45)
 
+    def test_intent_parser_wizards_vault_exhaustion_and_cheapest_gold(self):
+        """Verifies intent parser and orchestrator set wizards_vault_exhausted=True and optimization_target='cheapest_gold'."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        prompt = "What is the cheapest way to finish Twilight? I already bought the clovers from Wizard's Vault."
+        resolved_goal = parser.parse_intent(prompt)
+
+        self.assertEqual(resolved_goal.resolved_item_name, "Twilight")
+        self.assertEqual(resolved_goal.resolved_item_id, 30704)
+        self.assertTrue(resolved_goal.wizards_vault_exhausted)
+        self.assertEqual(resolved_goal.optimization_target, "cheapest_gold")
+
+        # Full pipeline test
+        player_account = AccountState(
+            materials={19675: 6, 19925: 71, 24310: 2},
+            wallet={68: 1500, 1: 5000000},
+            characters=[{"name": "Kerling", "profession": "Guardian", "level": 80}],
+            mount_types=["raptor", "skyscale"],
+            expansion_access=["GuildWars2", "PathOfFire", "SecretsOfTheObscure"]
+        )
+        guide = self.orchestrator.run_pipeline(prompt, player_account)
+        self.assertEqual(guide.goal_name, "Twilight")
+        self.assertGreater(len(guide.session_checklist), 0)
+
+    def test_vip_lounge_and_convenience_callout_in_guide(self):
+        """Verifies VIP lounge callout and convenience tools (Mistlock, Copper-Fed, Silver-Fed, Teleport to Friend) appear in guide."""
+        player_account = AccountState(
+            inventory={
+                81664: 1,  # Mistlock Sanctuary Passkey [&AgEAPwEA]
+                44602: 1,  # Copper-Fed Salvage-o-Matic [&AgE6rgAA]
+                67027: 1,  # Silver-Fed Salvage-o-Matic [&AgHTBQEA]
+                90335: 1,  # Recharging Teleport to Friend [&AgHfYAEA]
+            },
+            characters=[{"name": "Kerling", "profession": "Guardian", "level": 80, "crafting": [{"discipline": "Weaponsmith", "rating": 500}, {"discipline": "Armorsmith", "rating": 500}]}]
+        )
+        guide = self.orchestrator.run_pipeline("How do I get Twilight?", player_account)
+        
+        # 1. Strategic Recommendations Callout
+        recs_text = " ".join(guide.strategic_recommendations)
+        self.assertIn("Mistlock Sanctuary Passkey", recs_text)
+        self.assertIn("[&AgEAPwEA]", recs_text)
+        self.assertIn("Copper-Fed", recs_text)
+        self.assertIn("[&AgE6rgAA]", recs_text)
+        self.assertIn("Silver-Fed", recs_text)
+        self.assertIn("[&AgHTBQEA]", recs_text)
+        self.assertIn("Recharging Teleport to Friend", recs_text)
+        self.assertIn("[&AgHfYAEA]", recs_text)
+
+        # 2. Chapter 4 unified lounge workflow
+        roadmap_text = " ".join(guide.master_roadmap_phases)
+        self.assertIn("Mistlock Sanctuary", roadmap_text)
+        self.assertIn("[&AgEAPwEA]", roadmap_text)
+
+    def test_convenience_portfolio_and_bag_management_breakdown(self):
+        """Verifies full Account Convenience & Utility Portfolio breakdown and bag management tips."""
+        player_account = AccountState(
+            inventory={
+                81664: 1,  # Mistlock Sanctuary Passkey [&AgEAPwEA]
+                97009: 1,  # Arborstone Portal Scroll [&AgHxegEA]
+                84310: 1,  # Spearmarshal's Plea [&AgFpTwEA]
+                67393: 1,  # Candy Corn Gobbler [&AgEZCgEA]
+                73248: 1,  # Herta [&AgGgHAEA]
+                86694: 1,  # Lucky Dog Harvesting Tool [&AgGyUgEA]
+                44602: 1,  # Copper-Fed Salvage-o-Matic [&AgE6rgAA]
+                90335: 1,  # Recharging Teleport to Friend [&AgHfYAEA]
+            },
+            characters=[{"name": "Kerling", "profession": "Guardian", "level": 80, "crafting": [{"discipline": "Weaponsmith", "rating": 500}, {"discipline": "Armorsmith", "rating": 500}]}]
+        )
+        guide = self.orchestrator.run_pipeline("How do I get Twilight?", player_account)
+
+        recs_text = "\n".join(guide.strategic_recommendations)
+
+        # 1. Portfolio Header & Categories
+        self.assertIn("Account Convenience & Utility Portfolio", recs_text)
+        self.assertIn("VIP Lounge Passes", recs_text)
+        self.assertIn("Mistlock Sanctuary Passkey", recs_text)
+        self.assertIn("[&AgEAPwEA]", recs_text)
+        self.assertIn("Portal Tomes & Scrolls", recs_text)
+        self.assertIn("Spearmarshal's Plea", recs_text)
+        self.assertIn("[&AgFpTwEA]", recs_text)
+        self.assertIn("Converters & Gobblers", recs_text)
+        self.assertIn("Candy Corn Gobbler", recs_text)
+        self.assertIn("[&AgEZCgEA]", recs_text)
+        self.assertIn("Herta", recs_text)
+        self.assertIn("Infinite Gathering Tools", recs_text)
+        self.assertIn("Lucky Dog Harvesting Tool", recs_text)
+        self.assertIn("[&AgGyUgEA]", recs_text)
+        self.assertIn("Salvage & Utility Express", recs_text)
+        self.assertIn("Copper-Fed Salvage-o-Matic", recs_text)
+        self.assertIn("[&AgE6rgAA]", recs_text)
+
+        # 2. Inventory & Bag Overflow Management
+        self.assertIn("Inventory & Bag Overflow Management", recs_text)
+        self.assertIn("Invisible Bag Staging", recs_text)
+        self.assertIn("250-Stack Ingot Batching", recs_text)
+
+    def test_four_pillar_staging_and_post_forge_decision_fork_rendering(self):
+        """Verifies 4-Pillar Staging Checklist and Post-Forge Decision Fork rendering in Chapter 4 and Strategic Recommendations."""
+        player_account = AccountState(
+            characters=[{"name": "Kerling", "profession": "Guardian", "level": 80, "crafting": [{"discipline": "Weaponsmith", "rating": 500}, {"discipline": "Armorsmith", "rating": 500}]}],
+            bank={81664: 1} # Mistlock Sanctuary Passkey
+        )
+        guide = self.orchestrator.run_pipeline("How do I get Twilight?", player_account)
+
+        # 1. Verify 4-Pillar Staging Checklist in Chapter 4
+        roadmap_text = "\n".join(guide.master_roadmap_phases)
+        self.assertIn("4-Pillar Inventory Staging Checklist", roadmap_text)
+        self.assertIn("Pillar 1: Dusk", roadmap_text)
+        self.assertIn("[&AgEpZgAA]", roadmap_text)
+        self.assertIn("Pillar 2: Gift of Twilight", roadmap_text)
+        self.assertIn("[&AgHiEAAA]", roadmap_text)
+        self.assertIn("Pillar 3: Gift of Mastery", roadmap_text)
+        self.assertIn("[&AgHkEAAA]", roadmap_text)
+        self.assertIn("Pillar 4: Gift of Fortune", roadmap_text)
+        self.assertIn("[&AgHlEAAA]", roadmap_text)
+
+        # 2. Verify Post-Forge Decision Fork in Chapter 4
+        self.assertIn("Post-Forge Decision Fork", roadmap_text)
+        self.assertIn("Path A: Legendary Armory Binding", roadmap_text)
+        self.assertIn("Path B: The Eternity Commercial Arbitrage Loop", roadmap_text)
+        self.assertIn("3,800g", roadmap_text)
+        self.assertIn("3,230g net", roadmap_text)
+        self.assertIn("Skin Retention Dynamics", roadmap_text)
+        self.assertIn("Path C: Direct Trading Post Sale", roadmap_text)
+
+        # 3. Verify Post-Forge Decision Fork in Strategic Recommendations
+        recs_text = "\n".join(guide.strategic_recommendations)
+        self.assertIn("Post-Forge Decision Fork", recs_text)
+        self.assertIn("Option 1: Legendary Armory Binding", recs_text)
+        self.assertIn("Option 2: Commercial Eternity Arbitrage", recs_text)
+        self.assertIn("~3,800g Gross", recs_text)
+        self.assertIn("~3,230g Net", recs_text)
+        self.assertIn("Skin Retention Dynamic", recs_text)
+        self.assertIn("Option 3: Direct Trading Post Sale", recs_text)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -19,6 +19,7 @@ item:101582 a owl:NamedIndividual,
     rdfs:label "Legendary Relic"@en ;
     priory:gw2Id 101582 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_legendary_relic .
 
@@ -27,6 +28,7 @@ item:77474 a owl:NamedIndividual,
     rdfs:label "Ad Infinitum"@en ;
     priory:gw2Id 77474 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_ad_infinitum .
 
@@ -35,6 +37,7 @@ item:78430 a owl:NamedIndividual,
     rdfs:label "The Ascension"@en ;
     priory:gw2Id 78430 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_the_ascension .
 
@@ -43,6 +46,7 @@ item:81706 a owl:NamedIndividual,
     rdfs:label "Warbringer"@en ;
     priory:gw2Id 81706 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_warbringer .
 
@@ -51,6 +55,7 @@ item:81908 a owl:NamedIndividual,
     rdfs:label "Aurora"@en ;
     priory:gw2Id 81908 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_aurora .
 
@@ -59,6 +64,7 @@ item:91048 a owl:NamedIndividual,
     rdfs:label "Coalescence"@en ;
     priory:gw2Id 91048 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_coalescence .
 
@@ -67,6 +73,7 @@ item:91234 a owl:NamedIndividual,
     rdfs:label "Vision"@en ;
     priory:gw2Id 91234 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_vision .
 
@@ -75,6 +82,7 @@ item:91536 a owl:NamedIndividual,
     rdfs:label "Legendary Rune"@en ;
     priory:gw2Id 91536 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 6 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_legendary_rune .
 
@@ -83,6 +91,7 @@ item:92946 a owl:NamedIndividual,
     rdfs:label "Transcendence"@en ;
     priory:gw2Id 92946 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_transcendence .
 
@@ -91,6 +100,7 @@ item:92991 a owl:NamedIndividual,
     rdfs:label "Conflux"@en ;
     priory:gw2Id 92991 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 2 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_conflux .
 
@@ -99,6 +109,7 @@ item:95380 a owl:NamedIndividual,
     rdfs:label "Prismatic Champion's Regalia"@en ;
     priory:gw2Id 95380 ;
     priory:hasRarity rarity:Legendary ;
+    priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_prismatic_champions_regalia .
 

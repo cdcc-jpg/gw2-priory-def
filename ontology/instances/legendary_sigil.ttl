@@ -22,6 +22,7 @@ item:91505 a priory:LegendarySigil ;
     priory:chatCode "[&AgF5YwEA]" ;
     priory:hasRarity rarity:Legendary ;
     priory:hasUpgradeType upgrade:Sigil ;
+    priory:armoryMaxCap 4 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_legendary_sigil ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Legendary_Sigil> .

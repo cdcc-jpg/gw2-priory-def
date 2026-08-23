@@ -7,6 +7,7 @@
 @prefix item: <https://priory.gw2/id/item/> .
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
 
 # ==============================================================================
 # Shared Legendary Base Components & Acquisition Pathways
@@ -43,14 +44,16 @@ item:19678 a priory:GiftItem, owl:NamedIndividual ;
     skos:definition "Requires completing the WvW Gift of Battle Reward Track (~4-8 hours of World vs. World)."@en .
 
 item:path_gift_of_battle_track a priory:RewardTrackPath, owl:NamedIndividual ;
-    rdfs:label "WvW Gift of Battle Reward Track"@en ;
-    skos:definition "Earned by progressing and completing the WvW Gift of Battle track."@en .
+    rdfs:label "Gift of Battle WvW Reward Track"@en ;
+    priory:hasGameMode gamemode:WvWRewardTrack ;
+    priory:acceleratedBy priory:ExperienceBooster, priory:GuildTavernEnhancement, priory:HeroicBooster ;
+    skos:definition "Earned by progressing and completing the WvW Gift of Battle track. Completion takes ~8.0h unboosted or ~4.5h with booster accelerations (Experience Booster, Guild Tavern WvW Tavern Enhancement +10%, Heroic Booster)."@en .
 
-# --- Bloodstone Shard (ID: 19663) ---
-item:19663 a priory:CraftingMaterial, owl:NamedIndividual ;
+# --- Bloodstone Shard (ID: 19674) ---
+item:19674 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Bloodstone Shard"@en ;
-    priory:gw2Id 19663 ;
-    priory:hasRarity rarity:Rare ;
+    priory:gw2Id 19674 ;
+    priory:hasRarity rarity:Exotic ;
     priory:isAccountBound true ;
     priory:acquiredVia item:path_bloodstone_miyani ;
     skos:definition "Requires 200 Spirit Shards from Miyani at the Mystic Forge in Lion's Arch."@en .
@@ -59,7 +62,7 @@ item:path_bloodstone_miyani a priory:VendorExchangePath, owl:NamedIndividual ;
     rdfs:label "Purchase Bloodstone Shard from Miyani"@en ;
     priory:vendorNPC "Miyani" ;
     priory:zoneName "Lion's Arch" ;
-    priory:waypointName "Sanctum Harbor Waypoint" ;
+    priory:waypointName "Trader's Forum Waypoint" ;
     priory:nearestWaypoint "[&BBAEAAA=]" ;
     priory:requiresCurrency currency:SpiritShard ;
     priory:requiredQuantity 200 .

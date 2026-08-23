@@ -68,11 +68,11 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if qty_match:
             target_qty = int(qty_match.group(1))
 
-        # Extract time budget
+        # Extract time budget (supports decimal hours like 1.5 hours -> 90 minutes)
         time_budget = 120
-        time_match = re.search(r"(\d+)\s*(?:hours?|hrs?|h)", p_lower)
+        time_match = re.search(r"(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h)", p_lower)
         if time_match:
-            time_budget = int(time_match.group(1)) * 60
+            time_budget = int(float(time_match.group(1)) * 60)
         else:
             min_match = re.search(r"(\d+)\s*(?:minutes?|mins?|m)", p_lower)
             if min_match:
@@ -85,11 +85,11 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if "no wvw" in p_lower or "hate wvw" in p_lower or "avoid wvw" in p_lower:
             excluded.append("WvW")
 
-        # Extract exhausted/completed sources (e.g. "already bought clovers from wizard vault")
+        # Extract exhausted/completed sources (e.g. "already bought all clovers from wizard's vault")
         exhausted = []
-        if "already bought" in p_lower or "vault" in p_lower and ("bought" in p_lower or "done" in p_lower or "finished" in p_lower):
+        if "already bought" in p_lower or ("vault" in p_lower and any(w in p_lower for w in ["bought", "done", "finished", "exhausted", "completed", "claimed", "sold out"])):
             exhausted.append("WizardVault")
-        if "provisioner" in p_lower and ("bought" in p_lower or "done" in p_lower or "finished" in p_lower):
+        if "provisioner" in p_lower and any(w in p_lower for w in ["bought", "done", "finished", "exhausted", "completed"]):
             exhausted.append("Provisioners")
 
         # Extract gold budget
@@ -144,6 +144,9 @@ class RuleBasedMockLLMClient(BaseLLMClient):
                 break
 
         prefer_speed = any(w in p_lower for w in ["quick", "quickly", "fast", "fastest", "speed", "least effort", "instant", "soon"])
+        prefer_cheap = any(w in p_lower for w in ["cheapest", "least gold", "cost effective", "cheap", "lowest cost", "save gold", "saving gold", "cheaper"])
+        vault_exhausted = "WizardVault" in exhausted or "already bought" in p_lower or ("vault" in p_lower and any(w in p_lower for w in ["bought", "done", "finished", "exhausted", "completed", "claimed", "sold out"]))
+        opt_target = "cheapest_gold" if (prefer_cheap or vault_exhausted) else None
 
         # Instantiate target schema dynamically
         fields = schema.model_fields.keys()
@@ -165,6 +168,12 @@ class RuleBasedMockLLMClient(BaseLLMClient):
             data["category_filter"] = cat_filter
         if "prefer_speed" in fields:
             data["prefer_speed"] = prefer_speed
+        if "prefer_cheap" in fields:
+            data["prefer_cheap"] = prefer_cheap
+        if "wizards_vault_exhausted" in fields:
+            data["wizards_vault_exhausted"] = vault_exhausted or prefer_cheap
+        if "optimization_target" in fields:
+            data["optimization_target"] = opt_target
         if "goal_item_query" in fields:
             data["goal_item_query"] = cat_filter or goal_item
         if "is_ranking_query" in fields:

@@ -1,0 +1,49 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix path: <https://priory.gw2/id/path/> .
+
+path:19665_TempleOfBalthazarPath a priory:VendorExchangePath ;
+    rdfs:label "Temple of Balthazar Karma Vendor" ;
+    priory:targetItem item:19665 ;
+    priory:vendorNPC "Tactician Deathspark" ;
+    priory:zoneName "Straits of Devastation" ;
+    priory:nearestWaypoint "[&BO4CAAA=]" ;
+    priory:requiresCurrency currency:Karma ;
+    priory:requiredQuantity 2100 ;
+    priory:eventCadence "Temple contest event cycles approximately every 2 hours" ;
+    rdfs:comment "Temple must be in player-controlled state (contested temple blocks vendor)." .
+
+path:19665_SilverwastesPath a priory:OpenWorldFarmPath ;
+    rdfs:label "Silverwastes Chest Farm (RIBA)" ;
+    priory:targetItem item:19665 ;
+    priory:zoneName "The Silverwastes" ;
+    priory:nearestWaypoint "[&BF8HAAA=]" ;
+    priory:farmingEfficiency "8-15 Obsidian Shards per hour depending on chest density" ;
+    rdfs:comment "Obsidian Shards drop from Bandit Chests using Bandit Skeleton Keys." .
+
+path:19665_UnboundMagicPath a priory:VendorExchangePath ;
+    rdfs:label "Unbound Magic Vendor" ;
+    priory:targetItem item:19665 ;
+    priory:requiresCurrency currency:UnboundMagic ;
+    priory:requiredQuantity 100 ;
+    priory:requiresExpansion "LivingWorldSeason3" ;
+    rdfs:comment "Costs 100 Unbound Magic. Also costs 50 Karma per shard. Vendor in any LS3 map." .
+
+path:19665_LeyEnergyPath a priory:VendorExchangePath ;
+    rdfs:label "Ley-Energy Matter Converter" ;
+    priory:targetItem item:19665 ;
+    priory:requiresCurrency currency:LeyLineCrystal ;
+    priory:requiredQuantity 25 ;
+    priory:hasTimeGate "1 per day" ;
+    rdfs:comment "Requires 25 Ley-Line Crystals, or 25 Airship Parts, or 25 Lumps of Aurillium." .
+
+path:19665_FractalRelicPath a priory:VendorExchangePath ;
+    rdfs:label "Fractal Relic Vendor" ;
+    priory:targetItem item:19665 ;
+    priory:zoneName "Mistlock Observatory" ;
+    priory:nearestWaypoint "[&DYEFAAA=]" ;
+    priory:requiresCurrency currency:FractalRelic ;
+    priory:requiredQuantity 15 .

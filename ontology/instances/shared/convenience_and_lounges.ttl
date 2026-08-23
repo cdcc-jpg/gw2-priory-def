@@ -1,0 +1,756 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix itemtype: <https://priory.gw2/ref/itemtype/> .
+
+# ==============================================================================
+# Guild Wars 2 Master Convenience, Lounge, and Gizmo Registry
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Category 1: VIP Lounge Passes
+# ------------------------------------------------------------------------------
+
+# --- Mistlock Sanctuary Passkey (GW2 ID: 81664) ---
+item:81664 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mistlock Sanctuary Passkey"@en ;
+    priory:gw2Id 81664 ;
+    priory:chatCode "[&AgEAPwEA]" ;
+    priory:chatLink "[&AgEAPwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn true ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureInstantReturn ,
+                      priory:FeatureFractalLobby ;
+    rdfs:comment "Permanent passkey to the Mistlock Sanctuary fractal lounge in the Mists with complete crafting, vendors, bank, TP, Mystic Forge, and return-to-previous-map skill."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mistlock_Sanctuary_Passkey> .
+
+# --- Armistice Bastion Pass (GW2 ID: 90011) ---
+item:90011 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Armistice Bastion Pass"@en ;
+    priory:gw2Id 90011 ;
+    priory:chatCode "[&AgGbXwEA]" ;
+    priory:chatLink "[&AgGbXwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn true ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureInstantReturn ,
+                      priory:FeatureWvWVendors ;
+    rdfs:comment "Permanent pass to Armistice Bastion WvW lounge in the Mists with team chat, WvW vendors, siege training arena, crafting stations, bank, TP, and instant return."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Armistice_Bastion_Pass> .
+
+# --- Thousand Seas Pavilion Pass (GW2 ID: 98048) ---
+item:98048 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Thousand Seas Pavilion Pass"@en ;
+    priory:gw2Id 98048 ;
+    priory:chatCode "[&AgEAfwEA]" ;
+    priory:chatLink "[&AgEAfwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn true ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureInstantReturn ,
+                      priory:FeatureFishing ,
+                      priory:FeatureStrikePortals ;
+    rdfs:comment "Permanent pass to Thousand Seas Pavilion aquatic lounge in Cantha featuring fishing holes, Jade Bot workbench, Strike Mission portals, crafting stations, bank, TP, and instant return."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Thousand_Seas_Pavilion_Pass> .
+
+# --- Passkey to the Lily of the Elon (GW2 ID: 83457) ---
+item:83457 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Passkey to the Lily of the Elon"@en ;
+    skos:altLabel "Lily of the Elon"@en ;
+    priory:gw2Id 83457 ;
+    priory:chatCode "[&AgEBRgEA]" ;
+    priory:chatLink "[&AgEBRgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ;
+    rdfs:comment "Permanent VIP pass granting access to the luxury river barge Lily of the Elon in Amnoon (Crystal Oasis) with full crafting, Mystic Forge, bank, and trading post services."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Passkey_to_the_Lily_of_the_Elon> .
+
+# --- Royal Terrace Pass (GW2 ID: 49149) ---
+item:49149 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Royal Terrace Pass"@en ;
+    priory:gw2Id 49149 ;
+    priory:chatCode "[&AgH9vwAA]" ;
+    priory:chatLink "[&AgH9vwAA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ;
+    rdfs:comment "Permanent pass granting unlimited access to the Royal Terrace lounge in Divinity's Reach with full crafting, bank, trading post, and merchant services."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Royal_Terrace_Pass> .
+
+# --- Captain's Airship Pass (GW2 ID: 49449) ---
+item:49449 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Captain's Airship Pass"@en ;
+    priory:gw2Id 49449 ;
+    priory:chatCode "[&AgEpwQAA]" ;
+    priory:chatLink "[&AgEpwQAA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ;
+    rdfs:comment "Permanent pass granting access to the Havoc's Heir airship lounge floating above Gendarran Fields with full crafting, bank, TP, and vendor amenities."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Captain%27s_Airship_Pass> .
+
+# --- Noble's Folly Pass (GW2 ID: 75479) ---
+item:75479 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Noble's Folly Pass"@en ;
+    priory:gw2Id 75479 ;
+    priory:chatCode "[&AgHnJgEA]" ;
+    priory:chatLink "[&AgHnJgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ;
+    rdfs:comment "Permanent pass granting access to the Noble's Folly canopy lounge in Verdant Brink with gliding updrafts, full crafting, Mystic Forge, and trading post services."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Noble%27s_Folly_Pass> .
+
+# --- Lava Lounge Pass (GW2 ID: 79500) ---
+item:79500 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Lava Lounge Pass"@en ;
+    priory:gw2Id 79500 ;
+    priory:chatCode "[&AgGMNgEA]" ;
+    priory:chatLink "[&AgGMNgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ;
+    rdfs:comment "Permanent pass granting access to the Lava Lounge in Ember Bay (Ring of Fire) with thermal tube networks, full crafting, Mystic Forge, and trading post services."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Lava_Lounge_Pass> .
+
+# --- Champion's Rest Pass (GW2 ID: 82791) ---
+item:82791 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Champion's Rest Pass"@en ;
+    priory:gw2Id 82791 ;
+    priory:chatCode "[&AgFnQwEA]" ;
+    priory:chatLink "[&AgFnQwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn true ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureInstantReturn ;
+    rdfs:comment "Exclusive VIP pass granting access to the Champion's Rest lounge overlooking the Heart of the Mists PvP arena with full crafting, bank, TP, and return functionality."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Champion%27s_Rest_Pass> .
+
+# --- Arborstone Portal Scroll (GW2 ID: 97009) ---
+item:97009 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Arborstone Portal Scroll"@en ;
+    priory:gw2Id 97009 ;
+    priory:chatCode "[&AgHxegEA]" ;
+    priory:chatLink "[&AgHxegEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureStrikePortals ;
+    rdfs:comment "Permanent teleportation tome granting instant travel to Arborstone commercial hub in Echovald Wilds featuring Rested XP buff, EoD Strike portals, crafting stations, and vendors."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Arborstone_Portal_Scroll> .
+
+# --- Wizard's Tower Teleportation Scroll (GW2 ID: 100788) ---
+item:100788 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Wizard's Tower Teleportation Scroll"@en ;
+    priory:gw2Id 100788 ;
+    priory:chatCode "[&AgG0iQEA]" ;
+    priory:chatLink "[&AgG0iQEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureStrikePortals ;
+    rdfs:comment "Permanent teleportation scroll granting access to the Wizard's Tower in Secrets of the Obscure featuring Astral Ward merchants, convergence portals, crafting, and Mystic Forge."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Wizard%27s_Tower_Teleportation_Scroll> .
+
+# --- Invitation to the Eye of the North (GW2 ID: 92055) ---
+item:92055 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Invitation to the Eye of the North"@en ;
+    skos:altLabel "Eye of the North Portal Scroll"@en ;
+    priory:gw2Id 92055 ;
+    priory:chatCode "[&AgH3ZwEA]" ;
+    priory:chatLink "[&AgH3ZwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasCraftingStations true ;
+    priory:hasMysticForge true ;
+    priory:hasBank true ;
+    priory:hasTradingPost true ;
+    priory:hasVendor true ;
+    priory:hasInstantReturn false ;
+    priory:hasFeature priory:FeatureCraftingStations ,
+                      priory:FeatureMysticForge ,
+                      priory:FeatureBank ,
+                      priory:FeatureTradingPost ,
+                      priory:FeatureVendor ,
+                      priory:FeatureStrikePortals ;
+    rdfs:comment "Permanent portal invitation granting instant access to the Eye of the North hub with Aurene crafting, strike mission portals, bank, TP, and merchants."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Invitation_to_the_Eye_of_the_North> .
+
+# ------------------------------------------------------------------------------
+# Category 2: Infinite Salvage Tools
+# ------------------------------------------------------------------------------
+
+# --- Copper-Fed Salvage-o-Matic (GW2 ID: 44602) ---
+item:44602 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Copper-Fed Salvage-o-Matic"@en ;
+    priory:gw2Id 44602 ;
+    priory:chatCode "[&AgE6rgAA]" ;
+    priory:chatLink "[&AgE6rgAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:salvageCostPerUse 3 ;
+    priory:salvageRarityRate 0.10 ;
+    priory:salvageUpgradeRate 0.20 ;
+    rdfs:comment "Infinite-use salvage tool costing 3 copper per use. Equivalent to a Basic Salvage Kit with 10% chance of rarer materials and 20% chance of recovering upgrades. Optimal for salvaging white, blue, and green equipment."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Copper-Fed_Salvage-o-Matic> .
+
+# --- Silver-Fed Salvage-o-Matic (GW2 ID: 67027) ---
+item:67027 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Silver-Fed Salvage-o-Matic"@en ;
+    priory:gw2Id 67027 ;
+    priory:chatCode "[&AgHTBQEA]" ;
+    priory:chatLink "[&AgHTBQEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:salvageCostPerUse 60 ;
+    priory:salvageRarityRate 0.25 ;
+    priory:salvageUpgradeRate 0.80 ;
+    rdfs:comment "Infinite-use salvage tool costing 60 copper per use. Equivalent to a Master's Salvage Kit with 25% chance of rarer materials and 80% chance of recovering upgrades. Optimal for salvaging rare (yellow) gear for Globs of Ectoplasm."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Silver-Fed_Salvage-o-Matic> .
+
+# --- Runecrafter's Salvage-o-Matic (GW2 ID: 87400) ---
+item:87400 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Runecrafter's Salvage-o-Matic"@en ;
+    priory:gw2Id 87400 ;
+    priory:chatCode "[&AgFoVQEA]" ;
+    priory:chatLink "[&AgFoVQEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:salvageCostPerUse 30 ;
+    priory:salvageRarityRate 0.20 ;
+    priory:salvageUpgradeRate 1.00 ;
+    rdfs:comment "Infinite-use salvage tool costing 30 copper per use. Features a 100% chance of recovering upgrades as Charms, Symbols, and Lucent Motes. Optimal for salvaging masterwork (green) gear containing sigils or runes."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Runecrafter%27s_Salvage-o-Matic> .
+
+# --- Endless Upgrade Extractor (GW2 ID: 93121) ---
+item:93121 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Endless Upgrade Extractor"@en ;
+    priory:gw2Id 93121 ;
+    priory:chatCode "[&AgHxmwEA]" ;
+    priory:chatLink "[&AgHxmwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:salvageCostPerUse 0 ;
+    priory:salvageRarityRate 0.00 ;
+    priory:salvageUpgradeRate 1.00 ;
+    rdfs:comment "Infinite-use extraction tool that safely removes upgrades (runes, sigils, infusions, enrichments) from equipment without destroying either the gear or the upgrade component."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Endless_Upgrade_Extractor> .
+
+# ------------------------------------------------------------------------------
+# Category 3: Permanent Contracts
+# ------------------------------------------------------------------------------
+
+# --- Permanent Bank Access Contract (GW2 ID: 35976) ---
+item:35976 a priory:PermanentContract, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Permanent Bank Access Contract"@en ;
+    priory:gw2Id 35976 ;
+    priory:chatCode "[&AgEgDAEA]" ;
+    priory:chatLink "[&AgEgDAEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasBank true ;
+    priory:hasFeature priory:FeatureBank ;
+    rdfs:comment "Permanent account contract granting unlimited, portable access to your account bank and material storage anywhere in the game world."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Permanent_Bank_Access_Contract> .
+
+# --- Permanent Black Lion Merchant Contract (GW2 ID: 35977) ---
+item:35977 a priory:PermanentContract, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Permanent Black Lion Merchant Contract"@en ;
+    priory:gw2Id 35977 ;
+    priory:chatCode "[&AgEhDAEA]" ;
+    priory:chatLink "[&AgEhDAEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasVendor true ;
+    priory:hasFeature priory:FeatureVendor ;
+    rdfs:comment "Permanent contract that summons a Black Lion Merchant to sell basic gathering tools, salvage kits, and purchase vendor junk anywhere in Tyria."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Permanent_Black_Lion_Merchant_Contract> .
+
+# --- Permanent Trading Post Express Contract (GW2 ID: 35978) ---
+item:35978 a priory:PermanentContract, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Permanent Trading Post Express Contract"@en ;
+    priory:gw2Id 35978 ;
+    priory:chatCode "[&AgEiDAEA]" ;
+    priory:chatLink "[&AgEiDAEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasTradingPost true ;
+    priory:hasFeature priory:FeatureTradingPost ;
+    rdfs:comment "Permanent contract granting on-demand access to the Black Lion Trading Post to buy, sell, and collect delivered items and gold anywhere."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Permanent_Trading_Post_Express_Contract> .
+
+# --- Permanent Hair Stylist Contract (GW2 ID: 35984) ---
+item:35984 a priory:PermanentContract, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Permanent Hair Stylist Contract"@en ;
+    priory:gw2Id 35984 ;
+    priory:chatCode "[&AgEoDAEA]" ;
+    priory:chatLink "[&AgEoDAEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasFeature priory:FeatureStylist ;
+    rdfs:comment "Permanent contract that summons a personal hair stylist allowing complete, unlimited changes to character hairstyle, hair color, horn, and accessory options."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Permanent_Hair_Stylist_Contract> .
+
+# --- Permanent Tool Delivery Box (GW2 ID: 84950) ---
+item:84950 a priory:PermanentContract, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Permanent Tool Delivery Box"@en ;
+    skos:altLabel "Permanent Tool Delivery Contract"@en ;
+    priory:gw2Id 84950 ;
+    priory:chatCode "[&AgH6SwEA]" ;
+    priory:chatLink "[&AgH6SwEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasFeature priory:FeatureToolDelivery ;
+    rdfs:comment "Permanent contract allowing players to request deliveries of infinite gathering tool charges and harvesting supplies anywhere in Tyria."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Permanent_Black_Lion_Delivery_Box> .
+
+# --- Endless Repair Canister (GW2 ID: 91876) ---
+item:91876 a priory:PermanentContract, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Endless Repair Canister"@en ;
+    priory:gw2Id 91876 ;
+    priory:chatCode "[&AgH0ZgEA]" ;
+    priory:chatLink "[&AgH0ZgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasFeature priory:FeatureRepair ;
+    rdfs:comment "Infinite-use repair canister that instantly restores and repairs damaged armor and reinforces gear attributes anywhere."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Endless_Repair_Canister> .
+
+# ------------------------------------------------------------------------------
+# Category 4: Converters & Gobblers
+# ------------------------------------------------------------------------------
+
+# --- Candy Corn Gobbler (GW2 ID: 67393) ---
+item:67393 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Candy Corn Gobbler"@en ;
+    priory:gw2Id 67393 ;
+    priory:chatCode "[&AgFBBwEA]" ;
+    priory:chatLink "[&AgFBBwEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Halloween festival gobbler that consumes Candy Corn to grant random transformation and booster effects (XP, karma, magic find, speed)."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Candy_Corn_Gobbler> .
+
+# --- Zhaitaffy Gobbler (GW2 ID: 67836) ---
+item:67836 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Zhaitaffy Gobbler"@en ;
+    priory:gw2Id 67836 ;
+    priory:chatCode "[&AgFsCQEA]" ;
+    priory:chatLink "[&AgFsCQEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Dragon Bash festival gobbler that consumes Pieces of Zhaitaffy in exchange for Dragon Coffers or Festival Gobbler Boosts."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Zhaitaffy_Gobbler> .
+
+# --- Snowflake Gobbler (GW2 ID: 92585) ---
+item:92585 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Snowflake Gobbler"@en ;
+    priory:gw2Id 92585 ;
+    priory:chatCode "[&AgGpaQEA]" ;
+    priory:chatLink "[&AgGpaQEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Wintersday festival gobbler that consumes Snowflakes in exchange for Wintersday Gifts and Festival Gobbler Boosts."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Snowflake_Gobbler> .
+
+# --- Ley-Energy Matter Converter (GW2 ID: 67280) ---
+item:67280 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Ley-Energy Matter Converter"@en ;
+    priory:gw2Id 67280 ;
+    priory:chatCode "[&AgGgCgEA]" ;
+    priory:chatLink "[&AgGgCgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Heart of Thorns converter that exchanges map currencies (Airship Parts, Aurillium, Ley Line Crystals) or gives a free daily item/key."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Ley-Energy_Matter_Converter> .
+
+# --- Karmic Converter (GW2 ID: 66624) ---
+item:66624 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Karmic Converter"@en ;
+    priory:gw2Id 66624 ;
+    priory:chatCode "[&AgHgAQEA]" ;
+    priory:chatLink "[&AgHgAQEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Exotic Hunter reward gizmo that exchanges Karma daily for utility bags, crafting materials, or trade goods."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Karmic_Converter> .
+
+# --- Gleam of Sentience (GW2 ID: 92209) ---
+item:92209 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Gleam of Sentience"@en ;
+    priory:gw2Id 92209 ;
+    priory:chatCode "[&AgExaQEA]" ;
+    priory:chatLink "[&AgExaQEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Consolidated Sentient converter created in the Mystic Forge from four sentient components, consuming Bloodstone Dust, Dragonite Ore, and Empyreal Fragments for Fluctuating Masses."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gleam_of_Sentience> .
+
+# --- Sentient Anomaly (GW2 ID: 80087) ---
+item:80087 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Sentient Anomaly"@en ;
+    priory:gw2Id 80087 ;
+    priory:chatCode "[&AgFnOAEA]" ;
+    priory:chatLink "[&AgFnOAEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Living World Season 3 converter consuming Dragonite Ore and Bloodstone Dust in exchange for Fluctuating Mass."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sentient_Anomaly> .
+
+# --- Sentient Aberration (GW2 ID: 79558) ---
+item:79558 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Sentient Aberration"@en ;
+    priory:gw2Id 79558 ;
+    priory:chatCode "[&AgEmOwEA]" ;
+    priory:chatLink "[&AgEmOwEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Living World Season 3 converter consuming Dragonite Ore and Empyreal Fragments in exchange for Fluctuating Mass."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sentient_Aberration> .
+
+# --- Sentient Seed (GW2 ID: 81781) ---
+item:81781 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Sentient Seed"@en ;
+    priory:gw2Id 81781 ;
+    priory:chatCode "[&AgFlPQEA]" ;
+    priory:chatLink "[&AgFlPQEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Sentient converter component and trophy tied to Unbound Magic and Aurora legendary collection."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sentient_Seed> .
+
+# --- Sentient Singularity (GW2 ID: 81120) ---
+item:81120 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Sentient Singularity"@en ;
+    priory:gw2Id 81120 ;
+    priory:chatCode "[&AgHgPwEA]" ;
+    priory:chatLink "[&AgHgPwEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Living World Season 3 converter consuming Unbound Magic in exchange for Fluctuating Mass."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Sentient_Singularity> .
+
+# --- Hlish Hiss (GW2 ID: 90002) ---
+item:90002 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Hlish Hiss"@en ;
+    priory:gw2Id 90002 ;
+    priory:chatCode "[&AgHiXwEA]" ;
+    priory:chatLink "[&AgHiXwEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Convenience converter and barter gizmo for festival and event tokens."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Portable_exchanger> .
+
+# ------------------------------------------------------------------------------
+# Category 5: Portal Tomes & Teleporters
+# ------------------------------------------------------------------------------
+
+# --- Living World Season 3 Portal Tome (GW2 ID: 80332) ---
+item:80332 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Living World Season 3 Portal Tome"@en ;
+    priory:gw2Id 80332 ;
+    priory:chatCode "[&AgHMTgEA]" ;
+    priory:chatLink "[&AgHMTgEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Portal tome holding portal scrolls for all Living World Season 3 zones (Bloodstone Fen, Ember Bay, Bitterfrost Frontier, Lake Doric, Draconis Mons, Siren's Landing)."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Living_World_Season_3_Portal_Tome> .
+
+# --- Living World Season 4 Portal Tome (GW2 ID: 87508) ---
+item:87508 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Living World Season 4 Portal Tome"@en ;
+    priory:gw2Id 87508 ;
+    priory:chatCode "[&AgFUVQEA]" ;
+    priory:chatLink "[&AgFUVQEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Portal tome holding portal scrolls for all Living World Season 4 zones (Domain of Istan, Sandswept Isles, Domain of Kourna, Jahai Bluffs, Thunderhead Peaks, Dragonfall)."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Living_World_Season_4_Portal_Tome> .
+
+# --- Icebrood Saga Portal Tome (GW2 ID: 92850) ---
+item:92850 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Icebrood Saga Portal Tome"@en ;
+    priory:gw2Id 92850 ;
+    priory:chatCode "[&AgGiaQEA]" ;
+    priory:chatLink "[&AgGiaQEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Portal tome holding portal scrolls for Icebrood Saga zones (Grothmar Valley, Bjora Marches, Drizzlewood Coast, Eye of the North)."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/The_Icebrood_Saga_Portal_Tome> .
+
+# --- Recharging Teleport to Friend (GW2 ID: 90335) ---
+item:90335 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Recharging Teleport to Friend"@en ;
+    priory:gw2Id 90335 ;
+    priory:chatCode "[&AgHfYAEA]" ;
+    priory:chatLink "[&AgHfYAEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasFeature priory:FeatureInstantReturn ;
+    rdfs:comment "Infinite reusable gizmo that teleports you directly to the location of a party or squad member anywhere across Tyria on a 1-hour cooldown."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Recharging_Teleport_to_Friend> .
+
+# --- Exalted Portal Stone (GW2 ID: 79744) ---
+item:79744 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Exalted Portal Stone"@en ;
+    priory:gw2Id 79744 ;
+    priory:chatCode "[&AgEwTgEA]" ;
+    priory:chatLink "[&AgEwTgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Infinite-use teleportation stone that teleports the player directly to Tarir, the Forgotten City in Auric Basin."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Exalted_Portal_Stone> .
+
+# --- Hall of Monuments Portal Stone (GW2 ID: 20030) ---
+item:20030 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Hall of Monuments Portal Stone"@en ;
+    priory:gw2Id 20030 ;
+    priory:chatCode "[&AgE+TgAA]" ;
+    priory:chatLink "[&AgE+TgAA]" ;
+    priory:hasRarity rarity:Fine ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Teleportation stone granting access to the historic Hall of Monuments in the Eye of the North."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Hall_of_Monuments_Portal_Stone> .
+
+# ------------------------------------------------------------------------------
+# Category 6: Portable Mystic Forge
+# ------------------------------------------------------------------------------
+
+# --- Permanent Mystic Forge Conduit (GW2 ID: 70010) ---
+item:70010 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Permanent Mystic Forge Conduit"@en ;
+    priory:gw2Id 70010 ;
+    priory:chatCode "[&AgF6EQEA]" ;
+    priory:chatLink "[&AgF6EQEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasMysticForge true ;
+    priory:hasFeature priory:FeatureMysticForge ;
+    rdfs:comment "Reusable gizmo granting instantaneous, portable access to the Mystic Forge anywhere in the world without requiring a hub visit."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mystic_Forge_Conduit_(container)> .
+
+# --- Mystic Forge Conduit (GW2 ID: 35727) ---
+item:35727 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Conduit"@en ;
+    priory:gw2Id 35727 ;
+    priory:chatCode "[&AgG/IgAA]" ;
+    priory:chatLink "[&AgG/IgAA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasMysticForge true ;
+    priory:hasFeature priory:FeatureMysticForge ;
+    rdfs:comment "Crafted portable Mystic Forge conduit made by combining Mystic Forge Conduit components."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mystic_Forge_Conduit> .
+
+# --- Mystic Forge Node (GW2 ID: 68093) ---
+item:68093 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge Node"@en ;
+    priory:gw2Id 68093 ;
+    priory:chatCode "[&AgFdCgEA]" ;
+    priory:chatLink "[&AgFdCgEA]" ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    priory:hasMysticForge true ;
+    priory:hasFeature priory:FeatureMysticForge ;
+    rdfs:comment "Personal home node and portable conduit enabling direct Mystic Forge recipe forging anywhere."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mystic_Forge_Node> .
+
+# ------------------------------------------------------------------------------
+# Category 7: Account Storage Upgrades
+# ------------------------------------------------------------------------------
+
+# --- Shared Inventory Slot (GW2 ID: 67071) ---
+item:67071 a priory:AccountStorageUpgrade, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Shared Inventory Slot"@en ;
+    priory:gw2Id 67071 ;
+    priory:chatCode "[&AgH/BQEA]" ;
+    priory:chatLink "[&AgH/BQEA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Account upgrade that adds a shared inventory slot accessible by every character on the account."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Shared_Inventory_Slot> .
+
+# --- Material Storage Expander (GW2 ID: 42932) ---
+item:42932 a priory:AccountStorageUpgrade, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Material Storage Expander"@en ;
+    priory:gw2Id 42932 ;
+    priory:chatCode "[&AgG0pwAA]" ;
+    priory:chatLink "[&AgG0pwAA]" ;
+    priory:hasRarity rarity:Rare ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Account upgrade that increases the maximum stack size for every material in Material Storage by 250."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Material_Storage_Expander> .
+
+# --- Bank Tab Expansion (GW2 ID: 19995) ---
+item:19995 a priory:AccountStorageUpgrade, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Bank Tab Expansion"@en ;
+    priory:gw2Id 19995 ;
+    priory:chatCode "[&AgEbTgAA]" ;
+    priory:chatLink "[&AgEbTgAA]" ;
+    priory:hasRarity rarity:Masterwork ;
+    priory:hasItemType itemtype:Gizmo ;
+    priory:isAccountBound true ;
+    rdfs:comment "Account upgrade that adds one additional 30-slot tab to the account bank vault."@en ;
+    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Bank_Tab_Expansion> .

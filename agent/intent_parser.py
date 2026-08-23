@@ -46,6 +46,18 @@ class PlayerGoalIntent(BaseModel):
         default=False,
         description="Set to true if the player explicitly asks to craft quickly, fast, with least effort, or minimal time investment."
     )
+    prefer_cheap: bool = Field(
+        default=False,
+        description="Set to true if the player explicitly asks for the cheapest way, lowest cost, or most cost-effective path (e.g. 'cheapest', 'least gold', 'save gold')."
+    )
+    wizards_vault_exhausted: bool = Field(
+        default=False,
+        description="Set to true if Wizard's Vault items (clovers, starter kits, astral acclaim) are bought, exhausted, or completed."
+    )
+    optimization_target: Optional[str] = Field(
+        default=None,
+        description="Target optimization strategy: 'cheapest_gold', 'fastest_time', etc."
+    )
     target_quantity: int = Field(default=1, description="The desired number of items (e.g. 1, 2, 4).")
     time_budget_minutes: int = Field(default=120, description="Available playtime in minutes.")
     excluded_game_modes: List[str] = Field(default_factory=list, description="Game modes to avoid (e.g. WvW, PvP, Raids).")
@@ -65,6 +77,9 @@ class ResolvedGoal(BaseModel):
     is_acquisition_query: bool = False
     facet_name: Optional[str] = None
     prefer_speed: bool = False
+    prefer_cheap: bool = False
+    wizards_vault_exhausted: bool = False
+    optimization_target: Optional[str] = None
     target_quantity: int = 1
     chat_code: Optional[str] = None
 
@@ -82,7 +97,9 @@ class IntentParser:
         "2. target_item_name: Name of the specific item if goal_type is SPECIFIC_ITEM, else null.\n"
         "3. category_filter: Any mentioned generation ('Gen 1', 'Gen 2', 'Gen 3'), expansion ('Heart of Thorns', 'Path of Fire', 'End of Dragons', 'Secrets of the Obscure', 'Janthir Wilds'), or category ('Armor', 'Trinket', 'Upgrade', 'Spear', 'Greatsword'), else null.\n"
         "4. prefer_speed: Set to true if the player wants a fast/quick recommendation, least effort, or lowest time investment (e.g. 'quickly', 'fast', 'fastest', 'least effort'), else false.\n"
-        "5. target_quantity, time_budget_minutes, excluded_game_modes, preferred_game_modes, exhausted_sources, liquid_gold_budget."
+        "5. wizards_vault_exhausted: Set to true if Wizard's Vault clovers or starter kit are bought, exhausted, or completed.\n"
+        "6. optimization_target: Set to 'cheapest_gold' if user asks for cheapest route or if vault is exhausted.\n"
+        "7. target_quantity, time_budget_minutes, excluded_game_modes, preferred_game_modes, exhausted_sources, liquid_gold_budget."
     )
 
     def __init__(self, semantic_query_service: SemanticQueryService, llm_client: Optional[BaseLLMClient] = None):
@@ -107,6 +124,28 @@ class IntentParser:
             schema=PlayerGoalIntent
         )
 
+        p_lower = user_prompt.lower()
+        c_lower = (conversation_context or "").lower()
+        combined_text = f"{p_lower} {c_lower}"
+
+        vault_exhausted = (
+            intent.wizards_vault_exhausted
+            or "WizardVault" in intent.exhausted_sources
+            or ("vault" in combined_text and any(k in combined_text for k in ["bought", "exhausted", "completed", "claimed", "done", "finished"]))
+            or "already bought" in combined_text
+        )
+
+        is_cheapest = (
+            intent.optimization_target == "cheapest_gold"
+            or intent.prefer_cheap
+            or any(k in combined_text for k in ["cheapest", "cheapest route", "cheapest path", "lowest cost", "cheapest gold", "minimum gold", "save gold", "cheapest cost"])
+        )
+
+        opt_target = "cheapest_gold" if (is_cheapest or vault_exhausted or intent.optimization_target == "cheapest_gold") else intent.optimization_target
+        if is_cheapest or vault_exhausted:
+            intent.wizards_vault_exhausted = vault_exhausted or is_cheapest
+            intent.optimization_target = opt_target
+
         # Handle COMPARATIVE_RANKING queries directly without guessing specific item IDs
         if intent.goal_type == GoalType.COMPARATIVE_RANKING:
             return ResolvedGoal(
@@ -114,6 +153,9 @@ class IntentParser:
                 goal_type=GoalType.COMPARATIVE_RANKING,
                 category_filter=intent.category_filter,
                 prefer_speed=intent.prefer_speed,
+                prefer_cheap=intent.prefer_cheap or is_cheapest,
+                wizards_vault_exhausted=intent.wizards_vault_exhausted,
+                optimization_target=intent.optimization_target,
                 target_quantity=intent.target_quantity
             )
 
@@ -142,6 +184,9 @@ class IntentParser:
                         intent=intent,
                         goal_type=GoalType.COMPARATIVE_RANKING,
                         category_filter=intent.category_filter or item_query,
+                        prefer_cheap=intent.prefer_cheap or is_cheapest,
+                        wizards_vault_exhausted=intent.wizards_vault_exhausted,
+                        optimization_target=intent.optimization_target,
                         target_quantity=intent.target_quantity
                     )
             target_quantity = intent.target_quantity
@@ -155,6 +200,9 @@ class IntentParser:
             is_acquisition_query=intent.is_acquisition_query or intent.goal_type == GoalType.ACQUISITION_DISCOVERY,
             facet_name=intent.facet_name,
             prefer_speed=intent.prefer_speed,
+            prefer_cheap=intent.prefer_cheap or is_cheapest,
+            wizards_vault_exhausted=intent.wizards_vault_exhausted,
+            optimization_target=intent.optimization_target,
             target_quantity=target_quantity,
             chat_code=chat_code
         )

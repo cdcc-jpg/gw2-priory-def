@@ -36,9 +36,18 @@ def print_guide(guide):
     print(f"📊 Overall Account Readiness: {guide.readiness_percentage}%\n")
     print(f"📝 {guide.executive_summary}\n")
 
+    # If Wizard's Vault is exhausted, explicitly display prominent notice
+    has_vault_exhausted = any("Wizard's Vault Clovers Exhausted" in str(rec) for rec in guide.strategic_recommendations)
+    if has_vault_exhausted:
+        print("🚫 Wizard's Vault Clovers Exhausted: Routing to Daily BUY-2046 (2/day) + Mystic Forge fallback.\n")
+
     print("💡 STRATEGIC RECOMMENDATIONS & CONSTRAINTS:")
     for rec in guide.strategic_recommendations:
-        print(f"   {rec}")
+        if has_vault_exhausted and "🚫 Wizard's Vault Clovers Exhausted: Routing to Daily BUY-2046" in str(rec):
+            continue
+        lines = str(rec).split("\n")
+        for line in lines:
+            print(f"   {line}")
 
     if getattr(guide, "character_recommendations", None):
         print("\n👤 CHARACTER ASSIGNMENTS & CRAFTING HANDOFFS:")
@@ -46,13 +55,27 @@ def print_guide(guide):
             print(f"   • {cr}")
 
     if guide.master_roadmap_phases:
-        print("\n🗺️  5-PHASE MASTER CRAFTING ROADMAP:")
-        for line in guide.master_roadmap_phases:
-            print(f"   {line}")
+        is_chapters = any("Chapter" in line or "Expedition" in line or "Decision" in line for line in guide.master_roadmap_phases[:3] if isinstance(line, str))
+        if is_chapters:
+            print("\n🗺️  4-CHAPTER MASTER JOURNEY:")
+            for line in guide.master_roadmap_phases:
+                if line.startswith("**") and any(ch_term in line for ch_term in ["Chapter", "Decision", "Expedition", "Rituals", "Ceremony", "Precursor", "Forge"]):
+                    header = line.replace("**", "")
+                    print(f"\n ──────── {header} ────────")
+                else:
+                    print(f"{line}")
+        else:
+            print("\n🗺️  MASTER CRAFTING ROADMAP:")
+            for line in guide.master_roadmap_phases:
+                print(f"   {line}")
 
     print("\n📋 ACTIONABLE SESSION PLAN:")
     for step in guide.session_checklist:
-        chat = f" [{step.chat_code}]" if step.chat_code else ""
+        if step.chat_code:
+            chat_clean = step.chat_code if step.chat_code.startswith("[") else f"[{step.chat_code}]"
+            chat = f" `{chat_clean}`"
+        else:
+            chat = ""
         print(f"   [{step.step_number}] {step.title} (~{step.estimated_time_minutes} mins | {step.game_mode}){chat}")
         print(f"       -> {step.description}")
 

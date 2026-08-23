@@ -1,0 +1,137 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix zone: <https://priory.gw2/ref/zone/> .
+
+currency:61 a priory:Currency ;
+    rdfs:label "Tales of Dungeon Delving"@en ;
+    priory:gw2Id 61 .
+
+zone:AscalonianCatacombs a priory:Dungeon ;
+    rdfs:label "Ascalonian Catacombs"@en ;
+    priory:nearestWaypoint "[&BIcBAAA=]" ;
+    priory:hasPath "Path 1"@en, "Path 2"@en, "Path 3"@en .
+
+item:19640 a priory:GiftItem ;
+    rdfs:label "Gift of Ascalon"@en ;
+    priory:gw2Id 19640 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19640
+    ] .
+
+item:19641 a priory:GiftItem ;
+    rdfs:label "Gift of Knowledge"@en ;
+    priory:gw2Id 19641 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19641
+    ] .
+
+item:19642 a priory:GiftItem ;
+    rdfs:label "Gift of the Nobleman"@en ;
+    priory:gw2Id 19642 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19642
+    ] .
+
+item:19643 a priory:GiftItem ;
+    rdfs:label "Gift of Baelfire"@en ;
+    priory:gw2Id 19643 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19643
+    ] .
+
+item:19644 a priory:GiftItem ;
+    rdfs:label "Gift of Ice"@en ;
+    priory:gw2Id 19644 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19644
+    ] .
+
+item:19645 a priory:GiftItem ;
+    rdfs:label "Gift of Stealth"@en ;
+    priory:gw2Id 19645 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19645
+    ] .
+
+item:19646 a priory:GiftItem ;
+    rdfs:label "Gift of the Forgeman"@en ;
+    priory:gw2Id 19646 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19646
+    ] .
+
+item:19649 a priory:GiftItem ;
+    rdfs:label "Gift of Souls"@en ;
+    priory:gw2Id 19649 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:61 ;
+        priory:requiredQuantity 500 ;
+        priory:vendorNPC "Dungeon Merchant"@en ;
+        priory:zoneName "Lion's Arch"@en ;
+        priory:nearestWaypoint "[&BBAEAAA=]" ;
+        priory:targetItem item:19649
+    ] .

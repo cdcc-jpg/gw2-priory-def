@@ -1,0 +1,46 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix gamemode: <https://priory.gw2/ref/gamemode/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix path: <https://priory.gw2/id/path/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+
+path:19675_WizardsVaultPath a priory:VendorExchangePath ;
+    rdfs:label "Wizard's Vault Exchange for Mystic Clovers" ;
+    priory:targetItem item:19675 ;
+    priory:requiresCurrency currency:AstralAcclaim ;
+    priory:requiredQuantity 60 ;
+    priory:hasTimeGate "20 per season (~3 months)" .
+
+path:19675_FractalDailyPath a priory:VendorExchangePath ;
+    rdfs:label "Fractal BUY-2046 Daily Vendor" ;
+    priory:targetItem item:19675 ;
+    priory:zoneName "Mistlock Observatory" ;
+    priory:nearestWaypoint "[&DYEFAAA=]" ;
+    priory:requiresCurrency currency:FractalRelic ;
+    priory:requiredQuantity 150 ;
+    priory:hasTimeGate "2 per day" ;
+    rdfs:comment "Also requires 1 Mystic Coin per clover." .
+
+path:19675_RaidStrikePath a priory:VendorExchangePath ;
+    rdfs:label "Raid/Strike Weekly Vendor" ;
+    priory:targetItem item:19675 ;
+    priory:requiresCurrency currency:MagnetiteShard ;
+    priory:requiredQuantity 150 ;
+    priory:hasTimeGate "Weekly" ;
+    rdfs:comment "Purchasable with Magnetite Shards (Raids) or Prophet Shards (Strikes). Limited weekly purchases." .
+
+path:19675_WvWRewardTrackPath a priory:RewardTrackPath ;
+    rdfs:label "WvW Non-Repeatable Reward Tracks" ;
+    priory:targetItem item:19675 ;
+    priory:gameMode gamemode:WvW ;
+    rdfs:comment "Some WvW reward tracks grant Mystic Clovers on first completion." .
+
+recipe:MysticCloverForge a priory:MysticForgeRecipe ;
+    rdfs:label "Mystic Clover Forge Gamble" ;
+    priory:producesItem item:19675 ;
+    priory:outputQuantity 1 ;
+    priory:expectedYieldRate 0.33 ;
+    rdfs:comment "10 Obsidian Shards + 10 Mystic Coins + 10 Globs of Ectoplasm + 10 Philosopher's Stones. ~33% success rate per attempt." .

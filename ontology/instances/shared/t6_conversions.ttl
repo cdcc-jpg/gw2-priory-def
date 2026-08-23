@@ -1,0 +1,45 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix path: <https://priory.gw2/id/path/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+
+path:T6Materials_VolatileMagicPath a priory:VendorExchangePath ;
+    rdfs:label "Volatile Magic Trophy Shipments" ;
+    priory:zoneName "Dragonfall" ;
+    priory:nearestWaypoint "[&BNoLAAA=]" ;
+    priory:requiresCurrency currency:VolatileMagic ;
+    priory:requiredQuantity 250 ;
+    priory:requiresExpansion "LivingWorldSeason4" ;
+    priory:farmingEfficiency "Best gold-to-T6 conversion rate in the game" ;
+    rdfs:comment "Costs 250 Volatile Magic + 1 gold. Contains random T6 materials." .
+
+path:T6Materials_LaurelPath a priory:VendorExchangePath ;
+    rdfs:label "Laurel Heavy Crafting Bags" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:requiresCurrency currency:Laurel ;
+    priory:requiredQuantity 1 ;
+    rdfs:comment "1 Laurel per bag, contains 3 random T6 materials. No expansion required." .
+
+path:T6Materials_SilverwastesPath a priory:OpenWorldFarmPath ;
+    rdfs:label "Silverwastes RIBA Meta Farm" ;
+    priory:zoneName "The Silverwastes" ;
+    priory:nearestWaypoint "[&BF8HAAA=]" ;
+    priory:farmingEfficiency "15-25 gold equivalent per hour" ;
+    rdfs:comment "Drops ectos, T5/T6 materials, and gold from champion bags." .
+
+path:T6Materials_DrizzlewoodPath a priory:RewardTrackPath ;
+    rdfs:label "Drizzlewood Coast Reward Tracks" ;
+    priory:zoneName "Drizzlewood Coast" ;
+    priory:nearestWaypoint "[&BDoMAAA=]" ;
+    priory:requiresExpansion "IcebroodSaga" ;
+    rdfs:comment "Charr Legion supply caches contain T6 materials." .
+
+recipe:T5ToT6Promotion a priory:MysticForgeRecipe ;
+    rdfs:label "Spirit Shard Mystic Forge Promotion (T5 to T6)" ;
+    priory:producesItem item:19748 ;
+    priory:outputQuantity 85 ;
+    rdfs:comment "250 T5 + 1 Philosopher's Stone + 1 Crystal + 1 Elonian Wine -> ~85 T6." .

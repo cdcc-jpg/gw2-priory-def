@@ -1,0 +1,32 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix item: <https://priory.gw2/id/item/> .
+
+item:19640 a priory:GiftItem ; rdfs:label "Gift of Ascalon"@en ; priory:gw2Id 19640 .
+item:19662 a priory:CraftingMaterial ; rdfs:label "Bottle of Elonian Wine"@en ; priory:gw2Id 19662 .
+item:19663 a priory:CraftingMaterial ; rdfs:label "Bottle of Elonian Wine"@en ; priory:gw2Id 19663 .
+item:19665 a priory:CraftingMaterial ; rdfs:label "Philosopher's Stone"@en ; priory:gw2Id 19665 .
+item:19674 a priory:CraftingMaterial ; rdfs:label "Bloodstone Shard"@en ; priory:gw2Id 19674 .
+item:19675 a priory:CraftingMaterial ; rdfs:label "Mystic Clover"@en ; priory:gw2Id 19675 .
+item:19676 a priory:CraftingMaterial ; rdfs:label "Icy Runestone"@en ; priory:gw2Id 19676 .
+item:19678 a priory:GiftItem ; rdfs:label "Gift of Battle"@en ; priory:gw2Id 19678 .
+item:19680 a priory:CraftingMaterial ; rdfs:label "Philosopher's Stone"@en ; priory:gw2Id 19680 .
+item:19721 a priory:CraftingMaterial ; rdfs:label "Glob of Ectoplasm"@en ; priory:gw2Id 19721 .
+item:19732 a priory:CraftingMaterial ; rdfs:label "Pile of Crystalline Dust"@en ; priory:gw2Id 19732 .
+item:19925 a priory:CraftingMaterial ; rdfs:label "Obsidian Shard"@en ; priory:gw2Id 19925 .
+item:19976 a priory:CraftingMaterial ; rdfs:label "Mystic Coin"@en ; priory:gw2Id 19976 .
+item:20799 a priory:CraftingMaterial ; rdfs:label "Mystic Crystal"@en ; priory:gw2Id 20799 .
+item:24272 a priory:CraftingMaterial ; rdfs:label "Pile of Glittering Dust"@en ; priory:gw2Id 24272 .
+item:24275 a priory:CraftingMaterial ; rdfs:label "Pile of Shimmering Dust"@en ; priory:gw2Id 24275 .
+item:24282 a priory:CraftingMaterial ; rdfs:label "Pile of Radiant Dust"@en ; priory:gw2Id 24282 .
+item:24287 a priory:CraftingMaterial ; rdfs:label "Pile of Luminous Dust"@en ; priory:gw2Id 24287 .
+item:24294 a priory:CraftingMaterial ; rdfs:label "Pile of Incandescent Dust"@en ; priory:gw2Id 24294 .
+item:24309 a priory:CraftingMaterial ; rdfs:label "Onyx Core"@en ; priory:gw2Id 24309 .
+item:24310 a priory:CraftingMaterial ; rdfs:label "Onyx Lodestone"@en ; priory:gw2Id 24310 .
+item:24350 a priory:CraftingMaterial ; rdfs:label "Onyx Core"@en ; priory:gw2Id 24350 .
+item:24357 a priory:CraftingMaterial ; rdfs:label "Onyx Lodestone"@en ; priory:gw2Id 24357 .
+item:24515 a priory:UpgradeComponent ; rdfs:label "Superior Sigil of Blood"@en ; priory:gw2Id 24515 .
+item:24517 a priory:UpgradeComponent ; rdfs:label "Superior Sigil of Force"@en ; priory:gw2Id 24517 .
+item:24518 a priory:UpgradeComponent ; rdfs:label "Superior Sigil of Accuracy"@en ; priory:gw2Id 24518 .
+item:46747 a priory:UpgradeComponent ; rdfs:label "Superior Rune of the Traveler"@en ; priory:gw2Id 46747 .

@@ -1,0 +1,92 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix mount: <https://priory.gw2/ref/mount/> .
+
+mount:MountScheme a skos:ConceptScheme ;
+    skos:prefLabel "Mount and Mobility Scheme"@en .
+
+mount:GroundMount a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:prefLabel "Ground Mount"@en .
+
+mount:FlyingMount a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:prefLabel "Flying Mount"@en .
+
+mount:SpecialMount a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:prefLabel "Special Mount"@en .
+
+mount:Raptor a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:GroundMount ;
+    skos:prefLabel "Raptor"@en ;
+    skos:definition "Canyon leap"@en ;
+    priory:requiresExpansion "PathOfFire" .
+
+mount:Springer a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:GroundMount ;
+    skos:prefLabel "Springer"@en ;
+    skos:definition "High jump"@en ;
+    priory:requiresExpansion "PathOfFire" .
+
+mount:Skimmer a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:GroundMount ;
+    skos:prefLabel "Skimmer"@en ;
+    skos:definition "Water hover"@en ;
+    priory:requiresExpansion "PathOfFire" .
+
+mount:Jackal a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:GroundMount ;
+    skos:prefLabel "Jackal"@en ;
+    skos:definition "Sand portal"@en ;
+    priory:requiresExpansion "PathOfFire" .
+
+mount:Griffon a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:FlyingMount ;
+    skos:prefLabel "Griffon"@en ;
+    skos:definition "Glide dive"@en ;
+    priory:requiresExpansion "PathOfFire + collection" .
+
+mount:RollerBeetle a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:GroundMount ;
+    skos:prefLabel "Roller Beetle"@en ;
+    skos:definition "High speed"@en ;
+    priory:requiresExpansion "PathOfFire + LS4" .
+
+mount:Skyscale a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:FlyingMount ;
+    skos:prefLabel "Skyscale"@en ;
+    skos:definition "Vertical flight"@en ;
+    priory:requiresExpansion "PathOfFire + LS4" .
+
+mount:Warclaw a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:SpecialMount ;
+    skos:prefLabel "Warclaw"@en ;
+    skos:definition "WvW"@en ;
+    priory:requiresExpansion "Any WvW access" .
+
+mount:SiegeTurtle a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:SpecialMount ;
+    skos:prefLabel "Siege Turtle"@en ;
+    skos:definition "Co-op"@en ;
+    priory:requiresExpansion "EndOfDragons" .
+
+mount:JadeBot a skos:Concept ;
+    skos:inScheme mount:MountScheme ;
+    skos:broader mount:SpecialMount ;
+    skos:prefLabel "Jade Bot"@en ;
+    skos:definition "Fishing platform"@en ;
+    priory:requiresExpansion "EndOfDragons" .
