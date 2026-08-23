@@ -617,6 +617,13 @@ CONVENIENCE_ITEMS: Dict[str, Dict[str, Any]] = {
 }
 
 
+DEFAULT_ACCOUNT_ROSTER: List[str] = [
+    'Kerling', 'Skuta Rantakallio', 'Legacy Of Harathi', 'Styrman',
+    'Ksëne', 'Aubefein', 'Sara Loy', 'Flevkk', 'Like A Plastik Bag',
+    'Jaimelargent', 'Saladomatic'
+]
+
+
 @dataclass
 class AccountState:
     """Represents a player's live account snapshot from the GW2 API."""
@@ -633,6 +640,7 @@ class AccountState:
     characters: List[Dict[str, Any]] = field(default_factory=list)
     mount_types: List[str] = field(default_factory=list)
     expansion_access: List[str] = field(default_factory=lambda: ['GuildWars2'])
+    map_completed_characters: List[str] = field(default_factory=lambda: ['Kerling'])
 
     def total_item_count(self, item_id: int) -> int:
         """Aggregates an item's count across materials, bank, bags, and legendary armory."""
@@ -700,6 +708,27 @@ class AccountState:
     def has_expansion(self, expansion_name: str) -> bool:
         """Returns True if the specified expansion is owned."""
         return expansion_name in self.expansion_access
+
+    def is_character_map_completed(self, character_name: str) -> bool:
+        """Returns True if the specified character has completed 100% Core Tyria map exploration."""
+        return character_name in self.map_completed_characters
+
+    def eligible_exploration_characters(self) -> List[str]:
+        """Returns roster characters who have not completed 100% Core Map."""
+        roster_names: List[str] = []
+        if self.characters:
+            for c in self.characters:
+                if isinstance(c, dict) and c.get("name"):
+                    roster_names.append(c["name"])
+                elif isinstance(c, str):
+                    roster_names.append(c)
+        if not roster_names:
+            roster_names = list(DEFAULT_ACCOUNT_ROSTER)
+
+        eligible = [name for name in roster_names if not self.is_character_map_completed(name)]
+        if not eligible:
+            eligible = [name for name in DEFAULT_ACCOUNT_ROSTER if not self.is_character_map_completed(name)]
+        return eligible
 
     def owned_boosters(self) -> Dict[int, int]:
         """Detects owned boosters, gobblers, and tomes across materials, bank, and inventory."""

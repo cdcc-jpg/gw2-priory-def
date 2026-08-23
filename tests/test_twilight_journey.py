@@ -437,6 +437,10 @@ class TestTwilightJourney(unittest.TestCase):
         self.assertIn("11 characters", desc)
         self.assertIn("Kerling", desc)
         self.assertIn("Skuta Rantakallio", desc)
+        self.assertIn("100% Map Complete Character: Kerling", desc)
+        self.assertIn("Gifts of Exploration are awarded once per character", desc)
+        self.assertEqual(map_action.assigned_character, "Skuta Rantakallio")
+        self.assertNotEqual(map_action.assigned_character, "Kerling")
 
     def test_chapter_3_actual_owned_boosters_and_gobbler_telemetry(self):
         """Verifies Chapter 3 detects actual owned boosters/gobblers/tomes in bank and provides tailored activation instructions."""
@@ -544,10 +548,10 @@ class TestTwilightJourney(unittest.TestCase):
         self.assertEqual(itinerary[2].estimated_minutes, 10)
         self.assertEqual(itinerary[2].waypoint, "[&BBAEAAA=]")
 
-        # [4] Core Tyria Map Completion on Kerling with Skyscale (~45 mins)
-        self.assertEqual(itinerary[3].action_title, "Core Tyria Map Completion on Kerling with Skyscale")
+        # [4] Core Tyria Map Completion on Skuta Rantakallio with Skyscale (~45 mins)
+        self.assertEqual(itinerary[3].action_title, "Core Tyria Map Completion on Skuta Rantakallio with Skyscale")
         self.assertEqual(itinerary[3].estimated_minutes, 45)
-        self.assertEqual(itinerary[3].assigned_character, "Kerling")
+        self.assertEqual(itinerary[3].assigned_character, "Skuta Rantakallio")
         self.assertEqual(itinerary[3].recommended_mount, "Skyscale")
 
         total_session_minutes = sum(a.estimated_minutes for a in itinerary)
@@ -793,6 +797,44 @@ class TestTwilightJourney(unittest.TestCase):
         final_idx = ch4_titles.index("Final Forge Assembly")
         fork_idx = ch4_titles.index("🔮 Post-Forge Decision Fork (Armory Binding vs Eternity Arbitrage vs TP Sale)")
         self.assertGreater(fork_idx, final_idx)
+
+    def test_chapter_2_map_completed_kerling_alt_routing(self):
+        """Verifies Chapter 2 explicitly recognizes Kerling as map-completed and routes exploration to eligible alts."""
+        account = AccountState(
+            characters=[
+                {"name": "Kerling", "profession": "Guardian", "level": 80},
+                {"name": "Sara Loy", "profession": "Thief", "level": 80},
+                {"name": "Legacy Of Harathi", "profession": "Warrior", "level": 80}
+            ],
+            map_completed_characters=["Kerling"],
+            mount_types=["skyscale"],
+            expansion_access=["GuildWars2", "PathOfFire", "SecretsOfTheObscure"]
+        )
+        diff_report = self.diff_engine.compute_diff(30704, account)
+        plan = self.solver.build_journey_plan(diff_report=diff_report, account=account)
+        ch2 = plan.chapters[1]
+
+        # Check Chapter 2 banner
+        action0 = ch2.actions[0]
+        desc = action0.action_description
+        expected_notice = "✅ 100% Map Complete Character: Kerling has already completed 100% Core Tyria Map Completion and claimed their Gifts of Exploration. Since Gifts of Exploration are awarded once per character upon 100% world completion, select an eligible alt character from your roster (e.g. Skuta Rantakallio, Sara Loy, or Legacy Of Harathi) to run the 5 Core Tyria regions with your Skyscale to claim 2x new Gifts of Exploration!"
+        self.assertIn(expected_notice, desc)
+
+        # Check assigned character is Sara Loy (mobility thief), NOT Kerling
+        self.assertEqual(action0.assigned_character, "Sara Loy")
+        self.assertNotEqual(action0.assigned_character, "Kerling")
+
+        # Check session itinerary routes to Sara Loy
+        itinerary_plan = self.solver.solve_twilight_journey(
+            diff_report=diff_report,
+            account=account,
+            time_budget_minutes=120,
+            wizards_vault_exhausted=True
+        )
+        itinerary_exploration = next((a for a in itinerary_plan.session_itinerary if "Map Completion" in a.action_title), None)
+        self.assertIsNotNone(itinerary_exploration)
+        self.assertEqual(itinerary_exploration.assigned_character, "Sara Loy")
+        self.assertNotEqual(itinerary_exploration.assigned_character, "Kerling")
 
 
 if __name__ == "__main__":

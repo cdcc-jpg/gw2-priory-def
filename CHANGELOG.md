@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Character World Map Completion Tracking & Alt Roster Routing (`engine/account_diff.py`, `engine/twilight_journey_solver.py`, `agent/guide_generator.py`):**
+  - Added `map_completed_characters`, `is_character_map_completed()`, and `eligible_exploration_characters()` telemetry to `AccountState`.
+  - Recognized that **Kerling** has already achieved 100% Core Tyria Map Completion (retaining role as Weaponsmith 500 / Armorsmith 500 Primary Crafter & Forge Master in Mistlock Sanctuary).
+  - Automatically routes new 5-region Core Tyria exploration runs and session itineraries to eligible mobility alt characters (e.g. **Skuta Rantakallio** [Thief] / **Sara Loy** [Mesmer]) with Skyscale to generate 2x new Gifts of Exploration.
 - **4-Pillar Inventory Staging Checklist & Post-Forge Decision Fork (`ontology/instances/shared/eternity_and_post_craft.ttl`, `engine/twilight_journey_solver.py`, `agent/guide_generator.py`, `priory_cli.py`):**
   - **4-Pillar Inventory Staging Checklist:** Formally codified the pre-forge inventory audit verifying that all 4 compound pillars (*Pillar 1: Dusk* `[&AgEpZgAA]`, *Pillar 2: Gift of Twilight* `[&AgHiEAAA]`, *Pillar 3: Gift of Mastery* `[&AgHkEAAA]`, and *Pillar 4: Gift of Fortune* `[&AgHlEAAA]`) are held in the active bag staging area before approaching Zommoros.
   - **Post-Forge Decision Fork:** Modeled the 3 divergent post-crafting pathways:

@@ -76,7 +76,10 @@ def print_guide(guide):
             chat = f" `{chat_clean}`"
         else:
             chat = ""
-        print(f"   [{step.step_number}] {step.title} (~{step.estimated_time_minutes} mins | {step.game_mode}){chat}")
+        char_tag = ""
+        if getattr(step, "assigned_character", None) and f"[Character: {step.assigned_character}]" not in step.title:
+            char_tag = f" 👤 *[Character: {step.assigned_character}]*"
+        print(f"   [{step.step_number}] {step.title}{char_tag} (~{step.estimated_time_minutes} mins | {step.game_mode}){chat}")
         print(f"       -> {step.description}")
 
     if guide.missing_materials_summary:

@@ -799,18 +799,32 @@ class TwilightJourneySolver:
         return strats
 
     def _find_mobility_character_name(self, account: AccountState) -> str:
-        """Finds primary mobility character name, prioritizing Kerling."""
+        """Finds primary mobility character name from eligible exploration characters (excluding completed characters like Kerling)."""
+        eligible = account.eligible_exploration_characters()
+        if not eligible:
+            return "Skuta Rantakallio"
+
+        # Check structured characters if available
         if account.characters:
+            # 1. Look for high mobility professions (Thief, Ranger, Mesmer, Guardian) among eligible
             for c in account.characters:
-                if isinstance(c, dict) and c.get("name") == "Kerling":
-                    return "Kerling"
+                if isinstance(c, dict):
+                    name = c.get("name")
+                    if name in eligible and c.get("profession") in ["Thief", "Ranger", "Mesmer", "Guardian"]:
+                        return name
+            # 2. Look for any character among eligible
             for c in account.characters:
-                if isinstance(c, dict) and c.get("profession") in ["Guardian", "Thief", "Ranger", "Mesmer"]:
-                    return c.get("name", "Kerling")
-            c0 = account.characters[0]
-            if isinstance(c0, dict) and c0.get("name"):
-                return c0.get("name")
-        return "Kerling"
+                if isinstance(c, dict):
+                    name = c.get("name")
+                    if name in eligible:
+                        return name
+
+        # 3. Known preferred alts from default roster
+        for pref in ["Skuta Rantakallio", "Sara Loy", "Legacy Of Harathi"]:
+            if pref in eligible:
+                return pref
+
+        return eligible[0]
 
     def _generate_session_itinerary(
         self,
@@ -1095,21 +1109,24 @@ class TwilightJourneySolver:
             if not char_list:
                 char_list = DEFAULT_CHARACTERS
 
-            # Select primary mobility character
-            mobility_char = None
-            if account.characters:
-                for c in account.characters:
-                    if isinstance(c, dict) and c.get("profession") in ["Thief", "Ranger", "Mesmer", "Guardian"]:
-                        mobility_char = c.get("name")
-                        break
-            if not mobility_char and char_list:
-                mobility_char = next((name for name in char_list if name in ["Skuta Rantakallio", "Kerling", "Sara Loy"]), char_list[0])
+            # Select primary mobility character from eligible exploration characters
+            mobility_char = self._find_mobility_character_name(account)
 
             skyscale_mount_str = "Skyscale" if account.has_mount("skyscale") else ("Raptor" if account.has_mount("raptor") else "Skyscale")
+
+            notice_str = ""
+            if account.is_character_map_completed("Kerling") or account.map_completed_characters:
+                completed_names = ", ".join(account.map_completed_characters) if account.map_completed_characters else "Kerling"
+                notice_str = (
+                    f"✅ 100% Map Complete Character: {completed_names} has already completed 100% Core Tyria Map Completion and claimed their Gifts of Exploration. "
+                    f"Since Gifts of Exploration are awarded once per character upon 100% world completion, select an eligible alt character from your roster "
+                    f"(e.g. Skuta Rantakallio, Sara Loy, or Legacy Of Harathi) to run the 5 Core Tyria regions with your Skyscale to claim 2x new Gifts of Exploration!\n\n"
+                )
 
             c2_actions.append(JourneyAction(
                 action_title="Core Tyria Map Completion (2x Gifts of Exploration)",
                 action_description=(
+                    f"{notice_str}"
                     f"Recommend 100% Core Tyria map completion on your primary mobility character ({mobility_char}) with {skyscale_mount_str}. "
                     f"Assessed account roster of {len(char_list)} characters: {', '.join(char_list)}. "
                     f"✨ Milestone Reward: Completing 100% Core Map awards 2x Gifts of Exploration (satisfying Twilight AND providing a spare for your next Gen 1 legendary)!"

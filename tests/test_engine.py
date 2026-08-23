@@ -272,6 +272,48 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(len(by_cat["vip_lounges"]), 2)
         self.assertGreaterEqual(len(by_cat["converters_and_gobblers"]), 6)
 
+    def test_account_state_map_completion_tracking(self):
+        """Verifies default map_completed_characters, is_character_map_completed, and eligible_exploration_characters."""
+        # 1. Default account state
+        default_account = AccountState()
+        self.assertEqual(default_account.map_completed_characters, ["Kerling"])
+        self.assertTrue(default_account.is_character_map_completed("Kerling"))
+        self.assertFalse(default_account.is_character_map_completed("Skuta Rantakallio"))
+        
+        eligible_default = default_account.eligible_exploration_characters()
+        self.assertNotIn("Kerling", eligible_default)
+        self.assertIn("Skuta Rantakallio", eligible_default)
+        self.assertIn("Sara Loy", eligible_default)
+        self.assertIn("Legacy Of Harathi", eligible_default)
+
+        # 2. Account with explicit character roster
+        custom_account = AccountState(
+            characters=[
+                {"name": "Kerling", "profession": "Guardian", "level": 80},
+                {"name": "Sara Loy", "profession": "Thief", "level": 80},
+                {"name": "Styrman", "profession": "Engineer", "level": 80}
+            ],
+            map_completed_characters=["Kerling", "Sara Loy"]
+        )
+        self.assertTrue(custom_account.is_character_map_completed("Kerling"))
+        self.assertTrue(custom_account.is_character_map_completed("Sara Loy"))
+        self.assertFalse(custom_account.is_character_map_completed("Styrman"))
+
+        eligible_custom = custom_account.eligible_exploration_characters()
+        self.assertEqual(eligible_custom, ["Styrman"])
+
+        # 3. Account with only map-completed characters falls back to eligible default alts
+        completed_only_account = AccountState(
+            characters=[
+                {"name": "Kerling", "profession": "Guardian", "level": 80}
+            ],
+            map_completed_characters=["Kerling"]
+        )
+        eligible_completed = completed_only_account.eligible_exploration_characters()
+        self.assertNotIn("Kerling", eligible_completed)
+        self.assertIn("Skuta Rantakallio", eligible_completed)
+        self.assertIn("Sara Loy", eligible_completed)
+
 
 if __name__ == "__main__":
     unittest.main()

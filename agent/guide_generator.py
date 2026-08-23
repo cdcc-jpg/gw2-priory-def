@@ -378,8 +378,47 @@ class GuideGenerator:
         char_recs = []
         if optimal_plan and getattr(optimal_plan, "recommended_character", None):
             char_name = optimal_plan.recommended_character if isinstance(optimal_plan.recommended_character, str) else getattr(optimal_plan.recommended_character, "name", str(optimal_plan.recommended_character))
-            char_recs.append(f"👤 **Primary Crafter:** {char_name}")
-        
+            if "Kerling" in str(char_name):
+                char_recs.append(f"👤 **Primary Crafter & Forge Master:** {char_name} | ✅ 100% Core Map Completed")
+            else:
+                char_recs.append(f"👤 **Primary Crafter:** {char_name}")
+                if account_state and (account_state.is_character_map_completed("Kerling") or any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters)):
+                    char_recs.append("👤 **Master Crafter:** Kerling (Weaponsmith 500 & Armorsmith 500) | ✅ 100% Core Map Completed")
+        elif account_state and account_state.characters:
+            has_kerling = any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters) or (hasattr(account_state, "is_character_map_completed") and account_state.is_character_map_completed("Kerling"))
+            if has_kerling:
+                char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
+        else:
+            char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
+
+        # Exploration alt routing for Gift of Exploration / Map completion
+        if (optimal_plan and getattr(optimal_plan, "chapters", None)) or "Gift of Exploration" in missing_mats or "Gift of Mastery" in missing_mats:
+            mobility_char = None
+            if optimal_plan and getattr(optimal_plan, "chapters", None):
+                for ch in optimal_plan.chapters:
+                    if ch.chapter_number == 2:
+                        for a in ch.actions:
+                            if getattr(a, "assigned_character", None) and a.assigned_character != "Kerling":
+                                mobility_char = a.assigned_character
+                                break
+            if not mobility_char and optimal_plan and getattr(optimal_plan, "session_itinerary", None):
+                for a in optimal_plan.session_itinerary:
+                    if "Map Completion" in a.action_title and getattr(a, "assigned_character", None) and a.assigned_character != "Kerling":
+                        mobility_char = a.assigned_character
+                        break
+            if not mobility_char and account_state and hasattr(account_state, "eligible_exploration_characters"):
+                el = account_state.eligible_exploration_characters()
+                if el:
+                    mobility_char = el[0]
+            if not mobility_char:
+                mobility_char = "Skuta Rantakallio"
+
+            mount_str = "Skyscale" if (account_state and account_state.has_mount("skyscale")) or not (account_state and account_state.mount_types) else "Skyscale"
+            char_recs.append(
+                f"🗺️ **Core Map Exploration (Alt Runner):** **{mobility_char}** (with {mount_str}) — Assigned to new 100% Core Tyria exploration runs for 2x Gift of Exploration "
+                f"(Kerling is ✅ 100% Core Map Completed; alternate alts: Sara Loy / Legacy Of Harathi)."
+            )
+
         if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
             for phase in optimal_plan.master_roadmap:
                 for s in phase.milestone_steps:
@@ -659,8 +698,31 @@ class GuideGenerator:
         char_recs = []
         if optimal_plan and getattr(optimal_plan, "recommended_character", None):
             char_name = optimal_plan.recommended_character if isinstance(optimal_plan.recommended_character, str) else getattr(optimal_plan.recommended_character, "name", str(optimal_plan.recommended_character))
-            char_recs.append(f"👤 **Primary Crafter:** {char_name}")
-            
+            if "Kerling" in str(char_name):
+                char_recs.append(f"👤 **Primary Crafter & Forge Master:** {char_name} | ✅ 100% Core Map Completed")
+            else:
+                char_recs.append(f"👤 **Primary Crafter:** {char_name}")
+                if account_state and (account_state.is_character_map_completed("Kerling") or any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters)):
+                    char_recs.append("👤 **Master Crafter:** Kerling (Weaponsmith 500 & Armorsmith 500) | ✅ 100% Core Map Completed")
+        elif account_state and account_state.characters:
+            has_kerling = any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters) or (hasattr(account_state, "is_character_map_completed") and account_state.is_character_map_completed("Kerling"))
+            if has_kerling:
+                char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
+        else:
+            char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
+
+        # Exploration alt routing
+        alt_char = "Skuta Rantakallio"
+        if account_state and hasattr(account_state, "eligible_exploration_characters"):
+            el = account_state.eligible_exploration_characters()
+            if el:
+                alt_char = el[0]
+        mount_str = "Skyscale" if (account_state and account_state.has_mount("skyscale")) or not (account_state and account_state.mount_types) else "Skyscale"
+        char_recs.append(
+            f"🗺️ **Core Map Exploration (Alt Runner):** **{alt_char}** (with {mount_str}) — Assigned to new 100% Core Tyria exploration runs for 2x Gift of Exploration "
+            f"(Kerling is ✅ 100% Core Map Completed; alternate alts: Sara Loy / Legacy Of Harathi)."
+        )
+
         if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
             for phase in optimal_plan.master_roadmap:
                 for s in phase.milestone_steps:
