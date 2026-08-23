@@ -1,5 +1,6 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
@@ -7,9 +8,11 @@
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix zone: <https://priory.gw2/ref/zone/> .
 
-currency:61 a priory:Currency ;
+currency:69 a priory:Currency ;
     rdfs:label "Tales of Dungeon Delving"@en ;
-    priory:gw2Id 61 .
+    skos:prefLabel "Tales of Dungeon Delving"@en ;
+    skos:notation "69" ;
+    priory:gw2Id 69 .
 
 zone:AscalonianCatacombs a priory:Dungeon ;
     rdfs:label "Ascalonian Catacombs"@en ;
@@ -23,7 +26,7 @@ item:19640 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -38,7 +41,7 @@ item:19641 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -53,7 +56,7 @@ item:19642 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -68,7 +71,7 @@ item:19643 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -83,7 +86,7 @@ item:19644 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -98,7 +101,7 @@ item:19645 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -113,7 +116,7 @@ item:19646 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;
@@ -128,7 +131,7 @@ item:19649 a priory:GiftItem ;
     priory:isAccountBound true ;
     priory:acquiredVia [
         a priory:VendorExchangePath ;
-        priory:requiresCurrency currency:61 ;
+        priory:requiresCurrency currency:69 ;
         priory:requiredQuantity 500 ;
         priory:vendorNPC "Dungeon Merchant"@en ;
         priory:zoneName "Lion's Arch"@en ;

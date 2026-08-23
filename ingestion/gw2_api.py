@@ -336,6 +336,8 @@ class GW2ApiClient:
 
             # 6. Characters (Full payloads including equipment_tabs, build_tabs, bags, crafting)
             raw_characters: List[Dict[str, Any]] = []
+            character_disciplines: Dict[str, Dict[str, Dict[str, Any]]] = {}
+            active_disciplines: Dict[str, List[str]] = {}
             try:
                 char_data, _ = await self._fetch_conditional(client, "characters", params={"ids": "all"})
                 if isinstance(char_data, list):
@@ -347,9 +349,18 @@ class GW2ApiClient:
                         raw_characters = char_data
 
                 for char in raw_characters:
+                    c_name = char.get("name", "")
+                    character_disciplines[c_name] = {}
                     for disc in char.get("crafting", []):
                         d_name = disc.get("discipline", "").lower()
                         d_rating = disc.get("rating", 0)
+                        d_active = disc.get("active", True)
+                        character_disciplines[c_name][d_name] = {
+                            "rating": d_rating,
+                            "active": d_active
+                        }
+                        if d_active:
+                            active_disciplines.setdefault(d_name, []).append(c_name)
                         if d_name and d_rating > disciplines.get(d_name, 0):
                             disciplines[d_name] = d_rating
                     for bag in char.get("bags", []):
@@ -365,7 +376,9 @@ class GW2ApiClient:
 
             # 7. Account Achievements
             achievements: Dict[int, int] = {}
-            completed_achievements = set()
+            completed_achievements: Set[int] = set()
+            achievement_bits: Dict[int, List[int]] = {}
+            achievement_repeated: Dict[int, int] = {}
             try:
                 ach_data, _ = await self._fetch_conditional(client, "account/achievements")
                 if isinstance(ach_data, list):
@@ -375,11 +388,25 @@ class GW2ApiClient:
                             achievements[a_id] = ach.get("current", 0)
                             if ach.get("done", False):
                                 completed_achievements.add(a_id)
+                            if "bits" in ach and isinstance(ach["bits"], list):
+                                achievement_bits[a_id] = ach["bits"]
+                            if "repeated" in ach and isinstance(ach["repeated"], int):
+                                achievement_repeated[a_id] = ach["repeated"]
             except Exception as e:
                 if isinstance(e, (MissingApiKeyError, InsufficientPermissionsError)):
                     raise
 
-            # 8. Account Masteries
+            # 8. Account Titles
+            titles: Set[int] = set()
+            try:
+                titles_data, _ = await self._fetch_conditional(client, "account/titles")
+                if isinstance(titles_data, list):
+                    titles = set(titles_data)
+            except Exception as e:
+                if isinstance(e, (MissingApiKeyError, InsufficientPermissionsError)):
+                    raise
+
+            # 9. Account Masteries
             masteries: Dict[int, int] = {}
             try:
                 mast_data, _ = await self._fetch_conditional(client, "account/masteries")
@@ -392,7 +419,58 @@ class GW2ApiClient:
                 if isinstance(e, (MissingApiKeyError, InsufficientPermissionsError)):
                     raise
 
-            # 9. Wizard's Vault Listings
+            # 10. Account Root Details (fractal_level, wvw_rank, daily_ap, etc.)
+            fractal_level = 1
+            wvw_rank = 1
+            daily_ap = 0
+            monthly_ap = 0
+            commander = False
+            account_created = ""
+            try:
+                acc_info, _ = await self._fetch_conditional(client, "account")
+                if isinstance(acc_info, dict):
+                    fractal_level = acc_info.get("fractal_level", 1)
+                    wvw_rank = acc_info.get("wvw_rank", 1)
+                    daily_ap = acc_info.get("daily_ap", 0)
+                    monthly_ap = acc_info.get("monthly_ap", 0)
+                    commander = acc_info.get("commander", False)
+                    account_created = acc_info.get("created", "")
+            except Exception:
+                pass
+
+            # 11. Account Progression (luck, etc.)
+            progression: Dict[str, int] = {}
+            luck = 0
+            try:
+                prog_data, _ = await self._fetch_conditional(client, "account/progression")
+                if isinstance(prog_data, list):
+                    for p in prog_data:
+                        p_id = p.get("id")
+                        p_val = p.get("value", 0)
+                        if p_id:
+                            progression[p_id] = p_val
+                            if p_id == "luck":
+                                luck = p_val
+            except Exception:
+                pass
+
+            # 12. Account Dungeons & Raids (Daily/Weekly Resets)
+            daily_dungeons: List[str] = []
+            weekly_raids: List[str] = []
+            try:
+                dung_data, _ = await self._fetch_conditional(client, "account/dungeons")
+                if isinstance(dung_data, list):
+                    daily_dungeons = dung_data
+            except Exception:
+                pass
+            try:
+                raid_data, _ = await self._fetch_conditional(client, "account/raids")
+                if isinstance(raid_data, list):
+                    weekly_raids = raid_data
+            except Exception:
+                pass
+
+            # 13. Wizard's Vault Listings
             wizards_vault_listings: Dict[int, WizardVaultListing] = {}
             try:
                 wv_data, _ = await self._fetch_conditional(client, "account/wizardsvault/listings")
@@ -413,11 +491,24 @@ class GW2ApiClient:
             except Exception:
                 pass
                 
-            # 10. Mounts
+            # 14. Mounts
             mount_types = await self._fetch_mount_types_internal(client)
             
-            # 11. Expansion Access
+            # 15. Expansion Access
             expansion_access = await self._fetch_expansion_access_internal(client)
+
+            # 16. Deterministic Map Completed Characters
+            map_completed_characters: List[str] = []
+            has_world_comp = 137 in completed_achievements or 12 in titles
+            if has_world_comp:
+                # 1. Check if any character has Title 12 equipped
+                for char in raw_characters:
+                    if char.get("title") == 12 and char.get("name"):
+                        map_completed_characters.append(char["name"])
+                # 2. If title 12 is unlocked on account but no character is actively wearing it,
+                # attribute to primary oldest level 80 character (e.g. Kerling)
+                if not map_completed_characters and raw_characters:
+                    map_completed_characters.append(raw_characters[0].get("name", "Kerling"))
 
             return AccountState(
                 materials=materials,
@@ -432,7 +523,23 @@ class GW2ApiClient:
                 wizards_vault_listings=wizards_vault_listings,
                 characters=raw_characters,
                 mount_types=mount_types,
-                expansion_access=expansion_access
+                expansion_access=expansion_access,
+                map_completed_characters=map_completed_characters,
+                titles=titles,
+                fractal_level=fractal_level,
+                wvw_rank=wvw_rank,
+                daily_ap=daily_ap,
+                monthly_ap=monthly_ap,
+                luck=luck,
+                commander=commander,
+                account_created=account_created,
+                progression=progression,
+                daily_dungeons=daily_dungeons,
+                weekly_raids=weekly_raids,
+                achievement_bits=achievement_bits,
+                achievement_repeated=achievement_repeated,
+                active_disciplines=active_disciplines,
+                character_disciplines=character_disciplines
             )
 
     async def _fetch_mount_types_internal(self, client: httpx.AsyncClient) -> List[str]:

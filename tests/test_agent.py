@@ -50,7 +50,7 @@ class TestAgentPipeline(unittest.TestCase):
         # Player owns 20 Clovers (needs 30 * 2 = 60) and 440 Provisioner Tokens in wallet (needs 100)
         player_account = AccountState(
             materials={19675: 20},
-            wallet={35: 440} # 440 Provisioner Tokens owned!
+            wallet={29: 440} # 440 Provisioner Tokens owned (Currency ID 29)!
         )
         diff_engine = AccountDiffEngine(self.store)
         report = diff_engine.compute_diff(91505, player_account, target_quantity=2)
@@ -74,7 +74,7 @@ class TestAgentPipeline(unittest.TestCase):
         """Verifies multi-turn chat session where player notes Wizard's Vault is already completed."""
         player_account = AccountState(
             materials={19675: 20}, # 20 Clovers owned (needs 60)
-            wallet={35: 440}       # 440 Provisioner tokens owned (needs 100)
+            wallet={29: 440}       # 440 Provisioner tokens owned (needs 100)
         )
         session = self.orchestrator.create_session(account_state=player_account)
 

@@ -20,7 +20,7 @@ priory:Exchange_VolatileMagic_TrophyShipment a priory:VendorExchangePath, owl:Na
     priory:outputQuantity 1 ;
     priory:estimatedT6Yield 15 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresCurrency 5040 ; priory:requiredQuantity 250 ] , # Volatile Magic
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 45 ; priory:requiredQuantity 250 ] , # Volatile Magic
         [ a priory:IngredientRequirement ; priory:requiresGold 1.0 ] ;
     skos:definition "Exchange 250 Volatile Magic and 1 gold for a Trophy Shipment yielding ~15 T6 fine materials on average." .
 
@@ -34,7 +34,7 @@ priory:Exchange_AstralAcclaim_MysticClover a priory:VendorExchangePath, owl:Name
     priory:outputQuantity 1 ;
     priory:seasonalCap 20 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresCurrency 68 ; priory:requiredQuantity 9 ] ; # Astral Acclaim
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 63 ; priory:requiredQuantity 9 ] ; # Astral Acclaim
     skos:definition "Cheapest and guaranteed source of Mystic Clovers: 9 Astral Acclaim per clover up to 20 per season." .
 
 priory:Exchange_AstralAcclaim_HeavyCraftingBag a priory:VendorExchangePath, owl:NamedIndividual ;
@@ -44,7 +44,7 @@ priory:Exchange_AstralAcclaim_HeavyCraftingBag a priory:VendorExchangePath, owl:
     priory:outputQuantity 1 ;
     priory:estimatedT6Yield 3 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresCurrency 68 ; priory:requiredQuantity 10 ] ; # Astral Acclaim
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 63 ; priory:requiredQuantity 10 ] ; # Astral Acclaim
     skos:definition "Exchange 10 Astral Acclaim for a Heavy Crafting Bag yielding 3 Tier 6 fine crafting materials." .
 
 priory:Exchange_AstralAcclaim_BagOfCoins a priory:VendorExchangePath, owl:NamedIndividual ;
@@ -53,7 +53,7 @@ priory:Exchange_AstralAcclaim_BagOfCoins a priory:VendorExchangePath, owl:NamedI
     priory:producesGold 1.0 ;
     priory:seasonalCap 90 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresCurrency 68 ; priory:requiredQuantity 6 ] ; # Astral Acclaim
+        [ a priory:IngredientRequirement ; priory:requiresCurrency 63 ; priory:requiredQuantity 6 ] ; # Astral Acclaim
     skos:definition "Convert 6 Astral Acclaim into 1 liquid gold coin (up to 90 cheap bags per season)." .
 
 # ------------------------------------------------------------------------------

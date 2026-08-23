@@ -286,7 +286,7 @@ class PathSolver:
                 )
 
             # Wizard's Vault Astral Acclaim
-            aa_amount = account.wallet.get(68, 0)
+            aa_amount = account.astral_acclaim_count()
             wv_clovers_rem = account.wizards_vault_remaining(19675)
             if aa_amount >= 9 and "WizardVault" not in excluded and "WizardVault" not in exhausted:
                 if wv_clovers_rem is not None and wv_clovers_rem == 0:

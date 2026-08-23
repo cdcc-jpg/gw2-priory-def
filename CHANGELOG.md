@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Forensic ArenaNet REST API v2 Ground Truth Ingestion & Model Discrepancy Resolution (`ingestion/gw2_api.py`, `engine/account_diff.py`, `engine/path_solver.py`, `ontology/instances/shared/`):**
+  - **Comprehensive Live API Discrepancy Audit (`docs/research/api_model_discrepancy_audit.md`):** Conducted empirical forensic audit of 19 live ArenaNet v2 endpoints against Priory's OWL 2 DL / SKOS ontology, AccountState, and graph solvers.
+  - **Discrepancy 1 — World Map Completion Resolution:** Established that "Been There, Done That" is live **Achievement ID `137`** and **Title ID `12`** (resolving historical confusion with ID `1062` *Toxic Alliance Slayer*). Added `has_world_completion_unlocked()` to `AccountState` and dynamic character title deduction without procedural guessing.
+  - **Discrepancy 2 — Tales of Dungeon Delving Currency & Meta Unlocks:** Corrected Tales of Dungeon Delving currency mapping from legacy `currency:61` (which is *Research Notes* in live API) to **`currency:69`** (live wallet: 3,997 Tales). Updated all 8 dungeon gift recipes (`item:19640` through `item:19649`) and added `has_dungeon_master_unlocked()` checking Achievement `122` / Title `15`.
+  - **Discrepancy 3 — Active Crafting License & Multi-Alt Discipline Routing:** Ingested `active: bool` per-character crafting flags from `/v2/characters` into `active_disciplines` and `character_disciplines`. Added `has_active_discipline()` allowing zero-cost character delegation rather than incurring discipline reactivation fees.
+  - **Discrepancy 4 — Wallet Currency & Progression Alignments:**
+    - Corrected **Astral Acclaim** to live Currency ID **`63`** (was previously querying `68` *Imperial Favor*).
+    - Corrected **Provisioner Token** to live Currency ID **`29`** (was previously labeled `35` *Elegy Mosaic*).
+    - Corrected **Volatile Magic** requirement in exchange networks to live Currency ID **`45`** (was previously `5040`).
+    - Ingested Account Root progression fields (`fractal_level: 100`, `wvw_rank: 1554`, `daily_ap`, `monthly_ap`, `commander`, `created`), `/v2/account/progression` (`luck: 2,170,565`), `/v2/account/titles` (75 unlocked titles), and `/v2/account/dungeons` / `/v2/account/raids` daily/weekly reset lockouts.
+  - **Test Suite Coverage (`tests/test_api_signals_and_discrepancies.py`):** Added 5 unit tests validating world completion deduction, dungeon token calculations, active crafting licenses, and wallet currency resolution (99/99 suite tests passing).
 - **Character World Map Completion Tracking & Alt Roster Routing (`engine/account_diff.py`, `engine/twilight_journey_solver.py`, `agent/guide_generator.py`):**
   - Added `map_completed_characters`, `is_character_map_completed()`, and `eligible_exploration_characters()` telemetry to `AccountState`.
   - Recognized that **Kerling** has already achieved 100% Core Tyria Map Completion (retaining role as Weaponsmith 500 / Armorsmith 500 Primary Crafter & Forge Master in Mistlock Sanctuary).

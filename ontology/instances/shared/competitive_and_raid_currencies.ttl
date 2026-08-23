@@ -100,7 +100,7 @@ item:76839 a priory:CraftingMaterial, owl:NamedIndividual ;
 currency:ProvisionerToken a priory:Currency, skos:Concept, owl:NamedIndividual ;
     rdfs:label "Provisioner Token"@en ;
     skos:prefLabel "Provisioner Token"@en ;
-    skos:notation "35" ;
-    priory:gw2Id 35 ;
+    skos:notation "29" ;
+    priory:gw2Id 29 ;
     skos:definition "Account currency earned by bartering crafted equipment with Faction Provisioners across Tyria. Used to purchase Gifts of Craftsmanship."@en .
 

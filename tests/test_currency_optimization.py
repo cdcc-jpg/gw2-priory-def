@@ -20,9 +20,9 @@ class TestCurrencyOptimization(unittest.TestCase):
         account = AccountState(
             materials={19721: 100},  # missing T6
             wallet={
-                45: 5000,  # 5,000 Volatile Magic
-                68: 500,   # 500 Astral Acclaim
-                3: 50      # 50 Laurels
+                45: 5000,  # 5,000 Volatile Magic (Currency 45)
+                63: 500,   # 500 Astral Acclaim (Currency 63)
+                3: 50      # 50 Laurels (Currency 3)
             }
         )
         report = self.diff_engine.compute_diff(goal_item_id=30704, account=account)  # The Moot

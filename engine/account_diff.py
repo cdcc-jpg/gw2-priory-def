@@ -641,6 +641,21 @@ class AccountState:
     mount_types: List[str] = field(default_factory=list)
     expansion_access: List[str] = field(default_factory=lambda: ['GuildWars2'])
     map_completed_characters: List[str] = field(default_factory=lambda: ['Kerling'])
+    titles: Set[int] = field(default_factory=set)
+    fractal_level: int = 1
+    wvw_rank: int = 1
+    daily_ap: int = 0
+    monthly_ap: int = 0
+    luck: int = 0
+    commander: bool = False
+    account_created: str = ""
+    progression: Dict[str, int] = field(default_factory=dict)
+    daily_dungeons: List[str] = field(default_factory=list)
+    weekly_raids: List[str] = field(default_factory=list)
+    achievement_bits: Dict[int, List[int]] = field(default_factory=dict)
+    achievement_repeated: Dict[int, int] = field(default_factory=dict)
+    active_disciplines: Dict[str, List[str]] = field(default_factory=dict)
+    character_disciplines: Dict[str, Dict[str, Dict[str, Any]]] = field(default_factory=dict)
 
     def total_item_count(self, item_id: int) -> int:
         """Aggregates an item's count across materials, bank, bags, and legendary armory."""
@@ -656,12 +671,50 @@ class AccountState:
         return self.wallet.get(currency_id, 0)
 
     def dungeon_tales_count(self) -> int:
-        """Returns count of currency 61 (or legacy 13) from self.wallet."""
-        return self.wallet.get(61, 0) + self.wallet.get(13, 0)
+        """Returns count of Tales of Dungeon Delving (currency 69, with fallback to legacy 61/13) from self.wallet."""
+        return self.wallet.get(69, 0) + self.wallet.get(61, 0) + self.wallet.get(13, 0)
 
     def astral_acclaim_count(self) -> int:
-        """Returns count of currency 68 from self.wallet."""
+        """Returns count of Astral Acclaim (currency 63, with fallback to 68) from self.wallet."""
+        return self.wallet.get(63, 0) if 63 in self.wallet else self.wallet.get(68, 0)
+
+    def imperial_favor_count(self) -> int:
+        """Returns count of Imperial Favor (currency 68) from self.wallet."""
         return self.wallet.get(68, 0)
+
+    def research_notes_count(self) -> int:
+        """Returns count of Research Notes (currency 61) from self.wallet."""
+        return self.wallet.get(61, 0)
+
+    def provisioner_tokens_count(self) -> int:
+        """Returns count of Provisioner Tokens (currency 29) from self.wallet."""
+        return self.wallet.get(29, 0)
+
+    def volatile_magic_count(self) -> int:
+        """Returns count of Volatile Magic (currency 45) from self.wallet."""
+        return self.wallet.get(45, 0)
+
+    def unbound_magic_count(self) -> int:
+        """Returns count of Unbound Magic (currency 32) from self.wallet."""
+        return self.wallet.get(32, 0)
+
+    def has_world_completion_unlocked(self) -> bool:
+        """Returns True if account has unlocked Been There, Done That (Achievement 137 or Title 12)."""
+        return 137 in self.completed_achievements or 12 in self.titles
+
+    def has_dungeon_master_unlocked(self) -> bool:
+        """Returns True if account has unlocked Dungeon Master (Achievement 122 or Title 15)."""
+        return 122 in self.completed_achievements or 15 in self.titles
+
+    def has_active_discipline(self, discipline: str, min_rating: int = 0) -> bool:
+        """Returns True if any character has the specified discipline currently active with at least min_rating."""
+        disc = discipline.lower()
+        if disc in self.active_disciplines:
+            for char_name in self.active_disciplines[disc]:
+                info = self.character_disciplines.get(char_name, {}).get(disc, {})
+                if info.get("rating", 0) >= min_rating:
+                    return True
+        return False
 
     def gold_count(self) -> float:
         """Returns gold balance (currency 1 / 10000.0)."""
@@ -1272,26 +1325,40 @@ class AccountDiffEngine:
                             node.sub_requirements.append(sub_node)
                         return node
 
-            # Check 2: Vendor Exchange with Currency (e.g. Gift of Craftsmanship -> Provisioner Tokens)
+            # Check 2: Vendor Exchange with Currency (e.g. Gift of Craftsmanship -> Provisioner Tokens, Gift of Ascalon -> Tales of Dungeon Delving)
             vendor_query = """
-            SELECT ?curr ?currNotation ?currLabel ?requiredQty WHERE {
+            SELECT ?curr ?currNotation ?currGw2Id ?currLabel ?requiredQty WHERE {
                 ?item priory:gw2Id ?gw2Id ;
                       priory:acquiredVia ?path .
                 ?path a priory:VendorExchangePath ;
                       priory:requiresCurrency ?curr ;
                       priory:requiredQuantity ?requiredQty .
                 OPTIONAL { ?curr skos:notation ?currNotation }
+                OPTIONAL { ?curr priory:gw2Id ?currGw2Id }
+                OPTIONAL { ?curr rdfs:label ?currLabel }
                 OPTIONAL { ?curr skos:prefLabel ?currLabel }
             } LIMIT 1
             """
             v_res = self.store.query(vendor_query, init_bindings={"gw2Id": Literal(item_id)})
             if v_res:
                 v_info = v_res[0]
-                curr_not = v_info.get("currNotation")
-                try:
-                    curr_id = int(curr_not) if curr_not is not None else 0
-                except (ValueError, TypeError):
-                    curr_id = 0
+                curr_id = 0
+                if v_info.get("currGw2Id") is not None:
+                    try:
+                        curr_id = int(v_info["currGw2Id"])
+                    except (ValueError, TypeError):
+                        pass
+                if not curr_id and v_info.get("currNotation") is not None:
+                    try:
+                        curr_id = int(v_info["currNotation"])
+                    except (ValueError, TypeError):
+                        pass
+                if not curr_id and v_info.get("curr") is not None:
+                    uri_str = str(v_info["curr"])
+                    last_part = uri_str.rstrip("/").split("/")[-1].split("#")[-1]
+                    if last_part.isdigit():
+                        curr_id = int(last_part)
+
                 curr_label = v_info.get("currLabel", "Currency")
                 total_curr_needed = int(v_info.get("requiredQty", 1)) * missing
                 owned_curr = account.total_currency_count(curr_id) if curr_id > 0 else 0
@@ -1302,7 +1369,7 @@ class AccountDiffEngine:
                     return node
                 else:
                     curr_missing = total_curr_needed - owned_curr
-                    missing_currencies[curr_label] = missing_currencies.get(curr_label, 0) + curr_missing
+                    missing_currencies[str(curr_label)] = missing_currencies.get(str(curr_label), 0) + curr_missing
                     summary_missing[label] = summary_missing.get(label, 0) + missing
                     return node
 
