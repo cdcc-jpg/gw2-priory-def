@@ -6,12 +6,30 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  // ── Safe Local Storage Helpers (with incognito & fallback support) ──────────
+  function getStorageItem(key) {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        return window.localStorage.getItem(key);
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function setStorageItem(key, val) {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        window.localStorage.setItem(key, String(val));
+      }
+    } catch (e) {}
+  }
+
   // ── State Management ────────────────────────────────────────────────────────
   let currentSpreadIndex = 0;
   let savedRecipes = [];
   let accountTelemetry = null;
   let isFlipping = false;
-  let audioEnabled = localStorage.getItem("priory_audio_enabled") === "true";
+  let audioEnabled = getStorageItem("priory_audio_enabled") === "true";
 
   // Solver Suite State
   let plannerBudgetMinutes = 60;
@@ -81,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateAudioButton();
     audioToggle.addEventListener("click", () => {
       audioEnabled = !audioEnabled;
-      localStorage.setItem("priory_audio_enabled", audioEnabled);
+      setStorageItem("priory_audio_enabled", audioEnabled);
       updateAudioButton();
       if (audioEnabled) {
         getAudioContext();
@@ -368,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function loadSavedRecipesFromStorage() {
     try {
-      const stored = localStorage.getItem("priory_grimoire_recipes");
+      const stored = getStorageItem("priory_grimoire_recipes");
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
@@ -385,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function saveRecipesToStorage() {
     try {
-      localStorage.setItem("priory_grimoire_recipes", JSON.stringify(savedRecipes));
+      setStorageItem("priory_grimoire_recipes", JSON.stringify(savedRecipes));
     } catch (e) {}
     updateRecipeTabs();
   }
@@ -719,7 +737,14 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 76158, name: "Nevermore", type: "Gen 2 Staff" },
     { id: 76159, name: "Astralaria", type: "Gen 2 Axe" },
     { id: 96203, name: "Aurene's Bite", type: "Gen 3 Greatsword" },
-    { id: 100806, name: "Obsidian Breastplate", type: "Heavy Legendary Armor" }
+    { id: 100806, name: "Obsidian Breastplate", type: "Heavy Legendary Armor" },
+    { id: 91234, name: "Coalescence", type: "Legendary Ring (Raid)" },
+    { id: 93105, name: "Conflux", type: "Legendary Ring (WvW)" },
+    { id: 81908, name: "Aurora", type: "Legendary Accessory (Season 3)" },
+    { id: 91048, name: "Vision", type: "Legendary Accessory (Season 4)" },
+    { id: 92991, name: "Transcendence", type: "Legendary Amulet (PvP)" },
+    { id: 95380, name: "Prismatic Champion's Regalia", type: "Legendary Amulet (Return to)" },
+    { id: 74155, name: "Ad Infinitum", type: "Legendary Backpack (Fractals)" }
   ];
 
   function getLegendaryIdByName(name, defaultId = 30704) {
@@ -1239,6 +1264,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goalSelect) {
       goalSelect.addEventListener("change", (e) => {
         plannerGoalId = parseInt(e.target.value, 10);
+        executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
       });
     }
 
@@ -1427,6 +1453,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goalSelect) {
       goalSelect.addEventListener("change", (e) => {
         arbitrageGoalId = parseInt(e.target.value, 10);
+        executeFetchArbitrage(arbitrageGoalId);
       });
     }
 
@@ -1725,6 +1752,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (goalSelect) {
       goalSelect.addEventListener("change", (e) => {
         prereqGoalId = parseInt(e.target.value, 10);
+        executeFetchPrerequisites(prereqGoalId);
       });
     }
 
