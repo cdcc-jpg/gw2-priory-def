@@ -67,19 +67,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const pageRight = document.querySelector(".page-right");
   
   // Audio toggle button - Assume it exists or we add a listener to it
+  // Audio toggle button with active state indicators
   const audioToggle = document.getElementById("audio-toggle");
   if (audioToggle) {
-    audioToggle.textContent = audioEnabled ? "🔊" : "🔇";
+    const updateAudioButton = () => {
+      audioToggle.classList.toggle("active", audioEnabled);
+      audioToggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
+      audioToggle.innerHTML = audioEnabled 
+        ? `<span class="audio-icon">🔊</span><span class="audio-label">Sound On</span>` 
+        : `<span class="audio-icon">🔇</span><span class="audio-label">Sound Off</span>`;
+      audioToggle.title = audioEnabled ? "Ambient sound enabled (Click to mute)" : "Ambient sound muted (Click to enable)";
+    };
+    updateAudioButton();
     audioToggle.addEventListener("click", () => {
       audioEnabled = !audioEnabled;
       localStorage.setItem("priory_audio_enabled", audioEnabled);
-      audioToggle.textContent = audioEnabled ? "🔊" : "🔇";
+      updateAudioButton();
     });
+  }
+
+  // Viewport Auto-Scaling Engine
+  function initResponsiveScaling() {
+    function updateBookScale() {
+      const availW = window.innerWidth - 60;
+      const availH = window.innerHeight - 90;
+      const baseW = 1040;
+      const baseH = 680;
+      const scale = Math.min(availW / baseW, availH / baseH, 1.45);
+      const safeScale = Math.max(scale, 0.62);
+      document.documentElement.style.setProperty('--book-scale', safeScale.toFixed(3));
+    }
+    window.addEventListener('resize', updateBookScale);
+    updateBookScale();
   }
   
   let gw2Tooltip = document.getElementById("gw2-tooltip");
 
   // Initialize
+  initResponsiveScaling();
   initParticles();
   initMouseParallax();
   loadSavedRecipesFromStorage();
@@ -137,22 +162,200 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (e.key === "ArrowLeft") btnPrev.click();
   });
 
-  function playSound(id) {
+  // ── Procedural Web Audio API Synthesizer (Zero 404s, 100% Offline) ──────────
+  let audioCtx = null;
+  function getAudioContext() {
+    if (!audioEnabled) return null;
+    try {
+      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function playPaperTurnSound() {
     if (!audioEnabled) return;
-    const audioEl = document.getElementById(id);
-    if (audioEl) {
-      audioEl.currentTime = 0;
-      audioEl.play().catch(() => {});
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const duration = 0.38;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      // Filtered white noise simulating parchment flutter
+      const filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(800, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + duration);
+      filter.Q.setValueAtTime(1.3, ctx.currentTime);
+
+      const gain = ctx.createGain();
+      const now = ctx.currentTime;
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.28, now + 0.04);
+      gain.gain.setValueAtTime(0.22, now + 0.12);
+      gain.gain.linearRampToValueAtTime(0.26, now + 0.18);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      noise.start(now);
+      noise.stop(now + duration);
+    } catch (err) {
+      // Audio fallback safe
+    }
+  }
+
+  function playForgeChimeSound() {
+    if (!audioEnabled) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      const duration = 2.2;
+
+      // Master gain
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.35, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      masterGain.connect(ctx.destination);
+
+      // Reverb-like decay simulation via low-pass feedback delay
+      const delay = ctx.createDelay();
+      delay.delayTime.setValueAtTime(0.075, now);
+      const delayGain = ctx.createGain();
+      delayGain.gain.setValueAtTime(0.32, now);
+      const delayFilter = ctx.createBiquadFilter();
+      delayFilter.type = "lowpass";
+      delayFilter.frequency.setValueAtTime(1500, now);
+
+      masterGain.connect(delay);
+      delay.connect(delayFilter);
+      delayFilter.connect(delayGain);
+      delayGain.connect(delay);
+      delayGain.connect(ctx.destination);
+
+      // Bell harmonic chime with dual sine oscillators (880Hz + 1320Hz)
+      const osc1 = ctx.createOscillator();
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(880, now);
+
+      const osc2 = ctx.createOscillator();
+      osc2.type = "sine";
+      osc2.frequency.setValueAtTime(1320, now);
+
+      const osc1Gain = ctx.createGain();
+      osc1Gain.gain.setValueAtTime(0.001, now);
+      osc1Gain.gain.linearRampToValueAtTime(0.7, now + 0.006);
+      osc1Gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      const osc2Gain = ctx.createGain();
+      osc2Gain.gain.setValueAtTime(0.001, now);
+      osc2Gain.gain.linearRampToValueAtTime(0.45, now + 0.006);
+      osc2Gain.gain.exponentialRampToValueAtTime(0.0001, now + duration * 0.85);
+
+      osc1.connect(osc1Gain);
+      osc1Gain.connect(masterGain);
+
+      osc2.connect(osc2Gain);
+      osc2Gain.connect(masterGain);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + duration);
+      osc2.stop(now + duration);
+    } catch (err) {
+      // Audio fallback safe
     }
   }
 
   // Quill debounce
   let quillTimeout = null;
   function playQuillSound() {
+    if (!audioEnabled) return;
     if (quillTimeout) return;
-    playSound('sfx-quill');
-    quillTimeout = setTimeout(() => { quillTimeout = null; }, 3000);
+    quillTimeout = setTimeout(() => { quillTimeout = null; }, 1200);
+
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    try {
+      const now = ctx.currentTime;
+      const duration = 0.22;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      // High-frequency textured noise scratch
+      const filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(3600, now);
+      filter.Q.setValueAtTime(3.2, now);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.001, now);
+      // Double micro-stroke burst simulating pen nib
+      gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.02, now + 0.08);
+      gain.gain.linearRampToValueAtTime(0.16, now + 0.11);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      noise.start(now);
+      noise.stop(now + duration);
+    } catch (err) {
+      // Audio fallback safe
+    }
   }
+
+  function playSound(id) {
+    if (!audioEnabled) return;
+    if (id === 'sfx-page-turn' || id === 'page-turn') {
+      playPaperTurnSound();
+      return;
+    }
+    if (id === 'sfx-forge-chime' || id === 'forge-chime') {
+      playForgeChimeSound();
+      return;
+    }
+    if (id === 'sfx-quill' || id === 'quill') {
+      playQuillSound();
+      return;
+    }
+    const audioEl = document.getElementById(id);
+    if (audioEl) {
+      audioEl.currentTime = 0;
+      audioEl.play().catch(() => {});
+    }
+  }
+  window.playSound = playSound;
 
   async function fetchAccountStatus() {
     try {
@@ -406,7 +609,324 @@ document.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(style);
   }
 
+  const LEGENDARY_PRESETS = [
+    { id: 30704, name: "Twilight", type: "Gen 1 Greatsword" },
+    { id: 30689, name: "Sunrise", type: "Gen 1 Greatsword" },
+    { id: 30687, name: "Incinerator", type: "Gen 1 Dagger" },
+    { id: 30694, name: "The Bifrost", type: "Gen 1 Staff" },
+    { id: 30685, name: "Kudzu", type: "Gen 1 Longbow" },
+    { id: 30684, name: "Frostfang", type: "Gen 1 Axe" },
+    { id: 30695, name: "Bolt", type: "Gen 1 Sword" },
+    { id: 30693, name: "The Predator", type: "Gen 1 Rifle" },
+    { id: 30690, name: "The Juggernaut", type: "Gen 1 Hammer" },
+    { id: 30686, name: "The Dreamer", type: "Gen 1 Shortbow" },
+    { id: 76158, name: "Nevermore", type: "Gen 2 Staff" },
+    { id: 76159, name: "Astralaria", type: "Gen 2 Axe" },
+    { id: 96203, name: "Aurene's Bite", type: "Gen 3 Greatsword" },
+    { id: 100806, name: "Obsidian Breastplate", type: "Heavy Legendary Armor" }
+  ];
+
+  function getLegendaryIdByName(name, defaultId = 30704) {
+    if (!name) return defaultId;
+    const clean = name.toLowerCase().replace(/^(the|aurene's)\s+/, "").trim();
+    const found = LEGENDARY_PRESETS.find(p => {
+      const pName = p.name.toLowerCase().replace(/^(the|aurene's)\s+/, "").trim();
+      return pName === clean || clean.includes(pName) || pName.includes(clean);
+    });
+    return found ? found.id : defaultId;
+  }
+
+  function isComparativeRanking(guide) {
+    if (!guide) return false;
+    const name = (guide.goal_name || "").toLowerCase();
+    if (name.includes("closest:") || name.includes("closest") || name.includes("ranking") || name.includes("rankings") || name.includes("recommendation") || name.includes("leaderboard")) {
+      return true;
+    }
+    if (guide.target_quantity > 1 && (!guide.master_roadmap_phases || guide.master_roadmap_phases.length === 0)) {
+      return true;
+    }
+    if ((!guide.master_roadmap_phases || guide.master_roadmap_phases.length === 0) && (guide.strategic_recommendations && guide.strategic_recommendations.length > 0)) {
+      return true;
+    }
+    if (guide.strategic_recommendations && guide.strategic_recommendations.some(r => r.includes("Leaderboard") || r.includes("Closest Legendaries") || r.includes("Recommendations:"))) {
+      return true;
+    }
+    return false;
+  }
+
+  function getLeaderboardTitle(guide) {
+    if (!guide || !guide.goal_name) return "CHAPTER II: THE PRIORY LEADERBOARD";
+    const raw = guide.goal_name.trim();
+    const upper = raw.toUpperCase();
+    if (upper.includes("ACCESSOR")) return "LEGENDARY ACCESSORY LEADERBOARD";
+    if (upper.includes("WEAPON")) return "LEGENDARY WEAPONS LEADERBOARD";
+    if (upper.includes("ARMOR")) return "LEGENDARY ARMOR LEADERBOARD";
+    if (upper.includes("TRINKET")) return "LEGENDARY TRINKET LEADERBOARD";
+    if (upper.includes("AMULET")) return "LEGENDARY AMULET LEADERBOARD";
+    if (upper.includes("RING")) return "LEGENDARY RING LEADERBOARD";
+    if (upper.includes("BACKPACK")) return "LEGENDARY BACKPACK LEADERBOARD";
+    return "CHAPTER II: THE PRIORY LEADERBOARD";
+  }
+
+  function extractLeaderboardData(guide) {
+    const items = [];
+    if (!guide) return items;
+
+    const recs = guide.strategic_recommendations || [];
+    for (const raw of recs) {
+      const line = (raw || "").trim();
+      if (!line) continue;
+      const clean = line.replace(/\*\*/g, "").trim();
+
+      // Format: #1 The Moot (Mace): 78.4% Ready | Est. Cost: ~412.0g | [Precursor Crafting / Drop] [🎁 Bank Kit Ready]
+      const match = clean.match(/^#(\d+)\s+([^(]+?)(?:\s*\(([^)]+)\))?:\s*([\d.]+)%?\s*Ready\s*\|\s*(?:Est\.?\s*Cost:\s*)?~?([\d.,]+)g\s*\|\s*\[([^\]]+)\](.*)/i);
+      if (match) {
+        const gateMatch = clean.match(/⏳\s*(~?[\w\s]+gate)/i);
+        items.push({
+          rank: parseInt(match[1], 10),
+          name: match[2].trim(),
+          subtype: match[3] ? match[3].trim() : "Item",
+          readiness: parseFloat(match[4]),
+          cost: parseFloat(match[5].replace(/,/g, "")),
+          archetype: match[6].trim(),
+          hasKit: clean.includes("Bank Kit") || clean.includes("Starter Kit"),
+          hasGate: clean.includes("gate") || clean.includes("⏳"),
+          gateText: gateMatch ? gateMatch[1] : (clean.includes("gate") ? "Time-Gated" : null)
+        });
+        continue;
+      }
+
+      // Loose fallback match
+      const m2 = clean.match(/#(\d+)\s+([A-Za-z0-9' -]+?)(?:\s*\(([^)]+)\))?[:\s-]+(\d+(?:\.\d+)?)%/i);
+      if (m2) {
+        const goldM = clean.match(/([\d.,]+)\s*g\b/);
+        const archM = clean.match(/\[([^\]]+)\]/);
+        const gateMatch = clean.match(/⏳\s*(~?[\w\s]+gate)/i);
+        items.push({
+          rank: parseInt(m2[1], 10),
+          name: m2[2].trim(),
+          subtype: m2[3] ? m2[3].trim() : "Item",
+          readiness: parseFloat(m2[4]),
+          cost: goldM ? parseFloat(goldM[1].replace(/,/g, "")) : 0,
+          archetype: archM ? archM[1] : "Standard Crafting",
+          hasKit: clean.includes("Bank Kit") || clean.includes("Starter Kit"),
+          hasGate: clean.includes("gate") || clean.includes("⏳"),
+          gateText: gateMatch ? gateMatch[1] : (clean.includes("gate") ? "Time-Gated" : null)
+        });
+      }
+    }
+
+    if (items.length === 0 && guide.goal_name) {
+      const topName = guide.goal_name.replace(/^(?:Closest|Ranking|Recommendation|Leaderboard):\s*/i, "").trim();
+      items.push({
+        rank: 1,
+        name: topName || "Top Recommendation",
+        subtype: "Legendary",
+        readiness: parseFloat(guide.readiness_percentage) || 0,
+        cost: 0,
+        archetype: "Precursor & Gifts",
+        hasKit: (guide.strategic_recommendations || []).some(r => r.includes("Starter Kit") || r.includes("Bank Kit")),
+        hasGate: false,
+        gateText: null
+      });
+    }
+
+    return items;
+  }
+
+  function renderLeaderboardSpread(guide) {
+    const items = extractLeaderboardData(guide);
+    const topItem = items[0] || {
+      rank: 1,
+      name: guide.goal_name || "Top Recommendation",
+      subtype: "Legendary",
+      readiness: parseFloat(guide.readiness_percentage) || 0,
+      cost: 0,
+      archetype: "Precursor & Gifts",
+      hasKit: false,
+      hasGate: false,
+      gateText: null
+    };
+    const subItems = items.slice(1, 5);
+    const heroItemId = getLegendaryIdByName(topItem.name, guide.goal_item_id || 30704);
+    const title = getLeaderboardTitle(guide);
+
+    const starterKitRec = (guide.strategic_recommendations || []).find(r => r.includes("Starter Kit") || r.includes("Bank Kit"));
+    const boosterRec = (guide.strategic_recommendations || []).find(r => r.includes("Booster") || r.includes("Speed Analysis") || r.includes("Zhaitaffy") || r.includes("Speed Tips") || r.includes("Wizard"));
+
+    // ── LEFT PAGE: THE PRIORY LEADERBOARD ────────────────────────────────────
+    leftPageBody.innerHTML = `
+      <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
+      <h3 class="page-title">${escapeHtml(title)}</h3>
+      <div class="handwritten-subtitle">~ Top Ranked Recommendations ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div class="priory-leaderboard-spread">
+        <!-- Hero Card: #1 Top Pick -->
+        <div class="priory-hero-card">
+          <div class="hero-card-header">
+            <div class="rank-badge rank-top">
+              <span>#1</span>
+              <span class="top-pick-sub">TOP PICK</span>
+            </div>
+            <div class="hero-item-info">
+              <div class="hero-item-title">
+                <span class="hero-name">${escapeHtml(topItem.name)}</span>
+                <span class="hero-subtype">(${escapeHtml(topItem.subtype)})</span>
+              </div>
+              <div class="hero-archetype-row">
+                <span class="archetype-badge">${escapeHtml(topItem.archetype)}</span>
+                ${topItem.hasKit ? `<span class="kit-badge">🎁 Bank Starter Kit Ready (0g Precursor)</span>` : ''}
+                ${topItem.hasGate ? `<span class="gate-badge">⏳ ${escapeHtml(topItem.gateText || 'Time-Gated')}</span>` : ''}
+              </div>
+            </div>
+            <div class="hero-metrics">
+              <div class="hero-readiness-label">Account Readiness</div>
+              <div class="hero-readiness-val">${topItem.readiness}%</div>
+              <div class="hero-cost-val">${topItem.cost > 0 ? `Est. Cost: ~${topItem.cost.toLocaleString()}g` : 'Est. Cost: ~0g (Kit Ready)'}</div>
+            </div>
+          </div>
+
+          <div class="hero-bar-wrap">
+            <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, topItem.readiness))}%;"></div>
+          </div>
+
+          ${topItem.hasKit || starterKitRec ? `
+            <div class="starter-kit-callout">
+              <span class="kit-icon">🎁</span>
+              <div class="kit-callout-text">
+                ${starterKitRec ? formatTextWithWaypoints(starterKitRec) : `<strong>Bank Starter Kit Ready:</strong> Select this weapon to claim its Precursor and Gift for <strong>0 gold</strong> from your Legendary Weapon Starter Kit!`}
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="recipe-jump-bar hero-jump-bar">
+            <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${heroItemId})">⏱ Plan Session</button>
+            <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${heroItemId})">⚖ Arbitrage Matrix</button>
+            <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${heroItemId})">📜 Prerequisite Audit</button>
+          </div>
+        </div>
+
+        <!-- Sub Cards: #2 through #5 -->
+        ${subItems.length > 0 ? `
+          <div class="priory-subcards-list">
+            ${subItems.map(item => {
+              const subId = getLegendaryIdByName(item.name, guide.goal_item_id || 30704);
+              return `
+                <div class="priory-sub-card">
+                  <div class="rank-badge rank-sub">#${item.rank}</div>
+                  <div class="sub-card-main">
+                    <div class="sub-card-title-row">
+                      <span class="sub-item-name">${escapeHtml(item.name)}</span>
+                      <span class="sub-item-subtype">(${escapeHtml(item.subtype)})</span>
+                      <span class="sub-item-cost">${item.cost > 0 ? `~${item.cost.toLocaleString()}g` : '~0g'}</span>
+                      <span class="sub-item-readiness">${item.readiness}%</span>
+                    </div>
+                    <div class="sub-bar-wrap">
+                      <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, item.readiness))}%;"></div>
+                    </div>
+                    <div class="sub-badges-row">
+                      <span class="archetype-pill">${escapeHtml(item.archetype)}</span>
+                      ${item.hasKit ? `<span class="kit-pill">🎁 Kit Ready</span>` : ''}
+                      ${item.hasGate ? `<span class="gate-pill">⏳ ${escapeHtml(item.gateText || 'Time-Gated')}</span>` : ''}
+                      <div class="sub-card-actions">
+                        <button type="button" class="btn-sub-jump" onclick="jumpToPlanner(${subId})" title="Plan Session">⏱ Plan</button>
+                        <button type="button" class="btn-sub-jump" onclick="jumpToArbitrage(${subId})" title="Buy vs Craft">⚖ Arbitrage</button>
+                        <button type="button" class="btn-sub-jump" onclick="jumpToPrereqs(${subId})" title="Prerequisite Audit">📜 Prereqs</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
+      </div>
+
+      <div class="handwritten-marginalia" style="margin-top: 6px;">
+        "The wise arcanist observes all paths before committing the first ingot."
+      </div>
+    `;
+
+    // ── RIGHT PAGE: STRATEGIC ACCELERATION & ACTIONABLE CHECKLIST ────────────
+    const checklist = guide.session_checklist && guide.session_checklist.length > 0
+      ? guide.session_checklist
+      : [
+          {
+            step_number: 1,
+            title: "Claim Precursor / Starter Kit",
+            estimated_time_minutes: 2,
+            game_mode: "Account",
+            description: "Withdraw your Starter Kit or Precursor from the Bank or inventory.",
+            chat_code: null
+          },
+          {
+            step_number: 2,
+            title: "Complete Wizard's Vault Objectives",
+            estimated_time_minutes: 10,
+            game_mode: "OpenWorld",
+            description: "Clear daily objectives and exchange Astral Acclaim for Mystic Clovers.",
+            chat_code: null
+          }
+        ];
+
+    const boosterText = boosterRec
+      ? boosterRec
+      : "⚡ **Speed Analysis & Boosters:** Stack Experience + Heroic + Guild Tavern WvW buff (Gift of Battle in ~4.5h vs 8h). Convert Astral Acclaim into Mystic Clovers from Wizard's Vault to bypass Mystic Forge gambling.";
+
+    rightPageBody.innerHTML = `
+      <div class="runic-header">ᛋ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᚲ ✦ ᛈ ᚨ ᚦ</div>
+      <h3 class="page-title">Strategic Acceleration</h3>
+      <div class="handwritten-subtitle">~ Priority Action Items & Speed Protocol ~</div>
+      <div class="ink-divider">✦</div>
+
+      <!-- Booster & Speed Acceleration Box -->
+      <div class="leaderboard-synergy-box booster-synergy-box">
+        <div class="synergy-box-title">
+          <span class="synergy-icon">⚡</span>
+          <span>Speed Tips & Booster Acceleration</span>
+        </div>
+        <div class="synergy-box-content">
+          ${formatTextWithWaypoints(boosterText)}
+        </div>
+      </div>
+
+      <!-- Actionable Session Checklist -->
+      <div class="journal-section" style="margin-top: 4px;">
+        <h4>Actionable Session Checklist</h4>
+        <div class="leaderboard-checklist">
+          ${checklist.map(step => `
+            <div class="leaderboard-ck-item">
+              <div class="ck-item-top">
+                <span class="ck-step-num">Step ${step.step_number}</span>
+                <span class="ck-step-title"><strong>${escapeHtml(step.title)}</strong></span>
+                <span class="ck-step-time">~${step.estimated_time_minutes}m</span>
+                ${step.game_mode ? `<span class="ck-mode-badge mode-${escapeHtml((step.game_mode||'').toLowerCase())}">[${escapeHtml(step.game_mode)}]</span>` : ''}
+              </div>
+              <div class="ck-item-desc">
+                ${formatTextWithWaypoints(step.description)}
+              </div>
+              ${step.chat_code ? `
+                <div class="ck-item-footer">
+                  <button class="chatcode-stamp ck-wp-btn" onclick="copyChatCode('${step.chat_code}', this, event)" title="Click to copy waypoint">
+                    <span>📍</span> WP: ${escapeHtml(step.chat_code)}
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      ${renderMarginaliaTip(guide.motivational_tip || "Archivist Note: Align your daily routines with live currency conversion spikes.")}
+    `;
+  }
+
   function renderRecipeSpread(guide) {
+    if (isComparativeRanking(guide)) {
+      renderLeaderboardSpread(guide);
+      return;
+    }
     const qty = guide.target_quantity > 1 ? `${guide.target_quantity}x ` : "";
     const name = `${qty}${guide.goal_name}`;
     const chatCode = guide.chat_code || "[&AgErZgAA]";
@@ -453,6 +973,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ${renderMarginaliaTip(guide.motivational_tip)}
     `;
   }
+  window.renderRecipeSpread = renderRecipeSpread;
+  window.isComparativeRanking = isComparativeRanking;
   
   function renderMysticForgeSockets(mats) {
     if (!mats) return "";
@@ -539,23 +1061,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ── CHAPTER II: SESSION PLANNER ─────────────────────────────────────────── */
-  const LEGENDARY_PRESETS = [
-    { id: 30704, name: "Twilight", type: "Gen 1 Greatsword" },
-    { id: 30689, name: "Sunrise", type: "Gen 1 Greatsword" },
-    { id: 30687, name: "Incinerator", type: "Gen 1 Dagger" },
-    { id: 30694, name: "The Bifrost", type: "Gen 1 Staff" },
-    { id: 30685, name: "Kudzu", type: "Gen 1 Longbow" },
-    { id: 30684, name: "Frostfang", type: "Gen 1 Axe" },
-    { id: 30695, name: "Bolt", type: "Gen 1 Sword" },
-    { id: 30693, name: "The Predator", type: "Gen 1 Rifle" },
-    { id: 30690, name: "The Juggernaut", type: "Gen 1 Hammer" },
-    { id: 30686, name: "The Dreamer", type: "Gen 1 Shortbow" },
-    { id: 76158, name: "Nevermore", type: "Gen 2 Staff" },
-    { id: 76159, name: "Astralaria", type: "Gen 2 Axe" },
-    { id: 96203, name: "Aurene's Bite", type: "Gen 3 Greatsword" },
-    { id: 100806, name: "Obsidian Breastplate", type: "Heavy Legendary Armor" }
-  ];
-
   function renderGoalSelectOptions(selectedId) {
     return LEGENDARY_PRESETS.map(p => 
       `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${escapeHtml(p.name)} (${p.type})</option>`

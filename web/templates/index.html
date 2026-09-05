@@ -21,11 +21,21 @@
     <!-- Main 3D Scene Viewport -->
     <div class="scene" id="scene">
         
-        <div class="top-nav-controls">
-            <a href="/3d" class="btn-switch-prototype" title="Switch to Full WebGL 3D Real-Time Grimoire">
-                <strong>Launch 3D WebGL Grimoire</strong>
-            </a>
-            <button class="audio-toggle" id="audio-toggle" title="Toggle ambient sound">Sound Off</button>
+        <div class="top-nav-controls priory-control-bar">
+            <div class="priory-archives-header">
+                <span class="priory-seal-insignia" aria-hidden="true">⚜</span>
+                <span class="priory-header-title">Durmand Priory Archives <span class="priory-header-sep">•</span> The Legendary Grimoire</span>
+                <div class="priory-essence-indicator" title="Live Arcane Resonance with GW2 Archives">
+                    <span class="essence-pulse-orb"></span>
+                    <span class="essence-status-text">Live Essence</span>
+                </div>
+            </div>
+            <div class="top-controls-actions">
+                <button class="audio-toggle" id="audio-toggle" title="Toggle ambient sound" aria-label="Toggle ambient sound" aria-pressed="false">
+                    <span class="audio-icon">🔇</span>
+                    <span class="audio-label">Sound Off</span>
+                </button>
+            </div>
         </div>
 
         <!-- Desk Environment Props -->
@@ -154,9 +164,14 @@
                     <div class="page-counter-badge" id="page-counter-display">
                         Chapter I • Page 1 of 1
                     </div>
-                    <button class="btn-page-nav" id="btn-next-page" title="Next Page">
-                        Next Page <span class="nav-arrow">⮞</span>
-                    </button>
+                    <div class="tome-nav-actions-right">
+                        <button class="btn-page-nav" id="btn-next-page" title="Next Page">
+                            Next Page <span class="nav-arrow">⮞</span>
+                        </button>
+                        <a href="/3d" class="btn-concept-lab" title="Explore the experimental WebGL 3D Concept Laboratory">
+                            <span class="concept-lab-glyph">🧪</span> 3D Concept Lab →
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="kb-hint">Use ← → arrow keys to turn pages</div>
