@@ -5,6 +5,7 @@ and resolves entity names to canonical Knowledge Graph URIs with multi-turn sess
 """
 
 from __future__ import annotations
+import re
 from enum import Enum
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -167,6 +168,76 @@ class IntentParser:
             intent.wizards_vault_exhausted = vault_exhausted or is_cheapest
             intent.optimization_target = opt_target
 
+        # Extract target quantity if not captured by LLM
+        if intent.target_quantity <= 1:
+            qty_match = re.search(
+                r"\b(\d+)\s*(?:legendaries|legendary|sigils?|runes?|twilight|dusk|clovers?|weapons?|items?|upgrades?|leggy|rings?|amulets?|accessories?|trinkets?|backpacks?|spears?)\b",
+                p_lower
+            )
+            if qty_match:
+                intent.target_quantity = int(qty_match.group(1))
+            else:
+                count_match = re.search(r"\b(?:which|top|fastest|quickest|easiest|closest|best)\s+(\d+)\b", p_lower)
+                if count_match:
+                    intent.target_quantity = int(count_match.group(1))
+
+        # Detect category filter and normalize plurals
+        category_slot_terms = [
+            "generation 1", "gen 1", "generation 2", "gen 2", "generation 3", "gen 3",
+            "aurene", "soto", "obsidian", "janthir",
+            "rings", "ring", "amulets", "amulet", "accessories", "accessory",
+            "trinkets", "trinket", "backpack", "back", "jewelry", "armor",
+            "upgrades", "upgrade", "spears", "spear"
+        ]
+        plural_cat_map = {
+            "rings": "ring",
+            "amulets": "amulet",
+            "accessories": "accessory",
+            "trinkets": "trinket",
+            "upgrades": "upgrade",
+            "spears": "spear",
+            "generation 1": "gen 1",
+            "generation 2": "gen 2",
+            "generation 3": "gen 3",
+        }
+        detected_category = None
+        for term in category_slot_terms:
+            if re.search(r"\b" + re.escape(term) + r"\b", p_lower):
+                detected_category = term
+                break
+
+        is_general_comparative = any(re.search(r"\b" + re.escape(w) + r"\b", p_lower) for w in [
+            "which legendaries", "what legendaries", "closest legendaries", "rank all",
+            "which 2 legendaries", "top 2 legendaries", "fastest legendaries"
+        ])
+        if is_general_comparative:
+            detected_category = None
+            intent.category_filter = None
+        elif detected_category:
+            detected_category = plural_cat_map.get(detected_category.lower(), detected_category.lower())
+            intent.category_filter = detected_category
+        elif intent.category_filter and not any(k in p_lower for k in ["it", "that", "this", "these", "same"]):
+            intent.category_filter = None
+
+        has_category_terms = (intent.category_filter is not None) or any(re.search(r"\b" + re.escape(t) + r"\b", p_lower) for t in category_slot_terms)
+        has_comparative_terms = any(re.search(r"\b" + re.escape(w) + r"\b", p_lower) for w in [
+            "legendaries", "which", "what can i craft", "what should i craft", "what to craft",
+            "closest", "rank", "leaderboard", "how far", "how close", "where am i",
+            "fastest", "quickest", "easiest", "next legendary", "best legendary", "recommend",
+            "can i craft", "what legendaries", "which legendaries"
+        ])
+
+        # Check if single specific item is explicitly named in prompt
+        known_specific_names = [
+            "twilight", "sunrise", "eternity", "kudzu", "the moot", "the juggernaut",
+            "bolt", "incinerator", "nevermore", "astralaria", "hope", "chuka and champawat",
+            "conflux", "coalescence", "transcendence", "vision", "aurora", "ad infinitum",
+            "the ascension", "warbringer", "prismatic champion's regalia",
+            "klobjarne harvester", "kamohoali'i kotaki",
+            "dusk", "mystic clover", "mystic coin", "sigil", "sigils", "rune", "runes"
+        ]
+        has_named_specific_item = any(re.search(r"\b" + re.escape(name) + r"\b", p_lower) for name in known_specific_names)
+
         # Heuristic classification fallback if LLM defaulted to SPECIFIC_ITEM (evaluated on current prompt)
         is_arbitrage = any(k in p_lower for k in [
             "buy vs craft", "craft or buy", "arbitrage", "cheaper to buy",
@@ -177,6 +248,12 @@ class IntentParser:
             "prerequisite", "prerequisites", "mastery", "masteries",
             "am i ready", "can i craft", "collection unlocked", "ready to craft"
         ])
+        # Prevent hijacking into PREREQUISITE_AUDIT for broad category or comparative questions
+        if (has_category_terms or has_comparative_terms) and not has_named_specific_item:
+            is_prerequisite = False
+            if intent.goal_type == GoalType.PREREQUISITE_AUDIT:
+                intent.goal_type = GoalType.COMPARATIVE_RANKING
+
         is_opportunity_cost = any(k in p_lower for k in [
             "best use of", "opportunity cost", "spend astral acclaim",
             "clovers or gold", "clover or gold", "how should i spend",
@@ -198,6 +275,23 @@ class IntentParser:
                 intent.goal_type = GoalType.CURRENCY_OPPORTUNITY_COST
             elif is_session:
                 intent.goal_type = GoalType.SESSION_ITINERARY
+            else:
+                # Promote to COMPARATIVE_RANKING if no recognizable specific item found
+                is_generic_or_missing_target = (
+                    not intent.target_item_name
+                    or (intent.target_item_name.lower() in ["twilight"] and "twilight" not in p_lower)
+                    or intent.target_item_name.lower() in [
+                        "ring", "rings", "amulet", "amulets", "accessory", "accessories",
+                        "trinket", "trinkets", "backpack", "back", "jewelry", "armor",
+                        "upgrade", "upgrades", "spear", "spears", "legendary", "legendaries"
+                    ]
+                )
+                has_no_recognized_item = is_generic_or_missing_target or not has_named_specific_item
+
+                if has_no_recognized_item and (has_category_terms or has_comparative_terms):
+                    intent.goal_type = GoalType.COMPARATIVE_RANKING
+                    if not intent.category_filter and detected_category:
+                        intent.category_filter = detected_category
 
         # Handle SESSION_ITINERARY queries
         if intent.goal_type == GoalType.SESSION_ITINERARY:
@@ -365,12 +459,15 @@ class IntentParser:
                     resolved_item_id = previous_goal.resolved_item_id
                     resolved_item_name = previous_goal.resolved_item_name
                     chat_code = previous_goal.chat_code
-                else:
                     # Fallback to comparative ranking if entity is unrecognized or broad category
+                    cat_f = intent.category_filter or detected_category
+                    if not cat_f and item_query:
+                        cat_f = plural_cat_map.get(item_query.lower(), item_query)
                     return ResolvedGoal(
                         intent=intent,
                         goal_type=GoalType.COMPARATIVE_RANKING,
-                        category_filter=intent.category_filter or item_query,
+                        category_filter=cat_f,
+                        prefer_speed=intent.prefer_speed,
                         prefer_cheap=intent.prefer_cheap or is_cheapest,
                         wizards_vault_exhausted=intent.wizards_vault_exhausted,
                         optimization_target=intent.optimization_target,

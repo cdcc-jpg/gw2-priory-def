@@ -10,6 +10,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Legendary Jewelry & Trinket Ontology Grounding, Ranker DAG Memoization, Robust Intent Disambiguation & 3D Grimoire Leaderboard Spreads (`ontology/`, `engine/`, `agent/`, `web/`, `tests/`):**
+  - **Trinket & Jewelry Equipment Slot Grounding (`ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl`, `ontology/character.ttl`):** Formally equipped all Guild Wars 2 legendary jewelry and back items with canonical equipment slots (`priory:hasEquipmentSlot`) and rich SKOS alternative labels (`skos:altLabel`):
+    - *Rings:* Coalescence (`91234`, `slot:Ring`), Conflux (`93105`, `slot:Ring`).
+    - *Amulets:* Transcendence (`92991`, `slot:Amulet`), Prismatic Champion's Regalia (`95380`, `slot:Amulet`).
+    - *Accessories:* Aurora (`81908`, `slot:Accessory`), Vision (`91048`, `slot:Accessory`).
+    - *Backpacks:* Ad Infinitum (`74155`, `slot:Backpack`), The Ascension (`77474`, `slot:Backpack`), Warbringer (`81462`, `slot:Backpack`).
+    - Registered canonical slot concepts (`slot:Ring`, `slot:Accessory`, `slot:Chest`, `slot:Legs`) in `character.ttl`.
+  - **Account Ranker SPARQL Slot Awareness & Sub-Tree Diff Memoization (`engine/account_ranker.py`, `engine/account_diff.py`):**
+    - Updated SPARQL query in `get_all_legendaries_in_graph()` to select `priory:hasEquipmentSlot ?slot` and set `subtype = slotLabel or weaponTypeLabel` and populate `altLabels`.
+    - Expanded slot and category filtering in `rank_all_legendaries()` for `"ring"`, `"rings"`, `"amulet"`, `"amulets"`, `"accessory"`, `"accessories"`, `"trinket"`, `"trinkets"`, `"backpack"`, and `"back"`.
+    - Added AST sub-tree memoization in `AccountDiffEngine` (`_sub_tree_memo`) and node cloning (`ItemRequirementNode.clone()`), eliminating redundant re-traversals of shared gifts and ingredients. Accelerated full 141-legendary ranker sweeps from 47.3s down to **0.54s** (~136x speedup).
+    - Hardened `AccountState.has_legendary_unlocked()` and `armory_item_count()` to gracefully handle sets, dicts, lists of IDs, and API armory dictionaries.
+  - **Natural Language Intent Disambiguation for Jewelry & Plurals (`agent/llm_client.py`, `agent/intent_parser.py`, `agent/guide_generator.py`):**
+    - Added jewelry slot keywords and normalized plurals to category extraction (`"ring"`, `"rings"`, `"amulet"`, `"amulets"`, `"accessory"`, `"accessories"`, `"trinket"`).
+    - Expanded comparative ranking recognition to support plural `"legendaries"`, numeric quantities (`"which 2 legendaries"`, `"fastest 2"`, `"top 2"`), and speed qualifiers (`"fastest"`, `"quickest"`, `"easiest"`).
+    - Prevented broad category queries (e.g. *"Can I craft legendary rings?"*, *"What legendary amulets can I craft?"*) from being misclassified as prerequisite audits or defaulting to Twilight.
+    - Updated `generate_ranking_guide()` to format contextual titles and summaries specifically around jewelry categories (e.g. *"Closest Legendary Rings: Coalescence & Conflux"*).
+  - **Developer Observability & WebGL 3D Grimoire Leaderboard Spreads (`web/app.py`, `web/static/js/grimoire_3d.js`):**
+    - Added structured console logging for every API query, parsed intent, and generated guide to stdout.
+    - Added `GET /api/session/history` for conversation inspection.
+    - Updated `/api/status` to accurately report whether Gemini is live or operating under deterministic rule-based fallback with error diagnosis.
+    - Upgraded 3D Grimoire canvas rendering with dedicated **"CHAPTER II: THE PRIORY LEADERBOARD"** spreads displaying ranked cards with live progress bars, estimated gold costs, archetype badges, bank starter kit callouts, and actionable session checklists.
+    - Achieved 100% pass rate across the test suite (160/160 tests passing in 65.8s).
 - **Full Conversational Routing, Regional Expansion Leaf Gift Subtrees, Real-Time TP Integration & Grimoire Web GUI (`agent/`, `ontology/`, `engine/`, `web/`, `tests/`):**
   - **Conversational Neuro-Symbolic Routing (`agent/intent_parser.py`, `agent/orchestrator.py`, `agent/guide_generator.py`):** Extended `GoalType` with `SESSION_ITINERARY`, `ARBITRAGE_EVALUATION`, `PREREQUISITE_AUDIT`, and `CURRENCY_OPPORTUNITY_COST`. Natural language queries (e.g. "What should I do tonight in 90 mins?", "Should I craft or buy Twilight?", "Check my masteries for Nevermore", "Best use of my Astral Acclaim") are deterministically classified and dispatched to dedicated graph solvers. Guides synthesize waypoint codes (`[&...]`), 0/1 knapsack session schedules, character crafting allocations, and Wallace 15% liquidation margins under strict Zero Domain Semantics in Python.
   - **Regional Expansion Leaf Gift Subtrees (`ontology/instances/shared/regional_expansion_materials.ttl`, `legendary_milestone_vendors.ttl`):** Fully grounded the 45 intermediate expansion leaf gifts:

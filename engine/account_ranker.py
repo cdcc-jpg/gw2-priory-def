@@ -39,11 +39,12 @@ class AccountRanker:
     def __init__(self, graph_store: PrioryGraphStore, diff_engine: Optional[AccountDiffEngine] = None):
         self.store = graph_store
         self.diff_engine = diff_engine or AccountDiffEngine(graph_store)
+        self._arch_cache: Dict[int, Tuple[str, float]] = {}
 
     def get_all_legendaries_in_graph(self) -> List[Dict[str, Any]]:
-        """Retrieves all legendary items from the Knowledge Graph with SKOS altLabels."""
+        """Retrieves all legendary items from the Knowledge Graph with SKOS altLabels and equipment slots."""
         sparql = """
-        SELECT DISTINCT ?item ?gw2Id ?label ?weaponTypeLabel ?chatCode ?altLabel WHERE {
+        SELECT DISTINCT ?item ?gw2Id ?label ?type ?weaponTypeLabel ?slotLabel ?chatCode ?altLabel WHERE {
             ?item a ?type ;
                   priory:gw2Id ?gw2Id ;
                   rdfs:label ?label .
@@ -51,6 +52,7 @@ class AccountRanker:
                 priory:LegendaryWeapon,
                 priory:LegendaryArmor,
                 priory:LegendaryTrinket,
+                priory:LegendaryBackpack,
                 priory:LegendaryRelic,
                 priory:LegendarySigil,
                 priory:LegendaryRune
@@ -58,6 +60,10 @@ class AccountRanker:
             OPTIONAL {
                 ?item priory:hasWeaponType ?wt .
                 ?wt skos:prefLabel ?weaponTypeLabel .
+            }
+            OPTIONAL {
+                ?item priory:hasEquipmentSlot ?slot .
+                ?slot skos:prefLabel ?slotLabel .
             }
             OPTIONAL { ?item priory:chatCode ?chatCode }
             OPTIONAL { ?item skos:altLabel ?altLabel }
@@ -70,16 +76,32 @@ class AccountRanker:
             if not iid:
                 continue
             iid = int(iid)
+            slot_label = r.get("slotLabel")
+            wt_label = r.get("weaponTypeLabel")
+            subtype = slot_label or wt_label
+            type_uri = str(r.get("type", ""))
+            type_name = type_uri.split("#")[-1].split("/")[-1] if type_uri else "Legendary"
+
             if iid not in items_by_id:
                 items_by_id[iid] = {
                     "gw2Id": iid,
                     "label": r.get("label", "Unknown Legendary"),
-                    "weaponType": r.get("weaponTypeLabel"),
+                    "itemType": type_name,
+                    "subtype": subtype,
+                    "weaponType": wt_label,
+                    "slotLabel": slot_label,
                     "chatCode": r.get("chatCode"),
                     "altLabels": set()
                 }
+            else:
+                if subtype and not items_by_id[iid].get("subtype"):
+                    items_by_id[iid]["subtype"] = subtype
+                if type_name in ["LegendaryTrinket", "LegendaryBackpack"]:
+                    items_by_id[iid]["itemType"] = type_name
+
             if r.get("altLabel"):
                 items_by_id[iid]["altLabels"].add(str(r["altLabel"]).lower())
+
         return list(items_by_id.values())
 
     def rank_all_legendaries(
@@ -98,9 +120,12 @@ class AccountRanker:
             tp_prices: Optional dict mapping GW2 item IDs to live TP prices.
             top_n: Number of top closest items to return.
             exclude_unlocked: Whether to exclude already owned Armory legendaries.
-            filter_query: Optional filter string (e.g. 'Gen 2', 'Generation 2', 'Aurene', 'Greatsword').
+            filter_query: Optional filter string (e.g. 'Gen 2', 'Generation 2', 'Aurene', 'Greatsword', 'Ring', 'Trinket').
             prefer_speed: Whether to prioritize active gameplay speed and low time-gates.
         """
+        # Clear sub-tree memoization before multi-item evaluation batch
+        self.diff_engine.clear_sub_tree_cache()
+
         legendaries = self.get_all_legendaries_in_graph()
         rankings: List[LegendaryRankingItem] = []
 
@@ -109,14 +134,52 @@ class AccountRanker:
         # Filter by generation, expansion, slot, or weapon facet if requested by the Top LLM
         if filter_query:
             fq = filter_query.lower().strip()
-            if fq and fq not in ["legendary", "item", "items", "weapon", "weapons", "all"]:
+            if fq and fq not in ["legendary", "item", "items", "all"]:
                 filtered_legs = []
+                special_tokens = {
+                    "ring", "rings", "amulet", "amulets", "accessory",
+                    "accessories", "trinket", "trinkets", "backpack", "back"
+                }
                 for leg in legendaries:
                     lbl = leg["label"].lower()
+                    st = (leg.get("subtype") or "").lower()
                     wt = (leg.get("weaponType") or "").lower()
                     alts = leg.get("altLabels", set())
-                    if fq in lbl or fq in wt or any(fq in a for a in alts) or any(a in fq for a in alts if len(a) >= 3):
+                    itype = leg.get("itemType", "")
+
+                    matched = False
+                    if fq in special_tokens or fq in ["jewelry"]:
+                        token_forms = {fq}
+                        if fq.endswith("s"):
+                            token_forms.add(fq[:-1])
+                        if fq.endswith("ies"):
+                            token_forms.add(fq[:-3] + "y")
+                        if fq.endswith("y"):
+                            token_forms.add(fq[:-1] + "ies")
+
+                        def _token_in_text(token: str, text: str) -> bool:
+                            if not text:
+                                return False
+                            if len(token) <= 4:
+                                return bool(re.search(r'\b' + re.escape(token) + r'\b', text))
+                            return token in text
+
+                        if fq in ["trinket", "trinkets", "jewelry"] or "trinket" in fq or "jewelry" in fq:
+                            if itype == "LegendaryTrinket" or any(_token_in_text(t, lbl) or _token_in_text(t, st) or any(_token_in_text(t, a) for a in alts) for t in token_forms):
+                                matched = True
+                        if not matched:
+                            if any(_token_in_text(t, lbl) or _token_in_text(t, st) or any(_token_in_text(t, a) for a in alts) for t in token_forms):
+                                matched = True
+                        if not matched and (fq in ["backpack", "back"] or "back" in fq):
+                            if itype == "LegendaryBackpack" or "back" in lbl or "back" in st or any("back" in a for a in alts):
+                                matched = True
+                    else:
+                        if fq in lbl or (st and fq in st) or (wt and fq in wt) or any(fq in a for a in alts) or any(a in fq for a in alts if len(a) >= 3):
+                            matched = True
+
+                    if matched:
                         filtered_legs.append(leg)
+
                 if filtered_legs:
                     legendaries = filtered_legs
 
@@ -146,8 +209,8 @@ class AccountRanker:
                     rankings.append(LegendaryRankingItem(
                         gw2_id=item_id,
                         name=name,
-                        item_type="Legendary",
-                        subtype=leg.get("weaponType"),
+                        item_type=leg.get("itemType") or "Legendary",
+                        subtype=leg.get("subtype") or leg.get("weaponType"),
                         chat_code=leg.get("chatCode"),
                         is_already_unlocked=True,
                         readiness_pct=100.0,
@@ -211,26 +274,30 @@ class AccountRanker:
                 est_gold += 200.0
 
             # 5. Query Precursor Archetype & Gameplay Hours from Knowledge Graph
-            arch_query = """
-            SELECT ?ptype ?ptag ?hours WHERE {
-                ?item priory:gw2Id ?gw2Id ;
-                      priory:hasPrecursorType ?ptype .
-                OPTIONAL { ?ptype priory:archetypeTag ?ptag }
-                OPTIONAL { ?ptype priory:estimatedGameplayHours ?hours }
-            } LIMIT 1
-            """
-            arch_res = self.store.query(arch_query, init_bindings={"gw2Id": Literal(item_id)})
-            prec_arch = "Standard Crafting"
-            gameplay_hours = 0.5
-            if arch_res:
-                row = arch_res[0]
-                prec_arch = str(row["ptag"]) if row.get("ptag") else str(row.get("ptype", "")).split("#")[-1].split("/")[-1]
-                if row.get("hours"):
-                    try:
-                        gameplay_hours = float(row.get("hours"))
-                    except Exception:
-                        pass
-            elif starter_kit_eligible:
+            if item_id not in self._arch_cache:
+                arch_query = """
+                SELECT ?ptype ?ptag ?hours WHERE {
+                    ?item priory:gw2Id ?gw2Id ;
+                          priory:hasPrecursorType ?ptype .
+                    OPTIONAL { ?ptype priory:archetypeTag ?ptag }
+                    OPTIONAL { ?ptype priory:estimatedGameplayHours ?hours }
+                } LIMIT 1
+                """
+                arch_res = self.store.query(arch_query, init_bindings={"gw2Id": Literal(item_id)})
+                prec_arch = "Standard Crafting"
+                gameplay_hours = 0.5
+                if arch_res:
+                    row = arch_res[0]
+                    prec_arch = str(row["ptag"]) if row.get("ptag") else str(row.get("ptype", "")).split("#")[-1].split("/")[-1]
+                    if row.get("hours"):
+                        try:
+                            gameplay_hours = float(row.get("hours"))
+                        except Exception:
+                            pass
+                self._arch_cache[item_id] = (prec_arch, gameplay_hours)
+
+            prec_arch, gameplay_hours = self._arch_cache[item_id]
+            if starter_kit_eligible:
                 prec_arch = "Starter Kit Choice — Instant (0g)"
                 gameplay_hours = 0.0
 
@@ -251,8 +318,8 @@ class AccountRanker:
             rankings.append(LegendaryRankingItem(
                 gw2_id=item_id,
                 name=name,
-                item_type="Legendary",
-                subtype=leg.get("weaponType"),
+                item_type=leg.get("itemType") or "Legendary",
+                subtype=leg.get("subtype") or leg.get("weaponType"),
                 chat_code=leg.get("chatCode"),
                 is_already_unlocked=False,
                 readiness_pct=round(effective_readiness, 1),

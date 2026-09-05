@@ -4,6 +4,8 @@
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix slot: <https://priory.gw2/ref/slot/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 item:43775 a priory:CraftingMaterial ;
@@ -19,72 +21,123 @@ item:74155 a owl:NamedIndividual,
     rdfs:label "Ad Infinitum"@en ;
     priory:gw2Id 74155 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Backpack ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_ad_infinitum .
+    priory:producedBy recipe:forge_ad_infinitum ;
+    skos:altLabel "backpack"@en,
+        "back item"@en,
+        "backpiece"@en,
+        "legendary backpack"@en,
+        "fractal backpiece"@en,
+        "ad infinitum"@en .
 
 item:77474 a owl:NamedIndividual,
         priory:LegendaryBackpack ;
     rdfs:label "The Ascension"@en ;
     priory:gw2Id 77474 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Backpack ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_the_ascension .
+    priory:producedBy recipe:forge_the_ascension ;
+    skos:altLabel "backpack"@en,
+        "back item"@en,
+        "backpiece"@en,
+        "legendary backpack"@en,
+        "pvp backpiece"@en,
+        "the ascension"@en .
 
 item:81462 a owl:NamedIndividual,
         priory:LegendaryBackpack ;
     rdfs:label "Warbringer"@en ;
     priory:gw2Id 81462 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Backpack ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_warbringer .
+    priory:producedBy recipe:forge_warbringer ;
+    skos:altLabel "backpack"@en,
+        "back item"@en,
+        "backpiece"@en,
+        "legendary backpack"@en,
+        "wvw backpiece"@en,
+        "warbringer"@en .
 
 item:81908 a owl:NamedIndividual,
         priory:LegendaryTrinket ;
     rdfs:label "Aurora"@en ;
     priory:gw2Id 81908 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Accessory ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_aurora .
+    priory:producedBy recipe:forge_aurora ;
+    skos:altLabel "accessory"@en,
+        "accessories"@en,
+        "legendary accessory"@en,
+        "lws3 accessory"@en,
+        "aurora"@en .
 
 item:91048 a owl:NamedIndividual,
         priory:LegendaryTrinket ;
     rdfs:label "Vision"@en ;
     priory:gw2Id 91048 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Accessory ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_vision .
+    priory:producedBy recipe:forge_vision ;
+    skos:altLabel "accessory"@en,
+        "accessories"@en,
+        "legendary accessory"@en,
+        "lws4 accessory"@en,
+        "vision"@en .
 
 item:91234 a owl:NamedIndividual,
         priory:LegendaryTrinket ;
     rdfs:label "Coalescence"@en ;
     priory:gw2Id 91234 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Ring ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_coalescence .
+    priory:producedBy recipe:forge_coalescence ;
+    skos:altLabel "ring"@en,
+        "rings"@en,
+        "legendary ring"@en,
+        "raid ring"@en,
+        "coalescence"@en .
 
 item:92991 a owl:NamedIndividual,
         priory:LegendaryTrinket ;
     rdfs:label "Transcendence"@en ;
     priory:gw2Id 92991 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Amulet ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_transcendence .
+    priory:producedBy recipe:forge_transcendence ;
+    skos:altLabel "amulet"@en,
+        "amulets"@en,
+        "legendary amulet"@en,
+        "pvp amulet"@en,
+        "transcendence"@en .
 
 item:93105 a owl:NamedIndividual,
         priory:LegendaryTrinket ;
     rdfs:label "Conflux"@en ;
     priory:gw2Id 93105 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Ring ;
     priory:armoryMaxCap 2 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_conflux .
+    priory:producedBy recipe:forge_conflux ;
+    skos:altLabel "ring"@en,
+        "rings"@en,
+        "legendary ring"@en,
+        "wvw ring"@en,
+        "conflux"@en .
 
 item:95380 a owl:NamedIndividual,
         priory:LegendaryTrinket,
@@ -93,9 +146,16 @@ item:95380 a owl:NamedIndividual,
     priory:metaAchievement "Seasons of the Dragons"@en ;
     priory:gw2Id 95380 ;
     priory:hasRarity rarity:Legendary ;
+    priory:hasEquipmentSlot slot:Amulet ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
-    priory:acquiredVia priory:Path_SeasonsOfTheDragons .
+    priory:acquiredVia priory:Path_SeasonsOfTheDragons ;
+    skos:altLabel "amulet"@en,
+        "amulets"@en,
+        "legendary amulet"@en,
+        "return to amulet"@en,
+        "seasons of the dragons"@en,
+        "prismatic champion's regalia"@en .
 
 priory:Path_SeasonsOfTheDragons a priory:AchievementCollectionPath, priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Complete Seasons of the Dragons Meta-Achievement"@en .

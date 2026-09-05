@@ -92,7 +92,8 @@ class PrioryChatSession:
                 time_budget_minutes=resolved_goal.intent.time_budget_minutes,
                 optimal_plan=top_optimal_plan,
                 target_quantity=resolved_goal.target_quantity,
-                account_state=self.account_state
+                account_state=self.account_state,
+                category_filter=resolved_goal.category_filter
             )
             self.history.append({"role": "user", "content": user_prompt})
             self.history.append({"role": "assistant", "content": guide.executive_summary})

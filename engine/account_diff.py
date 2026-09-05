@@ -680,7 +680,7 @@ class AccountState:
             self.bank.get(item_id, 0) +
             self.inventory.get(item_id, 0) +
             char_bags_count +
-            self.legendary_armory.get(item_id, 0)
+            self.armory_item_count(item_id)
         )
 
     def get_item_count(self, item_id: int) -> int:
@@ -830,9 +830,39 @@ class AccountState:
         """Returns True if the account owns Gift of Battle (item 19678)."""
         return self.total_item_count(19678) > 0
 
+    def armory_item_count(self, item_id: int) -> int:
+        """Safe accessor for legendary armory item count across dict, set, list, or tuple structures."""
+        armory = self.legendary_armory
+        if not armory:
+            return 0
+        if isinstance(armory, dict):
+            val = armory.get(item_id, 0)
+            if not val:
+                val = armory.get(str(item_id), 0)
+            try:
+                return int(val)
+            except (ValueError, TypeError):
+                return 1 if val else 0
+        if isinstance(armory, set):
+            return 1 if (item_id in armory or str(item_id) in armory) else 0
+        if isinstance(armory, (list, tuple)):
+            count = 0
+            if item_id in armory or str(item_id) in armory:
+                count += armory.count(item_id) + armory.count(str(item_id))
+            for elem in armory:
+                if isinstance(elem, dict):
+                    eid = elem.get("id")
+                    if eid == item_id or eid == str(item_id):
+                        try:
+                            count += int(elem.get("count", 1))
+                        except (ValueError, TypeError):
+                            count += 1
+            return count
+        return 0
+
     def has_legendary_unlocked(self, item_id: int) -> bool:
-        """Returns True if the item is unlocked in the Legendary Armory."""
-        return self.legendary_armory.get(item_id, 0) > 0
+        """Returns True if the item is unlocked in the Legendary Armory (safe for dict, set, and list)."""
+        return self.armory_item_count(item_id) > 0
 
     def wizards_vault_remaining(self, item_id: int) -> Optional[int]:
         """Returns the number of remaining purchases for a Wizard's Vault item, or None if not listed."""
@@ -1120,6 +1150,19 @@ class ItemRequirementNode:
     is_account_bound: bool = False
     sub_requirements: List[ItemRequirementNode] = field(default_factory=list)
 
+    def clone(self) -> ItemRequirementNode:
+        """Deep copy of the requirement node hierarchy."""
+        return ItemRequirementNode(
+            item_id=self.item_id,
+            label=self.label,
+            required_quantity=self.required_quantity,
+            owned_quantity=self.owned_quantity,
+            missing_quantity=self.missing_quantity,
+            is_satisfied=self.is_satisfied,
+            is_account_bound=self.is_account_bound,
+            sub_requirements=[child.clone() for child in self.sub_requirements]
+        )
+
 
 @dataclass
 class AccountDiffReport:
@@ -1164,6 +1207,40 @@ class AccountDiffEngine:
 
     def __init__(self, graph_store: Optional[PrioryGraphStore] = None):
         self.store = graph_store
+        # Memoization cache for intermediate sub-recipe DAG diffs across multi-item evaluations:
+        # Key: (item_id, multiplier, id(account))
+        # Value: (ItemRequirementNode, summary_missing, missing_currencies, used_recipes)
+        self._sub_tree_memo: Dict[Tuple[int, int, int], Tuple[ItemRequirementNode, Dict[str, int], Dict[str, int], Set[str]]] = {}
+
+        # Static graph metadata caches to eliminate redundant SPARQL evaluations
+        self._item_meta_cache: Dict[int, Optional[Dict[str, Any]]] = {}
+        self._unpackable_containers_cache: Dict[int, List[Tuple[int, str]]] = {}
+        self._tradable_precursor_cache: Dict[int, bool] = {}
+        self._recipes_cache: Dict[int, List[Dict[str, Any]]] = {}
+        self._recipe_ingredients_cache: Dict[str, List[Dict[str, Any]]] = {}
+        self._vendor_exchange_cache: Dict[int, Optional[Dict[str, Any]]] = {}
+        self._armory_cap_cache: Dict[int, int] = {}
+        self._achievement_reqs_cache: Dict[int, List[Dict[str, Any]]] = {}
+        self._mastery_reqs_cache: Dict[int, List[Dict[str, Any]]] = {}
+        self._discipline_recipes_cache: Optional[List[Dict[str, Any]]] = None
+
+    def clear_sub_tree_cache(self) -> None:
+        """Clears the memoized sub-tree cache across multi-item evaluations."""
+        self._sub_tree_memo.clear()
+
+    def clear_all_caches(self) -> None:
+        """Clears both sub-tree memoization and static graph caches."""
+        self._sub_tree_memo.clear()
+        self._item_meta_cache.clear()
+        self._unpackable_containers_cache.clear()
+        self._tradable_precursor_cache.clear()
+        self._recipes_cache.clear()
+        self._recipe_ingredients_cache.clear()
+        self._vendor_exchange_cache.clear()
+        self._armory_cap_cache.clear()
+        self._achievement_reqs_cache.clear()
+        self._mastery_reqs_cache.clear()
+        self._discipline_recipes_cache = None
 
     def get_available_purchasing_power(self, entity_iri_or_id: Any, account_state: AccountState) -> int:
         """Substrate-agnostic balance resolver querying AccountWalletScalar vs ContainerizedToken in RDF graph.
@@ -1326,32 +1403,38 @@ class AccountDiffEngine:
         is_acquisition_query: bool = False
     ) -> AccountDiffReport:
         """Recursively parses crafting DAG and computes account missing delta."""
-        item_meta = self.store.get_item_by_id(goal_item_id)
+        if goal_item_id not in self._item_meta_cache:
+            self._item_meta_cache[goal_item_id] = self.store.get_item_by_id(goal_item_id) if self.store else None
+        item_meta = self._item_meta_cache[goal_item_id]
         goal_name = item_meta["label"] if item_meta else f"Item {goal_item_id}"
 
         # 1. Armory Max Cap & Saturation Check
-        cap_query = """
-        SELECT ?cap WHERE {
-            ?item priory:gw2Id ?gw2Id .
-            { ?item priory:armoryMaxCap ?cap } UNION { ?item priory:maxArmoryCapacity ?cap }
-        } LIMIT 1
-        """
-        cap_res = self.store.query(cap_query, init_bindings={"gw2Id": Literal(goal_item_id)})
-        armory_max_cap = int(cap_res[0]["cap"]) if cap_res else 1
-        armory_owned = account.legendary_armory.get(goal_item_id, 0)
+        if goal_item_id not in self._armory_cap_cache:
+            cap_query = """
+            SELECT ?cap WHERE {
+                ?item priory:gw2Id ?gw2Id .
+                { ?item priory:armoryMaxCap ?cap } UNION { ?item priory:maxArmoryCapacity ?cap }
+            } LIMIT 1
+            """
+            cap_res = self.store.query(cap_query, init_bindings={"gw2Id": Literal(goal_item_id)}) if self.store else []
+            self._armory_cap_cache[goal_item_id] = int(cap_res[0]["cap"]) if cap_res else 1
+        armory_max_cap = self._armory_cap_cache[goal_item_id]
+        armory_owned = account.armory_item_count(goal_item_id)
         is_saturated = armory_owned >= armory_max_cap
 
         # 2. Achievement Prerequisites Check
-        ach_query = """
-        SELECT ?ach ?achId ?achLabel ?achDef WHERE {
-            ?item priory:gw2Id ?gw2Id ;
-                  priory:requiresAchievement ?ach .
-            ?ach priory:achievementId ?achId .
-            OPTIONAL { ?ach rdfs:label ?achLabel }
-            OPTIONAL { ?ach skos:definition ?achDef }
-        }
-        """
-        ach_res = self.store.query(ach_query, init_bindings={"gw2Id": Literal(goal_item_id)})
+        if goal_item_id not in self._achievement_reqs_cache:
+            ach_query = """
+            SELECT ?ach ?achId ?achLabel ?achDef WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      priory:requiresAchievement ?ach .
+                ?ach priory:achievementId ?achId .
+                OPTIONAL { ?ach rdfs:label ?achLabel }
+                OPTIONAL { ?ach skos:definition ?achDef }
+            }
+            """
+            self._achievement_reqs_cache[goal_item_id] = self.store.query(ach_query, init_bindings={"gw2Id": Literal(goal_item_id)}) if self.store else []
+        ach_res = self._achievement_reqs_cache[goal_item_id]
         missing_achievements = []
         for row in ach_res:
             a_id = int(row["achId"])
@@ -1363,17 +1446,19 @@ class AccountDiffEngine:
                 })
 
         # 3. Mastery Prerequisites Check
-        mast_query = """
-        SELECT ?track ?trackId ?trackLabel ?lvl ?mastName WHERE {
-            ?item priory:gw2Id ?gw2Id ;
-                  priory:requiresMasteryTrack ?track .
-            ?track priory:masteryId ?trackId .
-            OPTIONAL { ?item priory:requiredMasteryLevel ?lvl }
-            OPTIONAL { ?item priory:masteryName ?mastName }
-            OPTIONAL { ?track rdfs:label ?trackLabel }
-        }
-        """
-        mast_res = self.store.query(mast_query, init_bindings={"gw2Id": Literal(goal_item_id)})
+        if goal_item_id not in self._mastery_reqs_cache:
+            mast_query = """
+            SELECT ?track ?trackId ?trackLabel ?lvl ?mastName WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      priory:requiresMasteryTrack ?track .
+                ?track priory:masteryId ?trackId .
+                OPTIONAL { ?item priory:requiredMasteryLevel ?lvl }
+                OPTIONAL { ?item priory:masteryName ?mastName }
+                OPTIONAL { ?track rdfs:label ?trackLabel }
+            }
+            """
+            self._mastery_reqs_cache[goal_item_id] = self.store.query(mast_query, init_bindings={"gw2Id": Literal(goal_item_id)}) if self.store else []
+        mast_res = self._mastery_reqs_cache[goal_item_id]
         missing_masteries = []
         for row in mast_res:
             t_id = int(row["trackId"])
@@ -1457,19 +1542,26 @@ class AccountDiffEngine:
 
     def is_unpackable_from_account(self, item_id: int, account: AccountState) -> Optional[str]:
         """Checks if an item can be obtained from an owned container (e.g. Starter Kit in bank)."""
-        container_query = """
-        SELECT ?containerId ?containerLabel WHERE {
-            ?container priory:unpacksInto ?item ;
-                       priory:gw2Id ?containerId .
-            ?item priory:gw2Id ?gw2Id .
-            OPTIONAL { ?container rdfs:label ?containerLabel }
-        }
-        """
-        c_res = self.store.query(container_query, init_bindings={"gw2Id": Literal(item_id)})
-        for c_row in c_res:
-            c_id = int(c_row["containerId"])
+        if not self.store:
+            return None
+        if item_id not in self._unpackable_containers_cache:
+            container_query = """
+            SELECT ?containerId ?containerLabel WHERE {
+                ?container priory:unpacksInto ?item ;
+                           priory:gw2Id ?containerId .
+                ?item priory:gw2Id ?gw2Id .
+                OPTIONAL { ?container rdfs:label ?containerLabel }
+            }
+            """
+            c_res = self.store.query(container_query, init_bindings={"gw2Id": Literal(item_id)})
+            containers = []
+            for c_row in c_res:
+                containers.append((int(c_row["containerId"]), str(c_row.get("containerLabel", "Choice Chest in Bank"))))
+            self._unpackable_containers_cache[item_id] = containers
+
+        for c_id, c_label in self._unpackable_containers_cache[item_id]:
             if account.total_item_count(c_id) > 0:
-                return c_row.get("containerLabel", "Choice Chest in Bank")
+                return c_label
         return None
 
     def _resolve_node(
@@ -1486,7 +1578,29 @@ class AccountDiffEngine:
         if visited is None:
             visited = set()
 
-        item_meta = self.store.get_item_by_id(item_id)
+        # Check sub-tree memoization:
+        # Identical shared sub-recipes (Mystic Clovers, Gift of Fortune, Gift of Magic, Gift of Might, Gift of Mastery, etc.)
+        # are not re-traversed redundantly across items in multi-item evaluations.
+        can_memoize = (goal_item_id is not None and item_id != goal_item_id)
+        cache_key = (item_id, multiplier, id(account))
+
+        if can_memoize and cache_key in self._sub_tree_memo:
+            c_node, c_mats, c_currs, c_recs = self._sub_tree_memo[cache_key]
+            for k, v in c_mats.items():
+                summary_missing[k] = summary_missing.get(k, 0) + v
+            for k, v in c_currs.items():
+                missing_currencies[k] = missing_currencies.get(k, 0) + v
+            if used_recipes is not None:
+                used_recipes.update(c_recs)
+            return c_node.clone()
+
+        local_mats: Dict[str, int] = {}
+        local_currs: Dict[str, int] = {}
+        local_recs: Set[str] = set()
+
+        if item_id not in self._item_meta_cache:
+            self._item_meta_cache[item_id] = self.store.get_item_by_id(item_id) if self.store else None
+        item_meta = self._item_meta_cache[item_id]
         label = item_meta["label"] if item_meta else f"Item {item_id}"
         is_bound = item_meta.get("isAccountBound", True) if item_meta else True
 
@@ -1515,41 +1629,46 @@ class AccountDiffEngine:
                 node.is_satisfied = True
                 node.missing_quantity = 0
                 node.label = f"{label} (Unpackable from {container_name})"
+                if can_memoize:
+                    self._sub_tree_memo[cache_key] = (node.clone(), {}, {}, set())
                 return node
 
             # Check 0.5: Tradable Precursor (e.g. Dusk, Dawn for Gen 1 legendaries - treated as leaf component unless directly queried)
             is_tradable_precursor = False
             if goal_item_id is not None and item_id != goal_item_id:
-                tp_query = """
-                SELECT ?item WHERE {
-                    ?item priory:gw2Id ?gw2Id .
-                    { ?item priory:hasPrecursorType priory:TradablePrecursor }
-                    UNION
-                    { ?item a priory:PrecursorWeapon ; priory:isAccountBound false }
-                    UNION
-                    { ?item priory:hasSubstituteSource [ a priory:TradingPostPurchasePath ] }
-                } LIMIT 1
-                """
-                tp_res = self.store.query(tp_query, init_bindings={"gw2Id": Literal(item_id)})
-                if tp_res:
-                    is_tradable_precursor = True
+                if item_id not in self._tradable_precursor_cache:
+                    tp_query = """
+                    SELECT ?item WHERE {
+                        ?item priory:gw2Id ?gw2Id .
+                        { ?item priory:hasPrecursorType priory:TradablePrecursor }
+                        UNION
+                        { ?item a priory:PrecursorWeapon ; priory:isAccountBound false }
+                        UNION
+                        { ?item priory:hasSubstituteSource [ a priory:TradingPostPurchasePath ] }
+                    } LIMIT 1
+                    """
+                    tp_res = self.store.query(tp_query, init_bindings={"gw2Id": Literal(item_id)}) if self.store else []
+                    self._tradable_precursor_cache[item_id] = bool(tp_res)
+                is_tradable_precursor = self._tradable_precursor_cache[item_id]
 
-            if not is_tradable_precursor:
+            if not is_tradable_precursor and self.store is not None:
                 # Check 1: Direct crafting recipes producing this item
-                rec_query = """
-                SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
-                    ?item priory:gw2Id ?gw2Id ;
-                          priory:producedBy ?recipe .
-                    OPTIONAL { ?recipe priory:requiresDiscipline ?discipline }
-                    OPTIONAL { 
-                        ?recipe priory:requiredRating ?requiredRating 
+                if item_id not in self._recipes_cache:
+                    rec_query = """
+                    SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
+                        ?item priory:gw2Id ?gw2Id ;
+                              priory:producedBy ?recipe .
+                        OPTIONAL { ?recipe priory:requiresDiscipline ?discipline }
+                        OPTIONAL { 
+                            ?recipe priory:requiredRating ?requiredRating 
+                        }
+                        OPTIONAL { 
+                            ?recipe priory:requiresRating ?requiredRating 
+                        }
                     }
-                    OPTIONAL { 
-                        ?recipe priory:requiresRating ?requiredRating 
-                    }
-                }
-                """
-                recipes = self.store.query(rec_query, init_bindings={"gw2Id": Literal(item_id)})
+                    """
+                    self._recipes_cache[item_id] = self.store.query(rec_query, init_bindings={"gw2Id": Literal(item_id)})
+                recipes = self._recipes_cache[item_id]
 
                 if recipes:
                     # Multi-discipline preference: Select recipe matching player's active high-level discipline
@@ -1566,99 +1685,134 @@ class AccountDiffEngine:
                     if not selected_recipe_str:
                         selected_recipe_str = recipes[0]["recipe"]
 
+                    local_recs.add(selected_recipe_str)
                     if used_recipes is not None:
                         used_recipes.add(selected_recipe_str)
 
                     # Fetch ingredients for the selected recipe
-                    ing_query = """
-                    SELECT ?ingredientId (SAMPLE(?ingredientLabel) AS ?ingredientLabel) (SAMPLE(?quantity) AS ?quantity) WHERE {
-                        ?recipe priory:hasIngredientRequirement ?req .
-                        ?req priory:requiresItem ?ingredient ;
-                             priory:requiredQuantity ?quantity .
-                        ?ingredient priory:gw2Id ?ingredientId .
-                        OPTIONAL { ?ingredient rdfs:label ?ingredientLabel }
-                    }
-                    GROUP BY ?ingredientId ?req
-                    """
-                    ingredients = self.store.query(ing_query, init_bindings={"recipe": URIRef(selected_recipe_str)})
+                    if selected_recipe_str not in self._recipe_ingredients_cache:
+                        ing_query = """
+                        SELECT ?ingredientId (SAMPLE(?ingredientLabel) AS ?ingredientLabel) (SAMPLE(?quantity) AS ?quantity) WHERE {
+                            ?recipe priory:hasIngredientRequirement ?req .
+                            ?req priory:requiresItem ?ingredient ;
+                                 priory:requiredQuantity ?quantity .
+                            ?ingredient priory:gw2Id ?ingredientId .
+                            OPTIONAL { ?ingredient rdfs:label ?ingredientLabel }
+                        }
+                        GROUP BY ?ingredientId ?req
+                        """
+                        self._recipe_ingredients_cache[selected_recipe_str] = self.store.query(
+                            ing_query, init_bindings={"recipe": URIRef(selected_recipe_str)}
+                        )
+                    ingredients = self._recipe_ingredients_cache[selected_recipe_str]
+
                     if ingredients:
                         for ing in ingredients:
                             ing_id = int(ing["ingredientId"])
                             ing_qty = int(ing["quantity"]) * missing
                             sub_node = self._resolve_node(
-                                ing_id, ing_qty, account, summary_missing, missing_currencies, used_recipes, branch_visited, goal_item_id
+                                ing_id, ing_qty, account, local_mats, local_currs, local_recs, branch_visited, goal_item_id
                             )
                             node.sub_requirements.append(sub_node)
+
+                        for k, v in local_mats.items():
+                            summary_missing[k] = summary_missing.get(k, 0) + v
+                        for k, v in local_currs.items():
+                            missing_currencies[k] = missing_currencies.get(k, 0) + v
+                        if used_recipes is not None and local_recs:
+                            used_recipes.update(local_recs)
+
+                        if can_memoize:
+                            self._sub_tree_memo[cache_key] = (node.clone(), dict(local_mats), dict(local_currs), set(local_recs))
+
                         return node
 
             # Check 2: Vendor Exchange with Currency (e.g. Gift of Craftsmanship -> Provisioner Tokens, Gift of Ascalon -> Tales of Dungeon Delving)
-            vendor_query = """
-            SELECT ?curr ?currNotation ?currGw2Id ?currLabel ?requiredQty WHERE {
-                ?item priory:gw2Id ?gw2Id ;
-                      priory:acquiredVia ?path .
-                ?path a priory:VendorExchangePath ;
-                      priory:requiresCurrency ?curr ;
-                      priory:requiredQuantity ?requiredQty .
-                OPTIONAL { ?curr skos:notation ?currNotation }
-                OPTIONAL { ?curr priory:gw2Id ?currGw2Id }
-                OPTIONAL { ?curr rdfs:label ?currLabel }
-                OPTIONAL { ?curr skos:prefLabel ?currLabel }
-            } LIMIT 1
-            """
-            v_res = self.store.query(vendor_query, init_bindings={"gw2Id": Literal(item_id)})
-            if v_res:
-                v_info = v_res[0]
-                curr_id = 0
-                if v_info.get("currGw2Id") is not None:
-                    try:
-                        curr_id = int(v_info["currGw2Id"])
-                    except (ValueError, TypeError):
-                        pass
-                if not curr_id and v_info.get("currNotation") is not None:
-                    try:
-                        curr_id = int(v_info["currNotation"])
-                    except (ValueError, TypeError):
-                        pass
-                if not curr_id and v_info.get("curr") is not None:
-                    uri_str = str(v_info["curr"])
-                    last_part = uri_str.rstrip("/").split("/")[-1].split("#")[-1]
-                    if last_part.isdigit():
-                        curr_id = int(last_part)
+            if self.store is not None:
+                if item_id not in self._vendor_exchange_cache:
+                    vendor_query = """
+                    SELECT ?curr ?currNotation ?currGw2Id ?currLabel ?requiredQty WHERE {
+                        ?item priory:gw2Id ?gw2Id ;
+                              priory:acquiredVia ?path .
+                        ?path a priory:VendorExchangePath ;
+                              priory:requiresCurrency ?curr ;
+                              priory:requiredQuantity ?requiredQty .
+                        OPTIONAL { ?curr skos:notation ?currNotation }
+                        OPTIONAL { ?curr priory:gw2Id ?currGw2Id }
+                        OPTIONAL { ?curr rdfs:label ?currLabel }
+                        OPTIONAL { ?curr skos:prefLabel ?currLabel }
+                    } LIMIT 1
+                    """
+                    v_res = self.store.query(vendor_query, init_bindings={"gw2Id": Literal(item_id)})
+                    self._vendor_exchange_cache[item_id] = v_res[0] if v_res else None
 
-                curr_label = v_info.get("currLabel", "Currency")
-                total_curr_needed = int(v_info.get("requiredQty", 1)) * missing
-                owned_curr = account.total_currency_count(curr_id) if curr_id > 0 else 0
+                v_info = self._vendor_exchange_cache[item_id]
+                if v_info:
+                    curr_id = 0
+                    if v_info.get("currGw2Id") is not None:
+                        try:
+                            curr_id = int(v_info["currGw2Id"])
+                        except (ValueError, TypeError):
+                            pass
+                    if not curr_id and v_info.get("currNotation") is not None:
+                        try:
+                            curr_id = int(v_info["currNotation"])
+                        except (ValueError, TypeError):
+                            pass
+                    if not curr_id and v_info.get("curr") is not None:
+                        uri_str = str(v_info["curr"])
+                        last_part = uri_str.rstrip("/").split("/")[-1].split("#")[-1]
+                        if last_part.isdigit():
+                            curr_id = int(last_part)
 
-                if owned_curr >= total_curr_needed:
-                    node.is_satisfied = True
-                    node.missing_quantity = 0
-                    return node
-                else:
-                    curr_missing = total_curr_needed - owned_curr
-                    missing_currencies[str(curr_label)] = missing_currencies.get(str(curr_label), 0) + curr_missing
-                    summary_missing[label] = summary_missing.get(label, 0) + missing
-                    return node
+                    curr_label = v_info.get("currLabel", "Currency")
+                    total_curr_needed = int(v_info.get("requiredQty", 1)) * missing
+                    owned_curr = account.total_currency_count(curr_id) if curr_id > 0 else 0
+
+                    if owned_curr >= total_curr_needed:
+                        node.is_satisfied = True
+                        node.missing_quantity = 0
+                        if can_memoize:
+                            self._sub_tree_memo[cache_key] = (node.clone(), {}, {}, set())
+                        return node
+                    else:
+                        curr_missing = total_curr_needed - owned_curr
+                        local_currs[str(curr_label)] = curr_missing
+                        local_mats[label] = missing
+                        missing_currencies[str(curr_label)] = missing_currencies.get(str(curr_label), 0) + curr_missing
+                        summary_missing[label] = summary_missing.get(label, 0) + missing
+
+                        if can_memoize:
+                            self._sub_tree_memo[cache_key] = (node.clone(), dict(local_mats), dict(local_currs), set())
+                        return node
 
             # Check 3: Leaf crafting material
+            local_mats[label] = missing
             summary_missing[label] = summary_missing.get(label, 0) + missing
+
+            if can_memoize:
+                self._sub_tree_memo[cache_key] = (node.clone(), dict(local_mats), {}, set())
 
         return node
 
     def _evaluate_discipline_requirements(self, used_recipes: Set[str], account: AccountState) -> List[Dict[str, Any]]:
         """Determines if the account lacks required crafting disciplines for used recipes."""
         missing = []
-        if not used_recipes:
+        if not used_recipes or not self.store:
             return missing
 
-        disc_query = """
-        SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
-            ?recipe a priory:DisciplineRecipe ;
-                    priory:requiresDiscipline ?discipline .
-            OPTIONAL { ?recipe priory:requiredRating ?requiredRating }
-            OPTIONAL { ?recipe priory:requiresRating ?requiredRating }
-        }
-        """
-        for row in self.store.query(disc_query):
+        if self._discipline_recipes_cache is None:
+            disc_query = """
+            SELECT DISTINCT ?recipe ?discipline ?requiredRating WHERE {
+                ?recipe a priory:DisciplineRecipe ;
+                        priory:requiresDiscipline ?discipline .
+                OPTIONAL { ?recipe priory:requiredRating ?requiredRating }
+                OPTIONAL { ?recipe priory:requiresRating ?requiredRating }
+            }
+            """
+            self._discipline_recipes_cache = self.store.query(disc_query)
+
+        for row in self._discipline_recipes_cache:
             rec_uri = row["recipe"]
             if rec_uri in used_recipes:
                 disc_uri = row.get("discipline", "")

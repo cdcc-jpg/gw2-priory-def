@@ -43,32 +43,46 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         user_part = prompt.split("New user message:\n")[-1] if "New user message:\n" in prompt else prompt
         p_user = user_part.lower()
 
-        # Extract item name
-        # Extract goal item dynamically from natural language prompt
-        goal_item = "Twilight"
-        verb_match = re.search(r"(?:craft|make|forge|get|buy|obtain|build|target)\s+(?:a\s+|an\s+|the\s+)?(?:\d+\s+)?([A-Za-z0-9'\s]+?)(?:\s+in|\s+with|\s+and|\s+for|\s+from|[.?!,;]|$)", prompt, re.IGNORECASE)
-        if verb_match:
-            candidate = verb_match.group(1).strip()
-            candidate = re.sub(r"\b(tonight|today|now|please|asap|soon)\b", "", candidate, flags=re.I).strip()
-            if candidate:
-                if "sigil" in candidate.lower():
-                    goal_item = "Legendary Sigil" if "legendary" in candidate.lower() or "legendary" in p_lower else "Sigil"
-                elif "rune" in candidate.lower():
-                    goal_item = "Legendary Rune" if "legendary" in candidate.lower() or "legendary" in p_lower else "Rune"
-                else:
-                    goal_item = candidate
-        elif "sigil" in p_lower or "upgrades" in p_lower:
-            goal_item = "Legendary Sigil"
-        elif "dusk" in p_lower:
-            goal_item = "Dusk"
-        elif "clover" in p_lower or "mystic clover" in p_lower:
-            goal_item = "Mystic Clover"
+        # Extract category filter from new user message (preventing context contamination)
+        cat_filter = None
+        cat_tokens = [
+            "generation 1", "gen 1", "generation 2", "gen 2", "generation 3", "gen 3",
+            "aurene", "soto", "obsidian", "janthir",
+            "rings", "ring", "amulets", "amulet", "accessories", "accessory",
+            "trinkets", "trinket", "backpack", "back", "jewelry", "armor",
+            "upgrades", "upgrade", "spears", "spear"
+        ]
+        for term in cat_tokens:
+            if re.search(r"\b" + re.escape(term) + r"\b", p_user):
+                cat_filter = term
+                break
 
-        # Extract target quantity (e.g. "2 legendaries", "2 legendary sigils", "3 twilight", "2 sigils", "2 leggy upgrades")
+        plural_map = {
+            "rings": "ring",
+            "amulets": "amulet",
+            "accessories": "accessory",
+            "trinkets": "trinket",
+            "upgrades": "upgrade",
+            "spears": "spear",
+            "generation 1": "gen 1",
+            "generation 2": "gen 2",
+            "generation 3": "gen 3",
+        }
+        if cat_filter in plural_map:
+            cat_filter = plural_map[cat_filter]
+
+        # Extract target quantity (e.g. "2 legendaries", "which 2 legendaries", "fastest 2", "top 2 legendaries", "2 rings")
         target_qty = 1
-        qty_match = re.search(r"(\d+)\s*(?:legendaries|legendary|sigils?|twilight|dusk|clovers?|weapons?|items?|upgrades?|leggy)", p_lower)
+        qty_match = re.search(
+            r"\b(\d+)\s*(?:legendaries|legendary|sigils?|runes?|twilight|dusk|clovers?|weapons?|items?|upgrades?|leggy|rings?|amulets?|accessories?|trinkets?|backpacks?|spears?)\b",
+            p_lower
+        )
         if qty_match:
             target_qty = int(qty_match.group(1))
+        else:
+            count_match = re.search(r"\b(?:which|top|fastest|quickest|easiest|closest|best)\s+(\d+)\b", p_lower)
+            if count_match:
+                target_qty = int(count_match.group(1))
 
         # Extract time budget (supports decimal hours like 1.5 hours -> 90 minutes)
         time_budget = 120
@@ -100,24 +114,63 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if gold_match:
             gold_budget = int(gold_match.group(1))
 
-        # Extract goal item name
+        # Specific item extraction
+        specific_item_matches = [
+            ("legendary sigil", "Legendary Sigil"),
+            ("legendary rune", "Legendary Rune"),
+            ("legendary relic", "Legendary Relic"),
+            ("the moot", "The Moot"),
+            ("the juggernaut", "The Juggernaut"),
+            ("chuka and champawat", "Chuka and Champawat"),
+            ("prismatic champion's regalia", "Prismatic Champion's Regalia"),
+            ("ad infinitum", "Ad Infinitum"),
+            ("the ascension", "The Ascension"),
+            ("klobjarne harvester", "Klobjarne Harvester"),
+            ("kamohoali'i kotaki", "Kamohoali'i Kotaki"),
+            ("twilight", "Twilight"),
+            ("sunrise", "Sunrise"),
+            ("eternity", "Eternity"),
+            ("kudzu", "Kudzu"),
+            ("bolt", "Bolt"),
+            ("incinerator", "Incinerator"),
+            ("nevermore", "Nevermore"),
+            ("astralaria", "Astralaria"),
+            ("hope", "HOPE"),
+            ("conflux", "Conflux"),
+            ("coalescence", "Coalescence"),
+            ("transcendence", "Transcendence"),
+            ("vision", "Vision"),
+            ("aurora", "Aurora"),
+            ("warbringer", "Warbringer"),
+            ("aurene's weight", "Aurene's Weight"),
+            ("aurene's bite", "Aurene's Bite"),
+            ("aurene's argument", "Aurene's Argument"),
+            ("aurene's claw", "Aurene's Claw"),
+            ("aurene's fang", "Aurene's Fang"),
+            ("dusk", "Dusk"),
+            ("mystic clover", "Mystic Clover"),
+            ("mystic coin", "Mystic Coin"),
+            ("ectoplasm", "Glob of Ectoplasm"),
+            ("provisioner token", "Provisioner Token"),
+        ]
         goal_item = None
-        for item in ["twilight", "sunrise", "eternity", "kudzu", "the moot", "the juggernaut", "bolt", "incinerator",
-                     "legendary sigil", "legendary rune", "sigil", "rune", "conflux", "coalescence", "ad infinitum", "vision", "aurora",
-                     "aurene's weight", "aurene's bite", "aurene's argument", "aurene's claw", "aurene's fang",
-                     "nevermore", "astralaria", "hope", "chuka and champawat",
-                     "mystic clover", "mystic coin", "ectoplasm", "t6", "provisioner token"]:
-            if item in p_lower:
-                if item == "sigil":
-                    goal_item = "Legendary Sigil"
-                elif item == "rune":
-                    goal_item = "Legendary Rune"
-                else:
-                    goal_item = item.title()
+        has_specific_item = False
+        for pattern, canon_name in specific_item_matches:
+            if re.search(r"\b" + re.escape(pattern) + r"\b", p_lower):
+                goal_item = canon_name
+                has_specific_item = True
                 break
 
         if not goal_item:
-            goal_item = "Twilight"
+            if re.search(r"\bsigils?\b", p_lower):
+                goal_item = "Legendary Sigil"
+                has_specific_item = True
+            elif re.search(r"\brunes?\b", p_lower):
+                goal_item = "Legendary Rune"
+                has_specific_item = True
+            elif re.search(r"\bclovers?\b", p_lower):
+                goal_item = "Mystic Clover"
+                has_specific_item = True
 
         # Extract currency
         currency_name = None
@@ -176,10 +229,6 @@ class RuleBasedMockLLMClient(BaseLLMClient):
             "profitable to craft", "craft vs buy", "buy or craft",
             "cheaper to craft", "should i craft or buy", "should i buy or craft"
         ])
-        is_prerequisite = any(k in p_user for k in [
-            "prerequisite", "prerequisites", "mastery", "masteries",
-            "am i ready", "can i craft", "collection unlocked", "ready to craft"
-        ])
         is_opportunity_cost = any(k in p_user for k in [
             "best use of", "opportunity cost", "spend astral acclaim",
             "clovers or gold", "clover or gold", "how should i spend",
@@ -192,18 +241,62 @@ class RuleBasedMockLLMClient(BaseLLMClient):
             "what should i do in", "what to do in"
         ]) or ("what should i do" in p_user and any(t in p_user for t in ["tonight", "today", "mins", "minutes", "hour"]))
 
-        # Determine comparative vs specific vs acquisition goal
-        is_comparative = any(k in p_user for k in [
-            "closest", "which legendary", "what legendary", "rank all", "what should i craft",
-            "what to craft", "leaderboard", "rank", "how far", "how close", "where am i",
-            "what can i craft", "next legendary", "best legendary", "recommend"
+        # Slot and comparative detection
+        slot_terms = [
+            "ring", "rings", "amulet", "amulets", "accessory", "accessories",
+            "trinket", "trinkets", "backpack", "back", "jewelry", "armor",
+            "upgrade", "upgrades", "spear", "spears"
+        ]
+        has_slot_term = any(re.search(r"\b" + re.escape(w) + r"\b", p_user) for w in slot_terms)
+        has_action_or_rank = any(w in p_user for w in [
+            "craft", "get", "make", "closest", "rank", "which", "what", "can i", "recommend",
+            "top", "best", "fastest", "quickest", "easiest", "leaderboard", "how far", "how close"
         ])
+        is_slot_query = has_slot_term and has_action_or_rank and not has_specific_item
 
-        cat_filter = None
-        for term in ["gen 1", "generation 1", "gen 2", "generation 2", "gen 3", "generation 3", "aurene", "soto", "obsidian", "janthir", "armor", "trinket", "upgrade", "spear"]:
-            if term in p_lower:
-                cat_filter = term
-                break
+        has_count_comparative = (
+            bool(re.search(r"\b(?:which|what|top|fastest|quickest|easiest|closest|best)\s+\d+\b", p_user))
+            or bool(re.search(r"\b\d+\s+legendaries\b", p_user))
+            or bool(re.search(r"\b(?:which|what)\s+legendaries\b", p_user))
+        )
+        has_speed_qualifier = any(w in p_user for w in ["fastest", "quickest", "easiest"])
+        has_plural_legendaries = bool(re.search(r"\blegendaries\b", p_user))
+
+        comparative_phrases = [
+            "closest", "which legendary", "which legendaries", "what legendary", "what legendaries",
+            "rank all", "what should i craft", "what to craft", "leaderboard", "rank", "how far",
+            "how close", "where am i", "what can i craft", "next legendary", "best legendary",
+            "recommend", "fastest", "quickest", "can i quickly craft"
+        ]
+        has_comp_phrase = any(k in p_user for k in comparative_phrases)
+
+        is_comparative = (
+            (has_comp_phrase and not has_specific_item)
+            or (has_plural_legendaries and not has_specific_item)
+            or (has_count_comparative and not has_specific_item)
+            or is_slot_query
+            or (has_speed_qualifier and not has_specific_item and any(w in p_user for w in ["legendary", "legendaries", "craft", "make", "get", "item", "to craft"]))
+            or (cat_filter is not None and not has_specific_item)
+        )
+
+        # Fix is_prerequisite: prevent broad category queries from hijacking into PREREQUISITE_AUDIT
+        is_category_query = ((cat_filter is not None) or has_slot_term or has_plural_legendaries) and not has_specific_item
+
+        is_prerequisite = (
+            any(k in p_user for k in [
+                "prerequisite", "prerequisites", "mastery", "masteries",
+                "collection unlocked"
+            ])
+            or (any(k in p_user for k in ["am i ready", "ready to craft"]) and (has_specific_item or not is_category_query))
+            or ("can i craft" in p_user and has_specific_item and not is_category_query)
+        )
+        if is_category_query and not has_specific_item:
+            is_prerequisite = False
+
+        # DO NOT default goal_item to "Twilight" if query contains comparative, ranking, or category patterns
+        is_comp_or_cat = is_comparative or is_category_query
+        if not goal_item and not is_comp_or_cat:
+            goal_item = "Twilight"
 
         prefer_speed = any(w in p_lower for w in ["quick", "quickly", "fast", "fastest", "speed", "least effort", "instant", "soon"])
         prefer_cheap = any(w in p_lower for w in ["cheapest", "least gold", "cost effective", "cheap", "lowest cost", "save gold", "saving gold", "cheaper"])
@@ -222,14 +315,14 @@ class RuleBasedMockLLMClient(BaseLLMClient):
                 data["goal_type"] = "CURRENCY_OPPORTUNITY_COST"
             elif is_session:
                 data["goal_type"] = "SESSION_ITINERARY"
-            elif is_comparative or (cat_filter and not any(k in p_lower for k in ["twilight", "sigil", "rune", "aurene's", "bolt", "moot", "juggernaut", "kudzu", "sunrise", "eternity", "clover"])):
+            elif is_comparative or (cat_filter and not has_specific_item):
                 data["goal_type"] = "COMPARATIVE_RANKING"
             elif is_acquisition:
                 data["goal_type"] = "ACQUISITION_DISCOVERY"
             else:
                 data["goal_type"] = "SPECIFIC_ITEM"
         if "target_item_name" in fields:
-            data["target_item_name"] = None if (is_comparative or (is_session and not any(it in p_lower for it in ["twilight", "nevermore", "bolt", "sunrise", "eternity", "moot", "sigil"]))) else goal_item
+            data["target_item_name"] = None if ((is_comparative and not has_specific_item) or is_comp_or_cat or (is_session and not any(it in p_lower for it in ["twilight", "nevermore", "bolt", "sunrise", "eternity", "moot", "sigil"]))) else goal_item
         if "currency_name" in fields:
             data["currency_name"] = currency_name
         if "currency_id" in fields:
@@ -251,7 +344,7 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if "goal_item_query" in fields:
             data["goal_item_query"] = cat_filter or goal_item
         if "is_ranking_query" in fields:
-            data["is_ranking_query"] = is_comparative or (cat_filter is not None and goal_item == "Twilight")
+            data["is_ranking_query"] = is_comparative or is_comp_or_cat
         if "filter_category" in fields:
             data["filter_category"] = cat_filter
         if "target_quantity" in fields:
@@ -282,9 +375,30 @@ class GeminiLLMClient(BaseLLMClient):
             raise ValueError("GEMINI_API_KEY must be provided or set in environment.")
         self.model = model or os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
         self.fallback = RuleBasedMockLLMClient()
+        self.fallback_active = False
+        self.last_error = None
 
         from google import genai
         self.client = genai.Client(api_key=self.api_key)
+
+    def check_liveness(self) -> bool:
+        """Tests live provider connectivity with 1-token probe."""
+        if self.fallback_active:
+            return False
+        try:
+            from google.genai import types
+            config = types.GenerateContentConfig(max_output_tokens=1)
+            self.client.models.generate_content(
+                model=self.model,
+                contents="ping",
+                config=config,
+            )
+            self.fallback_active = False
+            return True
+        except Exception as e:
+            self.fallback_active = True
+            self.last_error = str(e)
+            return False
 
     def generate_structured(self, prompt: str, system_prompt: str, schema: Type[T]) -> T:
         from google.genai import types
@@ -300,8 +414,11 @@ class GeminiLLMClient(BaseLLMClient):
                 contents=prompt,
                 config=config,
             )
+            self.fallback_active = False
             return schema.model_validate_json(response.text)
         except Exception as e:
+            self.fallback_active = True
+            self.last_error = str(e)
             print(f"[Gemini API Warning] Structured generation error: {e}")
             return self.fallback.generate_structured(prompt, system_prompt, schema)
 
@@ -317,8 +434,11 @@ class GeminiLLMClient(BaseLLMClient):
                 contents=prompt,
                 config=config,
             )
+            self.fallback_active = False
             return response.text or ""
         except Exception as e:
+            self.fallback_active = True
+            self.last_error = str(e)
             print(f"[Gemini API Warning] Text generation error: {e}")
             return self.fallback.generate_text(prompt, system_prompt)
 
@@ -330,6 +450,8 @@ class LocalOllamaClient(BaseLLMClient):
         self.model_name = model_name
         self.host = host
         self.fallback = RuleBasedMockLLMClient()
+        self.fallback_active = False
+        self.last_error = None
 
     def generate_structured(self, prompt: str, system_prompt: str, schema: Type[T]) -> T:
         try:
@@ -341,15 +463,22 @@ class LocalOllamaClient(BaseLLMClient):
                 f"JSON Output:"
             )
             resp_text = self._post_generate(full_prompt, json_format=True)
+            self.fallback_active = False
             return schema.model_validate_json(resp_text)
-        except Exception:
+        except Exception as e:
+            self.fallback_active = True
+            self.last_error = str(e)
             return self.fallback.generate_structured(prompt, system_prompt, schema)
 
     def generate_text(self, prompt: str, system_prompt: str) -> str:
         try:
             full_prompt = f"{system_prompt}\n\nUser:\n{prompt}\n\nAssistant:"
-            return self._post_generate(full_prompt, json_format=False)
-        except Exception:
+            text = self._post_generate(full_prompt, json_format=False)
+            self.fallback_active = False
+            return text
+        except Exception as e:
+            self.fallback_active = True
+            self.last_error = str(e)
             return self.fallback.generate_text(prompt, system_prompt)
 
     def _post_generate(self, prompt: str, json_format: bool = False) -> str:

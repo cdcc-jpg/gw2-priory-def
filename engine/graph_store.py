@@ -74,6 +74,9 @@ class PrioryGraphStore:
         self.ref_repo_path = ref_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-ref")
         self.def_repo_path = def_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-def")
         self._loaded = False
+        self._prepared_queries: Dict[str, Any] = {}
+        self._item_cache: Dict[int, Optional[Dict[str, Any]]] = {}
+        self._direct_ingredients_cache: Dict[int, List[Dict[str, Any]]] = {}
 
         self._bind_namespaces()
 
@@ -135,7 +138,9 @@ class PrioryGraphStore:
 
     def query(self, sparql_str: str, init_bindings: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Executes a SPARQL query against the graph/dataset and returns list of dict results."""
-        q = prepareQuery(sparql_str, initNs=DEFAULT_NAMESPACES)
+        if sparql_str not in self._prepared_queries:
+            self._prepared_queries[sparql_str] = prepareQuery(sparql_str, initNs=DEFAULT_NAMESPACES)
+        q = self._prepared_queries[sparql_str]
         results = self.dataset.query(q, initBindings=init_bindings or {})
         
         output = []
@@ -154,6 +159,8 @@ class PrioryGraphStore:
 
     def get_item_by_id(self, gw2_id: int) -> Optional[Dict[str, Any]]:
         """Retrieves item metadata by GW2 API ID."""
+        if gw2_id in self._item_cache:
+            return self._item_cache[gw2_id]
         sparql = """
         SELECT DISTINCT ?item ?label ?rarity ?chatCode ?isAccountBound WHERE {
             ?item priory:gw2Id ?gw2Id ;
@@ -164,10 +171,14 @@ class PrioryGraphStore:
         } LIMIT 1
         """
         res = self.query(sparql, init_bindings={"gw2Id": Literal(gw2_id)})
-        return res[0] if res else None
+        meta = res[0] if res else None
+        self._item_cache[gw2_id] = meta
+        return meta
 
     def get_direct_recipe_ingredients(self, item_id: int) -> List[Dict[str, Any]]:
         """Retrieves direct ingredient requirements for an item's primary recipe."""
+        if item_id in self._direct_ingredients_cache:
+            return self._direct_ingredients_cache[item_id]
         sparql = """
         SELECT DISTINCT ?recipe ?recipeLabel ?ingredientId ?ingredientLabel ?quantity WHERE {
             ?item priory:gw2Id ?gw2Id ;
@@ -180,4 +191,6 @@ class PrioryGraphStore:
                         rdfs:label ?ingredientLabel .
         }
         """
-        return self.query(sparql, init_bindings={"gw2Id": Literal(item_id)})
+        res = self.query(sparql, init_bindings={"gw2Id": Literal(item_id)})
+        self._direct_ingredients_cache[item_id] = res
+        return res

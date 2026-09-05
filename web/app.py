@@ -108,17 +108,45 @@ def grimoire_3d():
 
 @app.route("/api/status", methods=["GET"])
 def api_status():
-    """Returns knowledge graph and LLM provider status."""
+    """Returns knowledge graph and LLM provider status, reporting live vs fallback mode."""
     store = get_or_create_store()
     orchestrator = get_or_create_orchestrator()
     account = get_live_account()
 
     llm = orchestrator.llm
-    if isinstance(llm, GeminiLLMClient):
-        provider_name = f"Google Gemini Live ({llm.model})"
+    is_fallback = False
+    fallback_reason = None
+
+    if isinstance(llm, RuleBasedMockLLMClient):
+        is_fallback = True
+        fallback_reason = "Operating on deterministic rule-based mock engine."
+        provider_name = "Rule-Based Deterministic Engine (Fallback)"
+    elif isinstance(llm, GeminiLLMClient):
+        if getattr(llm, "fallback_active", False):
+            is_fallback = True
+            fallback_reason = getattr(llm, "last_error", "API policy or quota limit")
+            provider_name = f"Google Gemini ({llm.model}) [Fallback Active]"
+        else:
+            if hasattr(llm, "check_liveness"):
+                is_live = llm.check_liveness()
+                if not is_live:
+                    is_fallback = True
+                    fallback_reason = getattr(llm, "last_error", "API policy or connectivity failed")
+                    provider_name = f"Google Gemini ({llm.model}) [Fallback Active]"
+                else:
+                    provider_name = f"Google Gemini Live ({llm.model})"
+            else:
+                provider_name = f"Google Gemini Live ({llm.model})"
     elif isinstance(llm, LocalOllamaClient):
-        provider_name = f"Local Ollama ({llm.model_name})"
+        if getattr(llm, "fallback_active", False):
+            is_fallback = True
+            fallback_reason = getattr(llm, "last_error", "Local Ollama server unreachable")
+            provider_name = f"Local Ollama ({llm.model_name}) [Fallback Active]"
+        else:
+            provider_name = f"Local Ollama ({llm.model_name})"
     else:
+        is_fallback = True
+        fallback_reason = "Unrecognized LLM client type."
         provider_name = "Rule-Based Deterministic Engine"
 
     gw2_key = os.getenv("GW2_API_KEY", "")
@@ -129,6 +157,9 @@ def api_status():
         "status": "ready",
         "triples_loaded": len(store.graph),
         "llm_provider": provider_name,
+        "is_fallback": is_fallback,
+        "llm_mode": "fallback" if is_fallback else "live",
+        "fallback_reason": fallback_reason,
         "api_key_configured": has_key,
         "api_key_masked": masked_key,
         "account_materials_count": len(account.materials),
@@ -172,6 +203,67 @@ def api_refresh_account():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@app.route("/api/session/history", methods=["GET"])
+def api_session_history():
+    """Returns recent session conversation history from SESSIONS for real-time monitoring and verification."""
+    session_id = request.args.get("session_id")
+    limit = int(request.args.get("limit", 20))
+
+    if session_id:
+        sess = SESSIONS.get(session_id)
+        if not sess:
+            return jsonify({
+                "success": True,
+                "session_id": session_id,
+                "history": [],
+                "turns_count": 0,
+                "message": f"Session '{session_id}' not found or no conversation history."
+            })
+
+        last_goal_dict = None
+        if sess.last_goal:
+            if hasattr(sess.last_goal, "model_dump"):
+                last_goal_dict = sess.last_goal.model_dump()
+            elif dataclasses.is_dataclass(sess.last_goal):
+                last_goal_dict = dataclasses.asdict(sess.last_goal)
+
+        return jsonify({
+            "success": True,
+            "session_id": session_id,
+            "history": sess.history[-limit:],
+            "turns_count": len(sess.history),
+            "last_goal": last_goal_dict,
+        })
+
+    # Return summary of all active sessions
+    sessions_summary = {}
+    for s_id, sess in SESSIONS.items():
+        last_goal_dict = None
+        if sess.last_goal:
+            if hasattr(sess.last_goal, "model_dump"):
+                last_goal_dict = sess.last_goal.model_dump()
+            elif dataclasses.is_dataclass(sess.last_goal):
+                last_goal_dict = dataclasses.asdict(sess.last_goal)
+        sessions_summary[s_id] = {
+            "turns_count": len(sess.history),
+            "recent_turns": sess.history[-limit:],
+            "last_goal": last_goal_dict,
+        }
+
+    default_history = []
+    if "default_user_session" in SESSIONS:
+        default_history = SESSIONS["default_user_session"].history[-limit:]
+    elif SESSIONS:
+        default_history = list(SESSIONS.values())[0].history[-limit:]
+
+    return jsonify({
+        "success": True,
+        "active_sessions_count": len(SESSIONS),
+        "history": default_history,
+        "sessions": sessions_summary,
+    })
+
+
 @app.route("/api/query", methods=["POST"])
 def api_query():
     """Processes a natural language query through the neuro-symbolic sandwich."""
@@ -181,6 +273,8 @@ def api_query():
 
     if not user_prompt:
         return jsonify({"error": "Empty query provided."}), 400
+
+    print(f"📥 [PRIORY WEB] Query: '{user_prompt}' | Session: {session_id}")
 
     orchestrator = get_or_create_orchestrator()
     account = get_live_account()
@@ -194,9 +288,27 @@ def api_query():
         # Process message with session context
         guide = session_obj.send_message(user_prompt)
 
+        last_goal = getattr(session_obj, "last_goal", None)
+        parsed_goal = (
+            getattr(last_goal, "resolved_item_name", None)
+            or getattr(last_goal, "category_filter", None)
+            or (getattr(last_goal.intent, "target_item_name", None) if last_goal and hasattr(last_goal, "intent") else None)
+            or guide.goal_name
+        )
+        goal_type = (
+            last_goal.goal_type.value
+            if last_goal and hasattr(last_goal, "goal_type") and hasattr(last_goal.goal_type, "value")
+            else str(getattr(last_goal, "goal_type", "UNKNOWN"))
+        )
+        target_quantity = getattr(last_goal, "target_quantity", getattr(guide, "target_quantity", 1))
+
+        print(f"🎯 [PRIORY PARSER] Goal: '{parsed_goal}' | Type: {goal_type} | Qty: {target_quantity}")
+        print(f"🔍 [PRIORY INTENT] Goal: '{guide.goal_name}' | Readiness: {guide.readiness_percentage}%")
+
         return jsonify({
             "success": True,
             "query": user_prompt,
+            "session_id": session_id,
             "guide": {
                 "goal_name": guide.goal_name,
                 "target_quantity": guide.target_quantity,
@@ -204,6 +316,7 @@ def api_query():
                 "readiness_percentage": guide.readiness_percentage,
                 "executive_summary": guide.executive_summary,
                 "strategic_recommendations": guide.strategic_recommendations,
+                "character_recommendations": getattr(guide, "character_recommendations", []),
                 "master_roadmap_phases": guide.master_roadmap_phases,
                 "session_checklist": [
                     {
@@ -219,9 +332,12 @@ def api_query():
                 "missing_materials_summary": guide.missing_materials_summary,
                 "missing_disciplines_summary": guide.missing_disciplines_summary,
                 "motivational_tip": guide.motivational_tip,
+                "vip_lounge_callout": getattr(guide, "vip_lounge_callout", None),
             }
         })
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"success": False, "error": str(e)}), 500
 
 

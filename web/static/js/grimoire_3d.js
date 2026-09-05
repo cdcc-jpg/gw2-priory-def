@@ -551,56 +551,12 @@
       ctx.fillText('— DURMAND PRIORY ARCHIVIST —', W / 2, 1920);
 
     } else {
-      // ── SPREAD N: LEGENDARY ITINERARY ──
+      // ── SPREAD N: LEGENDARY SPREAD (LEADERBOARD VS MASTER ROADMAP) ──
       const guide = savedRecipes[currentSpreadIndex - 1];
-      const name = (guide.target_quantity > 1 ? `${guide.target_quantity}x ` : '') + (guide.goal_name || 'Legendary Item');
-      const chatCode = guide.chat_code || '[&AgErZgAA]';
-
-      ctx.fillStyle = '#1c1424';
-      ctx.fillRect(120, 120, W - 240, 360);
-      ctx.strokeStyle = '#9d5bd2';
-      ctx.lineWidth = 6;
-      ctx.strokeRect(120, 120, W - 240, 360);
-
-      ctx.fillStyle = '#9d5bd2';
-      ctx.font = 'bold 76px Cinzel';
-      ctx.textAlign = 'left';
-      ctx.fillText(name, 160, 240);
-
-      ctx.font = '36px JetBrains Mono';
-      ctx.fillStyle = '#ffd478';
-      ctx.fillText(`Chat Code: ${chatCode}`, 160, 310);
-
-      ctx.font = 'bold 44px Cinzel';
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(`Account Readiness: ${guide.readiness_percentage}%`, 160, 410);
-
-      ctx.font = 'italic 42px IM Fell English';
-      ctx.fillStyle = '#4d3620';
-      wrapText(ctx, `"${guide.executive_summary || 'An artifact of tremendous power and prestige.'}"`, 140, 560, W - 280, 60);
-
-      ctx.fillStyle = '#24160a';
-      ctx.font = 'bold 54px Cinzel';
-      ctx.fillText('5-Phase Master Crafting Roadmap', 140, 880);
-
-      const phases = guide.master_roadmap_phases || [];
-      ctx.font = '40px IM Fell English';
-      ctx.fillStyle = '#332014';
-      let yOffset = 960;
-      phases.forEach((phase, idx) => {
-        yOffset = wrapText(ctx, `${idx + 1}. ${phase}`, 160, yOffset, W - 320, 54) + 20;
-      });
-
-      if (guide.strategic_recommendations && guide.strategic_recommendations.length > 0) {
-        ctx.fillStyle = '#24160a';
-        ctx.font = 'bold 50px Cinzel';
-        ctx.fillText('Currency & Mystic Conversions', 140, 1500);
-        ctx.font = '38px IM Fell English';
-        ctx.fillStyle = '#4d3620';
-        let recY = 1580;
-        guide.strategic_recommendations.slice(0, 3).forEach((rec) => {
-          recY = wrapText(ctx, `• ${rec}`, 160, recY, W - 320, 50) + 15;
-        });
+      if (isComparativeRanking(guide)) {
+        drawLeaderboardLeftPage(ctx, guide, W, H);
+      } else {
+        drawStandardRoadmapLeftPage(ctx, guide, W, H);
       }
     }
   }
@@ -656,42 +612,524 @@
       ctx.fillText('READY TO FORGE TRUTH', W / 2, 1850);
 
     } else {
-      // ── SPREAD N: CHECKLIST & 4-SOCKET MYSTIC FORGE ──
+      // ── SPREAD N: STRATEGIC ACCELERATION VS 4-SOCKET FORGE ──
       const guide = savedRecipes[currentSpreadIndex - 1];
+      if (isComparativeRanking(guide)) {
+        drawLeaderboardRightPage(ctx, guide, W, H);
+      } else {
+        drawStandardRoadmapRightPage(ctx, guide, W, H);
+      }
+    }
+  }
 
-      ctx.fillStyle = '#24160a';
-      ctx.font = 'bold 64px Cinzel';
-      ctx.textAlign = 'center';
-      ctx.fillText('ACTIONABLE ITINERARY', W / 2, 180);
+  // ── Comparative Ranking & Leaderboard Evaluation Helpers ────────────────────
+  function isComparativeRanking(guide) {
+    if (!guide) return false;
+    const name = (guide.goal_name || '').toLowerCase();
+    if (name.includes('closest:') || name.includes('closest') || name.includes('ranking') || name.includes('rankings') || name.includes('recommendation') || name.includes('leaderboard')) {
+      return true;
+    }
+    if (guide.target_quantity > 1 && (!guide.master_roadmap_phases || guide.master_roadmap_phases.length === 0)) {
+      return true;
+    }
+    if ((!guide.master_roadmap_phases || guide.master_roadmap_phases.length === 0) && (guide.strategic_recommendations && guide.strategic_recommendations.length > 0)) {
+      return true;
+    }
+    if (guide.strategic_recommendations && guide.strategic_recommendations.some(r => r.includes('Leaderboard') || r.includes('Closest Legendaries'))) {
+      return true;
+    }
+    return false;
+  }
 
-      ctx.fillStyle = '#70338a';
-      ctx.font = '54px Caveat';
-      ctx.fillText('~ Master Crafter’s Checklist & Delta ~', W / 2, 250);
+  function extractLeaderboardData(guide) {
+    const items = [];
+    if (!guide) return items;
 
-      draw4SocketDisplay(ctx, 140, 310, W - 280, guide.missing_materials_summary || {});
+    const recs = guide.strategic_recommendations || [];
+    for (const raw of recs) {
+      const line = raw.trim();
+      // Match line like: "   **#1 The Moot** (Mace): **78.4% Ready** | Est. Cost: ~412.0g | [Precursor Crafting / Drop] [🎁 Bank Kit Ready]"
+      const match = line.match(/\*?#(\d+)\s+([^*(]+?)(?:\s*\(([^)]+)\))?\*?:\s*\*?([\d.]+)%?\s*Ready\*?\s*\|\s*(?:Est\.?\s*Cost:\s*)?~?([\d.,]+)g\s*\|\s*\[([^\]]+)\](.*)/i);
+      if (match) {
+        items.push({
+          rank: parseInt(match[1], 10),
+          name: match[2].trim().replace(/\*\*/g, ''),
+          subtype: match[3] ? match[3].trim() : 'Weapon',
+          readiness: parseFloat(match[4]),
+          cost: parseFloat(match[5].replace(/,/g, '')),
+          archetype: match[6].trim(),
+          hasKit: line.includes('Bank Kit') || (match[7] && match[7].includes('Bank Kit')),
+          hasGate: line.includes('gate') || (match[7] && match[7].includes('gate'))
+        });
+        continue;
+      }
+      // Loose match for other patterns
+      const m2 = line.match(/#(\d+)\s+([A-Za-z0-9' -]+?)(?:\s*\(([^)]+)\))?[:\s-]+(\d+(?:\.\d+)?)%/i);
+      if (m2) {
+        const goldM = line.match(/([\d.,]+)\s*g\b/);
+        const archM = line.match(/\[([^\]]+)\]/);
+        items.push({
+          rank: parseInt(m2[1], 10),
+          name: m2[2].trim().replace(/\*\*/g, ''),
+          subtype: m2[3] ? m2[3].trim() : 'Weapon',
+          readiness: parseFloat(m2[4]),
+          cost: goldM ? parseFloat(goldM[1].replace(/,/g, '')) : 0,
+          archetype: archM ? archM[1] : 'Standard Crafting',
+          hasKit: line.includes('Bank Kit'),
+          hasGate: line.includes('gate')
+        });
+      }
+    }
 
+    if (items.length === 0 && guide.goal_name) {
+      const topName = guide.goal_name.replace(/^Closest:\s*/i, '').trim();
+      items.push({
+        rank: 1,
+        name: topName,
+        subtype: 'Weapon',
+        readiness: parseFloat(guide.readiness_percentage) || 0,
+        cost: 0,
+        archetype: 'Precursor & Gifts',
+        hasKit: recs.some(r => r.includes('Starter Kit') || r.includes('Bank')),
+        hasGate: false
+      });
+    }
+
+    return items;
+  }
+
+  function drawLeaderboardLeftPage(ctx, guide, W, H) {
+    // ── CHAPTER II: THE PRIORY LEADERBOARD ──
+    ctx.fillStyle = '#7b6348';
+    ctx.font = '36px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('FU TH A R K G W H N I J P EI Z S T B E M', W / 2, 160);
+
+    ctx.fillStyle = '#24160a';
+    ctx.font = 'bold 76px Cinzel';
+    ctx.fillText('CHAPTER II: THE PRIORY LEADERBOARD', W / 2, 255);
+
+    ctx.fillStyle = '#70338a';
+    ctx.font = '54px Caveat';
+    const catSubtitle = guide.goal_name ? `~ ${guide.goal_name} ~` : '~ Comparative Account Readiness & Precursor Matrix ~';
+    ctx.fillText(catSubtitle, W / 2, 330);
+
+    // Top Summary Banner
+    ctx.fillStyle = '#1c1424';
+    ctx.fillRect(120, 365, W - 240, 135);
+    ctx.strokeStyle = '#9d5bd2';
+    ctx.lineWidth = 5;
+    ctx.strokeRect(120, 365, W - 240, 135);
+
+    ctx.strokeStyle = '#c8963e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(126, 371, W - 252, 123);
+
+    ctx.fillStyle = '#ffd478';
+    ctx.font = 'bold 36px Cinzel';
+    ctx.textAlign = 'left';
+    ctx.fillText('TOP SCHOLAR RECOMMENDATION', 160, 415);
+
+    ctx.fillStyle = '#e8dcc4';
+    ctx.font = 'italic 34px IM Fell English';
+    const execText = guide.executive_summary || 'Evaluated against live materials, wallet, and precursor readiness.';
+    wrapText(ctx, `"${execText}"`, 160, 460, W - 320, 38);
+
+    // Parse Leaderboard Items
+    const items = extractLeaderboardData(guide);
+    const cardX = 120;
+    const cardW = W - 240; // 1808px
+    const maxCards = Math.min(items.length, 5);
+    const cardH = maxCards > 4 ? 200 : 215;
+    const cardGap = maxCards > 4 ? 22 : 28;
+    const startY = 525;
+
+    items.slice(0, 5).forEach((item, idx) => {
+      const cy = startY + idx * (cardH + cardGap);
+      const isTop = idx === 0;
+
+      // Card Background
+      if (isTop) {
+        const topGrad = ctx.createLinearGradient(cardX, cy, cardX + cardW, cy);
+        topGrad.addColorStop(0, 'rgba(200, 150, 62, 0.22)');
+        topGrad.addColorStop(0.5, 'rgba(240, 225, 195, 0.45)');
+        topGrad.addColorStop(1, 'rgba(112, 51, 138, 0.14)');
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(cardX, cy, cardW, cardH);
+
+        ctx.strokeStyle = '#c8963e';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(cardX, cy, cardW, cardH);
+
+        ctx.strokeStyle = '#9d5bd2';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cardX + 4, cy + 4, cardW - 8, cardH - 8);
+      } else {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.48)';
+        ctx.fillRect(cardX, cy, cardW, cardH);
+
+        ctx.strokeStyle = '#cbb68d';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(cardX, cy, cardW, cardH);
+      }
+
+      // Rank Badge
+      const badgeX = cardX + 24;
+      const badgeY = cy + 24;
+      const badgeW = 95;
+      const badgeH = cardH - 48;
+
+      if (isTop) {
+        ctx.fillStyle = '#c8963e';
+        ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+        ctx.strokeStyle = '#24160a';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(badgeX, badgeY, badgeW, badgeH);
+
+        ctx.fillStyle = '#24160a';
+        ctx.font = 'bold 56px Cinzel';
+        ctx.textAlign = 'center';
+        ctx.fillText('#1', badgeX + badgeW / 2, badgeY + 68);
+
+        ctx.font = 'bold 18px Cinzel';
+        ctx.fillText('TOP PICK', badgeX + badgeW / 2, badgeY + 104);
+      } else {
+        ctx.fillStyle = 'rgba(112, 51, 138, 0.08)';
+        ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+        ctx.strokeStyle = '#70338a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(badgeX, badgeY, badgeW, badgeH);
+
+        ctx.fillStyle = '#70338a';
+        ctx.font = 'bold 50px Cinzel';
+        ctx.textAlign = 'center';
+        ctx.fillText(`#${item.rank}`, badgeX + badgeW / 2, badgeY + badgeH / 2 + 18);
+      }
+
+      // Item Name & Subtype
       ctx.textAlign = 'left';
       ctx.fillStyle = '#24160a';
-      ctx.font = 'bold 50px Cinzel';
-      ctx.fillText('Session Action Items', 140, 860);
+      ctx.font = 'bold 48px Cinzel';
+      ctx.fillText(item.name, cardX + 145, cy + 62);
 
-      const checklist = guide.session_checklist || [];
-      let ckY = 940;
-      checklist.slice(0, 5).forEach((item) => {
-        ctx.fillStyle = '#24160a';
-        ctx.font = 'bold 40px Cinzel';
-        ctx.fillText(`[${item.step_number}] ${item.title} (~${item.estimated_time_minutes}m)`, 160, ckY);
-        ckY += 52;
-        ctx.fillStyle = '#4d3620';
-        ctx.font = '38px IM Fell English';
-        ckY = wrapText(ctx, item.description, 180, ckY, W - 360, 48) + 30;
-      });
+      const nameMetrics = ctx.measureText(item.name);
+      ctx.fillStyle = '#7b6348';
+      ctx.font = 'italic 36px IM Fell English';
+      ctx.fillText(`(${item.subtype})`, cardX + 160 + nameMetrics.width, cy + 62);
 
-      if (guide.motivational_tip) {
-        ctx.fillStyle = '#7a2b1f';
-        ctx.font = '52px Caveat';
-        wrapText(ctx, `Note: ${guide.motivational_tip}`, 160, 1750, W - 320, 60);
+      // Badges Row
+      let badgeCursorX = cardX + 145;
+      const badgeRowY = cy + 135;
+
+      // Precursor Archetype Badge
+      const archText = item.archetype || 'Standard Crafting';
+      ctx.font = 'bold 28px Cinzel';
+      const archMetrics = ctx.measureText(archText);
+      const archPillW = archMetrics.width + 30;
+
+      ctx.fillStyle = 'rgba(112, 51, 138, 0.08)';
+      ctx.fillRect(badgeCursorX, badgeRowY - 32, archPillW, 44);
+      ctx.strokeStyle = '#70338a';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(badgeCursorX, badgeRowY - 32, archPillW, 44);
+
+      ctx.fillStyle = '#501b69';
+      ctx.fillText(archText, badgeCursorX + 15, badgeRowY);
+      badgeCursorX += archPillW + 16;
+
+      // Bank Kit Ready Badge
+      if (item.hasKit) {
+        const kitText = '🎁 Bank Starter Kit Ready (0g Precursor)';
+        const kitMetrics = ctx.measureText(kitText);
+        const kitPillW = kitMetrics.width + 30;
+
+        ctx.fillStyle = 'rgba(35, 115, 55, 0.12)';
+        ctx.fillRect(badgeCursorX, badgeRowY - 32, kitPillW, 44);
+        ctx.strokeStyle = '#237337';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(badgeCursorX, badgeRowY - 32, kitPillW, 44);
+
+        ctx.fillStyle = '#1b5e20';
+        ctx.fillText(kitText, badgeCursorX + 15, badgeRowY);
+        badgeCursorX += kitPillW + 16;
       }
+
+      // Time Gated Badge
+      if (item.hasGate) {
+        const gateText = '⏳ Time-Gated';
+        const gateMetrics = ctx.measureText(gateText);
+        const gatePillW = gateMetrics.width + 24;
+
+        ctx.fillStyle = 'rgba(160, 48, 32, 0.08)';
+        ctx.fillRect(badgeCursorX, badgeRowY - 32, gatePillW, 44);
+        ctx.strokeStyle = '#a03020';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(badgeCursorX, badgeRowY - 32, gatePillW, 44);
+
+        ctx.fillStyle = '#8a1f14';
+        ctx.fillText(gateText, badgeCursorX + 12, badgeRowY);
+      }
+
+      // Right Side: Readiness & Gold Cost
+      const rightEdge = cardX + cardW - 35;
+
+      // Readiness Percentage
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#24160a';
+      ctx.font = 'bold 44px JetBrains Mono';
+      ctx.fillText(`${item.readiness}%`, rightEdge, cy + 58);
+
+      const rPctW = ctx.measureText(`${item.readiness}%`).width;
+      ctx.fillStyle = '#7b6348';
+      ctx.font = '32px IM Fell English';
+      ctx.fillText('Readiness: ', rightEdge - rPctW - 8, cy + 58);
+
+      // Readiness Progress Bar
+      const barW = 380;
+      const barH = 22;
+      const barX = rightEdge - barW;
+      const barY = cy + 76;
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(barX, barY, barW, barH);
+
+      const fillPct = Math.min(100, Math.max(0, item.readiness));
+      const fillW = Math.max(6, (fillPct / 100) * barW);
+      const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+      barGrad.addColorStop(0, '#c8963e');
+      barGrad.addColorStop(1, '#9d5bd2');
+      ctx.fillStyle = barGrad;
+      ctx.fillRect(barX, barY, fillW, barH);
+
+      ctx.strokeStyle = '#c8963e';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(barX, barY, barW, barH);
+
+      // Remaining Gold
+      ctx.fillStyle = '#8a5814';
+      ctx.font = 'bold 36px JetBrains Mono';
+      const costStr = item.cost > 0 ? `Est. Cost: ~${item.cost.toLocaleString()}g` : 'Est. Cost: ~0g';
+      ctx.fillText(costStr, rightEdge, cy + 140);
+    });
+
+    // Scholar Footer
+    ctx.strokeStyle = '#c8963e';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(180, 1780);
+    ctx.lineTo(W - 180, 1780);
+    ctx.stroke();
+
+    ctx.fillStyle = '#4d3620';
+    ctx.font = 'italic 40px IM Fell English';
+    ctx.textAlign = 'center';
+    ctx.fillText('"The wise arcanist observes all paths before committing the first ingot."', W / 2, 1845);
+
+    ctx.fillStyle = '#70338a';
+    ctx.font = 'bold 34px Cinzel';
+    ctx.fillText('— ARCHIVIST SECTOR LEADERBOARD AUDIT —', W / 2, 1915);
+  }
+
+  function drawLeaderboardRightPage(ctx, guide, W, H) {
+    // ── CHAPTER II: STRATEGIC ACCELERATION & ACTIONABLE CHECKLIST ──
+    ctx.fillStyle = '#7b6348';
+    ctx.font = '36px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('P EI Z S T B E M L NG O D F U TH A R K G W', W / 2, 160);
+
+    ctx.fillStyle = '#24160a';
+    ctx.font = 'bold 76px Cinzel';
+    ctx.fillText('STRATEGIC ACCELERATION', W / 2, 255);
+
+    ctx.fillStyle = '#70338a';
+    ctx.font = '54px Caveat';
+    ctx.fillText('~ Priority Action Items & Account Synergies ~', W / 2, 330);
+
+    const calloutX = 120;
+    const calloutW = W - 240;
+
+    // 1. Bank Starter Kit Callout Box
+    const starterKitRec = (guide.strategic_recommendations || []).find(r => r.includes('Starter Kit') || r.includes('Bank Starter Kit'));
+    const kitText = starterKitRec
+      ? starterKitRec.replace(/^[^\w*]+/, '').replace(/\*\*/g, '')
+      : 'You own Legendary Weapon Starter Kit—Set 2 in your Bank! Selecting your top choice immediately grants its Precursor weapon and Gift of the Weapon for 0 gold (saving ~200g in materials).';
+
+    ctx.fillStyle = 'rgba(200, 150, 62, 0.12)';
+    ctx.fillRect(calloutX, 365, calloutW, 160);
+    ctx.strokeStyle = '#c8963e';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(calloutX, 365, calloutW, 160);
+
+    ctx.fillStyle = '#8a5814';
+    ctx.font = 'bold 38px Cinzel';
+    ctx.textAlign = 'left';
+    ctx.fillText('🎁 BANK STARTER KIT SYNERGY', calloutX + 30, 415);
+
+    ctx.fillStyle = '#332014';
+    ctx.font = '34px IM Fell English';
+    wrapText(ctx, kitText, calloutX + 30, 460, calloutW - 60, 42);
+
+    // 2. Speed Tips & Booster Callout Box
+    const boosterRec = (guide.strategic_recommendations || []).find(r => r.includes('Booster') || r.includes('Speed Analysis') || r.includes('Zhaitaffy'));
+    const boosterText = boosterRec
+      ? boosterRec.replace(/^[^\w*]+/, '').replace(/\*\*/g, '')
+      : 'Stack Experience + Heroic + Guild Tavern WvW buff (Gift of Battle in ~4.5h vs 8h). Convert Astral Acclaim into Mystic Clovers from Wizard\'s Vault to bypass Mystic Forge gambling.';
+
+    ctx.fillStyle = 'rgba(112, 51, 138, 0.08)';
+    ctx.fillRect(calloutX, 550, calloutW, 175);
+    ctx.strokeStyle = '#70338a';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(calloutX, 550, calloutW, 175);
+
+    ctx.fillStyle = '#70338a';
+    ctx.font = 'bold 38px Cinzel';
+    ctx.fillText('⚡ SPEED TIPS & BOOSTER ACCELERATION', calloutX + 30, 600);
+
+    ctx.fillStyle = '#332014';
+    ctx.font = '34px IM Fell English';
+    wrapText(ctx, boosterText, calloutX + 30, 645, calloutW - 60, 42);
+
+    // 3. Actionable Checklist
+    ctx.fillStyle = '#24160a';
+    ctx.font = 'bold 50px Cinzel';
+    ctx.fillText('Actionable Checklist', calloutX, 780);
+
+    ctx.fillStyle = '#7b6348';
+    ctx.font = 'italic 34px IM Fell English';
+    ctx.fillText('~ In-Game Progression Sequence ~', calloutX + 460, 780);
+
+    const checklist = guide.session_checklist || [];
+    let ckY = 845;
+    checklist.slice(0, 5).forEach((item) => {
+      ctx.fillStyle = '#24160a';
+      ctx.font = 'bold 40px Cinzel';
+      ctx.fillText(`[Step ${item.step_number}] ${item.title}`, calloutX + 20, ckY);
+
+      const titleW = ctx.measureText(`[Step ${item.step_number}] ${item.title}`).width;
+
+      ctx.fillStyle = '#8a5814';
+      ctx.font = 'bold 36px JetBrains Mono';
+      ctx.fillText(`(~${item.estimated_time_minutes}m)`, calloutX + 35 + titleW, ckY);
+
+      const timeW = ctx.measureText(`(~${item.estimated_time_minutes}m)`).width;
+
+      if (item.game_mode) {
+        ctx.fillStyle = '#70338a';
+        ctx.font = 'bold 30px Cinzel';
+        ctx.fillText(`[${item.game_mode}]`, calloutX + 50 + titleW + timeW, ckY - 2);
+      }
+
+      if (item.chat_code) {
+        ctx.fillStyle = '#2a52be';
+        ctx.font = 'bold 30px JetBrains Mono';
+        ctx.fillText(`WP: ${item.chat_code}`, calloutX + calloutW - 280, ckY);
+      }
+
+      ckY += 46;
+      ctx.fillStyle = '#4d3620';
+      ctx.font = '36px IM Fell English';
+      ckY = wrapText(ctx, item.description, calloutX + 35, ckY, calloutW - 70, 46) + 26;
+    });
+
+    // 4. Bottom Motivational Tip & Flourish
+    if (guide.motivational_tip) {
+      ctx.fillStyle = '#7a2b1f';
+      ctx.font = 'italic 44px Caveat';
+      const cleanTip = guide.motivational_tip.replace(/\*\*/g, '');
+      wrapText(ctx, `Archivist Note: ${cleanTip}`, calloutX + 20, 1750, calloutW - 40, 52);
+    }
+
+    ctx.fillStyle = '#c8963e';
+    ctx.font = 'bold 32px Cinzel';
+    ctx.textAlign = 'center';
+    ctx.fillText('◈ THE DURMAND PRIORY • SECRETS OF THE MYSTIC FORGE ◈', W / 2, 1920);
+  }
+
+  function drawStandardRoadmapLeftPage(ctx, guide, W, H) {
+    const name = (guide.target_quantity > 1 ? `${guide.target_quantity}x ` : '') + (guide.goal_name || 'Legendary Item');
+    const chatCode = guide.chat_code || '[&AgErZgAA]';
+
+    ctx.fillStyle = '#1c1424';
+    ctx.fillRect(120, 120, W - 240, 360);
+    ctx.strokeStyle = '#9d5bd2';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(120, 120, W - 240, 360);
+
+    ctx.fillStyle = '#9d5bd2';
+    ctx.font = 'bold 76px Cinzel';
+    ctx.textAlign = 'left';
+    ctx.fillText(name, 160, 240);
+
+    ctx.font = '36px JetBrains Mono';
+    ctx.fillStyle = '#ffd478';
+    ctx.fillText(`Chat Code: ${chatCode}`, 160, 310);
+
+    ctx.font = 'bold 44px Cinzel';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`Account Readiness: ${guide.readiness_percentage}%`, 160, 410);
+
+    ctx.font = 'italic 42px IM Fell English';
+    ctx.fillStyle = '#4d3620';
+    wrapText(ctx, `"${guide.executive_summary || 'An artifact of tremendous power and prestige.'}"`, 140, 560, W - 280, 60);
+
+    ctx.fillStyle = '#24160a';
+    ctx.font = 'bold 54px Cinzel';
+    ctx.fillText('5-Phase Master Crafting Roadmap', 140, 880);
+
+    const phases = guide.master_roadmap_phases || [];
+    ctx.font = '40px IM Fell English';
+    ctx.fillStyle = '#332014';
+    let yOffset = 960;
+    phases.forEach((phase, idx) => {
+      yOffset = wrapText(ctx, `${idx + 1}. ${phase}`, 160, yOffset, W - 320, 54) + 20;
+    });
+
+    if (guide.strategic_recommendations && guide.strategic_recommendations.length > 0) {
+      ctx.fillStyle = '#24160a';
+      ctx.font = 'bold 50px Cinzel';
+      ctx.fillText('Currency & Mystic Conversions', 140, 1500);
+      ctx.font = '38px IM Fell English';
+      ctx.fillStyle = '#4d3620';
+      let recY = 1580;
+      guide.strategic_recommendations.slice(0, 3).forEach((rec) => {
+        recY = wrapText(ctx, `• ${rec}`, 160, recY, W - 320, 50) + 15;
+      });
+    }
+  }
+
+  function drawStandardRoadmapRightPage(ctx, guide, W, H) {
+    ctx.fillStyle = '#24160a';
+    ctx.font = 'bold 64px Cinzel';
+    ctx.textAlign = 'center';
+    ctx.fillText('ACTIONABLE ITINERARY', W / 2, 180);
+
+    ctx.fillStyle = '#70338a';
+    ctx.font = '54px Caveat';
+    ctx.fillText('~ Master Crafter’s Checklist & Delta ~', W / 2, 250);
+
+    draw4SocketDisplay(ctx, 140, 310, W - 280, guide.missing_materials_summary || {});
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#24160a';
+    ctx.font = 'bold 50px Cinzel';
+    ctx.fillText('Session Action Items', 140, 860);
+
+    const checklist = guide.session_checklist || [];
+    let ckY = 940;
+    checklist.slice(0, 5).forEach((item) => {
+      ctx.fillStyle = '#24160a';
+      ctx.font = 'bold 40px Cinzel';
+      ctx.fillText(`[${item.step_number}] ${item.title} (~${item.estimated_time_minutes}m)`, 160, ckY);
+      ckY += 52;
+      ctx.fillStyle = '#4d3620';
+      ctx.font = '38px IM Fell English';
+      ckY = wrapText(ctx, item.description, 180, ckY, W - 360, 48) + 30;
+    });
+
+    if (guide.motivational_tip) {
+      ctx.fillStyle = '#7a2b1f';
+      ctx.font = '52px Caveat';
+      wrapText(ctx, `Note: ${guide.motivational_tip}`, 160, 1750, W - 320, 60);
     }
   }
 
@@ -821,21 +1259,29 @@
   }
 
   function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ');
-    let line = '';
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + ' ';
-      const metrics = ctx.measureText(testLine);
-      if (metrics.width > maxWidth && n > 0) {
-        ctx.fillText(line, x, y);
-        line = words[n] + ' ';
-        y += lineHeight;
-      } else {
-        line = testLine;
+    if (!text) return y;
+    const paragraphs = String(text).split('\n');
+    let currentY = y;
+    for (let p = 0; p < paragraphs.length; p++) {
+      const words = paragraphs[p].split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, currentY);
+          line = words[n] + ' ';
+          currentY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, currentY);
+      if (p < paragraphs.length - 1) {
+        currentY += lineHeight;
       }
     }
-    ctx.fillText(line, x, y);
-    return y;
+    return currentY;
   }
 
   // ── 8. 3D Page Flip Engine (Horizontal Rotation & Vertex Curl) ───────────────

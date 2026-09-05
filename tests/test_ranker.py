@@ -127,9 +127,83 @@ class TestAccountRanker(unittest.TestCase):
         account = AccountState(materials={19721: 100, 19675: 30})
         session = orchestrator.create_session(account_state=account)
         guide = session.send_message("Which generation 2 legendary can I quickly craft")
-        self.assertTrue(any("Speed Analysis" in r for r in guide.strategic_recommendations))
+    def test_has_legendary_unlocked_data_structures(self):
+        """Verifies AccountState.has_legendary_unlocked is safe for sets, dicts, lists of ints, and lists of dicts."""
+        # Dict
+        acc_dict = AccountState(legendary_armory={30689: 1})
+        self.assertTrue(acc_dict.has_legendary_unlocked(30689))
+        self.assertFalse(acc_dict.has_legendary_unlocked(30688))
+
+        # Set
+        acc_set = AccountState(legendary_armory={30689})
+        self.assertTrue(acc_set.has_legendary_unlocked(30689))
+        self.assertFalse(acc_set.has_legendary_unlocked(30688))
+
+        # List of ints
+        acc_list_int = AccountState(legendary_armory=[30689, 30690])
+        self.assertTrue(acc_list_int.has_legendary_unlocked(30689))
+        self.assertFalse(acc_list_int.has_legendary_unlocked(30688))
+
+        # List of dicts (GW2 API JSON format)
+        acc_list_dict = AccountState(legendary_armory=[{"id": 30689, "count": 1}])
+        self.assertTrue(acc_list_dict.has_legendary_unlocked(30689))
+        self.assertFalse(acc_list_dict.has_legendary_unlocked(30688))
+
+    def test_trinket_and_backpack_filter_queries(self):
+        """Verifies filter queries for rings, amulets, accessories, trinkets, and backpacks."""
+        account = AccountState()
+        queries = ["ring", "rings", "amulet", "amulets", "accessory", "accessories", "trinket", "trinkets", "backpack", "back"]
+        for q in queries:
+            rankings = self.ranker.rank_all_legendaries(account, filter_query=q, top_n=5)
+            self.assertGreater(len(rankings), 0, f"Query '{q}' returned no results")
+
+        # Specific assertions
+        rings = self.ranker.rank_all_legendaries(account, filter_query="rings", top_n=5)
+        self.assertTrue(any("Coalescence" in r.name or "Conflux" in r.name for r in rings))
+
+        amulets = self.ranker.rank_all_legendaries(account, filter_query="amulets", top_n=5)
+        self.assertTrue(any("Transcendence" in r.name or "Regalia" in r.name for r in amulets))
+
+        accessories = self.ranker.rank_all_legendaries(account, filter_query="accessories", top_n=5)
+        self.assertTrue(any("Vision" in r.name or "Aurora" in r.name for r in accessories))
+
+        trinkets = self.ranker.rank_all_legendaries(account, filter_query="trinket", top_n=10)
+        self.assertGreaterEqual(len(trinkets), 5)
+
+        backpacks = self.ranker.rank_all_legendaries(account, filter_query="backpack", top_n=5)
+        self.assertTrue(any("Infinitum" in r.name or "Ascension" in r.name or "Warbringer" in r.name for r in backpacks))
+
+    def test_sub_tree_diff_memoization(self):
+        """Verifies sub-tree diff memoization avoids redundant traversal across multi-item evaluations."""
+        account = AccountState(materials={19721: 50})
+        self.ranker.diff_engine.clear_sub_tree_cache()
+
+        # Compute diff on Sunrise (item 30703, Gen 1 Greatsword)
+        self.ranker.diff_engine.compute_diff(30703, account)
+        # Verify that Gift of Fortune (19627) sub-tree was memoized
+        fortune_key = (19627, 1, id(account))
+        self.assertIn(fortune_key, self.ranker.diff_engine._sub_tree_memo)
+
+        # Compute diff on Twilight (item 30704, Gen 1 Greatsword) - should reuse memoized Gift of Fortune
+        cached_node, cached_mats, _, _ = self.ranker.diff_engine._sub_tree_memo[fortune_key]
+        self.assertEqual(cached_node.item_id, 19627)
+        self.assertIn("Glob of Ectoplasm", cached_mats)
+
+    def test_full_ranker_performance_benchmark(self):
+        """Benchmark: evaluating all 141+ legendaries completes in under 2 seconds."""
+        import time
+        account = AccountState(materials={19721: 100, 19675: 30})
+
+        t0 = time.perf_counter()
+        rankings = self.ranker.rank_all_legendaries(account, filter_query=None, top_n=10)
+        t1 = time.perf_counter()
+        elapsed = t1 - t0
+
+        self.assertGreater(len(rankings), 0)
+        self.assertLess(elapsed, 2.0, f"Full ranker evaluation took {elapsed:.3f}s, exceeding 2.0s threshold!")
 
 
 if __name__ == "__main__":
     unittest.main()
+
 

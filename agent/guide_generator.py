@@ -5,6 +5,7 @@ engaging, personalized, and actionable in-game progression guides with zero hall
 """
 
 from __future__ import annotations
+import re
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field
 from agent.intent_parser import ResolvedGoal, GoalType
@@ -563,13 +564,70 @@ class GuideGenerator:
         time_budget_minutes: int = 120,
         optimal_plan: Optional[Any] = None,
         target_quantity: int = 1,
-        account_state: Optional[AccountState] = None
+        account_state: Optional[AccountState] = None,
+        category_filter: Optional[str] = None
     ) -> PersonalizedGuide:
         """Generates a ranked comparative guide for 'Which legendary am I closest to?' queries."""
+        prompt_lower = user_prompt.lower()
+        cat_norm = category_filter.lower().strip() if category_filter else None
+        if not cat_norm:
+            cat_tokens = [
+                "generation 1", "gen 1", "generation 2", "gen 2", "generation 3", "gen 3",
+                "aurene", "soto", "obsidian", "janthir",
+                "rings", "ring", "amulets", "amulet", "accessories", "accessory",
+                "trinkets", "trinket", "backpack", "back", "jewelry", "armor",
+                "upgrades", "upgrade", "spears", "spear"
+            ]
+            for term in cat_tokens:
+                if re.search(r"\b" + re.escape(term) + r"\b", prompt_lower):
+                    cat_norm = term
+                    break
+
+        plural_map = {
+            "rings": "ring",
+            "amulets": "amulet",
+            "accessories": "accessory",
+            "trinkets": "trinket",
+            "upgrades": "upgrade",
+            "spears": "spear",
+            "generation 1": "gen 1",
+            "generation 2": "gen 2",
+            "generation 3": "gen 3",
+        }
+        if cat_norm in plural_map:
+            cat_norm = plural_map[cat_norm]
+
+        cat_display_map = {
+            "ring": ("Ring", "Rings"),
+            "amulet": ("Amulet", "Amulets"),
+            "accessory": ("Accessory", "Accessories"),
+            "trinket": ("Trinket", "Trinkets"),
+            "backpack": ("Backpack", "Backpacks"),
+            "back": ("Back Item", "Back Items"),
+            "jewelry": ("Jewelry Piece", "Jewelry"),
+            "armor": ("Armor Piece", "Armor"),
+            "upgrade": ("Upgrade", "Upgrades"),
+            "spear": ("Spear", "Spears"),
+            "gen 1": ("Gen 1 Legendary", "Gen 1 Legendaries"),
+            "gen 2": ("Gen 2 Legendary", "Gen 2 Legendaries"),
+            "gen 3": ("Gen 3 Legendary", "Gen 3 Legendaries"),
+            "soto": ("Obsidian Armor Piece", "Obsidian Armor"),
+            "obsidian": ("Obsidian Armor Piece", "Obsidian Armor"),
+            "janthir": ("Janthir Legendary", "Janthir Legendaries"),
+            "aurene": ("Aurene Legendary", "Aurene Legendaries"),
+        }
+
+        is_plural_request = (
+            target_quantity > 1
+            or any(w in prompt_lower for w in ["rings", "amulets", "accessories", "trinkets", "backpacks", "upgrades", "legendaries"])
+            or bool(re.search(r"\b(?:which|top|fastest|closest)\s+\d+\b", prompt_lower))
+        )
+
         if not rankings:
+            empty_title = f"Closest Legendary {cat_display_map[cat_norm][1]} Assessment" if (cat_norm and cat_norm in cat_display_map) else "Closest Legendary Assessment"
             return PersonalizedGuide(
-                goal_name="Closest Legendary Assessment",
-                target_quantity=1,
+                goal_name=empty_title,
+                target_quantity=target_quantity,
                 chat_code=None,
                 readiness_percentage=0,
                 executive_summary="No unowned legendary items found in the Knowledge Graph.",
@@ -585,14 +643,21 @@ class GuideGenerator:
         readiness = int(top_choice.readiness_pct)
 
         recs = []
-        if target_quantity > 1 and len(rankings) >= target_quantity:
+        if cat_norm and cat_norm in cat_display_map:
+            sing_name, plur_name = cat_display_map[cat_norm]
+            if is_plural_request and len(rankings) >= 2:
+                display_qty = target_quantity if target_quantity > 1 else 2
+                item_names = ", ".join(f"**{r.name}** ({r.subtype or sing_name})" for r in rankings[:display_qty])
+                recs.append(f"🏆 **Top {display_qty} {plur_name} Recommendations:** {item_names} are your top {display_qty} closest legendary {plur_name.lower()}!")
+            else:
+                recs.append(f"🏆 **Top {sing_name} Recommendation:** **{top_choice.name}** ({top_choice.subtype or sing_name}) is your #1 closest legendary {sing_name.lower()}!")
+        elif target_quantity > 1 and len(rankings) >= target_quantity:
             item_names = ", ".join(f"**{r.name}** ({r.subtype or 'Item'})" for r in rankings[:target_quantity])
             recs.append(f"🏆 **Top {target_quantity} Recommendations:** {item_names} are your top {target_quantity} closest legendaries!")
         else:
             recs.append(f"🏆 **Top Recommendation:** **{top_choice.name}** ({top_choice.subtype or 'Weapon'}) is your #1 closest legendary!")
 
         # Domain clarification note if player asked about non-existent Gen 2 / Tier 2 spear
-        prompt_lower = user_prompt.lower()
         if "tier two spear" in prompt_lower or "tier 2 spear" in prompt_lower or "gen 2 spear" in prompt_lower or "generation 2 spear" in prompt_lower:
             recs.append(
                 "📌 **Domain Note on Spears:** Guild Wars 2 does not have a Generation 2 legendary spear. "
@@ -622,12 +687,14 @@ class GuideGenerator:
 
         # Leaderboard items with precursor archetype and calendar days
         display_n = target_quantity if 1 < target_quantity <= 10 else 5
-        recs.append(f"📊 **Closest Legendaries Leaderboard (Top {min(display_n, len(rankings))}):**")
+        lb_label = f"Closest Legendary {cat_display_map[cat_norm][1]}" if (cat_norm and cat_norm in cat_display_map) else "Closest Legendaries"
+        recs.append(f"📊 **{lb_label} Leaderboard (Top {min(display_n, len(rankings))}):**")
         for i, item in enumerate(rankings[:display_n], 1):
             kit_tag = " [🎁 Bank Kit Ready]" if item.starter_kit_eligible else ""
             tg_tag = f" | ⏳ ~{item.calendar_day_gates}d gate" if item.calendar_day_gates > 0 else ""
+            sub = item.subtype or (cat_display_map[cat_norm][0] if (cat_norm and cat_norm in cat_display_map) else 'Item')
             recs.append(
-                f"   **#{i} {item.name}** ({item.subtype or 'Item'}): **{item.readiness_pct}% Ready** "
+                f"   **#{i} {item.name}** ({sub}): **{item.readiness_pct}% Ready** "
                 f"| Est. Cost: ~{item.estimated_remaining_gold}g | [{item.precursor_archetype}]{tg_tag}{kit_tag}"
             )
 
@@ -685,10 +752,29 @@ class GuideGenerator:
                     char_str = f" 👤 [Character: {s.assigned_character}]" if s.assigned_character else ""
                     master_roadmap_formatted.append(f"   [{s.step_number}] **{s.title}**{npc_str}{char_str}{wp_str}: {s.description}")
 
-        summary = (
-            f"Based on your live account snapshot (including your materials and bank starter kits), "
-            f"you are closest to crafting **{top_choice.name}** ({readiness}% ready, ~{top_choice.estimated_remaining_gold}g remaining)!"
-        )
+        if cat_norm and cat_norm in cat_display_map:
+            sing_name, plur_name = cat_display_map[cat_norm]
+            if is_plural_request and len(rankings) >= 2:
+                display_qty = target_quantity if target_quantity > 1 else 2
+                items_summary = " and ".join(
+                    f"**{r.name}** ({int(r.readiness_pct)}% ready, ~{r.estimated_remaining_gold}g remaining)"
+                    for r in rankings[:display_qty]
+                )
+                summary = (
+                    f"Based on your live account snapshot (including materials, currencies, and achievements), "
+                    f"your closest legendary {plur_name.lower()} are {items_summary}!"
+                )
+            else:
+                summary = (
+                    f"Based on your live account snapshot (including materials, currencies, and achievements), "
+                    f"you are closest to crafting the legendary {sing_name.lower()} **{top_choice.name}** "
+                    f"({readiness}% ready, ~{top_choice.estimated_remaining_gold}g remaining)!"
+                )
+        else:
+            summary = (
+                f"Based on your live account snapshot (including your materials and bank starter kits), "
+                f"you are closest to crafting **{top_choice.name}** ({readiness}% ready, ~{top_choice.estimated_remaining_gold}g remaining)!"
+            )
 
         if top_choice.starter_kit_eligible:
             tip = f"💡 **Priory Tip:** Crafting {top_choice.name} with your Bank Starter Kit saves you ~200g in precursor costs!"
@@ -804,9 +890,20 @@ class GuideGenerator:
         elif top_choice.name == "The Predator":
             char_recs.append("Best Character: **Legacy Of Harathi** (Level 80 Warrior) — Holds **Huntsman 500** active & can wield Rifles directly!")
 
+        if cat_norm and cat_norm in cat_display_map:
+            sing_name, plur_name = cat_display_map[cat_norm]
+            if is_plural_request and len(rankings) >= 2:
+                display_qty = target_quantity if target_quantity > 1 else 2
+                item_str = " & ".join(r.name for r in rankings[:display_qty])
+                goal_title = f"Closest Legendary {plur_name}: {item_str}"
+            else:
+                goal_title = f"Closest Legendary {sing_name}: {top_choice.name}"
+        else:
+            goal_title = f"Closest: {top_choice.name}"
+
         return PersonalizedGuide(
-            goal_name=f"Closest: {top_choice.name}",
-            target_quantity=1,
+            goal_name=goal_title,
+            target_quantity=target_quantity,
             chat_code=top_choice.chat_code,
             readiness_percentage=readiness,
             executive_summary=summary,

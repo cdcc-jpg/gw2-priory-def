@@ -397,6 +397,77 @@ class TestAgentPipeline(unittest.TestCase):
         self.assertTrue(any("Direct Exchange Value" in r for r in guide.strategic_recommendations))
         self.assertGreater(len(guide.session_checklist), 0)
 
+    def test_comparative_ranking_jewelry_slots_and_prerequisite_safety(self):
+        """Verifies that jewelry slots (rings, amulets) are routed to COMPARATIVE_RANKING and not hijacked into PREREQUISITE_AUDIT."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        # 1. Broad category questions must route to COMPARATIVE_RANKING
+        ring_goal = parser.parse_intent("Can I craft legendary rings?")
+        self.assertEqual(ring_goal.goal_type, GoalType.COMPARATIVE_RANKING)
+        self.assertEqual(ring_goal.category_filter, "ring")
+        self.assertIsNone(ring_goal.resolved_item_name)
+
+        amulet_goal = parser.parse_intent("What legendary amulets can I craft?")
+        self.assertEqual(amulet_goal.goal_type, GoalType.COMPARATIVE_RANKING)
+        self.assertEqual(amulet_goal.category_filter, "amulet")
+        self.assertIsNone(amulet_goal.resolved_item_name)
+
+        # 2. Specific item questions must route to PREREQUISITE_AUDIT
+        twilight_goal = parser.parse_intent("Can I craft Twilight?")
+        self.assertEqual(twilight_goal.goal_type, GoalType.PREREQUISITE_AUDIT)
+        self.assertEqual(twilight_goal.resolved_item_name, "Twilight")
+
+    def test_comparative_ranking_quantity_and_plural_legendaries(self):
+        """Verifies count extraction and plural legendaries for comparative ranking."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        two_legs = parser.parse_intent("Which 2 legendaries should I craft?")
+        self.assertEqual(two_legs.goal_type, GoalType.COMPARATIVE_RANKING)
+        self.assertEqual(two_legs.target_quantity, 2)
+        self.assertIsNone(two_legs.resolved_item_name)
+
+        fastest_legs = parser.parse_intent("Fastest 2 legendaries to craft")
+        self.assertEqual(fastest_legs.goal_type, GoalType.COMPARATIVE_RANKING)
+        self.assertEqual(fastest_legs.target_quantity, 2)
+        self.assertTrue(fastest_legs.prefer_speed)
+
+    def test_ranking_guide_category_formatting(self):
+        """Verifies ranking guide title, summary, and recommendations formatted around category_filter."""
+        account = AccountState(materials={19721: 50, 19675: 20})
+        guide = self.orchestrator.run_pipeline("Can I craft legendary rings?", account)
+
+        self.assertIn("Closest Legendary Rings", guide.goal_name)
+        self.assertIn("Coalescence", guide.goal_name)
+        self.assertIn("Conflux", guide.goal_name)
+        self.assertIn("closest legendary rings", guide.executive_summary.lower())
+        self.assertTrue(any("Rings Recommendations" in r for r in guide.strategic_recommendations))
+
+    def test_intent_parser_promotion_from_specific_item(self):
+        """Verifies promotion of SPECIFIC_ITEM to COMPARATIVE_RANKING when no recognizable item is in prompt."""
+        from agent.llm_client import BaseLLMClient
+        from agent.intent_parser import PlayerGoalIntent
+
+        class GenericDefaultLLMClient(BaseLLMClient):
+            def generate_structured(self, prompt, system_prompt, schema):
+                return schema(goal_type="SPECIFIC_ITEM", target_item_name="Twilight")
+            def generate_text(self, prompt, system_prompt):
+                return ""
+
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, GenericDefaultLLMClient())
+
+        # Should promote to COMPARATIVE_RANKING with ring filter
+        promoted = parser.parse_intent("What legendary rings can I craft?")
+        self.assertEqual(promoted.goal_type, GoalType.COMPARATIVE_RANKING)
+        self.assertEqual(promoted.category_filter, "ring")
+
+        # Should preserve target_quantity
+        promoted_qty = parser.parse_intent("Which 2 legendaries can I craft?")
+        self.assertEqual(promoted_qty.goal_type, GoalType.COMPARATIVE_RANKING)
+        self.assertEqual(promoted_qty.target_quantity, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

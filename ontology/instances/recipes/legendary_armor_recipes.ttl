@@ -69,18 +69,18 @@ item:103460 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_klobjarne_harvester .
 
-item:77474 a owl:NamedIndividual,
+item:74155 a owl:NamedIndividual,
         priory:LegendaryBackpack ;
     rdfs:label "Ad Infinitum"@en ;
-    priory:gw2Id 77474 ;
+    priory:gw2Id 74155 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_ad_infinitum .
 
-item:78430 a owl:NamedIndividual,
+item:77474 a owl:NamedIndividual,
         priory:LegendaryBackpack ;
     rdfs:label "The Ascension"@en ;
-    priory:gw2Id 78430 ;
+    priory:gw2Id 77474 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_the_ascension .

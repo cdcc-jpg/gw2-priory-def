@@ -405,14 +405,18 @@ slot:WeaponSlotAquatic2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:
 slot:Helm a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Head / Helm"@en .
 slot:Shoulders a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Shoulders"@en .
 slot:Coat a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Chest / Coat"@en .
+slot:Chest a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Chest"@en .
 slot:Gloves a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Gloves / Hands"@en .
 slot:Leggings a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Leggings / Legs"@en .
+slot:Legs a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Legs"@en .
 slot:Boots a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Boots / Feet"@en .
 slot:HelmAquatic a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Aquatic Headgear"@en .
 
 slot:Amulet a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Amulet"@en .
+slot:Ring a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Ring"@en .
 slot:Ring1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Ring 1"@en .
 slot:Ring2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Ring 2"@en .
+slot:Accessory a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Accessory"@en .
 slot:Accessory1 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Accessory 1"@en .
 slot:Accessory2 a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Accessory 2"@en .
 slot:Backpack a skos:Concept ; skos:inScheme priory:SlotScheme ; skos:prefLabel "Back Item"@en .
