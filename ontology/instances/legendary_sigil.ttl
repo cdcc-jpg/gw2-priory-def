@@ -1,9 +1,11 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix role: <https://priory.gw2/ref/role/> .
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix upgrade: <https://priory.gw2/ref/upgrade/> .
 @prefix discipline: <https://priory.gw2/ref/discipline/> .
@@ -227,3 +229,13 @@ item:19748 a priory:CraftingMaterial ; rdfs:label "Powerful Blood"@en ; priory:g
 item:19745 a priory:CraftingMaterial ; rdfs:label "Potent Venom Sac"@en ; priory:gw2Id 19745 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 item:19746 a priory:CraftingMaterial ; rdfs:label "Elaborate Totem"@en ; priory:gw2Id 19746 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 item:19732 a priory:CraftingMaterial ; rdfs:label "Crystalline Dust"@en ; priory:gw2Id 19732 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+
+# ------------------------------------------------------------------------------
+# Currencies (Account Wallet Scalars)
+# ------------------------------------------------------------------------------
+
+currency:ProvisionerToken a priory:AccountWalletScalar, priory:Currency, owl:NamedIndividual ;
+    rdfs:label "Provisioner Token"@en ;
+    priory:apiWalletId 29 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange .

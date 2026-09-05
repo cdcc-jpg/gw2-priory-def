@@ -1,0 +1,405 @@
+@prefix priory: <https://priory.gw2/def/> .
+@prefix role: <https://priory.gw2/ref/role/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix slot: <https://priory.gw2/ref/slot/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# ==============================================================================
+# GENERATION 3: AURENE LEGENDARY WEAPONS, DRAGON VARIANTS & TOKENS
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Key Tokens & Materials
+# ------------------------------------------------------------------------------
+
+# Antique Summoning Stone
+item:96978 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Antique Summoning Stone"@en ;
+    priory:gw2Id 96978 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:playsRole role:CraftingIngredient, role:MarketCommodity, role:CurrencyExchange ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isAccountBound false ;
+    priory:hasTimeGate [
+        a priory:TimeGate ;
+        priory:weeklyLimit 5 ;
+        priory:vendorNPC "Leivas"@en ;
+        priory:nearestWaypoint "[&BEwMAAA=]" ;
+        priory:zoneName "Arborstone"@en
+    ] ;
+    priory:acquiredVia item:vendor_leivas_ass ;
+    skos:altLabel "ASS"@en, "Summoning Stone"@en ;
+    skos:definition "Key End of Dragons crafting component used in Generation 3 legendary weapons and tributes. Limited to 5 purchases per account per calendar week from NPC Leivas in Arborstone ([&BEwMAAA=])."@en .
+
+# Augment existing Leivas vendor path from time_gates_and_caps.ttl
+item:vendor_leivas_ass priory:grantsItem item:96978 .
+
+# Chunk of Pure Jade
+item:96979 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Chunk of Pure Jade"@en ;
+    priory:gw2Id 96979 ;
+    priory:hasRarity rarity:Rare ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isAccountBound true ;
+    skos:altLabel "Pure Jade Chunk"@en, "Pure Jade"@en ;
+    skos:definition "Concentrated pure dragonjade mined across Canthan regions, used in crafting the Gift of the Dragon Empire and Gen 3 components."@en .
+
+# Ambergris / Chunk of Ancient Ambergris
+item:96347 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Chunk of Ancient Ambergris"@en ;
+    skos:altLabel "Ambergris"@en, "Ancient Ambergris"@en ;
+    priory:gw2Id 96347 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:playsRole role:CraftingIngredient, role:MarketCommodity ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isAccountBound false ;
+    skos:definition "High-value tradeable fishing commodity and crafting component required for Gen 3 weapons, Gift of Cantha, and Dragon Empire gifts."@en .
+
+# Memories of Aurene
+item:96074 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Memory of Aurene"@en ;
+    skos:altLabel "Memories of Aurene"@en ;
+    priory:gw2Id 96074 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isAccountBound false ;
+    skos:definition "Crystallized memories of the Prismatic Elder Dragon, Aurene. Acquired through End of Dragons events, strikes, and dragon metas; used for Gen 3 weapons and Elder Dragon variant skins."@en .
+
+# Jade Runestone
+item:96590 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Jade Runestone"@en ;
+    priory:gw2Id 96590 ;
+    priory:hasRarity rarity:Rare ;
+    priory:playsRole role:CraftingIngredient, role:MarketCommodity ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isAccountBound false ;
+    skos:definition "Tradeable Canthan runestone discovered in Echovald Wilds and Dragon's End chests, utilized in Gift of Cantha and legendary weapon gifts."@en .
+
+# ------------------------------------------------------------------------------
+# 2. Canthan Legendary Gifts
+# ------------------------------------------------------------------------------
+
+# Gift of Cantha
+item:97099 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Cantha"@en ;
+    priory:gw2Id 97099 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_cantha ;
+    skos:definition "End of Dragons regional gift combining Imperial Favor, Antique Summoning Stones, Jade Runestones, and Ambergris."@en .
+
+recipe:forge_gift_of_cantha a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of Cantha"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:97099 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresCurrency currency:ImperialFavor ; priory:requiredQuantity 2500 ] , # Imperial Favor
+        [ a priory:CostRequirement ; priory:requiresItem item:96978 ; priory:requiredQuantity 100 ] ,      # Antique Summoning Stones
+        [ a priory:CostRequirement ; priory:requiresItem item:96590 ; priory:requiredQuantity 100 ] ,      # Jade Runestones
+        [ a priory:CostRequirement ; priory:requiresItem item:96347 ; priory:requiredQuantity 100 ] .     # Chunk of Ancient Ambergris
+
+# Gift of the Dragon Empire
+item:96894 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Dragon Empire"@en ;
+    priory:gw2Id 96894 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_the_dragon_empire ;
+    skos:definition "Empire-wide legendary gift combining Gift of Cantha, Chunks of Pure Jade, Memories of Aurene, and Jade Runestones."@en .
+
+recipe:forge_gift_of_the_dragon_empire a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of the Dragon Empire"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96894 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresItem item:97099 ; priory:requiredQuantity 1 ] ,   # Gift of Cantha
+        [ a priory:CostRequirement ; priory:requiresItem item:96979 ; priory:requiredQuantity 100 ] , # Chunk of Pure Jade
+        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 250 ] , # Memories of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96590 ; priory:requiredQuantity 100 ] . # Jade Runestone
+
+# Gift of Aurene
+item:95797 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Aurene"@en ;
+    priory:gw2Id 95797 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isAccountBound true ;
+    skos:definition "Prismatic tribute gift combining Mystic Clovers, Ectoplasm, Runestones, and Memories of Aurene."@en .
+
+# ------------------------------------------------------------------------------
+# 3. 6 Elder Dragon Variant Tribute Scales
+# ------------------------------------------------------------------------------
+
+# Zhaitan Variant Scale (96001)
+item:96001 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+    rdfs:label "Aurene's Bite (Zhaitan Variant)"@en ;
+    skos:altLabel "Zhaitan Variant Scale"@en, "Zhaitan's Bite"@en, "Zhaitan Greatsword"@en, "Gen 3 Zhaitan Variant"@en ;
+    priory:gw2Id 96001 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:hasEquipmentSlot slot:TwoHand ;
+    priory:hasDragonFacet priory:ZhaitanFacet ;
+    priory:baseLegendaryItem item:96356 ; # Aurene's Bite
+    priory:playsRole role:EquippedGear, role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isEquipable true ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_AureneBite_Zhaitan ;
+    skos:definition "Legendary Greatsword skin variant channeling the death magic of the Elder Dragon Zhaitan."@en .
+
+# Kralkatorrik Variant Scale (96004)
+item:96004 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+    rdfs:label "Aurene's Insight (Kralkatorrik Variant)"@en ;
+    skos:altLabel "Kralkatorrik Variant Scale"@en, "Kralkatorrik's Insight"@en, "Kralkatorrik Staff"@en, "Gen 3 Kralkatorrik Variant"@en ;
+    priory:gw2Id 96004 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:hasEquipmentSlot slot:TwoHand ;
+    priory:hasDragonFacet priory:KralkatorrikFacet ;
+    priory:baseLegendaryItem item:96652 ; # Aurene's Insight
+    priory:playsRole role:EquippedGear, role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isEquipable true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_insight_kralkatorrik ;
+    skos:definition "Legendary Staff skin variant channeling the crystal and torment power of Kralkatorrik."@en .
+
+recipe:forge_aurenes_insight_kralkatorrik a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Aurene's Insight (Kralkatorrik Variant)"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96004 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresItem item:96652 ; priory:requiredQuantity 1 ] ,   # Aurene's Insight
+        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:46731 ; priory:requiredQuantity 10 ] .  # Pile of Bloodstone Dust / Branded Mass
+
+# Primordus Variant Scale (96005)
+item:96005 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+    rdfs:label "Aurene's Weight (Primordus Variant)"@en ;
+    skos:altLabel "Primordus Variant Scale"@en, "Primordus's Weight"@en, "Primordus Hammer"@en, "Gen 3 Primordus Variant"@en ;
+    priory:gw2Id 96005 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Hammer ;
+    priory:hasEquipmentSlot slot:TwoHand ;
+    priory:hasDragonFacet priory:PrimordusFacet ;
+    priory:baseLegendaryItem item:95684 ; # Aurene's Weight
+    priory:playsRole role:EquippedGear, role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isEquipable true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_weight_primordus ;
+    skos:definition "Legendary Hammer skin variant imbued with volcanic magma and fire magic of Primordus."@en .
+
+recipe:forge_aurenes_weight_primordus a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Aurene's Weight (Primordus Variant)"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96005 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresItem item:95684 ; priory:requiredQuantity 1 ] ,   # Aurene's Weight
+        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:46733 ; priory:requiredQuantity 10 ] .  # Dragonite Ingot
+
+# Soo-Won Variant Scale (96007)
+item:96007 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+    rdfs:label "Aurene's Flight (Soo-Won Variant)"@en ;
+    skos:altLabel "Soo-Won Variant Scale"@en, "Soo-Won's Flight"@en, "Soo-Won ShortBow"@en, "Gen 3 Soo-Won Variant"@en ;
+    priory:gw2Id 96007 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:ShortBow ;
+    priory:hasEquipmentSlot slot:TwoHand ;
+    priory:hasDragonFacet priory:SooWonFacet ;
+    priory:baseLegendaryItem item:97590 ; # Aurene's Flight
+    priory:playsRole role:EquippedGear, role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isEquipable true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_flight_soowon ;
+    skos:definition "Legendary bow skin variant channeling the tidal and life magic of the Water Dragon Soo-Won."@en .
+
+recipe:forge_aurenes_flight_soowon a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Aurene's Flight (Soo-Won Variant)"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96007 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresItem item:97590 ; priory:requiredQuantity 1 ] ,   # Aurene's Wing
+        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96979 ; priory:requiredQuantity 20 ] .  # Chunk of Pure Jade
+
+# Jormag Variant Scale (96006)
+item:96006 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+    rdfs:label "Aurene's Wisdom (Jormag Variant)"@en ;
+    skos:altLabel "Jormag Variant Scale"@en, "Jormag's Wisdom"@en, "Jormag Scepter"@en, "Gen 3 Jormag Variant"@en ;
+    priory:gw2Id 96006 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Scepter ;
+    priory:hasEquipmentSlot slot:MainHand ;
+    priory:hasDragonFacet priory:JormagFacet ;
+    priory:baseLegendaryItem item:96221 ; # Aurene's Wisdom
+    priory:playsRole role:EquippedGear, role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isEquipable true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_wisdom_jormag ;
+    skos:definition "Legendary Scepter skin variant evoking the frost and glacier magic of Jormag."@en .
+
+recipe:forge_aurenes_wisdom_jormag a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Aurene's Wisdom (Jormag Variant)"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96006 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresItem item:96221 ; priory:requiredQuantity 1 ] ,   # Aurene's Wisdom
+        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:46735 ; priory:requiredQuantity 10 ] .  # Empyreal Star
+
+# Mordremoth Variant Scale (96003)
+item:96003 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+    rdfs:label "Aurene's Rending (Mordremoth Variant)"@en ;
+    skos:altLabel "Mordremoth Variant Scale"@en, "Mordremoth's Rending"@en, "Mordremoth Axe"@en, "Gen 3 Mordremoth Variant"@en ;
+    priory:gw2Id 96003 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:hasEquipmentSlot slot:MainHand ;
+    priory:hasDragonFacet priory:MordremothFacet ;
+    priory:baseLegendaryItem item:96937 ; # Aurene's Rending
+    priory:playsRole role:EquippedGear, role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isEquipable true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_aurenes_rending_mordremoth ;
+    skos:definition "Legendary Axe skin variant rooted in the vine and mind magic of the Jungle Dragon Mordremoth."@en .
+
+recipe:forge_aurenes_rending_mordremoth a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Forge Aurene's Rending (Mordremoth Variant)"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96003 ;
+    priory:hasCostRequirement
+        [ a priory:CostRequirement ; priory:requiresItem item:96937 ; priory:requiredQuantity 1 ] ,   # Aurene's Rending
+        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:46733 ; priory:requiredQuantity 10 ] .  # Dragonite Ingot
+
+# ------------------------------------------------------------------------------
+# 4. Generation 3 Aurene Weapon Groundings (Roles & Substrates)
+# ------------------------------------------------------------------------------
+
+item:96356 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:96356 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97077 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97590 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97165 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:96652 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97377 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:96356 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:96028 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97590 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97783 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97590 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:97077 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+item:96221 a priory:ManifestedArtifact, priory:ContainerizedToken ;
+    priory:playsRole role:EquippedGear ;
+    priory:isContainerized true ;
+    priory:isEquipable true .
+
+# ------------------------------------------------------------------------------
+# 5. Generation 3 Precursor Weapon Groundings
+# ------------------------------------------------------------------------------
+item:97449 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:95967 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96827 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96915 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96193 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:95994 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96303 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:97691 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96925 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:97513 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96357 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:95920 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:95834 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:97267 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:96330 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .
+item:95814 a priory:ContainerizedToken ; priory:playsRole role:Precursor, role:CraftingIngredient, role:EquippedGear ; priory:isContainerized true ; priory:isEquipable true .

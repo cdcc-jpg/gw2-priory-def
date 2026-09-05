@@ -110,4 +110,6 @@ item:exchange_clover_fractals a priory:VendorExchangePath, owl:NamedIndividual ;
 
 item:forge_clovers a priory:MysticForgeRecipe, owl:NamedIndividual ;
     rdfs:label "Mystic Forge Clover Promotion"@en ;
+    priory:producesItem item:19675 ;
+    priory:outputQuantity 1 ;
     skos:definition "Gambling recipe combining Ectoplasm, Mystic Coins, Obsidian Shards, and Philosopher's Stones (~31.6% yield)."@en .

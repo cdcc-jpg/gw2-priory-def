@@ -3,8 +3,11 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@prefix iao: <http://purl.obolibrary.org/obo/IAO_> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix priory-ref: <https://priory.gw2/ref/> .
+@prefix role: <https://priory.gw2/ref/role/> .
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix weapon: <https://priory.gw2/ref/weapon/> .
 @prefix discipline: <https://priory.gw2/ref/discipline/> .
@@ -26,8 +29,14 @@
 # --- Base Entity & Item Taxonomy ---
 
 priory:Entity a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000001 ;
     rdfs:label "Game Entity"@en ;
     rdfs:comment "Root abstract class for all entities in Guild Wars 2."@en .
+
+priory:ManifestedArtifact a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000004 ;
+    rdfs:label "Manifested Combat Artifact"@en ;
+    rdfs:comment "Entities with in-game physical/3D representation, equip slots, and combat capability specifications."@en .
 
 priory:Item a owl:Class ;
     rdfs:subClassOf priory:Entity ;
@@ -35,7 +44,7 @@ priory:Item a owl:Class ;
     rdfs:comment "An item or resource that can exist in an account inventory, bank, or legendary armory."@en .
 
 priory:EquipableItem a owl:Class ;
-    rdfs:subClassOf priory:Item ;
+    rdfs:subClassOf priory:Item, priory:ManifestedArtifact ;
     rdfs:label "Equipable Item"@en ;
     rdfs:comment "An item that can be equipped onto a character equipment tab."@en .
 
@@ -148,18 +157,36 @@ priory:LegendaryRelic a owl:Class ;
     rdfs:subClassOf priory:Relic, priory:LegendaryItem ;
     rdfs:label "Legendary Relic"@en .
 
-# --- Materials, Gifts, Currencies ---
+# --- Materials, Gifts, Currencies & Ledger Tokens ---
+
+priory:LedgerToken a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
+    rdfs:label "Ledger Token / Accounting Entity"@en ;
+    rdfs:comment "Informational bookkeeping tokens, currencies, and intermediate crafting components."@en .
 
 priory:CraftingMaterial a owl:Class ;
-    rdfs:subClassOf priory:Item ;
+    rdfs:subClassOf priory:Item, priory:LedgerToken ;
     rdfs:label "Crafting Material"@en .
 
 priory:GiftItem a owl:Class ;
-    rdfs:subClassOf priory:Item ;
+    rdfs:subClassOf priory:Item, priory:LedgerToken ;
     rdfs:label "Gift Component"@en ;
     rdfs:comment "Intermediate gift components used in high-level Mystic Forge and legendary recipes."@en .
 
+priory:AccountWalletScalar a owl:Class ;
+    rdfs:subClassOf priory:LedgerToken ;
+    rdfs:label "Account Wallet Scalar"@en ;
+    rdfs:comment "Unlocated, non-containerized account-wide ledger balance."@en .
+
+priory:ContainerizedToken a owl:Class ;
+    rdfs:subClassOf priory:LedgerToken ;
+    rdfs:label "Containerized Inventory Token"@en ;
+    rdfs:comment "Token occupying discrete container slots in bags, bank, or material storage."@en .
+
+priory:AccountWalletScalar owl:disjointWith priory:ContainerizedToken .
+
 priory:Currency a owl:Class ;
+    rdfs:subClassOf priory:LedgerToken ;
     rdfs:label "Game Currency"@en ;
     rdfs:comment "Account-wide wallet currency, map currency, or barter token."@en .
 
@@ -182,6 +209,11 @@ priory:MysticForgeRecipe a owl:Class ;
 priory:IngredientRequirement a owl:Class ;
     rdfs:label "Ingredient Requirement"@en ;
     rdfs:comment "Reified N-ary relation specifying a required item or currency and its exact quantity."@en .
+
+priory:CurrencyRequirement a owl:Class ;
+    rdfs:subClassOf priory:IngredientRequirement ;
+    rdfs:label "Currency Requirement"@en ;
+    rdfs:comment "Reified requirement specifying a required currency and its exact quantity."@en .
 
 priory:AcquisitionPath a owl:Class ;
     rdfs:label "Acquisition Pathway"@en ;
@@ -314,6 +346,12 @@ priory:LoungeFeature a owl:Class ;
 # Object Properties (Verbs / Verb Phrases)
 # ==============================================================================
 
+priory:playsRole a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range role:GameRole ;
+    rdfs:label "plays role"@en ;
+    rdfs:comment "Links an entity to a realizable game role it assumes in systemic gameplay contexts."@en .
+
 priory:unpacksInto a owl:ObjectProperty ;
     rdfs:domain priory:ContainerItem ;
     rdfs:range priory:Item ;
@@ -442,6 +480,54 @@ priory:hasLoungeFeature a owl:ObjectProperty ;
 # ==============================================================================
 # Datatype Properties (Noun Phrases / Booleans)
 # ==============================================================================
+
+priory:apiWalletId a owl:DatatypeProperty ;
+    rdfs:domain priory:AccountWalletScalar ;
+    rdfs:range xsd:integer ;
+    rdfs:label "API wallet currency ID"@en ;
+    rdfs:comment "Unique identifier corresponding to the Guild Wars 2 account wallet currency endpoint."@en .
+
+priory:isContainerized a owl:DatatypeProperty ;
+    rdfs:domain priory:LedgerToken ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is containerized"@en ;
+    rdfs:comment "Indicates whether a token occupies discrete inventory/bank container slots."@en .
+
+priory:isDestroyable a owl:DatatypeProperty ;
+    rdfs:domain priory:LedgerToken ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is destroyable"@en ;
+    rdfs:comment "Indicates whether the token can be dragged out of inventory or destroyed."@en .
+
+priory:isMailable a owl:DatatypeProperty ;
+    rdfs:domain priory:LedgerToken ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is mailable"@en ;
+    rdfs:comment "Indicates whether the token can be attached to in-game mail."@en .
+
+priory:isTradeable a owl:DatatypeProperty ;
+    rdfs:domain priory:LedgerToken ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is tradeable"@en ;
+    rdfs:comment "Indicates whether the token can be bought and sold on the Black Lion Trading Post."@en .
+
+priory:isSalvageable a owl:DatatypeProperty ;
+    rdfs:domain priory:LedgerToken ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is salvageable"@en ;
+    rdfs:comment "Indicates whether the token can be processed with salvage kits."@en .
+
+priory:maxStackSize a owl:DatatypeProperty ;
+    rdfs:domain priory:ContainerizedToken ;
+    rdfs:range xsd:integer ;
+    rdfs:label "max stack size"@en ;
+    rdfs:comment "Maximum stack capacity for this item in a discrete container slot (typically 250)."@en .
+
+priory:icon a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "icon URL"@en ;
+    rdfs:comment "Official ArenaNet render image URL for the entity or concept."@en .
 
 priory:gw2Id a owl:DatatypeProperty ;
     rdfs:domain [ a owl:Class ; owl:unionOf (priory:Item priory:Recipe priory:Currency) ] ;

@@ -10,7 +10,8 @@
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     ns1:hasWeaponType <https://priory.gw2/ref/weapon/Spear> ;
-    ns1:isAccountBound true .
+    ns1:isAccountBound true ;
+    ns1:producedBy <https://priory.gw2/id/recipe/forge_klobjarne_harvester> .
 
 <https://priory.gw2/id/item/105653> a ns1:LegendaryWeapon ;
     rdfs:label "Ancora Pax"@en ;
@@ -24,7 +25,8 @@
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Staff> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     ns1:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
-    ns1:isAccountBound true .
+    ns1:isAccountBound true ;
+    ns1:acquiredVia ns1:Path_JanthirConvergence .
 
 <https://priory.gw2/id/item/106273> a ns1:LegendaryWeapon ;
     rdfs:label "Ancora Bellum"@en ;
@@ -38,7 +40,8 @@
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     ns1:hasWeaponType <https://priory.gw2/ref/weapon/Spear> ;
-    ns1:isAccountBound true .
+    ns1:isAccountBound true ;
+    ns1:acquiredVia ns1:Path_JanthirConvergence .
 
 <https://priory.gw2/id/item/30684> a ns1:LegendaryWeapon ;
     rdfs:label "Frostfang"@en ;

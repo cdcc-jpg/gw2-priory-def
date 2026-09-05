@@ -31,6 +31,9 @@ MOUNT = Namespace("https://priory.gw2/ref/mount/")
 REGION = Namespace("https://priory.gw2/ref/region/")
 ZONE = Namespace("https://priory.gw2/ref/zone/")
 GUILD_ENHANCEMENT = Namespace("https://priory.gw2/id/guild_enhancement/")
+BFO = Namespace("http://purl.obolibrary.org/obo/BFO_")
+IAO = Namespace("http://purl.obolibrary.org/obo/IAO_")
+ROLE = Namespace("https://priory.gw2/ref/role/")
 
 DEFAULT_NAMESPACES = {
     "priory": PRIORY,
@@ -52,6 +55,9 @@ DEFAULT_NAMESPACES = {
     "mount": MOUNT,
     "region": REGION,
     "zone": ZONE,
+    "bfo": BFO,
+    "iao": IAO,
+    "role": ROLE,
     "skos": rdflib.SKOS,
     "rdfs": rdflib.RDFS,
     "owl": rdflib.OWL,
@@ -94,7 +100,11 @@ class PrioryGraphStore:
                 "Ensure gw2-priory-ref repository is cloned."
             )
 
-        # 2. Load Ontology Schemas (Core, Character, and Application Schemas)
+        # 2. Load Ontology Schemas (BFO Subset, Core, Character, and Application Schemas)
+        bfo_subset = self.def_repo_path / "ontology" / "bfo_subset.ttl"
+        if bfo_subset.exists():
+            self.graph.parse(bfo_subset, format="turtle")
+
         core_ontology = self.def_repo_path / "ontology" / "priory_core.ttl"
         if core_ontology.exists():
             self.graph.parse(core_ontology, format="turtle")

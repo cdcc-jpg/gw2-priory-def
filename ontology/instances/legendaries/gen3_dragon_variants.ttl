@@ -81,6 +81,7 @@ item:96002 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Sword> ;
     priory:hasDragonFacet priory:ZhaitanFacet ;
     priory:baseLegendaryItem item:95675 ;
+    priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Zhaitan's Fang", "Zhaitan Sword" .
 
 # Mordremoth Variants
@@ -91,6 +92,7 @@ item:96003 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Axe> ;
     priory:hasDragonFacet priory:MordremothFacet ;
     priory:baseLegendaryItem item:95684 ;
+    priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Mordremoth's Rending", "Mordremoth Axe" .
 
 # Kralkatorrik Variants
@@ -101,6 +103,7 @@ item:96004 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
     priory:hasDragonFacet priory:KralkatorrikFacet ;
     priory:baseLegendaryItem item:96028 ;
+    priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Kralkatorrik's Insight", "Kralkatorrik Staff" .
 
 # Primordus Variants
@@ -111,6 +114,7 @@ item:96005 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Hammer> ;
     priory:hasDragonFacet priory:PrimordusFacet ;
     priory:baseLegendaryItem item:95808 ;
+    priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Primordus's Weight", "Primordus Hammer" .
 
 # Jormag Variants
@@ -121,6 +125,7 @@ item:96006 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
     priory:hasDragonFacet priory:JormagFacet ;
     priory:baseLegendaryItem item:96652 ;
+    priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Jormag's Wisdom", "Jormag Scepter" .
 
 # Soo-Won Variants
@@ -131,4 +136,6 @@ item:96007 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/ShortBow> ;
     priory:hasDragonFacet priory:SooWonFacet ;
     priory:baseLegendaryItem item:97783 ;
+    priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Soo-Won's Flight", "Soo-Won Short Bow" .
+

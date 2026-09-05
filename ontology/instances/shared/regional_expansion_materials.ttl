@@ -8,6 +8,7 @@
 @prefix recipe: <https://priory.gw2/id/recipe/> .
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix role: <https://priory.gw2/ref/role/> .
 
 # ==============================================================================
 # Regional Expansion Materials & Living World Currencies
@@ -153,4 +154,328 @@ item:83410 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound true ;
     priory:zoneName "Domain of Vabbi" ;
+    priory:acquiredVia item:vendor_vabbi ;
+    owl:sameAs item:83318 ;
     skos:definition "Path of Fire currency purchased with Elegy Mosaics and Trade Contracts for Gift of Desert Mastery and Coalescence."@en .
+
+item:83318 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Funerary Incense"@en ;
+    priory:gw2Id 83318 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:zoneName "Domain of Vabbi" ;
+    priory:acquiredVia item:vendor_vabbi ;
+    owl:sameAs item:83410 ;
+    skos:definition "Path of Fire currency purchased with Elegy Mosaics and Trade Contracts for Gift of Desert Mastery and Coalescence in Tomb of Primeval Kings."@en .
+
+# ------------------------------------------------------------------------------
+# 5. Mastery Gifts
+# ------------------------------------------------------------------------------
+
+item:82791 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gift of Bloodstone Magic"@en ;
+    priory:gw2Id 82791 ;
+    priory:producedBy recipe:forge_gift_of_bloodstone_magic .
+
+recipe:forge_gift_of_bloodstone_magic a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Bloodstone Magic"@en ;
+    priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 250 ; priory:requiresItem item:79280 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 250 ; priory:requiresItem item:80332 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 250 ; priory:requiresItem item:81706 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19674 ] ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:82791 .
+
+item:82701 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gift of Dragon Magic"@en ;
+    priory:gw2Id 82701 ;
+    priory:producedBy recipe:forge_gift_of_dragon_magic .
+
+recipe:forge_gift_of_dragon_magic a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Dragon Magic"@en ;
+    priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 250 ; priory:requiresItem item:79469 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 250 ; priory:requiresItem item:79899 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 250 ; priory:requiresItem item:81127 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19674 ] ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:82701 .
+
+item:82860 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gift of Draconic Mastery"@en ;
+    priory:gw2Id 82860 ;
+    priory:producedBy recipe:forge_gift_of_draconic_mastery .
+
+recipe:forge_gift_of_draconic_mastery a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Draconic Mastery"@en ;
+    priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19674 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:70842 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:82791 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:82701 ] ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:82860 .
+
+item:70842 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mordrem Lodestone"@en ;
+    priory:gw2Id 70842 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient .
+
+item:19662 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Bottle of Elonian Wine"@en ;
+    priory:gw2Id 19662 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient .
+
+item:gift_of_crystalline_magic a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gift of Crystalline Magic"@en ;
+    priory:producedBy recipe:forge_gift_of_crystalline_magic .
+
+recipe:forge_gift_of_crystalline_magic a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Crystalline Magic"@en ;
+    priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:86069 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:87645 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:86977 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19662 ] ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:gift_of_crystalline_magic .
+
+item:gift_of_ephemeral_magic a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gift of Ephemeral Magic"@en ;
+    priory:producedBy recipe:forge_gift_of_ephemeral_magic .
+
+recipe:forge_gift_of_ephemeral_magic a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Ephemeral Magic"@en ;
+    priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:90783 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:89537 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:88955 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19662 ] ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:gift_of_ephemeral_magic .
+
+item:91230 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Gift of Arid Mastery"@en ;
+    priory:gw2Id 91230 ;
+    priory:producedBy recipe:forge_gift_of_arid_mastery .
+
+recipe:forge_gift_of_arid_mastery a priory:MysticForgeRecipe ;
+    rdfs:label "Forge Gift of Arid Mastery"@en ;
+    priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:83410 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19674 ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:gift_of_crystalline_magic ],
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:gift_of_ephemeral_magic ] ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:91230 .
+
+# ------------------------------------------------------------------------------
+# 6. Heart of Thorns Regional Expansion Leaf Gifts
+# ------------------------------------------------------------------------------
+
+item:70797 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Fleet"@en ;
+    priory:gw2Id 70797 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_fleet ;
+    skos:definition "Heart of Thorns regional gift purchased from the Itzel Mastery Vendor in Verdant Brink for 250 Airship Parts and 10 Gold."@en .
+
+item:71943 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Tarir"@en ;
+    priory:gw2Id 71943 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_tarir ;
+    skos:definition "Heart of Thorns regional gift purchased from the Exalted Mastery Vendor in Auric Basin for 250 Lumps of Aurillium and 10 Gold."@en .
+
+item:74677 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Chak"@en ;
+    priory:gw2Id 74677 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_chak ;
+    skos:definition "Heart of Thorns regional gift purchased from the Nuhoch Mastery Vendor in Tangled Depths for 250 Ley Line Crystals and 10 Gold."@en .
+
+item:75919 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Maguuma"@en ;
+    skos:altLabel "Gift of Insights"@en ;
+    priory:gw2Id 75919 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:path_maguuma_map_completion ;
+    skos:definition "Heart of Thorns exploration gift awarded for achieving 100% map completion across Heart of Maguuma."@en .
+
+# ------------------------------------------------------------------------------
+# 7. Path of Fire Regional Expansion Leaf Gifts & Desert Mastery
+# ------------------------------------------------------------------------------
+
+item:82414 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Desert Mastery"@en ;
+    priory:gw2Id 82414 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:producedBy recipe:forge_gift_of_desert_mastery ;
+    skos:definition "Path of Fire mastery gift forged by combining Gift of the Oasis, Gift of the Highlands, Gift of the Riverlands, and Gift of the Desolation in the Mystic Forge."@en .
+
+recipe:forge_gift_of_desert_mastery a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of the Desert Mastery"@en ;
+    priory:producesItem item:82414 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:83694 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:83008 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:83471 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:83416 ; priory:requiredQuantity 1 ] ;
+    skos:definition "Combine Gift of the Oasis, Gift of the Highlands, Gift of the Riverlands, and Gift of the Desolation in the Mystic Forge to create Gift of the Desert Mastery."@en .
+
+item:83694 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Oasis"@en ;
+    priory:gw2Id 83694 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_oasis ;
+    skos:definition "Purchased from renown heart vendors in Crystal Oasis for 250 Trade Contracts."@en .
+
+item:83008 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Highlands"@en ;
+    priory:gw2Id 83008 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_highlands ;
+    skos:definition "Purchased from renown heart vendors in Desert Highlands for 250 Trade Contracts."@en .
+
+item:83471 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Riverlands"@en ;
+    priory:gw2Id 83471 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_riverlands ;
+    skos:definition "Purchased from renown heart vendors in Elon Riverlands for 250 Trade Contracts."@en .
+
+item:83416 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Desolation"@en ;
+    priory:gw2Id 83416 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_desolation ;
+    skos:definition "Purchased from renown heart vendors in The Desolation for 250 Trade Contracts."@en .
+
+# ------------------------------------------------------------------------------
+# 8. Secrets of the Obscure Regional Leaf Gifts
+# ------------------------------------------------------------------------------
+
+item:100140 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Amnytas"@en ;
+    priory:gw2Id 100140 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_lyhr, item:vendor_lyhr_amnytas ;
+    owl:sameAs item:100267 ;
+    skos:definition "Secrets of the Obscure regional gift purchased from Lyhr in The Wizard's Tower for 250 Pinches of Stardust and 10 Gold."@en .
+
+item:100424 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Cosmos"@en ;
+    priory:gw2Id 100424 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_lyhr, item:vendor_lyhr_cosmos ;
+    skos:definition "Secrets of the Obscure regional gift purchased from Lyhr in The Wizard's Tower for 250 Static Charges and 10 Gold."@en .
+
+item:100063 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Celestial Knowledge"@en ;
+    priory:gw2Id 100063 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:acquiredVia item:vendor_lyhr, item:vendor_lyhr_celestial ;
+    skos:definition "Secrets of the Obscure regional gift purchased from Lyhr in The Wizard's Tower for 250 Cases of Captured Lightning and 10 Gold."@en .
+
+# ------------------------------------------------------------------------------
+# 9. Competitive / WvW / PvP Leaf Gifts & Gift of the Mists
+# ------------------------------------------------------------------------------
+
+item:79549 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Mists"@en ;
+    priory:gw2Id 79549 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:producedBy recipe:forge_gift_of_the_mists ;
+    skos:definition "Competitive legendary component created in the Mystic Forge combining Gift of Glory, Gift of War, Gift of Battle, and Cube of Annihilation."@en .
+
+recipe:forge_gift_of_the_mists a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of the Mists"@en ;
+    priory:producesItem item:79549 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79548 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79547 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19678 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:cube_of_annihilation ; priory:requiredQuantity 1 ] ;
+    skos:definition "Combine Gift of Glory, Gift of War, Gift of Battle, and Cube of Annihilation in the Mystic Forge to create Gift of the Mists."@en .
+
+item:79548 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Glory"@en ;
+    priory:gw2Id 79548 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    owl:sameAs item:79895 ;
+    skos:definition "Competitive PvP gift earned from Shards of Glory and PvP League progression."@en .
+
+item:79895 a owl:NamedIndividual ;
+    owl:sameAs item:79548 .
+
+item:79547 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of War"@en ;
+    priory:gw2Id 79547 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    owl:sameAs item:79585 ;
+    skos:definition "Competitive WvW gift earned from Memories of Battle and WvW Skirmish Claim Tickets."@en .
+
+item:79585 a owl:NamedIndividual ;
+    owl:sameAs item:79547 .
+
+item:cube_of_annihilation a priory:CraftingMaterial, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Cube of Annihilation"@en ;
+    skos:altLabel "Cube of Stabilized Dark Energy"@en ;
+    priory:gw2Id 73137 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound true ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient ;
+    owl:sameAs item:73137 ;
+    skos:definition "Exotic component crafted with Stabilizing Matrices and Balls of Dark Energy, required for Gift of the Mists."@en .
+
+item:73137 a owl:NamedIndividual ;
+    owl:sameAs item:cube_of_annihilation .

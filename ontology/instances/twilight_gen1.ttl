@@ -10,6 +10,7 @@
 @prefix discipline: <https://priory.gw2/ref/discipline/> .
 @prefix gamemode: <https://priory.gw2/ref/gamemode/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
+@prefix role: <https://priory.gw2/ref/role/> .
 @prefix item: <https://priory.gw2/id/item/> .
 @prefix recipe: <https://priory.gw2/id/recipe/> .
 
@@ -26,6 +27,7 @@ item:30704 a priory:LegendaryWeapon ;
     priory:hasWeaponType weapon:Greatsword ;
     priory:armoryMaxCap 1 ;
     priory:isAccountBound true ;
+    priory:playsRole role:EquippedGear ;
     priory:producedBy recipe:forge_twilight ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Twilight> .
 
@@ -61,6 +63,7 @@ item:29185 a priory:PrecursorWeapon ;
     priory:hasRarity rarity:Exotic ;
     priory:hasWeaponType weapon:Greatsword ;
     priory:isAccountBound false ;
+    priory:playsRole role:Precursor, role:EquippedGear ;
     priory:hasSubstituteSource [ a priory:TradingPostPurchasePath ] ,
                                [ a priory:AchievementCollectionPath ] ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Dusk> .
@@ -420,3 +423,44 @@ item:19725 a priory:CraftingMaterial ; rdfs:label "Vicious Claw"@en ; priory:gw2
 item:19734 a priory:CraftingMaterial ; rdfs:label "Armored Scale"@en ; priory:gw2Id 19734 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 item:19723 a priory:CraftingMaterial ; rdfs:label "Ancient Bone"@en ; priory:gw2Id 19723 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 item:19728 a priory:CraftingMaterial ; rdfs:label "Vicious Fang"@en ; priory:gw2Id 19728 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+
+# ------------------------------------------------------------------------------
+# Currencies (Account Wallet Scalars)
+# ------------------------------------------------------------------------------
+
+currency:AstralAcclaim a priory:AccountWalletScalar, priory:Currency, owl:NamedIndividual ;
+    rdfs:label "Astral Acclaim"@en ;
+    priory:apiWalletId 68 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange .
+
+currency:FractalRelic a priory:AccountWalletScalar, priory:Currency, owl:NamedIndividual ;
+    rdfs:label "Fractal Relic"@en ;
+    priory:apiWalletId 7 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange .
+
+currency:SpiritShard a priory:AccountWalletScalar, priory:Currency, owl:NamedIndividual ;
+    rdfs:label "Spirit Shard"@en ;
+    priory:apiWalletId 23 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange .
+
+currency:Coin a priory:AccountWalletScalar, priory:Currency, owl:NamedIndividual ;
+    rdfs:label "Coin"@en ;
+    priory:apiWalletId 1 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange .
+
+currency:Karma a priory:AccountWalletScalar, priory:Currency, owl:NamedIndividual ;
+    rdfs:label "Karma"@en ;
+    priory:apiWalletId 2 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange .
+
+# ------------------------------------------------------------------------------
+# Dusk & Twilight Role Groundings
+# ------------------------------------------------------------------------------
+
+item:30689 priory:playsRole role:Precursor, role:EquippedGear .
+item:30699 priory:playsRole role:EquippedGear .

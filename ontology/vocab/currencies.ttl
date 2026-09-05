@@ -1,0 +1,405 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix role: <https://priory.gw2/ref/role/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
+
+currency:Coin a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Coin" ;
+    skos:prefLabel "Coin" ;
+    skos:altLabel "Coin" ;
+    skos:definition "The Coin currency." ;
+    priory:apiWalletId 1 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:1 .
+
+currency:1 a owl:NamedIndividual ;
+    owl:sameAs currency:Coin .
+
+currency:Karma a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Karma" ;
+    skos:prefLabel "Karma" ;
+    skos:altLabel "Karma" ;
+    skos:definition "The Karma currency." ;
+    priory:apiWalletId 2 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:2 .
+
+currency:2 a owl:NamedIndividual ;
+    owl:sameAs currency:Karma .
+
+currency:Laurel a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Laurel" ;
+    skos:prefLabel "Laurel" ;
+    skos:altLabel "Laurel" ;
+    skos:definition "The Laurel currency." ;
+    priory:apiWalletId 3 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:3 .
+
+currency:3 a owl:NamedIndividual ;
+    owl:sameAs currency:Laurel .
+
+currency:Gems a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Gems" ;
+    skos:prefLabel "Gems" ;
+    skos:altLabel "Gems" ;
+    skos:definition "The Gems currency." ;
+    priory:apiWalletId 4 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:4 .
+
+currency:4 a owl:NamedIndividual ;
+    owl:sameAs currency:Gems .
+
+currency:FractalRelic a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Fractal Relic" ;
+    skos:prefLabel "Fractal Relic" ;
+    skos:altLabel "Fractal Relic" ;
+    skos:definition "The Fractal Relic currency." ;
+    priory:apiWalletId 7 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:7 .
+
+currency:7 a owl:NamedIndividual ;
+    owl:sameAs currency:FractalRelic .
+
+currency:AirshipPart a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Airship Part" ;
+    skos:prefLabel "Airship Part" ;
+    skos:altLabel "Airship Part" ;
+    skos:definition "The Airship Part currency." ;
+    priory:apiWalletId 19 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:19 .
+
+currency:19 a owl:NamedIndividual ;
+    owl:sameAs currency:AirshipPart .
+
+currency:LumpOfAurillium a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Lump of Aurillium"@en ;
+    skos:prefLabel "Lump of Aurillium"@en ;
+    skos:altLabel "Lump of Aurillium"@en ;
+    skos:definition "The Lump of Aurillium currency obtained from Auric Basin."@en ;
+    priory:apiWalletId 22 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:22, currency:LeyLineSpark .
+
+currency:LeyLineSpark a owl:NamedIndividual ;
+    owl:sameAs currency:22, currency:LumpOfAurillium .
+
+currency:22 a owl:NamedIndividual ;
+    owl:sameAs currency:LumpOfAurillium, currency:LeyLineSpark .
+
+currency:SpiritShard a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Spirit Shard" ;
+    skos:prefLabel "Spirit Shard" ;
+    skos:altLabel "Spirit Shard" ;
+    skos:definition "The Spirit Shard currency." ;
+    priory:apiWalletId 23 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:23 .
+
+currency:23 a owl:NamedIndividual ;
+    owl:sameAs currency:SpiritShard .
+
+currency:PristineFractalRelic a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Pristine Fractal Relic" ;
+    skos:prefLabel "Pristine Fractal Relic" ;
+    skos:altLabel "Pristine Fractal Relic" ;
+    skos:definition "The Pristine Fractal Relic currency." ;
+    priory:apiWalletId 24 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:24 .
+
+currency:24 a owl:NamedIndividual ;
+    owl:sameAs currency:PristineFractalRelic .
+
+currency:CrystallineOre a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Crystalline Ore" ;
+    skos:prefLabel "Crystalline Ore" ;
+    skos:altLabel "Crystalline Ore" ;
+    skos:definition "The Crystalline Ore currency." ;
+    priory:apiWalletId 27 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:27 .
+
+currency:27 a owl:NamedIndividual ;
+    owl:sameAs currency:CrystallineOre .
+
+currency:MagnetiteShard a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Magnetite Shard" ;
+    skos:prefLabel "Magnetite Shard" ;
+    skos:altLabel "Magnetite Shard" ;
+    skos:definition "The Magnetite Shard currency." ;
+    priory:apiWalletId 28 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:28 .
+
+currency:28 a owl:NamedIndividual ;
+    owl:sameAs currency:MagnetiteShard .
+
+currency:UnboundMagic a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Unbound Magic" ;
+    skos:prefLabel "Unbound Magic" ;
+    skos:altLabel "Unbound Magic" ;
+    skos:definition "The Unbound Magic currency." ;
+    priory:apiWalletId 32 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:32 .
+
+currency:32 a owl:NamedIndividual ;
+    owl:sameAs currency:UnboundMagic .
+
+currency:PvPLeagueTicket a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "PvP League Ticket" ;
+    skos:prefLabel "PvP League Ticket" ;
+    skos:altLabel "PvP League Ticket" ;
+    skos:definition "The PvP League Ticket currency." ;
+    priory:apiWalletId 34 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:34 .
+
+currency:34 a owl:NamedIndividual ;
+    owl:sameAs currency:PvPLeagueTicket .
+
+currency:ElegyMosaic a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Elegy Mosaic" ;
+    skos:prefLabel "Elegy Mosaic" ;
+    skos:altLabel "Elegy Mosaic" ;
+    skos:definition "The Elegy Mosaic currency." ;
+    priory:apiWalletId 35 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:35, currency:39 .
+
+currency:35 a owl:NamedIndividual ;
+    owl:sameAs currency:ElegyMosaic .
+
+currency:39 a owl:NamedIndividual ;
+    owl:sameAs currency:ElegyMosaic .
+
+currency:WvWSkirmishClaimTicket a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "WvW Skirmish Claim Ticket" ;
+    skos:prefLabel "WvW Skirmish Claim Ticket" ;
+    skos:altLabel "WvW Skirmish Claim Ticket" ;
+    skos:definition "The WvW Skirmish Claim Ticket currency." ;
+    priory:apiWalletId 44 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:44 .
+
+currency:44 a owl:NamedIndividual ;
+    owl:sameAs currency:WvWSkirmishClaimTicket .
+
+currency:VolatileMagic a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Volatile Magic" ;
+    skos:prefLabel "Volatile Magic" ;
+    skos:altLabel "Volatile Magic" ;
+    skos:definition "The Volatile Magic currency." ;
+    priory:apiWalletId 45 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:45 .
+
+currency:45 a owl:NamedIndividual ;
+    owl:sameAs currency:VolatileMagic .
+
+currency:TradeContract a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Trade Contract" ;
+    skos:prefLabel "Trade Contract" ;
+    skos:altLabel "Trade Contract" ;
+    skos:definition "The Trade Contract currency." ;
+    priory:apiWalletId 49 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:49 .
+
+currency:49 a owl:NamedIndividual ;
+    owl:sameAs currency:TradeContract .
+
+currency:ImperialFavor a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Imperial Favor" ;
+    skos:prefLabel "Imperial Favor" ;
+    skos:altLabel "Imperial Favor" ;
+    skos:definition "The Imperial Favor currency." ;
+    priory:apiWalletId 59 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:59 .
+
+currency:59 a owl:NamedIndividual ;
+    owl:sameAs currency:ImperialFavor .
+
+currency:AstralAcclaim a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Astral Acclaim" ;
+    skos:prefLabel "Astral Acclaim" ;
+    skos:altLabel "Astral Acclaim" ;
+    skos:definition "The Astral Acclaim currency." ;
+    priory:apiWalletId 68 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:68 .
+
+currency:68 a owl:NamedIndividual ;
+    owl:sameAs currency:AstralAcclaim .
+
+currency:LeyLineCrystal a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Ley Line Crystal"@en ;
+    skos:prefLabel "Ley Line Crystal"@en ;
+    skos:altLabel "Ley Line Crystal"@en ;
+    skos:definition "The Ley Line Crystal currency obtained from events in Tangled Depths."@en ;
+    priory:apiWalletId 20 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:20 .
+
+currency:20 a owl:NamedIndividual ;
+    owl:sameAs currency:LeyLineCrystal .
+
+currency:PinchOfStardust a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Pinch of Stardust"@en ;
+    skos:prefLabel "Pinch of Stardust"@en ;
+    skos:altLabel "Pinch of Stardust"@en ;
+    skos:definition "The Pinch of Stardust currency obtained from Amnytas in Secrets of the Obscure."@en ;
+    priory:apiWalletId 73 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:73 .
+
+currency:73 a owl:NamedIndividual ;
+    owl:sameAs currency:PinchOfStardust .
+
+currency:StaticCharge a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Static Charge"@en ;
+    skos:prefLabel "Static Charge"@en ;
+    skos:altLabel "Static Charge"@en ;
+    skos:definition "The Static Charge currency obtained from Skywatch Archipelago in Secrets of the Obscure."@en ;
+    priory:apiWalletId 75 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:75 .
+
+currency:75 a owl:NamedIndividual ;
+    owl:sameAs currency:StaticCharge .
+
+currency:CaseOfCapturedLightning a owl:NamedIndividual,
+        bfo:IndependentContinuant,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    rdfs:label "Case of Captured Lightning"@en ;
+    skos:prefLabel "Case of Captured Lightning"@en ;
+    skos:altLabel "Case of Captured Lightning"@en ;
+    skos:definition "The Case of Captured Lightning currency obtained from The Wizard's Tower in Secrets of the Obscure."@en ;
+    priory:apiWalletId 76 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:76 .
+
+currency:76 a owl:NamedIndividual ;
+    owl:sameAs currency:CaseOfCapturedLightning .

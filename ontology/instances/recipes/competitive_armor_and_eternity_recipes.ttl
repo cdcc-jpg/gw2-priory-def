@@ -6,6 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix item: <https://priory.gw2/id/item/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
 
 # ==============================================================================
 # COMPETITIVE ARMOR & ETERNITY RECIPES
@@ -75,9 +76,64 @@ item:79900 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:isAccountBound true .
 
 item:80894 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Legendary Spike" ;
+    rdfs:label "Legendary Spike (Certificate of Honor)" ;
     priory:gw2Id 80894 ;
     priory:isAccountBound true .
+
+item:84099 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Certificate of Heroics" ;
+    priory:gw2Id 84099 ;
+    priory:isAccountBound true .
+
+item:81704 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Glob of Condensed Spirit Energy" ;
+    priory:gw2Id 81704 ;
+    priory:isAccountBound true .
+
+item:74286 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Jar of Distilled Glory" ;
+    priory:gw2Id 74286 ;
+    priory:isAccountBound true .
+
+item:79040 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Record of League Participation" ;
+    priory:gw2Id 79040 ;
+    priory:isAccountBound true .
+
+item:75960 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Record of League Victories" ;
+    priory:gw2Id 75960 ;
+    priory:isAccountBound true .
+
+item:20798 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Eldritch Scroll" ;
+    priory:gw2Id 20798 ;
+    priory:isAccountBound true .
+
+item:19925 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Obsidian Shard" ;
+    priory:gw2Id 19925 ;
+    priory:isAccountBound true .
+
+item:79230 a priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mist Core Fragment"@en ;
+    priory:gw2Id 79230 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Exotic> ;
+    priory:isAccountBound true .
+
+item:79103 a priory:Item, owl:NamedIndividual ;
+    rdfs:label "Star of Glory"@en ;
+    priory:gw2Id 79103 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Exotic> ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_StarOfGlory .
+
+priory:Recipe_StarOfGlory a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Purchase Star of Glory"@en ;
+    priory:producesItem item:79103 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79895 ; priory:requiredQuantity 400 ] . # Ascended Shards of Glory
 
 
 # WvW Gift of War Prosperity
@@ -95,7 +151,8 @@ priory:Recipe_GiftOfWarProsperity a priory:MysticForgeRecipe, owl:NamedIndividua
     priory:hasIngredientRequirement
         [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 15 ] ,  # Mystic Clover
         [ a priory:IngredientRequirement ; priory:requiresItem item:19629 ; priory:requiredQuantity 1 ] ,  # Gift of Condensed Might (or Gift of Might)
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19628 ; priory:requiredQuantity 1 ] .  # Gift of Condensed Magic (or Gift of Magic)
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19628 ; priory:requiredQuantity 1 ] ,  # Gift of Condensed Magic (or Gift of Magic)
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19678 ; priory:requiredQuantity 1 ] .  # Gift of Battle
 
 # WvW Gift of War Dedication
 item:80851 a priory:GiftItem, owl:NamedIndividual ;
@@ -110,8 +167,10 @@ priory:Recipe_GiftOfWarDedication a priory:MysticForgeRecipe, owl:NamedIndividua
     priory:producesItem item:80851 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:73248 ; priory:requiredQuantity 250 ] , # Memory of Battle
-        [ a priory:IngredientRequirement ; priory:requiresItem item:80894 ; priory:requiredQuantity 10 ] .  # Legendary Spike
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80894 ; priory:requiredQuantity 1 ] ,   # Certificate of Honor
+        [ a priory:IngredientRequirement ; priory:requiresItem item:84099 ; priory:requiredQuantity 1 ] ,   # Certificate of Heroics
+        [ a priory:IngredientRequirement ; priory:requiresItem item:81704 ; priory:requiredQuantity 1 ] ,   # Condensed Spirit Energy
+        [ a priory:IngredientRequirement ; priory:requiresItem item:73248 ; priory:requiredQuantity 250 ] . # Memory of Battle
 
 # WvW Gift of War Prowess
 item:80852 a priory:GiftItem, owl:NamedIndividual ;
@@ -121,67 +180,75 @@ item:80852 a priory:GiftItem, owl:NamedIndividual ;
     priory:isAccountBound true ;
     priory:producedBy priory:Recipe_GiftOfWarProwess .
 
-priory:Recipe_GiftOfWarProwess a priory:VendorExchangePath, owl:NamedIndividual ;
+priory:Recipe_GiftOfWarProwess a priory:VendorExchangePath, priory:Recipe, owl:NamedIndividual ;
     rdfs:label "Purchase Gift of War Prowess" ;
     priory:producesItem item:80852 ;
     priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:WvWSkirmishClaimTicket ;
+    priory:requiredQuantity 1095 ;
     priory:hasIngredientRequirement
         [ a priory:IngredientRequirement ; priory:requiresItem item:71581 ; priory:requiredQuantity 1095 ] . # WvW Skirmish Claim Ticket
 
 
-# PvP Gift of Tournament Prosperity
+# PvP Gift of Competitive Prosperity
 item:80860 a priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Tournament Prosperity" ;
+    rdfs:label "Gift of Competitive Prosperity" ;
     priory:gw2Id 80860 ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:isAccountBound true ;
-    priory:producedBy priory:Recipe_GiftOfTournamentProsperity .
+    priory:producedBy priory:Recipe_GiftOfCompetitiveProsperity .
 
-priory:Recipe_GiftOfTournamentProsperity a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Gift of Tournament Prosperity" ;
+priory:Recipe_GiftOfCompetitiveProsperity a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of Competitive Prosperity" ;
     priory:producesItem item:80860 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 15 ] ,  # Mystic Clover
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19629 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19628 ; priory:requiredQuantity 1 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79230 ; priory:requiredQuantity 15 ] ,  # Mist Core Fragments
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 15 ] ,  # Mystic Clovers
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19629 ; priory:requiredQuantity 1 ] ,   # Gift of Condensed Might
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19628 ; priory:requiredQuantity 1 ] .   # Gift of Condensed Magic
 
-# PvP Gift of Tournament Dedication
+# PvP Gift of Competitive Dedication
 item:80861 a priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Tournament Dedication" ;
+    rdfs:label "Gift of Competitive Dedication" ;
     priory:gw2Id 80861 ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:isAccountBound true ;
-    priory:producedBy priory:Recipe_GiftOfTournamentDedication .
+    priory:producedBy priory:Recipe_GiftOfCompetitiveDedication .
 
-priory:Recipe_GiftOfTournamentDedication a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Gift of Tournament Dedication" ;
+priory:Recipe_GiftOfCompetitiveDedication a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of Competitive Dedication" ;
     priory:producesItem item:80861 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:79895 ; priory:requiredQuantity 400 ] , # Ascended Shards of Glory
-        [ a priory:IngredientRequirement ; priory:requiresItem item:78902 ; priory:requiredQuantity 100 ] , # PvP League Tickets
-        [ a priory:IngredientRequirement ; priory:requiresItem item:79900 ; priory:requiredQuantity 1 ] .   # Star of Glory
+        [ a priory:IngredientRequirement ; priory:requiresItem item:74286 ; priory:requiredQuantity 1 ] ,   # Jar of Distilled Glory
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79040 ; priory:requiredQuantity 1 ] ,   # Record of League Participation
+        [ a priory:IngredientRequirement ; priory:requiresItem item:79103 ; priory:requiredQuantity 1 ] ,   # Star of Glory
+        [ a priory:IngredientRequirement ; priory:requiresItem item:81704 ; priory:requiredQuantity 1 ] .   # Condensed Spirit Energy
 
-# PvP Gift of Tournament Prowess
+# PvP Gift of Competitive Prowess
 item:80862 a priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Tournament Prowess" ;
+    rdfs:label "Gift of Competitive Prowess" ;
     priory:gw2Id 80862 ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:isAccountBound true ;
-    priory:producedBy priory:Recipe_GiftOfTournamentProwess .
+    priory:producedBy priory:Recipe_GiftOfCompetitiveProwess .
 
-priory:Recipe_GiftOfTournamentProwess a priory:VendorExchangePath, owl:NamedIndividual ;
-    rdfs:label "Purchase Gift of Tournament Prowess" ;
+priory:Recipe_GiftOfCompetitiveProwess a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of Competitive Prowess" ;
     priory:producesItem item:80862 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:78902 ; priory:requiredQuantity 100 ] . # PvP League Tickets
+        [ a priory:IngredientRequirement ; priory:requiresItem item:75960 ; priory:requiredQuantity 1 ] ,   # Record of League Victories
+        [ a priory:IngredientRequirement ; priory:requiresItem item:78902 ; priory:requiredQuantity 30 ] ,  # PvP League Tickets
+        [ a priory:IngredientRequirement ; priory:requiresItem item:20798 ; priory:requiredQuantity 1 ] ,   # Eldritch Scroll
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19925 ; priory:requiredQuantity 50 ] .  # Obsidian Shards
 
 
 # ------------------------------------------------------------------------------
-# 3. WvW LEGENDARY ARMOR RECIPES (Sample Exemplars: Chest, Helm, Boots)
+# 3. WvW LEGENDARY ARMOR RECIPES
 # ------------------------------------------------------------------------------
+
 
 item:803841 priory:producedBy priory:Recipe_TriumphantWarplate .
 
@@ -190,9 +257,76 @@ priory:Recipe_TriumphantWarplate a priory:MysticForgeRecipe, owl:NamedIndividual
     priory:producesItem item:803841 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80384 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
         [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:803451 priory:producedBy priory:Recipe_TriumphantPauldrons .
+
+priory:Recipe_TriumphantPauldrons a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Pauldrons" ;
+    priory:producesItem item:803451 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80345 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:805121 priory:producedBy priory:Recipe_TriumphantHelm .
+
+priory:Recipe_TriumphantHelm a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Helm" ;
+    priory:producesItem item:805121 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80512 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:804351 priory:producedBy priory:Recipe_TriumphantGauntlets .
+
+priory:Recipe_TriumphantGauntlets a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Gauntlets" ;
+    priory:producesItem item:804351 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80435 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:802611 priory:producedBy priory:Recipe_TriumphantLegguards .
+
+priory:Recipe_TriumphantLegguards a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Legguards" ;
+    priory:producesItem item:802611 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80261 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:805091 priory:producedBy priory:Recipe_TriumphantGreaves .
+
+priory:Recipe_TriumphantGreaves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Greaves" ;
+    priory:producesItem item:805091 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80509 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
 
 item:802481 priory:producedBy priory:Recipe_TriumphantJerkin .
 
@@ -201,9 +335,76 @@ priory:Recipe_TriumphantJerkin a priory:MysticForgeRecipe, owl:NamedIndividual ;
     priory:producesItem item:802481 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80248 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
         [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:803211 priory:producedBy priory:Recipe_TriumphantShoulderguards .
+
+priory:Recipe_TriumphantShoulderguards a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Shoulderguards" ;
+    priory:producesItem item:803211 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80321 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:804891 priory:producedBy priory:Recipe_TriumphantMask .
+
+priory:Recipe_TriumphantMask a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Mask" ;
+    priory:producesItem item:804891 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80489 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:803881 priory:producedBy priory:Recipe_TriumphantVambraces .
+
+priory:Recipe_TriumphantVambraces a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Vambraces" ;
+    priory:producesItem item:803881 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80388 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:802731 priory:producedBy priory:Recipe_TriumphantLeggings .
+
+priory:Recipe_TriumphantLeggings a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Leggings" ;
+    priory:producesItem item:802731 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80273 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:805621 priory:producedBy priory:Recipe_TriumphantBoots .
+
+priory:Recipe_TriumphantBoots a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Boots" ;
+    priory:producesItem item:805621 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80562 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
 
 item:803561 priory:producedBy priory:Recipe_TriumphantVestments .
 
@@ -212,6 +413,72 @@ priory:Recipe_TriumphantVestments a priory:MysticForgeRecipe, owl:NamedIndividua
     priory:producesItem item:803561 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80356 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:803321 priory:producedBy priory:Recipe_TriumphantMantle .
+
+priory:Recipe_TriumphantMantle a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Mantle" ;
+    priory:producesItem item:803321 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80332 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:804981 priory:producedBy priory:Recipe_TriumphantHood .
+
+priory:Recipe_TriumphantHood a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Hood" ;
+    priory:producesItem item:804981 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80498 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:803991 priory:producedBy priory:Recipe_TriumphantGloves .
+
+priory:Recipe_TriumphantGloves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Gloves" ;
+    priory:producesItem item:803991 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80399 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:802891 priory:producedBy priory:Recipe_TriumphantPants .
+
+priory:Recipe_TriumphantPants a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Pants" ;
+    priory:producesItem item:802891 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80289 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
+
+
+item:805741 priory:producedBy priory:Recipe_TriumphantShoes .
+
+priory:Recipe_TriumphantShoes a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Triumphant Hero's Shoes" ;
+    priory:producesItem item:805741 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80574 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
         [ a priory:IngredientRequirement ; priory:requiresItem item:80850 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80851 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80852 ; priory:requiredQuantity 1 ] .
@@ -221,6 +488,7 @@ priory:Recipe_TriumphantVestments a priory:MysticForgeRecipe, owl:NamedIndividua
 # 4. PvP LEGENDARY ARMOR RECIPES
 # ------------------------------------------------------------------------------
 
+
 item:806121 priory:producedBy priory:Recipe_ArdentBreastplate .
 
 priory:Recipe_ArdentBreastplate a priory:MysticForgeRecipe, owl:NamedIndividual ;
@@ -228,9 +496,76 @@ priory:Recipe_ArdentBreastplate a priory:MysticForgeRecipe, owl:NamedIndividual 
     priory:producesItem item:806121 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80612 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
         [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:803451 priory:producedBy priory:Recipe_ArdentPauldrons .
+
+priory:Recipe_ArdentPauldrons a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Pauldrons" ;
+    priory:producesItem item:803451 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80345 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:805121 priory:producedBy priory:Recipe_ArdentHelm .
+
+priory:Recipe_ArdentHelm a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Helm" ;
+    priory:producesItem item:805121 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80512 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:804351 priory:producedBy priory:Recipe_ArdentGauntlets .
+
+priory:Recipe_ArdentGauntlets a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Gauntlets" ;
+    priory:producesItem item:804351 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80435 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:802611 priory:producedBy priory:Recipe_ArdentLegguards .
+
+priory:Recipe_ArdentLegguards a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Legguards" ;
+    priory:producesItem item:802611 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80261 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:805091 priory:producedBy priory:Recipe_ArdentGreaves .
+
+priory:Recipe_ArdentGreaves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Greaves" ;
+    priory:producesItem item:805091 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80509 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
 
 item:806341 priory:producedBy priory:Recipe_ArdentJerkin .
 
@@ -239,9 +574,76 @@ priory:Recipe_ArdentJerkin a priory:MysticForgeRecipe, owl:NamedIndividual ;
     priory:producesItem item:806341 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80634 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
         [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:803211 priory:producedBy priory:Recipe_ArdentShoulderguards .
+
+priory:Recipe_ArdentShoulderguards a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Shoulderguards" ;
+    priory:producesItem item:803211 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80321 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:804891 priory:producedBy priory:Recipe_ArdentMask .
+
+priory:Recipe_ArdentMask a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Mask" ;
+    priory:producesItem item:804891 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80489 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:803881 priory:producedBy priory:Recipe_ArdentVambraces .
+
+priory:Recipe_ArdentVambraces a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Vambraces" ;
+    priory:producesItem item:803881 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80388 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:802731 priory:producedBy priory:Recipe_ArdentLeggings .
+
+priory:Recipe_ArdentLeggings a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Leggings" ;
+    priory:producesItem item:802731 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80273 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:805621 priory:producedBy priory:Recipe_ArdentBoots .
+
+priory:Recipe_ArdentBoots a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Boots" ;
+    priory:producesItem item:805621 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80562 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
 
 item:806551 priory:producedBy priory:Recipe_ArdentVestments .
 
@@ -250,6 +652,129 @@ priory:Recipe_ArdentVestments a priory:MysticForgeRecipe, owl:NamedIndividual ;
     priory:producesItem item:806551 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80655 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
         [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:803321 priory:producedBy priory:Recipe_ArdentMantle .
+
+priory:Recipe_ArdentMantle a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Mantle" ;
+    priory:producesItem item:803321 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80332 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:804981 priory:producedBy priory:Recipe_ArdentHood .
+
+priory:Recipe_ArdentHood a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Hood" ;
+    priory:producesItem item:804981 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80498 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:803991 priory:producedBy priory:Recipe_ArdentGloves .
+
+priory:Recipe_ArdentGloves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Gloves" ;
+    priory:producesItem item:803991 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80399 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:802891 priory:producedBy priory:Recipe_ArdentPants .
+
+priory:Recipe_ArdentPants a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Pants" ;
+    priory:producesItem item:802891 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80289 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+
+item:805741 priory:producedBy priory:Recipe_ArdentShoes .
+
+priory:Recipe_ArdentShoes a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Ardent Glorious Shoes" ;
+    priory:producesItem item:805741 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80574 ; priory:requiredQuantity 1 ] , # Precursor Armor Piece
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80860 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80861 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:80862 ; priory:requiredQuantity 1 ] .
+
+# ------------------------------------------------------------------------------
+# 5. COMPETITIVE PRECURSOR ARMOR PIECES & CANONICAL BRIDGES
+# ------------------------------------------------------------------------------
+
+item:80384 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Warplate (Precursor)"@en ; priory:gw2Id 80384 .
+item:80345 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Pauldrons (Precursor)"@en ; priory:gw2Id 80345 .
+item:80512 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Helm (Precursor)"@en ; priory:gw2Id 80512 .
+item:80435 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Gauntlets (Precursor)"@en ; priory:gw2Id 80435 .
+item:80261 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Legguards (Precursor)"@en ; priory:gw2Id 80261 .
+item:80509 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Greaves (Precursor)"@en ; priory:gw2Id 80509 .
+
+item:80248 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Jerkin (Precursor)"@en ; priory:gw2Id 80248 .
+item:80321 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Shoulderguards (Precursor)"@en ; priory:gw2Id 80321 .
+item:80489 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Mask (Precursor)"@en ; priory:gw2Id 80489 .
+item:80388 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Vambraces (Precursor)"@en ; priory:gw2Id 80388 .
+item:80273 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Leggings (Precursor)"@en ; priory:gw2Id 80273 .
+item:80562 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Boots (Precursor)"@en ; priory:gw2Id 80562 .
+
+item:80356 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Vestments (Precursor)"@en ; priory:gw2Id 80356 .
+item:80332 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Mantle (Precursor)"@en ; priory:gw2Id 80332 .
+item:80498 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Hood (Precursor)"@en ; priory:gw2Id 80498 .
+item:80399 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Gloves (Precursor)"@en ; priory:gw2Id 80399 .
+item:80289 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Pants (Precursor)"@en ; priory:gw2Id 80289 .
+item:80574 a priory:Item, owl:NamedIndividual ; rdfs:label "Triumphant Hero's Shoes (Precursor)"@en ; priory:gw2Id 80574 .
+
+item:80612 a priory:Item, owl:NamedIndividual ; rdfs:label "Ardent Glorious Breastplate (Precursor)"@en ; priory:gw2Id 80612 .
+item:80634 a priory:Item, owl:NamedIndividual ; rdfs:label "Ardent Glorious Jerkin (Precursor)"@en ; priory:gw2Id 80634 .
+item:80655 a priory:Item, owl:NamedIndividual ; rdfs:label "Ardent Glorious Vestments (Precursor)"@en ; priory:gw2Id 80655 .
+
+# Connect WvW armor individuals from competitive_legendary_armors.ttl
+item:801451 priory:producedBy priory:Recipe_TriumphantPauldrons ; owl:sameAs item:803451, item:82963 .
+item:805571 priory:producedBy priory:Recipe_TriumphantHelm ; owl:sameAs item:805121, item:84176 .
+item:801951 priory:producedBy priory:Recipe_TriumphantGauntlets ; owl:sameAs item:804351, item:82456 .
+item:802771 priory:producedBy priory:Recipe_TriumphantLegguards ; owl:sameAs item:802611, item:82196 .
+item:805781 priory:producedBy priory:Recipe_TriumphantGreaves ; owl:sameAs item:805091, item:82801 .
+
+item:801311 priory:producedBy priory:Recipe_TriumphantShoulderguards ; owl:sameAs item:803211, item:82994 .
+item:801611 priory:producedBy priory:Recipe_TriumphantMask ; owl:sameAs item:804891, item:82437 .
+item:802521 priory:producedBy priory:Recipe_TriumphantVambraces ; owl:sameAs item:803881, item:84110 .
+item:802811 priory:producedBy priory:Recipe_TriumphantLeggings ; owl:sameAs item:802731, item:82903 .
+item:805901 priory:producedBy priory:Recipe_TriumphantBoots ; owl:sameAs item:805621, item:82093 .
+
+item:802441 priory:producedBy priory:Recipe_TriumphantMantle ; owl:sameAs item:803321, item:82173 .
+item:804121 priory:producedBy priory:Recipe_TriumphantHood ; owl:sameAs item:804981, item:82902 .
+item:801881 priory:producedBy priory:Recipe_TriumphantGloves ; owl:sameAs item:803991, item:84629 .
+item:804551 priory:producedBy priory:Recipe_TriumphantPants ; owl:sameAs item:802891, item:83497 .
+item:803241 priory:producedBy priory:Recipe_TriumphantShoes ; owl:sameAs item:805741, item:83289 .
+
+# Canonical bridges for chests
+item:803841 owl:sameAs item:83394 .
+item:802481 owl:sameAs item:84578 .
+item:803561 owl:sameAs item:83036 .
+item:806121 owl:sameAs item:83348 .
+item:806341 owl:sameAs item:82670 .
+item:806551 owl:sameAs item:83113 .
+

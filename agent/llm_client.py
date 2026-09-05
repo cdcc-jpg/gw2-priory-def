@@ -40,6 +40,8 @@ class RuleBasedMockLLMClient(BaseLLMClient):
 
     def generate_structured(self, prompt: str, system_prompt: str, schema: Type[T]) -> T:
         p_lower = prompt.lower()
+        user_part = prompt.split("New user message:\n")[-1] if "New user message:\n" in prompt else prompt
+        p_user = user_part.lower()
 
         # Extract item name
         # Extract goal item dynamically from natural language prompt
@@ -103,6 +105,7 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         for item in ["twilight", "sunrise", "eternity", "kudzu", "the moot", "the juggernaut", "bolt", "incinerator",
                      "legendary sigil", "legendary rune", "sigil", "rune", "conflux", "coalescence", "ad infinitum", "vision", "aurora",
                      "aurene's weight", "aurene's bite", "aurene's argument", "aurene's claw", "aurene's fang",
+                     "nevermore", "astralaria", "hope", "chuka and champawat",
                      "mystic clover", "mystic coin", "ectoplasm", "t6", "provisioner token"]:
             if item in p_lower:
                 if item == "sigil":
@@ -115,6 +118,43 @@ class RuleBasedMockLLMClient(BaseLLMClient):
 
         if not goal_item:
             goal_item = "Twilight"
+
+        # Extract currency
+        currency_name = None
+        currency_id = None
+        if "astral acclaim" in p_lower or "astral" in p_lower:
+            currency_name = "Astral Acclaim"
+            currency_id = 68
+        elif "clover" in p_lower or "mystic clover" in p_lower:
+            currency_name = "Mystic Clover"
+            currency_id = 19675
+        elif "spirit shard" in p_lower:
+            currency_name = "Spirit Shard"
+            currency_id = 23
+        elif "laurel" in p_lower:
+            currency_name = "Laurel"
+            currency_id = 3
+        elif "fractal relic" in p_lower:
+            currency_name = "Fractal Relic"
+            currency_id = 7
+        elif "volatile magic" in p_lower:
+            currency_name = "Volatile Magic"
+            currency_id = 45
+        elif "provisioner token" in p_lower:
+            currency_name = "Provisioner Token"
+            currency_id = 29
+        elif "karma" in p_lower:
+            currency_name = "Karma"
+            currency_id = 2
+        elif "ectoplasm" in p_lower or "ecto" in p_lower:
+            currency_name = "Glob of Ectoplasm"
+            currency_id = 19721
+        elif "mystic coin" in p_lower:
+            currency_name = "Mystic Coin"
+            currency_id = 19976
+        elif "gold" in p_lower:
+            currency_name = "Gold"
+            currency_id = 1
 
         # Extract dragon facet variants
         facet_name = None
@@ -130,11 +170,33 @@ class RuleBasedMockLLMClient(BaseLLMClient):
             "without the mystic forge", "how to get"
         ])
 
+        # Extract new goal types from the new user message (preventing context contamination)
+        is_arbitrage = any(k in p_user for k in [
+            "buy vs craft", "craft or buy", "arbitrage", "cheaper to buy",
+            "profitable to craft", "craft vs buy", "buy or craft",
+            "cheaper to craft", "should i craft or buy", "should i buy or craft"
+        ])
+        is_prerequisite = any(k in p_user for k in [
+            "prerequisite", "prerequisites", "mastery", "masteries",
+            "am i ready", "can i craft", "collection unlocked", "ready to craft"
+        ])
+        is_opportunity_cost = any(k in p_user for k in [
+            "best use of", "opportunity cost", "spend astral acclaim",
+            "clovers or gold", "clover or gold", "how should i spend",
+            "where should i spend", "spend my laurels", "best way to spend"
+        ])
+        is_session = any(k in p_user for k in [
+            "session", "itinerary", "routine", "playtime", "knapsack", "schedule"
+        ]) or any(k in p_user for k in [
+            "what should i do tonight", "what to do tonight", "what can i do tonight",
+            "what should i do in", "what to do in"
+        ]) or ("what should i do" in p_user and any(t in p_user for t in ["tonight", "today", "mins", "minutes", "hour"]))
+
         # Determine comparative vs specific vs acquisition goal
-        is_comparative = any(k in p_lower for k in [
+        is_comparative = any(k in p_user for k in [
             "closest", "which legendary", "what legendary", "rank all", "what should i craft",
             "what to craft", "leaderboard", "rank", "how far", "how close", "where am i",
-            "what can i craft", "can i craft", "next legendary", "best legendary", "recommend"
+            "what can i craft", "next legendary", "best legendary", "recommend"
         ])
 
         cat_filter = None
@@ -152,14 +214,26 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         fields = schema.model_fields.keys()
         data: Dict[str, Any] = {}
         if "goal_type" in fields:
-            if is_comparative or (cat_filter and not any(k in p_lower for k in ["twilight", "sigil", "rune", "aurene's", "bolt", "moot", "juggernaut", "kudzu", "sunrise", "eternity", "clover"])):
+            if is_arbitrage:
+                data["goal_type"] = "ARBITRAGE_EVALUATION"
+            elif is_prerequisite:
+                data["goal_type"] = "PREREQUISITE_AUDIT"
+            elif is_opportunity_cost:
+                data["goal_type"] = "CURRENCY_OPPORTUNITY_COST"
+            elif is_session:
+                data["goal_type"] = "SESSION_ITINERARY"
+            elif is_comparative or (cat_filter and not any(k in p_lower for k in ["twilight", "sigil", "rune", "aurene's", "bolt", "moot", "juggernaut", "kudzu", "sunrise", "eternity", "clover"])):
                 data["goal_type"] = "COMPARATIVE_RANKING"
             elif is_acquisition:
                 data["goal_type"] = "ACQUISITION_DISCOVERY"
             else:
                 data["goal_type"] = "SPECIFIC_ITEM"
         if "target_item_name" in fields:
-            data["target_item_name"] = None if is_comparative else goal_item
+            data["target_item_name"] = None if (is_comparative or (is_session and not any(it in p_lower for it in ["twilight", "nevermore", "bolt", "sunrise", "eternity", "moot", "sigil"]))) else goal_item
+        if "currency_name" in fields:
+            data["currency_name"] = currency_name
+        if "currency_id" in fields:
+            data["currency_id"] = currency_id
         if "is_acquisition_query" in fields:
             data["is_acquisition_query"] = is_acquisition
         if "facet_name" in fields:

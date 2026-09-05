@@ -1,6 +1,8 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix priory: <https://priory.gw2/def/> .
+@prefix role: <https://priory.gw2/ref/role/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
 @prefix gamemode: <https://priory.gw2/ref/gamemode/> .
 @prefix item: <https://priory.gw2/id/item/> .
@@ -44,3 +46,24 @@ recipe:MysticCloverForge a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:expectedYieldRate 0.33 ;
     rdfs:comment "10 Obsidian Shards + 10 Mystic Coins + 10 Globs of Ectoplasm + 10 Philosopher's Stones. ~33% success rate per attempt." .
+
+# ------------------------------------------------------------------------------
+# Material Tokens
+# ------------------------------------------------------------------------------
+
+item:19976 a priory:ContainerizedToken, priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mystic Coin"@en ;
+    priory:gw2Id 19976 ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isDestroyable true ;
+    priory:isMailable true ;
+    priory:isTradeable true ;
+    priory:isSalvageable false ;
+    priory:playsRole role:CraftingIngredient, role:CurrencyExchange, role:MarketCommodity .
+
+item:19675 a priory:ContainerizedToken, priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Mystic Clover"@en ;
+    priory:gw2Id 19675 ;
+    priory:isContainerized true ;
+    priory:playsRole role:CraftingIngredient .

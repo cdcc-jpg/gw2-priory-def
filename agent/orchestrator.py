@@ -98,6 +98,89 @@ class PrioryChatSession:
             self.history.append({"role": "assistant", "content": guide.executive_summary})
             return guide
 
+        # Route SESSION_ITINERARY
+        if resolved_goal.goal_type == GoalType.SESSION_ITINERARY:
+            itinerary = self.orchestrator.solver.schedule_daily_session_itinerary(
+                account=self.account_state,
+                time_budget_minutes=resolved_goal.intent.time_budget_minutes,
+                target_item_id=resolved_goal.resolved_item_id
+            )
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_session_itinerary_guide(
+                itinerary=itinerary,
+                goal=resolved_goal,
+                user_prompt=user_prompt,
+                account_state=self.account_state
+            )
+            self.history.append({"role": "user", "content": user_prompt})
+            self.history.append({"role": "assistant", "content": guide.executive_summary})
+            return guide
+
+        # Route ARBITRAGE_EVALUATION
+        if resolved_goal.goal_type == GoalType.ARBITRAGE_EVALUATION:
+            report = self.orchestrator.solver.solve_buy_vs_craft_vs_vault(
+                goal_item_id=resolved_goal.resolved_item_id or 30704,
+                live_prices=live_tp_prices or {},
+                account_state=self.account_state
+            )
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_arbitrage_guide(
+                arbitrage_report=report,
+                goal=resolved_goal,
+                account_state=self.account_state
+            )
+            self.history.append({"role": "user", "content": user_prompt})
+            self.history.append({"role": "assistant", "content": guide.executive_summary})
+            return guide
+
+        # Route PREREQUISITE_AUDIT
+        if resolved_goal.goal_type == GoalType.PREREQUISITE_AUDIT:
+            report = self.orchestrator.diff_engine.verify_legendary_prerequisites(
+                goal_item_id=resolved_goal.resolved_item_id or 30704,
+                account_state=self.account_state
+            )
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_prerequisite_guide(
+                prereq_report=report,
+                goal=resolved_goal,
+                account_state=self.account_state
+            )
+            self.history.append({"role": "user", "content": user_prompt})
+            self.history.append({"role": "assistant", "content": guide.executive_summary})
+            return guide
+
+        # Route CURRENCY_OPPORTUNITY_COST
+        if resolved_goal.goal_type == GoalType.CURRENCY_OPPORTUNITY_COST:
+            target_id = resolved_goal.currency_id or resolved_goal.resolved_item_id or 68
+            qty = resolved_goal.target_quantity
+            if self.account_state:
+                if target_id in self.account_state.wallet:
+                    qty = self.account_state.wallet[target_id]
+                elif target_id in self.account_state.materials:
+                    qty = self.account_state.materials[target_id]
+                elif target_id in (63, 68):
+                    qty = self.account_state.astral_acclaim_count() or qty
+            qty = max(qty, 1)
+
+            tp_sell = 0
+            if live_tp_prices and target_id in live_tp_prices:
+                p_info = live_tp_prices[target_id]
+                if isinstance(p_info, dict):
+                    tp_sell = p_info.get("sells", {}).get("unit_price", 0) or p_info.get("unit_price", 0)
+                elif isinstance(p_info, (int, float)):
+                    tp_sell = int(p_info * 10000) if p_info < 1000 else int(p_info)
+
+            cost_eval = self.orchestrator.solver.evaluate_cross_role_opportunity_cost(
+                item_id=target_id,
+                quantity=qty,
+                tp_sell_unit_price=tp_sell
+            )
+            guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_opportunity_cost_guide(
+                opportunity_cost=cost_eval,
+                goal=resolved_goal,
+                account_state=self.account_state
+            )
+            self.history.append({"role": "user", "content": user_prompt})
+            self.history.append({"role": "assistant", "content": guide.executive_summary})
+            return guide
+
         # 2. Deterministic Account Delta
         diff_report = self.orchestrator.diff_engine.compute_diff(
             goal_item_id=resolved_goal.resolved_item_id,

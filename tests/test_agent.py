@@ -5,7 +5,7 @@ from pathlib import Path
 from engine.graph_store import PrioryGraphStore
 from engine.account_diff import AccountState, AccountDiffEngine
 from agent.orchestrator import PrioryAgentOrchestrator
-from agent.intent_parser import IntentParser
+from agent.intent_parser import IntentParser, GoalType
 from agent.llm_client import RuleBasedMockLLMClient
 from engine.semantic_query import SemanticQueryService
 
@@ -296,6 +296,106 @@ class TestAgentPipeline(unittest.TestCase):
         self.assertIn("~3,230g Net", recs_text)
         self.assertIn("Skin Retention Dynamic", recs_text)
         self.assertIn("Option 3: Direct Trading Post Sale", recs_text)
+
+    def test_session_itinerary_parsing_and_orchestrator_dispatch(self):
+        """Verifies parsing and orchestrator dispatch for SESSION_ITINERARY."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        prompt = "What should I do tonight in 90 mins?"
+        resolved_goal = parser.parse_intent(prompt)
+
+        self.assertEqual(resolved_goal.goal_type, GoalType.SESSION_ITINERARY)
+        self.assertEqual(resolved_goal.intent.time_budget_minutes, 90)
+
+        # Pipeline dispatch test
+        player_account = AccountState(
+            materials={43772: 100},  # Quartz Crystals
+            characters=[{"name": "Kerling", "profession": "Guardian", "level": 80, "crafting": [{"discipline": "Weaponsmith", "rating": 500}]}]
+        )
+        guide = self.orchestrator.run_pipeline(prompt, player_account)
+
+        self.assertGreater(len(guide.session_checklist), 0)
+        self.assertGreater(len(guide.strategic_recommendations), 0)
+        total_time = sum(step.estimated_time_minutes for step in guide.session_checklist)
+        self.assertLessEqual(total_time, 90)
+        self.assertIn("utilization", guide.executive_summary.lower())
+        # Check waypoint exists on scheduled tasks
+        self.assertTrue(any(step.chat_code is not None for step in guide.session_checklist))
+
+    def test_arbitrage_evaluation_parsing_and_orchestrator_dispatch(self):
+        """Verifies parsing and orchestrator dispatch for ARBITRAGE_EVALUATION."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        prompt = "Should I craft or buy Twilight?"
+        resolved_goal = parser.parse_intent(prompt)
+
+        self.assertEqual(resolved_goal.goal_type, GoalType.ARBITRAGE_EVALUATION)
+        self.assertEqual(resolved_goal.resolved_item_name, "Twilight")
+        self.assertEqual(resolved_goal.resolved_item_id, 30704)
+
+        # Pipeline dispatch test with live Trading Post prices
+        live_prices = {
+            30704: {"sells": {"unit_price": 28500000}, "buys": {"unit_price": 23500000}},
+            29185: {"sells": {"unit_price": 1800000}, "buys": {"unit_price": 1500000}},
+        }
+        guide = self.orchestrator.run_pipeline(prompt, AccountState(), live_tp_prices=live_prices)
+
+        self.assertEqual(guide.goal_name, "Twilight")
+        self.assertIn("Arbitrage Evaluation", guide.executive_summary)
+        self.assertIn("Recommended Action", guide.executive_summary)
+        self.assertGreater(len(guide.strategic_recommendations), 0)
+        self.assertTrue(any("Precursor Strategy" in r for r in guide.strategic_recommendations))
+        self.assertGreater(len(guide.session_checklist), 0)
+
+    def test_prerequisite_audit_parsing_and_orchestrator_dispatch(self):
+        """Verifies parsing and orchestrator dispatch for PREREQUISITE_AUDIT."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        prompt = "Check my masteries for Nevermore"
+        resolved_goal = parser.parse_intent(prompt)
+
+        self.assertEqual(resolved_goal.goal_type, GoalType.PREREQUISITE_AUDIT)
+        self.assertEqual(resolved_goal.resolved_item_name, "Nevermore")
+        self.assertEqual(resolved_goal.resolved_item_id, 71383)
+
+        # Pipeline dispatch test on account missing masteries
+        player_account = AccountState(masteries={})
+        guide = self.orchestrator.run_pipeline(prompt, player_account)
+
+        self.assertEqual(guide.goal_name, "Nevermore")
+        self.assertIn("Prerequisite Audit", guide.executive_summary)
+        self.assertGreater(len(guide.strategic_recommendations), 0)
+        # Check that masteries are flagged
+        recs_text = " ".join(guide.strategic_recommendations)
+        self.assertTrue("Mastery" in recs_text or "Masteries" in recs_text)
+        self.assertGreater(len(guide.session_checklist), 0)
+        self.assertTrue(any("Train Mastery" in step.title for step in guide.session_checklist))
+
+    def test_currency_opportunity_cost_parsing_and_orchestrator_dispatch(self):
+        """Verifies parsing and orchestrator dispatch for CURRENCY_OPPORTUNITY_COST."""
+        service = SemanticQueryService(self.store)
+        parser = IntentParser(service, self.mock_llm)
+
+        prompt = "Best use of my Astral Acclaim"
+        resolved_goal = parser.parse_intent(prompt)
+
+        self.assertEqual(resolved_goal.goal_type, GoalType.CURRENCY_OPPORTUNITY_COST)
+        self.assertEqual(resolved_goal.currency_name, "Astral Acclaim")
+        self.assertIn(resolved_goal.currency_id, (63, 68))
+
+        # Pipeline dispatch test
+        player_account = AccountState(wallet={68: 800, 63: 800})
+        guide = self.orchestrator.run_pipeline(prompt, player_account)
+
+        self.assertEqual(guide.goal_name, "Astral Acclaim")
+        self.assertIn("Opportunity Cost", guide.executive_summary)
+        self.assertIn("Recommended disposition", guide.executive_summary)
+        self.assertGreater(len(guide.strategic_recommendations), 0)
+        self.assertTrue(any("Direct Exchange Value" in r for r in guide.strategic_recommendations))
+        self.assertGreater(len(guide.session_checklist), 0)
 
 
 if __name__ == "__main__":

@@ -11,27 +11,36 @@
 # GEN 3 ELDER DRAGON VARIANT RECIPES (Mystic Forge)
 # ==============================================================================
 
-# Reagent Declarations
 item:96000 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Memory of Aurene" ;
+    rdfs:label "Memory of Aurene"@en ;
     priory:gw2Id 96000 ;
-    priory:isAccountBound false .
+    priory:isAccountBound false ;
+    owl:sameAs item:96088 .
 
 item:96221 a priory:LegendaryWeapon, owl:NamedIndividual ;
-    rdfs:label "Aurene's Bite" ;
+    rdfs:label "Aurene's Bite"@en ;
     priory:gw2Id 96221 ;
     priory:isAccountBound true .
 
 item:46733 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Dragonite Ingot" ;
+    rdfs:label "Dragonite Ingot"@en ;
     priory:gw2Id 46733 ;
     priory:isAccountBound true .
 
 
-# Zhaitan Bite Variant Recipe
-# Base Aurene's Bite + 100 Memories of Aurene + 10 Dragonite Ingots + 2500 Research Notes
-priory:Recipe_AureneBite_Zhaitan a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Aurene's Bite (Zhaitan Variant)" ;
+# Variant Weapon Individual
+item:96001 a priory:LegendaryWeapon, owl:NamedIndividual ;
+    rdfs:label "Aurene's Bite (Zhaitan Variant)"@en ;
+    priory:gw2Id 96001 ;
+    priory:hasDragonFacet priory:ZhaitanFacet ;
+    priory:isAccountBound true ;
+    priory:producedBy priory:Recipe_AureneBite_Zhaitan .
+
+# Vendor Exchange Recipe with Leivas in Arborstone
+priory:Recipe_AureneBite_Zhaitan a priory:Recipe, owl:NamedIndividual ;
+    rdfs:label "Exchange Aurene's Bite (Zhaitan Variant)"@en ;
+    priory:vendorNPC "Leivas"@en ;
+    priory:zoneName "Arborstone"@en ;
     priory:producesItem item:96001 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement

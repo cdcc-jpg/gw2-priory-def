@@ -53,6 +53,18 @@ item:102000 a priory:LegendaryStarterKit, priory:ChoiceChest, owl:NamedIndividua
     priory:unpacksInto item:29165, item:19637, item:29169, item:19636, item:29172, item:19647, item:29182, item:19660 ;
     rdfs:comment "Contains a choice between Incinerator, Frostfang, The Juggernaut, or Kraitkin Starter Kits."@en .
 
+item:19636 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Sanctuary"@en ;
+    priory:gw2Id 19636 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
+item:19637 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Baelfire"@en ;
+    priory:gw2Id 19637 ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
 # ==============================================================================
 # Acquisition Pathway Individuals (Container Unpack Routes)
 # ==============================================================================

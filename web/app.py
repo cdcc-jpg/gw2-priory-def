@@ -7,6 +7,7 @@ neuro-symbolic semantic layer before integration with the main gw2priory website
 from __future__ import annotations
 import os
 import asyncio
+import dataclasses
 from typing import Dict, Any, Optional
 from pathlib import Path
 from flask import Flask, render_template, request, jsonify, session
@@ -133,11 +134,11 @@ def api_status():
         "account_materials_count": len(account.materials),
         "account_armory_count": len(account.legendary_armory),
         "wallet": {
-            "astral_acclaim": account.wallet.get(68, 0),
+            "astral_acclaim": account.wallet.get(63, 0),
             "volatile_magic": account.wallet.get(45, 0),
             "spirit_shards": account.wallet.get(23, 0),
             "laurels": account.wallet.get(3, 0),
-            "provisioner_tokens": account.wallet.get(35, 0),
+            "provisioner_tokens": account.wallet.get(29, 0),
             "liquid_gold": account.wallet.get(1, 0) / 10000.0 if 1 in account.wallet else 0.0,
         }
     })
@@ -219,6 +220,126 @@ def api_query():
                 "missing_disciplines_summary": guide.missing_disciplines_summary,
                 "motivational_tip": guide.motivational_tip,
             }
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/api/solver/itinerary", methods=["POST"])
+def api_solver_itinerary():
+    """Generates mathematically optimal daily session itinerary using 0/1 knapsack priority scheduling."""
+    data = request.get_json(silent=True) or {}
+    time_budget = int(data.get("time_budget_minutes") or 60)
+    goal_item_id = int(data.get("goal_item_id") or 30704)
+    active_events = data.get("active_events")
+
+    store = get_or_create_store()
+    account = get_live_account()
+    solver = PathSolver(store)
+
+    try:
+        itinerary = solver.schedule_daily_session_itinerary(
+            goal_item_id=goal_item_id,
+            time_budget_minutes=time_budget,
+            account_state=account,
+            active_events=active_events,
+        )
+        return jsonify({
+            "success": True,
+            "itinerary": dataclasses.asdict(itinerary)
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/api/solver/arbitrage", methods=["POST"])
+def api_solver_arbitrage():
+    """Computes buy vs craft vs vault multi-way arbitrage matrix with Wallace's 15% TP tax model."""
+    data = request.get_json(silent=True) or {}
+    goal_item_id = int(data.get("goal_item_id") or 30704)
+    custom_prices = data.get("live_prices") or {}
+
+    store = get_or_create_store()
+    account = get_live_account()
+    solver = PathSolver(store)
+
+    prices_map = dict(custom_prices)
+    if not prices_map:
+        try:
+            api_client = GW2ApiClient()
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            fetched = loop.run_until_complete(api_client.get_tp_prices([goal_item_id, 19721, 19976]))
+            loop.close()
+            for p in fetched:
+                prices_map[p["id"]] = p
+        except Exception:
+            pass
+
+    try:
+        report = solver.solve_buy_vs_craft_vs_vault(
+            goal_item_id=goal_item_id,
+            live_prices=prices_map,
+            account_state=account,
+        )
+        return jsonify({
+            "success": True,
+            "arbitrage": dataclasses.asdict(report)
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/api/solver/prerequisites", methods=["POST"])
+def api_solver_prerequisites():
+    """Audits account masteries, world completion, active crafting disciplines, and collection prerequisites."""
+    data = request.get_json(silent=True) or {}
+    goal_item_id = int(data.get("goal_item_id") or 30704)
+
+    store = get_or_create_store()
+    account = get_live_account()
+    diff_engine = AccountDiffEngine(store)
+
+    try:
+        report = diff_engine.verify_legendary_prerequisites(
+            goal_item_id=goal_item_id,
+            account_state=account,
+        )
+        return jsonify({
+            "success": True,
+            "prerequisites": dataclasses.asdict(report)
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/api/solver/opportunity-cost", methods=["POST"])
+def api_solver_opportunity_cost():
+    """Evaluates cross-role opportunity cost (TP liquidation vs salvage vs currency spending)."""
+    data = request.get_json(silent=True) or {}
+    currency_id = int(data.get("currency_id") or 63)
+    account = get_live_account()
+
+    default_qty = account.wallet.get(currency_id) or account.get_item_count(currency_id) or 100
+    quantity = int(data.get("quantity") or default_qty)
+    tp_sell = int(data.get("tp_sell_unit_price") or 0)
+    salvage_val = int(data.get("salvage_expected_unit_value") or 0)
+    direct_val = float(data.get("direct_exchange_unit_value") or 0.0)
+
+    store = get_or_create_store()
+    solver = PathSolver(store)
+
+    try:
+        report = solver.evaluate_cross_role_opportunity_cost(
+            item_id=currency_id,
+            quantity=quantity,
+            tp_sell_unit_price=tp_sell,
+            salvage_expected_unit_value=salvage_val,
+            direct_exchange_unit_value=direct_val,
+        )
+        return jsonify({
+            "success": True,
+            "opportunity_cost": report
         })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500

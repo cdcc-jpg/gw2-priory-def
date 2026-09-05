@@ -37,7 +37,7 @@ flowchart TD
     subgraph Layer2["2. Core Layer: Semantic Knowledge Graph & Deterministic Math"]
         PydanticIntent --> SQS["SemanticQueryService\n(SPARQL Entity Resolution)"]
         SQS <--> GraphStore["PrioryGraphStore\n(In-Memory RDFLib Triples)"]
-        GraphStore <--> TTL["OWL 2 DL Schemas & SKOS Vocabularies\n(priory_core.ttl, vocab/*.ttl, instances/*.ttl)"]
+        GraphStore <--> TTL["BFO-Lite, OWL 2 DL Schemas & Game Roles\n(bfo_subset.ttl, priory_core.ttl, game_roles.ttl, vocab/*.ttl)"]
         
         SQS --> DiffEngine["AccountDiffEngine\n(DAG Traversal & Account Delta)"]
         DiffEngine <--> GraphStore
@@ -113,11 +113,13 @@ sequenceDiagram
 
 | Component | Standard | Purpose in Project Priory |
 | :--- | :--- | :--- |
-| **TBox (Ontology Schema)** | **OWL 2 DL** | Defines formal relations, classes (`Item`, `LegendaryWeapon`, `Recipe`, `AcquisitionPath`, `TimeGate`), object properties (`requiresIngredient`, `hasSubstituteSource`), cardinalities, and logical axioms. |
-| **Controlled Vocabularies** | **SKOS** | Hierarchical concept schemes (`skos:ConceptScheme`, `skos:broader`, `skos:notation`) for game taxonomies: Item Rarities, Disciplines, Weapon Types, Currencies, Game Modes. |
-| **ABox (Instance Data)** | **RDF / OWL Individuals** | Specific game items (e.g. *Twilight*, *Dusk*, *Legendary Sigil*), recipe DAG nodes, vendor exchanges, and live player inventory triples. |
-| **Integrity & Constraints** | **W3C SHACL** | Enforces closed-world validation shapes before merging triples into the graph (e.g. discipline rating bounds, mandatory labels, output cardinalities). |
-| **Dynamic Delta Engine** | **SPARQL 1.1 + Python Math** | Computes the recursive inventory difference ($N \ge 1$ multiplier), resolves wallet currencies, and detects the **Legendary Armory**. |
+| **Upper Ontology (BFO-Lite)** | **ISO/IEC 21838-2 (BFO 2020) + IAO** | Foundational upper-level ontology (`bfo_subset.ttl`) aligning entities, independent/specifically dependent continuants, realizable roles, dispositions, and information content artifacts. |
+| **TBox (Domain Ontology Schema)** | **OWL 2 DL** | Defines formal domain classes (`Item`, `LedgerToken`, `AccountWalletScalar`, `ContainerizedToken`, `ManifestedArtifact`, `Recipe`), object properties (`playsRole`, `producesItem`), datatype constraints (`isContainerized`, `apiWalletId`), and substrate disjointness axioms. |
+| **Controlled Vocabularies & Game Roles** | **SKOS + OWL 2 DL Punning** | Standardized concept schemes (`role:GameRoleScheme`, `currency:CurrencyScheme`, `weapon:WeaponTypeScheme`, etc.) modeling realizable game roles (`CurrencyExchange`, `CraftingIngredient`, `SalvageTarget`, `MarketCommodity`, `Precursor`, `EquippedGear`) with punning support. |
+| **ABox (Instance Knowledge Graph)** | **RDF / OWL Individuals** | Specific game items, recipes, vendor exchanges, currencies, and ephemeral hydrated character triples. |
+| **Integrity & Substrate Constraints** | **W3C SHACL** | Enforces closed-world structural validation shapes (`role_shape.ttl`, `priory_shacl.ttl`, `character_shape.ttl`) guaranteeing storage substrate invariants, role disjointness (`JunkSell` vs `EquippedGear`), and recipe cardinalities. |
+| **Dynamic Delta & Opportunity Cost Solver** | **SPARQL 1.1 + Python Math** | Substrate-agnostic purchasing power aggregation across wallet and containerized slots, zero domain semantics graph querying, and cross-role opportunity cost optimization (`SELL_ON_TP`, `SALVAGE`, `SPEND_AS_CURRENCY`). |
+| **Arbitrage & Ergonomics Engine** | **Trading Post API + Graph Solver** | Solves multi-way acquisition matrix (`solve_buy_vs_craft_vs_vault`) adhering to Wallace's verified 15% TP tax model, Wizard's Vault Starter Kit precursor valuation (1,200 AA), Mystic Clover EV (3.2 MC + 3.2 Ecto), T6 fine material promotion spreads, and multi-alt discipline routing avoiding 50 silver reactivation fees. |
 
 ---
 
@@ -159,7 +161,7 @@ python3 run_web.py
 python3 scripts/demo_character_reasoning.py
 ```
 
-### 5. Run the Automated Test Suite (48 tests)
+### 5. Run the Automated Test Suite (150+ tests)
 ```bash
 python3 -m unittest discover tests
 ```
@@ -178,13 +180,17 @@ gw2-priory-def/
 │   ├── data_flow_and_reasoning.md   # Step-by-step query lifecycle trace
 │   └── ontology_and_vocab_reference.md # Complete data dictionary
 ├── ontology/                    # OWL 2 DL Schemas, SHACL Shapes & Instances
-│   ├── priory_core.ttl          # Core OWL 2 DL schema (TBox)
+│   ├── bfo_subset.ttl           # ISO/IEC 21838-2 BFO 2020 & IAO upper alignment
+│   ├── priory_core.ttl          # Core OWL 2 DL schema, substrates & token taxonomy
 │   ├── character.ttl            # Character ontology, disciplines, bags & equipability
-│   ├── priory_shacl.ttl         # SHACL validation shapes
+│   ├── priory_shacl.ttl         # SHACL validation shapes for 7 archetypes
 │   ├── shapes/                  # Granular SHACL constraint shape definitions
-│   │   └── character_shape.ttl  # Character individual validation shapes
+│   │   ├── character_shape.ttl  # Character individual validation shapes
+│   │   └── role_shape.ttl       # Storage substrates & game role disjointness shapes
 │   ├── instances/               # Verified RDF item instance graphs (ABox)
-│   └── vocab/                   # Local copy of SKOS taxonomies (from gw2-priory-ref)
+│   └── vocab/                   # Controlled vocabularies & game roles
+│       ├── game_roles.ttl       # Punned OWL 2 DL & SKOS Game Roles taxonomy
+│       └── ...
 ├── engine/                      # Graph Store & Deterministic Reasoning
 │   ├── graph_store.py           # In-memory Dataset & RDF graph store loader
 │   ├── character_graph.py       # Ephemeral in-memory character named graph hydrator
@@ -206,7 +212,8 @@ gw2-priory-def/
 │   ├── app.py                   # Flask server & REST API
 │   ├── templates/index.html     # Semantic GUI template
 │   └── static/                  # Vanilla CSS & JS controller
-├── tests/                       # Automated Unit Test Suites (48 tests)
+├── tests/                       # Automated Unit Test Suites (150+ tests)
+│   ├── test_bfo_roles_and_substrates.py # BFO roles, substrates & opportunity costs
 │   ├── test_character_ontology.py # SHACL validation, hydration SLA & MCP tests
 │   └── ...
 ├── run_web.py                   # Web GUI runner script

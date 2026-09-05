@@ -17,7 +17,7 @@
 # ------------------------------------------------------------------------------
 
 # --- Grandmaster Craftsman Hobbs (Precursor Collections & Volumes) ---
-item:vendor_hobbs a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_hobbs a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Grandmaster Craftsman Hobbs"@en ;
     priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
     priory:zoneName "Lion's Arch"@en ;
@@ -26,7 +26,7 @@ item:vendor_hobbs a priory:VendorExchangePath, owl:NamedIndividual ;
     skos:definition "Sells Gen 1 and Gen 2 legendary precursor crafting collection books and recipes."@en .
 
 # --- Miyani / Mystic Forge (Ectoplasm, Spirit Shards, Clovers, Assembly) ---
-item:vendor_miyani a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_miyani a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Miyani & Mystic Forge"@en ;
     priory:vendorNPC "Miyani"@en ;
     priory:zoneName "Lion's Arch"@en ;
@@ -37,7 +37,7 @@ item:vendor_miyani a priory:VendorExchangePath, owl:NamedIndividual ;
 # ------------------------------------------------------------------------------
 # 2. Frostgorge Sound (Icy Runestones)
 # ------------------------------------------------------------------------------
-item:vendor_rojan a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_rojan a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Rojan the Penitent"@en ;
     priory:vendorNPC "Rojan the Penitent"@en ;
     priory:zoneName "Frostgorge Sound"@en ;
@@ -64,7 +64,14 @@ item:vendor_tarir a priory:VendorExchangePath, owl:NamedIndividual ;
     priory:zoneName "Auric Basin"@en ;
     priory:waypointName "Forgotten City Waypoint"@en ;
     priory:nearestWaypoint "[&BNYHAAA=]" ;
-    skos:definition "Exchanges Aurillium for Gift of Tarir."@en .
+    priory:producesItem item:71943 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:LumpOfAurillium ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:LumpOfAurillium ; priory:requiredQuantity 250 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:Coin ; priory:requiredQuantity 100000 ] ;
+    skos:definition "Exchanges 250 Lumps of Aurillium and 10 Gold for Gift of Tarir from the Exalted Mastery Vendor in Auric Basin."@en .
 
 # --- Itzel Mastery Vendor (Gift of the Fleet / Airship Parts) ---
 item:vendor_fleet a priory:VendorExchangePath, owl:NamedIndividual ;
@@ -73,16 +80,38 @@ item:vendor_fleet a priory:VendorExchangePath, owl:NamedIndividual ;
     priory:zoneName "Verdant Brink"@en ;
     priory:waypointName "Jaka Itzel Waypoint"@en ;
     priory:nearestWaypoint "[&BO8FAAA=]" ;
-    skos:definition "Exchanges Airship Parts for Gift of the Fleet."@en .
+    priory:producesItem item:70797 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:AirshipPart ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:AirshipPart ; priory:requiredQuantity 250 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:Coin ; priory:requiredQuantity 100000 ] ;
+    skos:definition "Exchanges 250 Airship Parts and 10 Gold for Gift of the Fleet from the Itzel Mastery Vendor in Verdant Brink."@en .
 
-# --- Nuhoch Mastery Vendor (Gift of the Chak / Ley-Line Sparks) ---
+# --- Nuhoch Mastery Vendor (Gift of the Chak / Ley Line Crystals) ---
 item:vendor_chak a priory:VendorExchangePath, owl:NamedIndividual ;
     rdfs:label "Nuhoch Mastery Vendor"@en ;
     priory:vendorNPC "Nuhoch Mastery Vendor"@en ;
     priory:zoneName "Tangled Depths"@en ;
     priory:waypointName "SCAR Bivouac Waypoint"@en ;
     priory:nearestWaypoint "[&BPUHAAA=]" ;
-    skos:definition "Exchanges Ley-Line Sparks for Gift of the Chak."@en .
+    priory:producesItem item:74677 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:LeyLineCrystal ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:LeyLineCrystal ; priory:requiredQuantity 250 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:Coin ; priory:requiredQuantity 100000 ] ;
+    skos:definition "Exchanges 250 Ley Line Crystals and 10 Gold for Gift of the Chak from the Nuhoch Mastery Vendor in Tangled Depths."@en .
+
+# --- Heart of Maguuma Map Completion (Gift of Maguuma) ---
+item:path_maguuma_map_completion a priory:AchievementCollectionPath, owl:NamedIndividual ;
+    rdfs:label "Heart of Maguuma Map Completion"@en ;
+    priory:zoneName "Heart of Maguuma"@en ;
+    priory:producesItem item:75919 ;
+    priory:outputQuantity 1 ;
+    skos:definition "Earned by achieving 100% map exploration across Heart of Maguuma zones (Verdant Brink, Auric Basin, Tangled Depths, Dragon's Stand)."@en .
 
 # ------------------------------------------------------------------------------
 # 4. Path of Fire (Funerary Incense & Desert Mastery)
@@ -93,12 +122,71 @@ item:vendor_vabbi a priory:VendorExchangePath, owl:NamedIndividual ;
     priory:zoneName "Domain of Vabbi"@en ;
     priory:waypointName "Necropolis Waypoint"@en ;
     priory:nearestWaypoint "[&BO8KAAA=]" ;
+    priory:producesItem item:83318 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:ElegyMosaic ;
+    priory:requiredQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:ElegyMosaic ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:TradeContract ; priory:requiredQuantity 5 ] ;
     skos:definition "Exchanges Elegy Mosaics and Trade Contracts for Funerary Incense in the Tomb of Primeval Kings."@en .
+
+item:vendor_oasis a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Crystal Oasis Renown Vendor"@en ;
+    priory:vendorNPC "Priestess Karima / Heart Vendors"@en ;
+    priory:zoneName "Crystal Oasis"@en ;
+    priory:nearestWaypoint "[&BAMKAAA=]" ;
+    priory:producesItem item:83694 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:TradeContract ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:TradeContract ; priory:requiredQuantity 250 ] ;
+    skos:definition "Exchanges 250 Trade Contracts for Gift of the Oasis in Crystal Oasis."@en .
+
+item:vendor_highlands a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Desert Highlands Renown Vendor"@en ;
+    priory:vendorNPC "Highlands Heart Vendors"@en ;
+    priory:zoneName "Desert Highlands"@en ;
+    priory:nearestWaypoint "[&BBEKAAA=]" ;
+    priory:producesItem item:83008 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:TradeContract ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:TradeContract ; priory:requiredQuantity 250 ] ;
+    skos:definition "Exchanges 250 Trade Contracts for Gift of the Highlands in Desert Highlands."@en .
+
+item:vendor_riverlands a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Elon Riverlands Renown Vendor"@en ;
+    priory:vendorNPC "Riverlands Heart Vendors"@en ;
+    priory:zoneName "Elon Riverlands"@en ;
+    priory:nearestWaypoint "[&BFMKAAA=]" ;
+    priory:producesItem item:83471 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:TradeContract ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:TradeContract ; priory:requiredQuantity 250 ] ;
+    skos:definition "Exchanges 250 Trade Contracts for Gift of the Riverlands in Elon Riverlands."@en .
+
+item:vendor_desolation a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "The Desolation Renown Vendor"@en ;
+    priory:vendorNPC "Desolation Heart Vendors"@en ;
+    priory:zoneName "The Desolation"@en ;
+    priory:nearestWaypoint "[&BBoKAAA=]" ;
+    priory:producesItem item:83416 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:TradeContract ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:TradeContract ; priory:requiredQuantity 250 ] ;
+    skos:definition "Exchanges 250 Trade Contracts for Gift of the Desolation in The Desolation."@en .
 
 # ------------------------------------------------------------------------------
 # 5. End of Dragons (Antique Summoning Stones & Jade Mastery)
 # ------------------------------------------------------------------------------
-item:vendor_leivas a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_leivas a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Leivas"@en ;
     priory:vendorNPC "Leivas"@en ;
     priory:zoneName "Arborstone"@en ;
@@ -109,10 +197,55 @@ item:vendor_leivas a priory:VendorExchangePath, owl:NamedIndividual ;
 # ------------------------------------------------------------------------------
 # 6. Secrets of the Obscure (Obsidian Armor & Kryptis Purifications)
 # ------------------------------------------------------------------------------
-item:vendor_lyhr a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_lyhr a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Lyhr"@en ;
     priory:vendorNPC "Lyhr"@en ;
     priory:zoneName "The Wizard's Tower"@en ;
     priory:waypointName "Tower Courtyard Waypoint"@en ;
     priory:nearestWaypoint "[&BB8OAAA=]" ;
-    skos:definition "Exchanges Kryptis Essences and map components for Purified Kryptis Essences and Obsidian Armor."@en .
+    skos:definition "Exchanges Kryptis Essences and map components for Purified Kryptis Essences, regional gifts, and Obsidian Armor."@en .
+
+item:vendor_lyhr_amnytas a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Lyhr (Gift of Amnytas)"@en ;
+    priory:vendorNPC "Lyhr"@en ;
+    priory:zoneName "The Wizard's Tower"@en ;
+    priory:waypointName "Tower Courtyard Waypoint"@en ;
+    priory:nearestWaypoint "[&BB8OAAA=]" ;
+    priory:producesItem item:100140 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:PinchOfStardust ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:PinchOfStardust ; priory:requiredQuantity 250 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:Coin ; priory:requiredQuantity 100000 ] ;
+    skos:definition "Exchanges 250 Pinches of Stardust and 10 Gold for Gift of Amnytas from Lyhr in The Wizard's Tower."@en .
+
+item:vendor_lyhr_cosmos a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Lyhr (Gift of the Cosmos)"@en ;
+    priory:vendorNPC "Lyhr"@en ;
+    priory:zoneName "The Wizard's Tower"@en ;
+    priory:waypointName "Tower Courtyard Waypoint"@en ;
+    priory:nearestWaypoint "[&BB8OAAA=]" ;
+    priory:producesItem item:100424 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:StaticCharge ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:StaticCharge ; priory:requiredQuantity 250 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:Coin ; priory:requiredQuantity 100000 ] ;
+    skos:definition "Exchanges 250 Static Charges and 10 Gold for Gift of the Cosmos from Lyhr in The Wizard's Tower."@en .
+
+item:vendor_lyhr_celestial a priory:VendorExchangePath, owl:NamedIndividual ;
+    rdfs:label "Lyhr (Gift of Celestial Knowledge)"@en ;
+    priory:vendorNPC "Lyhr"@en ;
+    priory:zoneName "The Wizard's Tower"@en ;
+    priory:waypointName "Tower Courtyard Waypoint"@en ;
+    priory:nearestWaypoint "[&BB8OAAA=]" ;
+    priory:producesItem item:100063 ;
+    priory:outputQuantity 1 ;
+    priory:requiresCurrency currency:CaseOfCapturedLightning ;
+    priory:requiredQuantity 250 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:CaseOfCapturedLightning ; priory:requiredQuantity 250 ] ,
+        [ a priory:IngredientRequirement, priory:CurrencyRequirement ; priory:requiresCurrency currency:Coin ; priory:requiredQuantity 100000 ] ;
+    skos:definition "Exchanges 250 Cases of Captured Lightning and 10 Gold for Gift of Celestial Knowledge from Lyhr in The Wizard's Tower."@en .

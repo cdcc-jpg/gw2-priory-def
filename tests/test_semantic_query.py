@@ -69,6 +69,70 @@ class TestSemanticQuery(unittest.TestCase):
         self.assertIn("VendorExchangePath", actions)
         self.assertIn("buy", actions["VendorExchangePath"]["synonyms"])
 
+    def test_find_items_by_role_and_subsumption(self):
+        """Verifies resolving items playing roles using both prefixed and bare identifiers with subsumption."""
+        # 1. Prefixed role:CurrencyExchange
+        currencies = self.service.find_items_by_role("role:CurrencyExchange")
+        self.assertGreater(len(currencies), 0)
+        labels = [c["label"] for c in currencies]
+        self.assertIn("Astral Acclaim", labels)
+        self.assertIn("Coin", labels)
+
+        aa = next(c for c in currencies if c["label"] == "Astral Acclaim")
+        self.assertEqual(aa["substrateType"], "priory:AccountWalletScalar")
+        self.assertEqual(aa["gw2Id"], 68)
+
+        # 2. Bare role identifier "CurrencyExchange"
+        bare_currencies = self.service.find_items_by_role("CurrencyExchange")
+        self.assertEqual(len(currencies), len(bare_currencies))
+
+        # 3. EquippedGear role
+        gear_items = self.service.find_items_by_role("role:EquippedGear")
+        self.assertGreater(len(gear_items), 0)
+        gear_labels = [g["label"] for g in gear_items]
+        self.assertIn("Twilight", gear_labels)
+        twilight_match = next(g for g in gear_items if g["label"] == "Twilight")
+        self.assertEqual(twilight_match["substrateType"], "priory:ContainerizedToken")
+        self.assertEqual(twilight_match["gw2Id"], 30704)
+
+    def test_get_token_economic_affordances(self):
+        """Verifies economic profile of items including substrate, roles, containerization, salvage, trade, and stack size."""
+        # 1. Containerized Gear Item: Twilight (30704)
+        twilight_profile = self.service.get_token_economic_affordances(30704)
+        self.assertEqual(twilight_profile["label"], "Twilight")
+        self.assertEqual(twilight_profile["substrate"], "priory:ContainerizedToken")
+        self.assertTrue(twilight_profile["isContainerized"])
+        self.assertFalse(twilight_profile["isTradeable"])  # Account bound
+        self.assertEqual(twilight_profile["maxStackSize"], 250)
+        self.assertTrue(any("EquippedGear" in r for r in twilight_profile["roles"]))
+
+        # 2. Account Wallet Scalar: Coin (1)
+        coin_profile = self.service.get_token_economic_affordances(1)
+        self.assertEqual(coin_profile["label"], "Coin")
+        self.assertEqual(coin_profile["substrate"], "priory:AccountWalletScalar")
+        self.assertFalse(coin_profile["isContainerized"])
+        self.assertFalse(coin_profile["isSalvageable"])
+        self.assertFalse(coin_profile["isTradeable"])
+        self.assertEqual(coin_profile["maxStackSize"], 0)
+        self.assertTrue(any("CurrencyExchange" in r for r in coin_profile["roles"]))
+
+    def test_get_manifested_gear_catalog(self):
+        """Verifies manifested gear catalog excludes pure ledger tokens and contains equipment."""
+        catalog = self.service.get_manifested_gear_catalog()
+        self.assertGreater(len(catalog), 50)
+
+        labels = {item["label"] for item in catalog}
+        self.assertIn("Twilight", labels)
+        self.assertIn("Eternity", labels)
+        self.assertIn("Sunrise", labels)
+
+        # Ensure pure ledger tokens / currencies / crafting materials are excluded
+        self.assertNotIn("Coin", labels)
+        self.assertNotIn("Astral Acclaim", labels)
+        self.assertNotIn("Spirit Shard", labels)
+        self.assertNotIn("Glob of Ectoplasm", labels)
+
 
 if __name__ == "__main__":
     unittest.main()
+

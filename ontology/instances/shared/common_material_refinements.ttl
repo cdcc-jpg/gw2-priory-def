@@ -4,6 +4,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix priory: <https://priory.gw2/def/> .
+@prefix role: <https://priory.gw2/ref/role/> .
 @prefix item: <https://priory.gw2/id/item/> .
 @prefix recipe: <https://priory.gw2/id/recipe/> .
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
@@ -715,3 +716,21 @@ recipe:refine_bolt_of_gossamer a priory:CraftingRecipe, owl:NamedIndividual ;
         priory:requiresItem item:19746 ; # 2 Gossamer Scrap
         priory:requiredQuantity 2
     ] .
+
+# ------------------------------------------------------------------------------
+# 5. Ectoplasm & Salvage Refinements
+# ------------------------------------------------------------------------------
+
+# --- Glob of Ectoplasm (19721) ---
+item:19721 a priory:ContainerizedToken, priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Glob of Ectoplasm"@en ;
+    priory:gw2Id 19721 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isDestroyable true ;
+    priory:isMailable true ;
+    priory:isTradeable true ;
+    priory:isSalvageable true ;
+    priory:playsRole role:CraftingIngredient, role:CurrencyExchange, role:SalvageTarget, role:MarketCommodity .

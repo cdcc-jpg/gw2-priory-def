@@ -13,6 +13,41 @@ document.addEventListener("DOMContentLoaded", () => {
   let isFlipping = false;
   let audioEnabled = localStorage.getItem("priory_audio_enabled") === "true";
 
+  // Solver Suite State
+  let plannerBudgetMinutes = 60;
+  let plannerGoalId = 30704;
+  let plannerItineraryData = null;
+  let plannerLoading = false;
+
+  let arbitrageGoalId = 30704;
+  let arbitrageData = null;
+  let arbitrageLoading = false;
+  let oppCurrencyId = 63;
+  let oppQuantity = 100;
+  let oppData = null;
+  let oppLoading = false;
+
+  let prereqGoalId = 30704;
+  let prereqData = null;
+  let prereqLoading = false;
+
+  // Global Quick Jump Handlers
+  window.jumpToPlanner = (goalId) => {
+    plannerGoalId = Number(goalId) || 30704;
+    plannerItineraryData = null;
+    turnPageTo(1, 1 > currentSpreadIndex ? "forward" : "backward");
+  };
+  window.jumpToArbitrage = (goalId) => {
+    arbitrageGoalId = Number(goalId) || 30704;
+    arbitrageData = null;
+    turnPageTo(2, 2 > currentSpreadIndex ? "forward" : "backward");
+  };
+  window.jumpToPrereqs = (goalId) => {
+    prereqGoalId = Number(goalId) || 30704;
+    prereqData = null;
+    turnPageTo(3, 3 > currentSpreadIndex ? "forward" : "backward");
+  };
+
   // DOM Handles
   const tome = document.getElementById("grimoire-tome");
   const scene = document.getElementById("scene");
@@ -25,6 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const pageCounterDisplay = document.getElementById("page-counter-display");
   const savedRecipesTabs = document.getElementById("saved-recipes-tabs");
   const tabInscribe = document.getElementById("tab-inscribe");
+  const tabPlanner = document.getElementById("tab-planner");
+  const tabArbitrage = document.getElementById("tab-arbitrage");
+  const tabPrereqs = document.getElementById("tab-prereqs");
   const pageLeft = document.querySelector(".page-left");
   const pageRight = document.querySelector(".page-right");
   
@@ -57,7 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnNext.addEventListener("click", () => {
-    if (currentSpreadIndex < savedRecipes.length && !isFlipping) {
+    const totalSpreads = 4 + savedRecipes.length;
+    if (currentSpreadIndex < totalSpreads - 1 && !isFlipping) {
       turnPageTo(currentSpreadIndex + 1, "forward");
     }
   });
@@ -68,8 +107,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  if (tabPlanner) {
+    tabPlanner.addEventListener("click", () => {
+      if (currentSpreadIndex !== 1 && !isFlipping) {
+        turnPageTo(1, 1 > currentSpreadIndex ? "forward" : "backward");
+      }
+    });
+  }
+
+  if (tabArbitrage) {
+    tabArbitrage.addEventListener("click", () => {
+      if (currentSpreadIndex !== 2 && !isFlipping) {
+        turnPageTo(2, 2 > currentSpreadIndex ? "forward" : "backward");
+      }
+    });
+  }
+
+  if (tabPrereqs) {
+    tabPrereqs.addEventListener("click", () => {
+      if (currentSpreadIndex !== 3 && !isFlipping) {
+        turnPageTo(3, 3 > currentSpreadIndex ? "forward" : "backward");
+      }
+    });
+  }
+
   document.addEventListener("keydown", (e) => {
-    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
     if (e.key === "ArrowRight") btnNext.click();
     else if (e.key === "ArrowLeft") btnPrev.click();
   });
@@ -126,33 +189,46 @@ document.addEventListener("DOMContentLoaded", () => {
     savedRecipesTabs.innerHTML = "";
     savedRecipes.forEach((recipe, idx) => {
       const tab = document.createElement("button");
-      tab.className = `tome-tab recipe-tab ${currentSpreadIndex === idx + 1 ? "active" : ""}`;
+      const targetSpread = 4 + idx;
+      tab.className = `tome-tab recipe-tab ${currentSpreadIndex === targetSpread ? "active" : ""}`;
       tab.innerHTML = `<span>${escapeHtml(recipe.goal_name)}</span>`;
       tab.addEventListener("click", () => {
         if (isFlipping) return;
-        const targetIdx = idx + 1;
-        if (targetIdx !== currentSpreadIndex) {
-          turnPageTo(targetIdx, targetIdx > currentSpreadIndex ? "forward" : "backward");
+        if (targetSpread !== currentSpreadIndex) {
+          turnPageTo(targetSpread, targetSpread > currentSpreadIndex ? "forward" : "backward");
         }
       });
       savedRecipesTabs.appendChild(tab);
     });
 
-    tabInscribe.className = `tome-tab ${currentSpreadIndex === 0 ? "active" : ""}`;
+    tabInscribe.classList.toggle("active", currentSpreadIndex === 0);
+    if (tabPlanner) tabPlanner.classList.toggle("active", currentSpreadIndex === 1);
+    if (tabArbitrage) tabArbitrage.classList.toggle("active", currentSpreadIndex === 2);
+    if (tabPrereqs) tabPrereqs.classList.toggle("active", currentSpreadIndex === 3);
   }
 
   function renderCurrentSpread() {
-    const totalSpreads = 1 + savedRecipes.length;
+    const totalSpreads = 4 + savedRecipes.length;
     btnPrev.disabled = currentSpreadIndex === 0;
     btnNext.disabled = currentSpreadIndex >= totalSpreads - 1;
 
     if (currentSpreadIndex === 0) {
       pageCounterDisplay.textContent = `Chapter I • Inscription • Spread 1 of ${totalSpreads}`;
       renderInscriptionSpread();
+    } else if (currentSpreadIndex === 1) {
+      pageCounterDisplay.textContent = `Chapter II • Daily Session Planner • Spread 2 of ${totalSpreads}`;
+      renderSessionPlannerSpread();
+    } else if (currentSpreadIndex === 2) {
+      pageCounterDisplay.textContent = `Chapter III • Buy vs Craft Arbitrage • Spread 3 of ${totalSpreads}`;
+      renderArbitrageSpread();
+    } else if (currentSpreadIndex === 3) {
+      pageCounterDisplay.textContent = `Chapter IV • Prerequisite Audit • Spread 4 of ${totalSpreads}`;
+      renderPrerequisitesSpread();
     } else {
-      const recipe = savedRecipes[currentSpreadIndex - 1];
-      pageCounterDisplay.textContent = `Chapter II • ${recipe.goal_name} • Spread ${currentSpreadIndex + 1} of ${totalSpreads}`;
-      renderRecipeSpread(recipe);
+      const recipeIdx = currentSpreadIndex - 4;
+      const recipe = savedRecipes[recipeIdx];
+      pageCounterDisplay.textContent = `Chapter V • ${recipe ? recipe.goal_name : 'Recipe'} • Spread ${currentSpreadIndex + 1} of ${totalSpreads}`;
+      if (recipe) renderRecipeSpread(recipe);
     }
 
     updateRecipeTabs();
@@ -354,6 +430,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <span>Account Readiness:</span>
           <span class="readiness-pct">${guide.readiness_percentage}%</span>
         </div>
+        <div class="recipe-jump-bar">
+          <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${guide.goal_item_id || 30704})">⏱ Plan Session</button>
+          <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${guide.goal_item_id || 30704})">⚖ Arbitrage Matrix</button>
+          <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${guide.goal_item_id || 30704})">📜 Prerequisite Audit</button>
+        </div>
       </div>
 
       ${renderRecommendationsSection(guide.strategic_recommendations)}
@@ -457,6 +538,737 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  /* ── CHAPTER II: SESSION PLANNER ─────────────────────────────────────────── */
+  const LEGENDARY_PRESETS = [
+    { id: 30704, name: "Twilight", type: "Gen 1 Greatsword" },
+    { id: 30689, name: "Sunrise", type: "Gen 1 Greatsword" },
+    { id: 30687, name: "Incinerator", type: "Gen 1 Dagger" },
+    { id: 30694, name: "The Bifrost", type: "Gen 1 Staff" },
+    { id: 30685, name: "Kudzu", type: "Gen 1 Longbow" },
+    { id: 30684, name: "Frostfang", type: "Gen 1 Axe" },
+    { id: 30695, name: "Bolt", type: "Gen 1 Sword" },
+    { id: 30693, name: "The Predator", type: "Gen 1 Rifle" },
+    { id: 30690, name: "The Juggernaut", type: "Gen 1 Hammer" },
+    { id: 30686, name: "The Dreamer", type: "Gen 1 Shortbow" },
+    { id: 76158, name: "Nevermore", type: "Gen 2 Staff" },
+    { id: 76159, name: "Astralaria", type: "Gen 2 Axe" },
+    { id: 96203, name: "Aurene's Bite", type: "Gen 3 Greatsword" },
+    { id: 100806, name: "Obsidian Breastplate", type: "Heavy Legendary Armor" }
+  ];
+
+  function renderGoalSelectOptions(selectedId) {
+    return LEGENDARY_PRESETS.map(p => 
+      `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${escapeHtml(p.name)} (${p.type})</option>`
+    ).join("");
+  }
+
+  function formatCopper(copper) {
+    if (copper == null || isNaN(copper)) return "—";
+    const negative = copper < 0;
+    const absVal = Math.abs(Math.round(copper));
+    const gold = Math.floor(absVal / 10000);
+    const silver = Math.floor((absVal % 10000) / 100);
+    const cop = absVal % 100;
+
+    const prefix = negative ? "-" : "";
+    if (gold > 0) {
+      return `${prefix}<span class="coin-gold">${gold.toLocaleString()}g</span> <span class="coin-silver">${silver}s</span> <span class="coin-copper">${cop}c</span>`;
+    } else if (silver > 0) {
+      return `${prefix}<span class="coin-silver">${silver}s</span> <span class="coin-copper">${cop}c</span>`;
+    } else {
+      return `${prefix}<span class="coin-copper">${cop}c</span>`;
+    }
+  }
+
+  function renderSessionPlannerSpread() {
+    const goalOptions = renderGoalSelectOptions(plannerGoalId);
+
+    leftPageBody.innerHTML = `
+      <div class="runic-header">ᛟ ᚱ ᛞ ᛖ ᚱ ✦ ᚲ ᛚ ᛟ ᚲ ᚲ</div>
+      <h2 class="page-title">Chapter II: Session Planner</h2>
+      <div class="handwritten-subtitle">~ Knapsack Activity Scheduler ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div class="inscribe-form">
+        <label class="inscribe-label" for="planner-goal-select">Target Legendary Goal:</label>
+        <select id="planner-goal-select" class="priory-select">
+          ${goalOptions}
+        </select>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px;">
+          <label class="inscribe-label" for="planner-budget-slider" style="font-size: 1.15rem;">Playtime Budget:</label>
+          <span id="budget-val-display" style="font-family: var(--font-head); font-weight: 700; color: var(--leather-gold); font-size: 1.05rem;">${plannerBudgetMinutes} mins</span>
+        </div>
+        <input type="range" id="planner-budget-slider" min="30" max="120" step="30" value="${plannerBudgetMinutes}" class="priory-slider">
+        
+        <div class="playtime-quick-btns">
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 30 ? 'active' : ''}" data-mins="30">30m</button>
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 60 ? 'active' : ''}" data-mins="60">60m</button>
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 90 ? 'active' : ''}" data-mins="90">90m</button>
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 120 ? 'active' : ''}" data-mins="120">120m</button>
+        </div>
+
+        <button type="button" class="btn-forge-inscribe" id="btn-calc-itinerary" style="margin-top: 10px;">
+          <span id="btn-itinerary-text">${plannerLoading ? 'Computing Knapsack Schedule...' : 'Schedule Optimal Itinerary'}</span>
+          <span id="btn-itinerary-spinner" class="spinner-ink ${plannerLoading ? '' : 'hidden'}"></span>
+        </button>
+      </div>
+
+      <div id="planner-summary-container" style="margin-top: 10px;">
+        ${renderPlannerSummaryBox()}
+      </div>
+    `;
+
+    rightPageBody.innerHTML = `
+      <div class="runic-header">ᚱ ᛟ ᚢ ᛏ ᛖ ✦ ᛏ ᚨ ᛊ ᚲ ᛊ</div>
+      <h3 class="page-title">Prioritized Tasks</h3>
+      <div class="handwritten-subtitle">~ Logical Waypoint Route ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div id="planner-tasks-container">
+        ${renderPlannerTasksList()}
+      </div>
+    `;
+
+    const goalSelect = document.getElementById("planner-goal-select");
+    if (goalSelect) {
+      goalSelect.addEventListener("change", (e) => {
+        plannerGoalId = parseInt(e.target.value, 10);
+      });
+    }
+
+    const slider = document.getElementById("planner-budget-slider");
+    const valDisplay = document.getElementById("budget-val-display");
+    if (slider) {
+      slider.addEventListener("input", (e) => {
+        plannerBudgetMinutes = parseInt(e.target.value, 10);
+        if (valDisplay) valDisplay.textContent = `${plannerBudgetMinutes} mins`;
+        document.querySelectorAll(".playtime-btn").forEach(btn => {
+          btn.classList.toggle("active", parseInt(btn.getAttribute("data-mins"), 10) === plannerBudgetMinutes);
+        });
+      });
+    }
+
+    document.querySelectorAll(".playtime-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const mins = parseInt(btn.getAttribute("data-mins"), 10);
+        plannerBudgetMinutes = mins;
+        if (slider) slider.value = mins;
+        if (valDisplay) valDisplay.textContent = `${mins} mins`;
+        document.querySelectorAll(".playtime-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
+      });
+    });
+
+    const btnCalc = document.getElementById("btn-calc-itinerary");
+    if (btnCalc) {
+      btnCalc.addEventListener("click", () => {
+        executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
+      });
+    }
+
+    if (!plannerItineraryData && !plannerLoading) {
+      executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
+    }
+  }
+
+  function renderPlannerSummaryBox() {
+    if (!plannerItineraryData) {
+      return `
+        <div class="essence-journal-box">
+          <div class="essence-journal-title">Knapsack Strategy</div>
+          <div style="font-size: 0.82rem; color: var(--ink-soft); line-height: 1.4;">
+            Applies a 0/1 knapsack priority algorithm over daily time-gated activities (Quartz Crystal Charging, Account Refinements, Ley-Line Anomaly, Provisioner Tokens, Fractals/Vault Clovers, and Antique Summoning Stones) to maximize progression per minute played.
+          </div>
+        </div>
+      `;
+    }
+    const itin = plannerItineraryData;
+    return `
+      <div class="essence-journal-box">
+        <div class="essence-journal-title">
+          <span>${escapeHtml(itin.goal_name)} Itinerary</span>
+          <span style="color: var(--leather-gold); font-weight: bold;">${itin.time_utilization_pct}% Utilization</span>
+        </div>
+        <div class="essence-stats-grid">
+          <div class="stat-item"><span class="lbl">Time Budget:</span><span class="val">${itin.time_budget_minutes}m</span></div>
+          <div class="stat-item"><span class="lbl">Scheduled Time:</span><span class="val">${itin.total_scheduled_minutes}m</span></div>
+          <div class="stat-item"><span class="lbl">Tasks Queued:</span><span class="val">${itin.tasks.length}</span></div>
+          <div class="stat-item"><span class="lbl">Unused Window:</span><span class="val">${Math.max(0, itin.time_budget_minutes - itin.total_scheduled_minutes)}m</span></div>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--ink-mid); margin-top: 8px; font-style: italic;">
+          "${escapeHtml(itin.summary)}"
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPlannerTasksList() {
+    if (plannerLoading) {
+      return `<div style="text-align: center; padding: 40px;"><span class="spinner-ink" style="width: 28px; height: 28px; border-width: 3px; border-top-color: var(--leather-gold);"></span><div style="margin-top: 10px; font-family: var(--font-head); color: var(--ink-mid);">Solving 0/1 Knapsack Schedule...</div></div>`;
+    }
+    if (!plannerItineraryData || !plannerItineraryData.tasks || plannerItineraryData.tasks.length === 0) {
+      return `<div style="text-align: center; padding: 30px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.15rem;">No tasks scheduled for this duration.</div>`;
+    }
+
+    return plannerItineraryData.tasks.map((task, idx) => {
+      const inputs = task.required_inputs?.name 
+        ? `${task.required_inputs.count || ''}x ${task.required_inputs.name}`
+        : (task.required_inputs?.description || (task.required_inputs?.currencies ? Object.entries(task.required_inputs.currencies).map(([k, v]) => `${v} ${k}`).join(', ') : 'None'));
+      
+      const rewardVal = task.reward_output?.value_towards_goal || task.reward_output?.name || '';
+      const charTag = task.character_name 
+        ? `<div style="font-size: 0.75rem; color: var(--ink-soft);">👤 Character: <strong style="color: var(--leather-gold);">${escapeHtml(task.character_name)}</strong></div>`
+        : '';
+
+      return `
+        <div class="task-item-card">
+          <div class="task-header-row">
+            <span class="task-title">${idx + 1}. ${escapeHtml(task.title)}</span>
+            <span class="task-duration-badge">⏱ ${task.estimated_duration_minutes}m</span>
+          </div>
+          <div class="task-loc-row">
+            <span>📍 ${escapeHtml(task.location_name)}</span>
+            <button class="chatcode-stamp" onclick="copyChatCode('${task.waypoint_code}', this, event)" title="Copy Waypoint Code">
+              ${escapeHtml(task.waypoint_code)}
+            </button>
+          </div>
+          ${charTag}
+          <div class="task-desc">${formatTextWithWaypoints(task.instructions)}</div>
+          <div class="task-reward-box">
+            <div><strong>Inputs:</strong> ${escapeHtml(inputs)}</div>
+            <div><strong>Reward:</strong> ${escapeHtml(rewardVal)}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  async function executeFetchItinerary(goalId, minutes) {
+    plannerLoading = true;
+    const btnText = document.getElementById("btn-itinerary-text");
+    const btnSpinner = document.getElementById("btn-itinerary-spinner");
+    if (btnText) btnText.textContent = "Computing Knapsack Schedule...";
+    if (btnSpinner) btnSpinner.classList.remove("hidden");
+
+    try {
+      const res = await fetch("/api/solver/itinerary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal_item_id: goalId, time_budget_minutes: minutes })
+      });
+      const data = await res.json();
+      if (data.success && data.itinerary) {
+        plannerItineraryData = data.itinerary;
+        const sumCont = document.getElementById("planner-summary-container");
+        if (sumCont) sumCont.innerHTML = renderPlannerSummaryBox();
+        const taskCont = document.getElementById("planner-tasks-container");
+        if (taskCont) taskCont.innerHTML = renderPlannerTasksList();
+      } else {
+        alert(data.error || "Failed to schedule itinerary.");
+      }
+    } catch (e) {
+      console.error("Itinerary error:", e);
+    } finally {
+      plannerLoading = false;
+      if (btnText) btnText.textContent = "Schedule Optimal Itinerary";
+      if (btnSpinner) btnSpinner.classList.add("hidden");
+    }
+  }
+
+  /* ── CHAPTER III: BUY VS CRAFT ARBITRAGE ─────────────────────────────────── */
+  function renderArbitrageSpread() {
+    const goalOptions = renderGoalSelectOptions(arbitrageGoalId);
+
+    leftPageBody.innerHTML = `
+      <div class="runic-header">ᚷ ᛟ ᛚ ᛞ ✦ ᛏ ᚨ ᛪ ✦ ᛗ ᚨ ᛏ</div>
+      <h2 class="page-title">Chapter III: Arbitrage Matrix</h2>
+      <div class="handwritten-subtitle">~ Buy vs Craft vs Vault ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div class="inscribe-form">
+        <label class="inscribe-label" for="arbitrage-goal-select">Analyze Legendary Item:</label>
+        <select id="arbitrage-goal-select" class="priory-select">
+          ${goalOptions}
+        </select>
+        <button type="button" class="btn-forge-inscribe" id="btn-run-arbitrage" style="margin-top: 6px;">
+          <span id="btn-arb-text">${arbitrageLoading ? 'Evaluating Arbitrage Matrix...' : 'Evaluate Multi-Way Arbitrage'}</span>
+          <span id="btn-arb-spinner" class="spinner-ink ${arbitrageLoading ? '' : 'hidden'}"></span>
+        </button>
+      </div>
+
+      <div id="arbitrage-left-results" style="margin-top: 10px;">
+        ${renderArbitrageLeftContent()}
+      </div>
+    `;
+
+    rightPageBody.innerHTML = `
+      <div class="runic-header">ᛊ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᛖ ᛊ</div>
+      <h3 class="page-title">Component Paths & Costs</h3>
+      <div class="handwritten-subtitle">~ Precursor, Clovers & Opportunity Cost ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div id="arbitrage-right-results">
+        ${renderArbitrageRightContent()}
+      </div>
+    `;
+
+    const goalSelect = document.getElementById("arbitrage-goal-select");
+    if (goalSelect) {
+      goalSelect.addEventListener("change", (e) => {
+        arbitrageGoalId = parseInt(e.target.value, 10);
+      });
+    }
+
+    const btnRun = document.getElementById("btn-run-arbitrage");
+    if (btnRun) {
+      btnRun.addEventListener("click", () => {
+        executeFetchArbitrage(arbitrageGoalId);
+      });
+    }
+
+    attachOpportunityCostListeners();
+
+    if (!arbitrageData && !arbitrageLoading) {
+      executeFetchArbitrage(arbitrageGoalId);
+    }
+  }
+
+  function renderArbitrageLeftContent() {
+    if (arbitrageLoading) {
+      return `<div style="text-align: center; padding: 40px;"><span class="spinner-ink" style="width: 28px; height: 28px; border-width: 3px; border-top-color: var(--leather-gold);"></span><div style="margin-top: 10px; font-family: var(--font-head); color: var(--ink-mid);">Calculating Arbitrage Matrices...</div></div>`;
+    }
+    if (!arbitrageData) {
+      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Select a legendary and evaluate the multi-way arbitrage matrix.</div>`;
+    }
+
+    const rep = arbitrageData;
+    let verdictClass = 'craft';
+    let verdictLabel = 'RECOMMENDED: CRAFT FOR SELF';
+    if (rep.recommended_action === 'CRAFT_FOR_PROFIT') {
+      verdictClass = 'profit';
+      verdictLabel = '✦ HIGH VALUE: CRAFT FOR PROFIT (TP FLIP) ✦';
+    } else if (rep.recommended_action === 'BUY_FINISHED_DIRECT') {
+      verdictClass = 'buy';
+      verdictLabel = 'RECOMMENDED: BUY DIRECT FROM TRADING POST';
+    }
+
+    const marginVal = rep.profit_margin_if_sold != null ? rep.profit_margin_if_sold : 0;
+    const marginColor = marginVal >= 0 ? '#2e7d32' : '#c62828';
+    const marginSign = marginVal >= 0 ? '+' : '';
+
+    return `
+      <div class="verdict-banner ${verdictClass}">
+        ${verdictLabel}
+      </div>
+
+      <div class="arbitrage-grid">
+        <div class="arb-card">
+          <span class="arb-card-lbl">Instant TP Buy</span>
+          <span class="arb-card-val">${formatCopper(rep.instant_buy_total)}</span>
+        </div>
+        <div class="arb-card">
+          <span class="arb-card-lbl">TP Buy Order</span>
+          <span class="arb-card-val">${formatCopper(rep.buy_order_total)}</span>
+        </div>
+        <div class="arb-card">
+          <span class="arb-card-lbl">Scratch Craft Cost</span>
+          <span class="arb-card-val">${formatCopper(rep.craft_from_scratch_total)}</span>
+        </div>
+        <div class="arb-card" style="border-color: var(--leather-gold); background: rgba(200, 150, 62, 0.08);">
+          <span class="arb-card-lbl" style="color: var(--leather-gold); font-weight: bold;">My Account Craft Cost</span>
+          <span class="arb-card-val" style="font-weight: bold;">${formatCopper(rep.my_account_craft_cost)}</span>
+        </div>
+      </div>
+
+      <div class="tax-breakdown-box">
+        <div style="font-family: var(--font-head); font-weight: 700; color: var(--ink-dark); text-transform: uppercase;">
+          Wallace's 15% TP Tax Liquidation Model
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--ink-soft);">TP Gross Liquidation:</span>
+          <span>${formatCopper(rep.buy_order_total)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--ink-soft);">Wallace 15% TP Tax (10% + 5% listing):</span>
+          <span>-${formatCopper(Math.round(rep.buy_order_total * 0.15))}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-top: 1px dotted var(--parch-line); padding-top: 3px;">
+          <span style="color: var(--ink-dark); font-weight: bold;">Net Payout If Sold:</span>
+          <span style="font-weight: bold;">${formatCopper(rep.net_sell_if_sold)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--parch-line); padding-top: 3px; font-size: 0.85rem;">
+          <span style="font-weight: bold;">Net Profit Margin (vs Scratch):</span>
+          <span style="font-weight: bold; color: ${marginColor};">${marginSign}${formatCopper(marginVal)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderArbitrageRightContent() {
+    if (!arbitrageData) {
+      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Component breakdown will appear upon evaluation.</div>`;
+    }
+    const rep = arbitrageData;
+    const prec = rep.precursor_strategy || {};
+    const clover = rep.clover_strategy || {};
+
+    let t6Rows = "";
+    if (rep.t6_promotion_strategy && Object.keys(rep.t6_promotion_strategy).length > 0) {
+      t6Rows = Object.entries(rep.t6_promotion_strategy).slice(0, 4).map(([name, info]) => {
+        const isPromote = info.recommended_option === "PROMOTE_T5_FORGE";
+        const badgeStyle = isPromote ? "background: #e8f5e9; color: #2e7d32;" : "background: #e3f2fd; color: #1565c0;";
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; border-bottom: 1px dotted var(--parch-line); padding: 2px 0;">
+            <span>${escapeHtml(name)}</span>
+            <span style="${badgeStyle} padding: 1px 5px; border-radius: 3px; font-weight: 600;">${isPromote ? 'Promote T5 Forge' : 'Buy Direct TP'}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    return `
+      <div class="task-item-card" style="margin-bottom: 6px;">
+        <div class="task-header-row">
+          <span class="task-title">🗡️ Precursor Acquisition</span>
+          <span class="task-duration-badge" style="background: var(--leather-gold); color: #fff;">${escapeHtml(prec.recommended_strategy || 'BUY_ORDER')}</span>
+        </div>
+        <div style="font-size: 0.78rem; color: var(--ink-mid); margin-top: 2px;">
+          <strong>Target:</strong> ${escapeHtml(prec.precursor_name || 'Precursor')} ${prec.precursor_id ? `(ID: ${prec.precursor_id})` : ''}
+        </div>
+        <div style="font-size: 0.78rem; color: var(--ink-soft); line-height: 1.35;">
+          ${escapeHtml(prec.details || 'Compare TP buy order vs Grandmaster Craftsman Hobbs collection vs Wizard Vault Starter Kit.')}
+        </div>
+      </div>
+
+      <div class="task-item-card" style="margin-bottom: 6px;">
+        <div class="task-header-row">
+          <span class="task-title">🍀 Mystic Clover EV Path</span>
+          <span class="task-duration-badge" style="background: #70338a; color: #fff;">${escapeHtml(clover.recommended_strategy || 'WIZARDS_VAULT')}</span>
+        </div>
+        <div style="font-size: 0.78rem; color: var(--ink-soft); line-height: 1.35; margin-top: 2px;">
+          ${escapeHtml(clover.notes || 'Evaluates Mystic Forge recipe expected value (3.2 Mystic Coins + 3.2 Ecto per Clover) vs Fractal BLING-9988 and Astral Acclaim discounted caps.')}
+        </div>
+      </div>
+
+      ${t6Rows ? `
+        <div class="essence-journal-box" style="margin-bottom: 6px; padding: 6px 10px;">
+          <div class="essence-journal-title" style="font-size: 0.72rem; margin-bottom: 4px;">T6 Material Promotion Spreads</div>
+          ${t6Rows}
+        </div>
+      ` : ''}
+
+      <div class="tax-breakdown-box" id="opp-cost-widget">
+        <div style="font-family: var(--font-head); font-weight: 700; color: var(--ink-dark); font-size: 0.76rem; text-transform: uppercase;">
+          Cross-Role Opportunity Cost Analyzer
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <select id="opp-currency-select" class="priory-select" style="font-size: 0.75rem; padding: 4px 6px;">
+            <option value="63" ${oppCurrencyId === 63 ? 'selected' : ''}>Astral Acclaim (ID: 63)</option>
+            <option value="29" ${oppCurrencyId === 29 ? 'selected' : ''}>Provisioner Token (ID: 29)</option>
+            <option value="23" ${oppCurrencyId === 23 ? 'selected' : ''}>Spirit Shards (ID: 23)</option>
+            <option value="3" ${oppCurrencyId === 3 ? 'selected' : ''}>Laurels (ID: 3)</option>
+            <option value="45" ${oppCurrencyId === 45 ? 'selected' : ''}>Volatile Magic (ID: 45)</option>
+          </select>
+          <button type="button" class="btn-jump-tool" id="btn-eval-opp" style="white-space: nowrap; padding: 4px 8px;">
+            Analyze
+          </button>
+        </div>
+        <div id="opp-results-container" style="font-size: 0.76rem; color: var(--ink-mid);">
+          ${renderOppCostResults()}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderOppCostResults() {
+    if (oppLoading) return "<span>Evaluating cross-role value...</span>";
+    if (!oppData) return "<span>Select a currency to evaluate cross-role trade-offs.</span>";
+    const d = oppData;
+    return `
+      <div style="margin-top: 4px; border-top: 1px dotted var(--parch-line); padding-top: 4px;">
+        <div>Recommended: <strong style="color: var(--leather-gold);">${escapeHtml(d.optimal_role_disposition || d.recommended_disposition)}</strong></div>
+        <div style="display: flex; justify-content: space-between; color: var(--ink-soft);">
+          <span>Direct Currency Val: ${d.direct_exchange_value ? formatCopper(d.direct_exchange_value * 10000) : '0g'}</span>
+          <span>TP Liquidation: ${formatCopper(d.tp_liquidation_value)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function attachOpportunityCostListeners() {
+    const oppSelect = document.getElementById("opp-currency-select");
+    if (oppSelect) {
+      oppSelect.addEventListener("change", (e) => {
+        oppCurrencyId = parseInt(e.target.value, 10);
+      });
+    }
+    const btnOpp = document.getElementById("btn-eval-opp");
+    if (btnOpp) {
+      btnOpp.addEventListener("click", () => {
+        executeFetchOpportunityCost(oppCurrencyId, oppQuantity);
+      });
+    }
+  }
+
+  async function executeFetchArbitrage(goalId) {
+    arbitrageLoading = true;
+    const btnText = document.getElementById("btn-arb-text");
+    const btnSpinner = document.getElementById("btn-arb-spinner");
+    if (btnText) btnText.textContent = "Evaluating Arbitrage Matrix...";
+    if (btnSpinner) btnSpinner.classList.remove("hidden");
+
+    try {
+      const res = await fetch("/api/solver/arbitrage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal_item_id: goalId })
+      });
+      const data = await res.json();
+      if (data.success && data.arbitrage) {
+        arbitrageData = data.arbitrage;
+        const leftCont = document.getElementById("arbitrage-left-results");
+        if (leftCont) leftCont.innerHTML = renderArbitrageLeftContent();
+        const rightCont = document.getElementById("arbitrage-right-results");
+        if (rightCont) {
+          rightCont.innerHTML = renderArbitrageRightContent();
+          attachOpportunityCostListeners();
+        }
+      } else {
+        alert(data.error || "Failed to evaluate arbitrage.");
+      }
+    } catch (e) {
+      console.error("Arbitrage error:", e);
+    } finally {
+      arbitrageLoading = false;
+      if (btnText) btnText.textContent = "Evaluate Multi-Way Arbitrage";
+      if (btnSpinner) btnSpinner.classList.add("hidden");
+    }
+  }
+
+  async function executeFetchOpportunityCost(currencyId, qty) {
+    oppLoading = true;
+    const oppCont = document.getElementById("opp-results-container");
+    if (oppCont) oppCont.innerHTML = renderOppCostResults();
+
+    try {
+      const res = await fetch("/api/solver/opportunity-cost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currency_id: currencyId, quantity: qty })
+      });
+      const data = await res.json();
+      if (data.success && data.opportunity_cost) {
+        oppData = data.opportunity_cost;
+        if (oppCont) oppCont.innerHTML = renderOppCostResults();
+      }
+    } catch (e) {
+      console.error("Opportunity cost error:", e);
+    } finally {
+      oppLoading = false;
+      if (oppCont) oppCont.innerHTML = renderOppCostResults();
+    }
+  }
+
+  /* ── CHAPTER IV: PREREQUISITE AUDIT ───────────────────────────────────────── */
+  function renderPrerequisitesSpread() {
+    const goalOptions = renderGoalSelectOptions(prereqGoalId);
+
+    leftPageBody.innerHTML = `
+      <div class="runic-header">ᚨ ᚢ ᛞ ᛁ ᛏ ✦ ᚱ ᛖ ᚨ ᛞ ᛁ</div>
+      <h2 class="page-title">Chapter IV: Prerequisite Audit</h2>
+      <div class="handwritten-subtitle">~ Masteries, Crafting & Collections ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div class="inscribe-form">
+        <label class="inscribe-label" for="prereq-goal-select">Audit Account for Legendary:</label>
+        <select id="prereq-goal-select" class="priory-select">
+          ${goalOptions}
+        </select>
+        <button type="button" class="btn-forge-inscribe" id="btn-run-prereqs" style="margin-top: 6px;">
+          <span id="btn-prereq-text">${prereqLoading ? 'Auditing Account Readiness...' : 'Audit Account Prerequisites'}</span>
+          <span id="btn-prereq-spinner" class="spinner-ink ${prereqLoading ? '' : 'hidden'}"></span>
+        </button>
+      </div>
+
+      <div id="prereq-left-results" style="margin-top: 10px;">
+        ${renderPrereqLeftContent()}
+      </div>
+    `;
+
+    rightPageBody.innerHTML = `
+      <div class="runic-header">ᛒ ᛚ ᛟ ᚲ ᚲ ᛖ ᚱ ᛊ ✦ ᚱ ᛟ ᚢ ᛏ ᛖ</div>
+      <h3 class="page-title">Discipline Routing & Blockers</h3>
+      <div class="handwritten-subtitle">~ Zero-Fee Character Assignments ~</div>
+      <div class="ink-divider">✦</div>
+
+      <div id="prereq-right-results">
+        ${renderPrereqRightContent()}
+      </div>
+    `;
+
+    const goalSelect = document.getElementById("prereq-goal-select");
+    if (goalSelect) {
+      goalSelect.addEventListener("change", (e) => {
+        prereqGoalId = parseInt(e.target.value, 10);
+      });
+    }
+
+    const btnRun = document.getElementById("btn-run-prereqs");
+    if (btnRun) {
+      btnRun.addEventListener("click", () => {
+        executeFetchPrerequisites(prereqGoalId);
+      });
+    }
+
+    if (!prereqData && !prereqLoading) {
+      executeFetchPrerequisites(prereqGoalId);
+    }
+  }
+
+  function renderPrereqLeftContent() {
+    if (prereqLoading) {
+      return `<div style="text-align: center; padding: 40px;"><span class="spinner-ink" style="width: 28px; height: 28px; border-width: 3px; border-top-color: var(--leather-gold);"></span><div style="margin-top: 10px; font-family: var(--font-head); color: var(--ink-mid);">Auditing Masteries & Prerequisites...</div></div>`;
+    }
+    if (!prereqData) {
+      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Select a legendary to audit account masteries and readiness.</div>`;
+    }
+
+    const rep = prereqData;
+    const canCraft = rep.can_craft_immediately;
+    const verdictBanner = canCraft
+      ? `<div class="verdict-banner profit">✦ READY TO CRAFT IMMEDIATELY ✦<br><span style="font-size:0.75rem; font-weight:normal;">All Masteries, World Completion & Active Crafting Satisfied</span></div>`
+      : `<div class="verdict-banner craft">⚠️ PREREQUISITES PENDING<br><span style="font-size:0.75rem; font-weight:normal;">Account satisfies some conditions but action items remain</span></div>`;
+
+    const worldBadge = rep.has_world_completion ? "pass" : "fail";
+    const worldText = rep.has_world_completion ? "Completed" : "Incomplete";
+
+    const craftBadge = rep.active_crafting_ready ? "pass" : "warn";
+    const craftText = rep.active_crafting_ready ? "Ready (500)" : "Needs Discipline";
+
+    const masteryBadge = rep.mastery_requirements_met ? "pass" : "warn";
+    const masteryText = rep.mastery_requirements_met ? "Satisfied" : "Missing Unlocks";
+
+    const precBits = rep.precursor_collection_bits_total > 0
+      ? `${rep.precursor_collection_bits_done} / ${rep.precursor_collection_bits_total}`
+      : "Standard";
+
+    return `
+      ${verdictBanner}
+
+      <div class="prereq-pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span>World Completion</span>
+            <span class="pillar-badge ${worldBadge}">${worldText}</span>
+          </div>
+          <div style="font-size: 0.74rem; color: var(--ink-soft);">
+            Source: ${escapeHtml(rep.world_completion_source || 'Map / Gift of Exploration')}
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span>Crafting Disciplines</span>
+            <span class="pillar-badge ${craftBadge}">${craftText}</span>
+          </div>
+          <div style="font-size: 0.74rem; color: var(--ink-soft);">
+            ${rep.active_crafting_ready ? 'Discipline active at level 500' : 'Switch character or level discipline'}
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span>Mastery Tracks</span>
+            <span class="pillar-badge ${masteryBadge}">${masteryText}</span>
+          </div>
+          <div style="font-size: 0.74rem; color: var(--ink-soft);">
+            ${rep.missing_masteries?.length > 0 ? `${rep.missing_masteries.length} masteries pending` : 'All masteries acquired'}
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span>Precursor Step</span>
+            <span class="pillar-badge pass">${precBits}</span>
+          </div>
+          <div style="font-size: 0.74rem; color: var(--ink-soft);">
+            ${escapeHtml(rep.precursor_collection_step || 'Tradeable / Finished')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPrereqRightContent() {
+    if (!prereqData) {
+      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Blockers and character assignments will appear here.</div>`;
+    }
+
+    const rep = prereqData;
+    let blockersHtml = "";
+    if (rep.blockers && rep.blockers.length > 0) {
+      blockersHtml = rep.blockers.map(b => `
+        <div style="font-size: 0.8rem; color: #c62828; margin-bottom: 4px; display: flex; gap: 6px;">
+          <span>⛔</span> <span>${escapeHtml(b)}</span>
+        </div>
+      `).join("");
+    } else {
+      blockersHtml = `<div style="font-size: 0.82rem; color: #2e7d32; font-style: italic;">✨ Zero hard blockers! All prerequisite requirements are met.</div>`;
+    }
+
+    let routingHtml = "";
+    if (rep.crafting_assignment_recommendations && rep.crafting_assignment_recommendations.length > 0) {
+      routingHtml = rep.crafting_assignment_recommendations.map(r => `
+        <div class="task-item-card" style="margin-bottom: 4px; padding: 6px 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <strong>${escapeHtml(r.gift_or_component || r.gift || 'Gift')}</strong>
+            <span style="color: var(--leather-gold); font-weight: bold;">${escapeHtml(r.character_name || r.recommended_character || 'Kerling')}</span>
+          </div>
+          <div style="font-size: 0.74rem; color: var(--ink-soft);">
+            Discipline: ${escapeHtml(r.discipline || 'Weaponsmith')} (Rating: ${r.current_rating || 500})
+          </div>
+        </div>
+      `).join("");
+    } else if (rep.character_discipline_assignments && Object.keys(rep.character_discipline_assignments).length > 0) {
+      routingHtml = Object.entries(rep.character_discipline_assignments).map(([charName, discInfo]) => `
+        <div class="task-item-card" style="margin-bottom: 4px; padding: 6px 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <strong>${escapeHtml(charName)}</strong>
+            <span style="color: var(--leather-gold); font-weight: bold;">Level ${discInfo.rating || 500}</span>
+          </div>
+          <div style="font-size: 0.74rem; color: var(--ink-soft);">
+            Discipline: ${escapeHtml(discInfo.discipline || 'Crafting')}
+          </div>
+        </div>
+      `).join("");
+    } else {
+      routingHtml = `<div style="font-size: 0.8rem; color: var(--ink-soft);">No character discipline reassignments needed.</div>`;
+    }
+
+    return `
+      <div class="essence-journal-box" style="margin-bottom: 8px;">
+        <div class="essence-journal-title" style="color: #c62828;">Active Crafting Blockers</div>
+        ${blockersHtml}
+      </div>
+
+      <div class="essence-journal-box" style="margin-bottom: 8px;">
+        <div class="essence-journal-title">Multi-Alt Discipline Routing (Avoid 50s Fee)</div>
+        ${routingHtml}
+      </div>
+
+      ${rep.missing_masteries && rep.missing_masteries.length > 0 ? `
+        <div class="essence-journal-box">
+          <div class="essence-journal-title" style="color: var(--leather-gold);">Missing Masteries</div>
+          <ul style="padding-left: 16px; font-size: 0.78rem; color: var(--ink-mid);">
+            ${rep.missing_masteries.map(m => `<li>${escapeHtml(m)}</li>`).join("")}
+          </ul>
+        </div>
+      ` : ''}
+    `;
+  }
+
   function turnPageTo(targetIndex, direction = "forward") {
     if (targetIndex === currentSpreadIndex) return;
     isFlipping = true;
@@ -513,11 +1325,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const existingIdx = savedRecipes.findIndex(r => r.goal_name === data.guide.goal_name);
         if (existingIdx !== -1) {
           savedRecipes[existingIdx] = data.guide;
-          turnPageTo(existingIdx + 1, "forward");
+          turnPageTo(4 + existingIdx, "forward");
         } else {
           savedRecipes.push(data.guide);
           saveRecipesToStorage();
-          turnPageTo(savedRecipes.length, "forward");
+          turnPageTo(4 + savedRecipes.length - 1, "forward");
         }
       } else {
         alert(data.error || "The Priory could not resolve this recipe.");

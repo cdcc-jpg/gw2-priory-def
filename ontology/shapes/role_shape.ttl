@@ -1,0 +1,79 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix role: <https://priory.gw2/ref/role/> .
+
+<https://priory.gw2/shapes/role> a owl:Ontology ;
+    rdfs:label "SHACL Shapes for GW2 Game Roles and Storage Substrates"@en ;
+    rdfs:comment "Structural validation shapes enforcing constraints on AccountWalletScalar, ContainerizedToken, and GameRole disjointness."@en ;
+    owl:versionInfo "1.0.0" .
+
+# ==============================================================================
+# Storage Substrate Validation Shapes
+# ==============================================================================
+
+priory:AccountWalletScalarShape a sh:NodeShape ;
+    sh:targetClass priory:AccountWalletScalar ;
+    rdfs:label "Account Wallet Scalar Shape"@en ;
+    rdfs:comment "Enforces structural invariants on unlocated, scalar account-wide currencies."@en ;
+    sh:property [
+        sh:path priory:apiWalletId ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "AccountWalletScalar must declare exactly one integer apiWalletId."@en ;
+    ] ;
+    sh:property [
+        sh:path priory:isContainerized ;
+        sh:datatype xsd:boolean ;
+        sh:hasValue false ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "AccountWalletScalar isContainerized must be false."@en ;
+    ] ;
+    sh:property [
+        sh:path priory:playsRole ;
+        sh:not [
+            sh:in ( role:SalvageTarget role:MarketCommodity ) ;
+        ] ;
+        sh:message "AccountWalletScalar cannot play SalvageTarget or MarketCommodity roles."@en ;
+    ] .
+
+priory:ContainerizedTokenShape a sh:NodeShape ;
+    sh:targetClass priory:ContainerizedToken ;
+    rdfs:label "Containerized Token Shape"@en ;
+    rdfs:comment "Enforces structural invariants on containerized inventory tokens."@en ;
+    sh:property [
+        sh:path priory:isContainerized ;
+        sh:datatype xsd:boolean ;
+        sh:hasValue true ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "ContainerizedToken isContainerized must be true."@en ;
+    ] .
+
+# ==============================================================================
+# Role Disjointness Shape
+# ==============================================================================
+
+priory:RoleDisjointnessShape a sh:NodeShape ;
+    sh:targetClass priory:Entity ;
+    sh:targetSubjectsOf priory:playsRole ;
+    rdfs:label "Role Disjointness Shape"@en ;
+    rdfs:comment "Enforces game role exclusivity: an entity cannot simultaneously play both JunkSell and EquippedGear roles."@en ;
+    sh:not [
+        sh:and (
+            [
+                sh:path priory:playsRole ;
+                sh:hasValue role:JunkSell ;
+            ]
+            [
+                sh:path priory:playsRole ;
+                sh:hasValue role:EquippedGear ;
+            ]
+        )
+    ] ;
+    sh:message "An entity cannot simultaneously play both JunkSell and EquippedGear roles."@en .

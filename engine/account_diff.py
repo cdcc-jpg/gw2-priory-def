@@ -10,6 +10,11 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from rdflib import Literal, URIRef
 from rdflib.plugins.sparql import prepareQuery
 from engine.graph_store import PrioryGraphStore, DEFAULT_NAMESPACES
+from engine.character_graph import (
+    CRAFTING_DISCIPLINE_STATIONS,
+    route_crafting_discipline,
+    encode_item_chat_link
+)
 
 
 @dataclass
@@ -636,6 +641,7 @@ class AccountState:
     achievements: Dict[int, int] = field(default_factory=dict)
     completed_achievements: Set[int] = field(default_factory=set)
     masteries: Dict[int, int] = field(default_factory=dict)
+    mastery_points: Dict[str, Dict[str, int]] = field(default_factory=dict)
     wizards_vault_listings: Dict[int, WizardVaultListing] = field(default_factory=dict)
     characters: List[Dict[str, Any]] = field(default_factory=list)
     mount_types: List[str] = field(default_factory=list)
@@ -656,51 +662,139 @@ class AccountState:
     achievement_repeated: Dict[int, int] = field(default_factory=dict)
     active_disciplines: Dict[str, List[str]] = field(default_factory=dict)
     character_disciplines: Dict[str, Dict[str, Dict[str, Any]]] = field(default_factory=dict)
+    daily_crafting: List[str] = field(default_factory=list)
+    world_bosses: List[str] = field(default_factory=list)
 
     def total_item_count(self, item_id: int) -> int:
-        """Aggregates an item's count across materials, bank, bags, and legendary armory."""
+        """Aggregates an item's count across materials, bank, bags (inventory & characters[*].bags), and legendary armory."""
+        char_bags_count = 0
+        if self.characters:
+            for char in self.characters:
+                for bag in char.get("bags", []):
+                    if isinstance(bag, dict):
+                        for inv_item in bag.get("inventory", []):
+                            if isinstance(inv_item, dict) and inv_item.get("id") == item_id:
+                                char_bags_count += inv_item.get("count", 1)
         return (
             self.materials.get(item_id, 0) +
             self.bank.get(item_id, 0) +
             self.inventory.get(item_id, 0) +
+            char_bags_count +
             self.legendary_armory.get(item_id, 0)
+        )
+
+    def get_item_count(self, item_id: int) -> int:
+        """Sums an item's count across materials, bank, and bags (inventory & characters[*].bags)."""
+        char_bags_count = 0
+        if self.characters:
+            for char in self.characters:
+                for bag in char.get("bags", []):
+                    if isinstance(bag, dict):
+                        for inv_item in bag.get("inventory", []):
+                            if isinstance(inv_item, dict) and inv_item.get("id") == item_id:
+                                char_bags_count += inv_item.get("count", 1)
+        return (
+            self.materials.get(item_id, 0) +
+            self.bank.get(item_id, 0) +
+            self.inventory.get(item_id, 0) +
+            char_bags_count
         )
 
     def total_currency_count(self, currency_id: int) -> int:
         """Returns total owned amount of a wallet currency by its API ID."""
         return self.wallet.get(currency_id, 0)
 
-    def dungeon_tales_count(self) -> int:
-        """Returns count of Tales of Dungeon Delving (currency 69, with fallback to legacy 61/13) from self.wallet."""
+    def dungeon_tales_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Tales of Dungeon Delving from wallet, querying graph store if provided."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine._get_dungeon_tales(self)
         return self.wallet.get(69, 0) + self.wallet.get(61, 0) + self.wallet.get(13, 0)
 
-    def astral_acclaim_count(self) -> int:
-        """Returns count of Astral Acclaim (currency 63, with fallback to 68) from self.wallet."""
+    def astral_acclaim_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Astral Acclaim from wallet, dynamically querying priory:apiWalletId if graph_store passed."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine._get_astral_acclaim(self)
         return self.wallet.get(63, 0) if 63 in self.wallet else self.wallet.get(68, 0)
 
-    def imperial_favor_count(self) -> int:
-        """Returns count of Imperial Favor (currency 68) from self.wallet."""
+    def imperial_favor_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Imperial Favor from wallet, querying graph store if provided."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine.get_available_purchasing_power("currency:ImperialFavor", self)
         return self.wallet.get(68, 0)
 
-    def research_notes_count(self) -> int:
-        """Returns count of Research Notes (currency 61) from self.wallet."""
+    def research_notes_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Research Notes from wallet, querying graph store if provided."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine.get_available_purchasing_power("currency:ResearchNote", self)
         return self.wallet.get(61, 0)
 
-    def provisioner_tokens_count(self) -> int:
-        """Returns count of Provisioner Tokens (currency 29) from self.wallet."""
+    def provisioner_tokens_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Provisioner Tokens from wallet, querying graph store if provided."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine._get_provisioner_tokens(self)
         return self.wallet.get(29, 0)
 
-    def volatile_magic_count(self) -> int:
-        """Returns count of Volatile Magic (currency 45) from self.wallet."""
+    def volatile_magic_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Volatile Magic from wallet, querying graph store if provided."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine.get_available_purchasing_power("currency:VolatileMagic", self)
         return self.wallet.get(45, 0)
 
-    def unbound_magic_count(self) -> int:
-        """Returns count of Unbound Magic (currency 32) from self.wallet."""
+    def unbound_magic_count(self, graph_store: Optional[Any] = None) -> int:
+        """Returns count of Unbound Magic from wallet, querying graph store if provided."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine.get_available_purchasing_power("currency:UnboundMagic", self)
         return self.wallet.get(32, 0)
+
+    def get_available_purchasing_power(self, entity_iri_or_id: Any, graph_store: Optional[Any] = None) -> int:
+        """Substrate-agnostic purchasing power balance resolver."""
+        if graph_store is not None:
+            engine = AccountDiffEngine(graph_store)
+            return engine.get_available_purchasing_power(entity_iri_or_id, self)
+        if isinstance(entity_iri_or_id, int):
+            if entity_iri_or_id in self.wallet:
+                return self.wallet[entity_iri_or_id]
+            return self.get_item_count(entity_iri_or_id)
+        return 0
 
     def has_world_completion_unlocked(self) -> bool:
         """Returns True if account has unlocked Been There, Done That (Achievement 137 or Title 12)."""
         return 137 in self.completed_achievements or 12 in self.titles
+
+    def has_world_completion_gift(self) -> bool:
+        """Returns True if account owns Gift of Exploration (item 19677)."""
+        return self.total_item_count(19677) > 0
+
+    def world_completion_status(self) -> Tuple[bool, Optional[str]]:
+        """Determines world exploration status and source ("INVENTORY_GIFT", "TITLE_12", "ACHIEVEMENT_137")."""
+        if self.total_item_count(19677) > 0:
+            return True, "INVENTORY_GIFT"
+        if 12 in self.titles:
+            return True, "TITLE_12"
+        if 137 in self.completed_achievements or self.achievements.get(137, 0) >= 100:
+            return True, "ACHIEVEMENT_137"
+        return False, None
+
+    def legendary_crafting_mastery_level(self) -> int:
+        """Returns Central Tyria Legendary Crafting mastery level (0-4).
+        Track 6 in live GW2 API, track 10 in ontology/legacy tests."""
+        return max(self.masteries.get(6, 0), self.masteries.get(10, 0))
+
+    def has_legendary_crafting_tier(self, tier: int) -> bool:
+        """Checks if Central Tyria Legendary Crafting mastery tier is unlocked:
+        Tier 1: Revered Antiquarian (1)
+        Tier 2: Magister of Legends (2)
+        Tier 3: Historian of the Armaments (3)
+        Tier 4: Scholar of Secrets (4)
+        """
+        return self.legendary_crafting_mastery_level() >= tier
 
     def has_dungeon_master_unlocked(self) -> bool:
         """Returns True if account has unlocked Dungeon Master (Achievement 122 or Title 15)."""
@@ -1046,11 +1140,183 @@ class AccountDiffReport:
     missing_disciplines: List[Dict[str, Any]] = field(default_factory=list)
 
 
+@dataclass
+class PrerequisiteReport:
+    """Evaluation of account prerequisites (world completion, masteries, crafting, collections) for a legendary goal."""
+    goal_item_id: int
+    goal_name: str
+    has_world_completion: bool
+    world_completion_source: Optional[str]  # "TITLE_12", "ACHIEVEMENT_137", "INVENTORY_GIFT"
+    mastery_requirements_met: bool
+    missing_masteries: List[str]
+    active_crafting_ready: bool
+    crafting_assignment_recommendations: List[Dict[str, Any]]
+    precursor_collection_step: Optional[str]
+    precursor_collection_bits_done: int
+    precursor_collection_bits_total: int
+    can_craft_immediately: bool
+    blockers: List[str]
+    character_discipline_assignments: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+
+
 class AccountDiffEngine:
     """Recursive graph traversal engine for computing inventory deltas and progression gaps."""
 
-    def __init__(self, graph_store: PrioryGraphStore):
+    def __init__(self, graph_store: Optional[PrioryGraphStore] = None):
         self.store = graph_store
+
+    def get_available_purchasing_power(self, entity_iri_or_id: Any, account_state: AccountState) -> int:
+        """Substrate-agnostic balance resolver querying AccountWalletScalar vs ContainerizedToken in RDF graph.
+        
+        If wallet scalar: reads from account_state.wallet using priory:apiWalletId.
+        If containerized token: sums account_state.get_item_count(item_id) across materials, bank, and bags.
+        Provides graceful fallback if entity is not found in graph or graph store is not passed.
+        """
+        if self.store is not None:
+            target_uri = None
+            target_id = None
+            target_name = None
+
+            if isinstance(entity_iri_or_id, int):
+                target_id = Literal(entity_iri_or_id)
+            elif isinstance(entity_iri_or_id, URIRef):
+                target_uri = entity_iri_or_id
+            elif isinstance(entity_iri_or_id, str):
+                s = entity_iri_or_id.strip()
+                if s.isdigit():
+                    target_id = Literal(int(s))
+                elif s.startswith("http://") or s.startswith("https://"):
+                    target_uri = URIRef(s)
+                elif ":" in s:
+                    prefix, local = s.split(":", 1)
+                    if prefix in DEFAULT_NAMESPACES:
+                        target_uri = DEFAULT_NAMESPACES[prefix][local]
+                    else:
+                        target_name = Literal(local.lower())
+                else:
+                    target_name = Literal(s.lower())
+
+            sparql = """
+            SELECT DISTINCT ?entity ?walletId ?itemId ?isWallet ?isContainer WHERE {
+                {
+                    ?entity priory:apiWalletId ?walletId .
+                    BIND(true AS ?isWallet)
+                } UNION {
+                    ?entity a/rdfs:subClassOf* priory:AccountWalletScalar .
+                    OPTIONAL { ?entity priory:apiWalletId ?walletId }
+                    BIND(true AS ?isWallet)
+                } UNION {
+                    ?entity a/rdfs:subClassOf* priory:ContainerizedToken .
+                    OPTIONAL { ?entity priory:gw2Id ?itemId }
+                    BIND(true AS ?isContainer)
+                } UNION {
+                    ?entity a/rdfs:subClassOf* priory:Item .
+                    OPTIONAL { ?entity priory:gw2Id ?itemId }
+                    BIND(true AS ?isContainer)
+                } UNION {
+                    ?entity priory:gw2Id ?itemId .
+                }
+                OPTIONAL { ?entity skos:notation ?notation }
+                OPTIONAL { ?entity rdfs:label ?label }
+                OPTIONAL { ?entity skos:prefLabel ?prefLabel }
+                FILTER (
+                    (BOUND(?targetUri) && ?entity = ?targetUri) ||
+                    (BOUND(?targetId) && (?walletId = ?targetId || ?itemId = ?targetId || (BOUND(?notation) && STR(?notation) = STR(?targetId)))) ||
+                    (BOUND(?targetName) && (
+                        (BOUND(?label) && LCASE(STR(?label)) = ?targetName) ||
+                        (BOUND(?prefLabel) && LCASE(STR(?prefLabel)) = ?targetName) ||
+                        CONTAINS(LCASE(STR(?entity)), ?targetName)
+                    ))
+                )
+            } LIMIT 1
+            """
+            init_b = {}
+            if target_uri:
+                init_b["targetUri"] = target_uri
+            if target_id:
+                init_b["targetId"] = target_id
+            if target_name:
+                init_b["targetName"] = target_name
+
+            res = self.store.query(sparql, init_bindings=init_b)
+            if res:
+                match = res[0]
+                is_wallet = bool(match.get("isWallet"))
+                wallet_id = match.get("walletId")
+                item_id = match.get("itemId")
+
+                if is_wallet and wallet_id is not None:
+                    wid = int(wallet_id)
+                    if wid in account_state.wallet:
+                        return account_state.wallet[wid]
+                    elif wid == 68 and 63 in account_state.wallet:
+                        return account_state.wallet[63]
+                    elif wid == 63 and 68 in account_state.wallet:
+                        return account_state.wallet[68]
+                    elif wid == 69:
+                        return account_state.wallet.get(69, 0) + account_state.wallet.get(61, 0) + account_state.wallet.get(13, 0)
+                    return account_state.wallet.get(wid, 0)
+                elif item_id is not None:
+                    iid = int(item_id)
+                    return account_state.get_item_count(iid)
+
+        # Fallback to current behavior if graph store not passed or entity not found in graph
+        if isinstance(entity_iri_or_id, int):
+            if entity_iri_or_id in account_state.wallet:
+                return account_state.wallet[entity_iri_or_id]
+            return account_state.get_item_count(entity_iri_or_id)
+        elif isinstance(entity_iri_or_id, str):
+            if entity_iri_or_id.isdigit():
+                val = int(entity_iri_or_id)
+                if val in account_state.wallet:
+                    return account_state.wallet[val]
+                return account_state.get_item_count(val)
+            s_lower = entity_iri_or_id.lower()
+            if "astral" in s_lower:
+                return account_state.astral_acclaim_count()
+            elif "dungeon" in s_lower or "tales" in s_lower:
+                return account_state.dungeon_tales_count()
+            elif "gold" in s_lower or "coin" in s_lower:
+                return int(account_state.gold_count())
+            elif "karma" in s_lower:
+                return account_state.karma_count()
+            elif "spirit" in s_lower:
+                return account_state.spirit_shards_count()
+            elif "provisioner" in s_lower:
+                return account_state.provisioner_tokens_count()
+            elif "volatile" in s_lower:
+                return account_state.volatile_magic_count()
+            elif "unbound" in s_lower:
+                return account_state.unbound_magic_count()
+            elif "imperial" in s_lower:
+                return account_state.imperial_favor_count()
+            elif "research" in s_lower:
+                return account_state.research_notes_count()
+        return 0
+
+    def _get_astral_acclaim(self, account_state: AccountState) -> int:
+        """Resolves Astral Acclaim wallet balance dynamically via graph priory:apiWalletId."""
+        return self.get_available_purchasing_power("currency:AstralAcclaim", account_state)
+
+    def _get_dungeon_tales(self, account_state: AccountState) -> int:
+        """Resolves Tales of Dungeon Delving balance dynamically via graph priory:apiWalletId."""
+        return self.get_available_purchasing_power("currency:TalesOfDungeonDelving", account_state)
+
+    def _get_provisioner_tokens(self, account_state: AccountState) -> int:
+        """Resolves Provisioner Token balance dynamically via graph priory:apiWalletId."""
+        return self.get_available_purchasing_power("currency:ProvisionerToken", account_state)
+
+    def _get_spirit_shards(self, account_state: AccountState) -> int:
+        """Resolves Spirit Shards balance dynamically via graph priory:apiWalletId."""
+        return self.get_available_purchasing_power("currency:SpiritShard", account_state)
+
+    def _get_karma(self, account_state: AccountState) -> int:
+        """Resolves Karma balance dynamically via graph priory:apiWalletId."""
+        return self.get_available_purchasing_power("currency:Karma", account_state)
+
+    def _get_coin(self, account_state: AccountState) -> int:
+        """Resolves Coin balance dynamically via graph priory:apiWalletId."""
+        return self.get_available_purchasing_power("currency:Coin", account_state)
 
     def compute_diff(
         self,
@@ -1426,3 +1692,554 @@ class AccountDiffEngine:
                         "current_rating": player_rating
                     })
         return missing
+
+    def verify_legendary_prerequisites(self, goal_item_id: int, account_state: AccountState) -> PrerequisiteReport:
+        """Verifies account prerequisites (mastery tiers, active crafting, world completion, precursor collections) for crafting a legendary goal."""
+        item_meta = self.store.get_item_by_id(goal_item_id) if self.store else None
+        goal_name = item_meta["label"] if item_meta else f"Item {goal_item_id}"
+        if goal_name == f"Item {goal_item_id}":
+            if goal_item_id in GEN1_WEAPONS:
+                goal_name = GEN1_WEAPONS[goal_item_id]["name"]
+            elif goal_item_id in GEN2_WEAPONS:
+                goal_name = GEN2_WEAPONS[goal_item_id]["name"]
+            elif goal_item_id in GEN3_WEAPON_NAMES:
+                goal_name = GEN3_WEAPON_NAMES[goal_item_id]
+            elif goal_item_id in ARMOR_NAMES:
+                goal_name = ARMOR_NAMES[goal_item_id]
+            elif goal_item_id in PRECURSOR_NAMES:
+                goal_name = PRECURSOR_NAMES[goal_item_id]
+
+        # 1. World Exploration Status & Source
+        has_world_comp, world_comp_source = account_state.world_completion_status()
+
+        # 2. Item Generation / Archetype Classification
+        is_gen1 = goal_item_id in GEN1_WEAPON_IDS or goal_item_id in GEN1_PRECURSOR_IDS
+        is_gen2 = goal_item_id in GEN2_WEAPON_IDS or goal_item_id in GEN2_PRECURSOR_IDS
+        is_gen3 = goal_item_id in GEN3_WEAPON_IDS
+        is_armor = goal_item_id in LEGENDARY_ARMOR_IDS
+
+        if not (is_gen1 or is_gen2 or is_gen3 or is_armor) and self.store:
+            gen_query = """
+            SELECT ?gen ?isArmor ?isWeapon WHERE {
+                ?item priory:gw2Id ?gw2Id .
+                OPTIONAL { ?item priory:generation ?gen }
+                OPTIONAL { ?item a priory:LegendaryArmor . BIND(true AS ?isArmor) }
+                OPTIONAL { ?item a priory:LegendaryWeapon . BIND(true AS ?isWeapon) }
+            } LIMIT 1
+            """
+            res = self.store.query(gen_query, init_bindings={"gw2Id": Literal(goal_item_id)})
+            if res:
+                row = res[0]
+                g_val = str(row.get("gen", ""))
+                if "1" in g_val:
+                    is_gen1 = True
+                elif "2" in g_val:
+                    is_gen2 = True
+                elif "3" in g_val:
+                    is_gen3 = True
+                if row.get("isArmor"):
+                    is_armor = True
+
+        blockers: List[str] = []
+
+        # 3. World Exploration Check (Required for Gen 1 Gift of Mastery)
+        if is_gen1 and not has_world_comp:
+            blockers.append(
+                "Missing 100% Core Tyria World Completion (requires Title 12 'Been there. Done that.', Achievement 137 'Been There, Done That', or Gift of Exploration in inventory)."
+            )
+
+        # 4. Central Tyria Legendary Crafting & Expansion Masteries
+        cur_crafting_mastery = account_state.legendary_crafting_mastery_level()
+        missing_masteries: List[str] = []
+
+        if is_gen1:
+            # Gen 1 precursor crafting / weapon forging requires Tier 3 Historian of the Armaments
+            # (Tier 1 for Dusk I, Tier 2 for Dusk II, Tier 3 for Dusk III)
+            required_tier = 3
+            if cur_crafting_mastery < required_tier:
+                tier_labels = {
+                    1: "Central Tyria Legendary Crafting Tier 1: Revered Antiquarian",
+                    2: "Central Tyria Legendary Crafting Tier 2: Magister of Legends",
+                    3: "Central Tyria Legendary Crafting Tier 3: Historian of the Armaments",
+                }
+                for t in range(cur_crafting_mastery + 1, required_tier + 1):
+                    missing_masteries.append(tier_labels[t])
+        elif is_gen2:
+            # Gen 2 requires Tier 4 Scholar of Secrets
+            required_tier = 4
+            if cur_crafting_mastery < required_tier:
+                tier_labels = {
+                    1: "Central Tyria Legendary Crafting Tier 1: Revered Antiquarian",
+                    2: "Central Tyria Legendary Crafting Tier 2: Magister of Legends",
+                    3: "Central Tyria Legendary Crafting Tier 3: Historian of the Armaments",
+                    4: "Central Tyria Legendary Crafting Tier 4: Scholar of Secrets",
+                }
+                for t in range(cur_crafting_mastery + 1, required_tier + 1):
+                    missing_masteries.append(tier_labels[t])
+            # Heart of Thorns masteries: Exalted Lore lvl 2, Itzel Lore lvl 1, Nuhoch Lore lvl 2
+            if account_state.masteries.get(1, 0) < 2:
+                missing_masteries.append("Heart of Thorns: Exalted Acceptance (Level 2)")
+            if account_state.masteries.get(2, 0) < 1:
+                missing_masteries.append("Heart of Thorns: Itzel Language (Level 1)")
+            if account_state.masteries.get(3, 0) < 2:
+                missing_masteries.append("Heart of Thorns: Nuhoch Proving (Level 2)")
+        elif is_gen3:
+            # End of Dragons masteries: Commercial Hub lvl 3
+            if account_state.masteries.get(4, 0) < 3:
+                missing_masteries.append("End of Dragons: Commercial Hub (Level 3)")
+
+        if self.store is not None:
+            mast_sparql = """
+            SELECT ?trackId ?trackLabel ?lvl ?mastName WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      priory:requiresMasteryTrack ?track .
+                ?track priory:masteryId ?trackId .
+                OPTIONAL { ?item priory:requiredMasteryLevel ?lvl }
+                OPTIONAL { ?item priory:masteryName ?mastName }
+                OPTIONAL { ?track rdfs:label ?trackLabel }
+            }
+            """
+            for row in self.store.query(mast_sparql, init_bindings={"gw2Id": Literal(goal_item_id)}):
+                t_id = int(row["trackId"])
+                req_lvl = int(row.get("lvl", 1))
+                cur_lvl = account_state.masteries.get(t_id, 0)
+                if cur_lvl < req_lvl:
+                    m_label = str(row.get("mastName", f"{row.get('trackLabel', f'Track {t_id}')} Level {req_lvl}"))
+                    if m_label not in missing_masteries:
+                        missing_masteries.append(m_label)
+
+        mastery_requirements_met = (len(missing_masteries) == 0)
+        if not mastery_requirements_met:
+            blockers.append(f"Mastery requirements not met: {', '.join(missing_masteries)}.")
+
+        # 5. Active Crafting Disciplines Check Across Characters
+        required_disciplines: List[Tuple[str, int]] = []
+        if goal_item_id in GEN1_WEAPONS:
+            w_info = GEN1_WEAPONS[goal_item_id]
+            required_disciplines.append(w_info["disc"])
+            if "sec_disc" in w_info:
+                required_disciplines.append(w_info["sec_disc"])
+        elif goal_item_id in GEN1_PRECURSOR_IDS:
+            w_id = PRECURSOR_TO_WEAPON.get(goal_item_id)
+            if w_id and w_id in GEN1_WEAPONS:
+                required_disciplines.append(GEN1_WEAPONS[w_id]["disc"])
+            else:
+                required_disciplines.append(("weaponsmith", 500))
+        elif goal_item_id in GEN2_WEAPONS:
+            w_info = GEN2_WEAPONS[goal_item_id]
+            required_disciplines.append(w_info["disc"])
+            if "sec_disc" in w_info:
+                required_disciplines.append(w_info["sec_disc"])
+        elif goal_item_id in GEN2_PRECURSOR_IDS:
+            w_id = PRECURSOR_TO_WEAPON.get(goal_item_id)
+            if w_id and w_id in GEN2_WEAPONS:
+                required_disciplines.append(GEN2_WEAPONS[w_id]["disc"])
+        elif goal_item_id in GEN3_WEAPON_DISCIPLINES:
+            required_disciplines.append(GEN3_WEAPON_DISCIPLINES[goal_item_id])
+        elif goal_item_id in LEGENDARY_ARMOR_DISCIPLINES:
+            required_disciplines.append(LEGENDARY_ARMOR_DISCIPLINES[goal_item_id])
+        else:
+            if self.store is not None:
+                disc_sparql = """
+                SELECT DISTINCT ?disc ?rating WHERE {
+                    {
+                        ?item priory:gw2Id ?gw2Id ;
+                              priory:producedBy ?rec .
+                        ?rec priory:requiresDiscipline ?disc .
+                        OPTIONAL { ?rec priory:requiredRating ?rating }
+                        OPTIONAL { ?rec priory:requiresRating ?rating }
+                    } UNION {
+                        ?item priory:gw2Id ?gw2Id ;
+                              priory:producedBy ?forgeRec .
+                        ?forgeRec priory:hasIngredientRequirement ?req .
+                        ?req priory:requiresItem ?subItem .
+                        ?subItem priory:producedBy ?rec .
+                        ?rec priory:requiresDiscipline ?disc .
+                        OPTIONAL { ?rec priory:requiredRating ?rating }
+                        OPTIONAL { ?rec priory:requiresRating ?rating }
+                    }
+                }
+                """
+                for r in self.store.query(disc_sparql, init_bindings={"gw2Id": Literal(goal_item_id)}):
+                    disc_uri = str(r["disc"])
+                    disc_name = disc_uri.rstrip("/").split("/")[-1].lower()
+                    rating = int(r.get("rating", 400)) if r.get("rating") else 400
+                    if (disc_name, rating) not in required_disciplines:
+                        required_disciplines.append((disc_name, rating))
+
+        crafting_assignment_recommendations: List[Dict[str, Any]] = []
+        character_discipline_assignments: Dict[str, Dict[str, Any]] = {}
+        for disc, req_rating in required_disciplines:
+            disc_lower = disc.lower()
+            routing = route_crafting_discipline(
+                discipline=disc_lower,
+                required_rating=req_rating,
+                account_state=account_state,
+                graph_store=self.store
+            )
+            character_discipline_assignments[disc_lower] = routing
+            if routing.get("action") != "ASSIGNED_ACTIVE":
+                crafting_assignment_recommendations.append(routing)
+
+        active_crafting_ready = (len(crafting_assignment_recommendations) == 0)
+        if not active_crafting_ready:
+            disc_strs = [f"{r['discipline'].title()} ({r['required_rating']})" for r in crafting_assignment_recommendations]
+            blockers.append(f"Active crafting discipline licenses not ready for: {', '.join(disc_strs)}.")
+
+        # 6. Precursor Collection Bitmask Analysis
+        collection_key = goal_item_id
+        if collection_key not in HOBBS_COLLECTIONS:
+            if goal_item_id in GEN1_WEAPONS:
+                collection_key = GEN1_WEAPONS[goal_item_id]["precursor_id"]
+            elif goal_item_id in GEN2_WEAPONS:
+                collection_key = GEN2_WEAPONS[goal_item_id]["precursor_id"]
+
+        precursor_collection_step: Optional[str] = None
+        precursor_collection_bits_done: int = 0
+        precursor_collection_bits_total: int = 0
+
+        if collection_key in HOBBS_COLLECTIONS:
+            tiers = HOBBS_COLLECTIONS[collection_key]
+            last_tier = tiers[-1]
+            if goal_item_id in GEN1_WEAPONS:
+                precursor_id = GEN1_WEAPONS[goal_item_id]["precursor_id"]
+            elif goal_item_id in GEN2_WEAPONS:
+                precursor_id = GEN2_WEAPONS[goal_item_id]["precursor_id"]
+            else:
+                precursor_id = collection_key
+
+            has_precursor = (
+                account_state.total_item_count(precursor_id) > 0
+                or account_state.total_item_count(goal_item_id) > 0
+                or account_state.has_legendary_unlocked(goal_item_id)
+            )
+
+            if has_precursor:
+                precursor_collection_step = "COMPLETED"
+                precursor_collection_bits_done = last_tier["bits_total"]
+                precursor_collection_bits_total = last_tier["bits_total"]
+            else:
+                current_tier = None
+                for t in tiers:
+                    t_done = False
+                    for aid in t["ach_ids"]:
+                        if aid in account_state.completed_achievements:
+                            t_done = True
+                            break
+                        if account_state.achievements.get(aid, 0) >= t["bits_total"]:
+                            t_done = True
+                            break
+                    if not t_done:
+                        current_tier = t
+                        break
+
+                if current_tier is None:
+                    precursor_collection_step = "COMPLETED"
+                    precursor_collection_bits_done = last_tier["bits_total"]
+                    precursor_collection_bits_total = last_tier["bits_total"]
+                else:
+                    precursor_collection_step = current_tier["name"]
+                    precursor_collection_bits_total = current_tier["bits_total"]
+                    bits_done = 0
+                    for aid in current_tier["ach_ids"]:
+                        if aid in account_state.achievement_bits:
+                            bits_done = max(bits_done, len(account_state.achievement_bits[aid]))
+                        if aid in account_state.achievements:
+                            bits_done = max(bits_done, account_state.achievements[aid])
+                    precursor_collection_bits_done = min(bits_done, precursor_collection_bits_total)
+                    blockers.append(
+                        f"Precursor collection incomplete: {precursor_collection_step} ({precursor_collection_bits_done}/{precursor_collection_bits_total} objectives completed)."
+                    )
+        else:
+            precursor_collection_step = None
+            precursor_collection_bits_done = 0
+            precursor_collection_bits_total = 0
+
+        # 7. Item-Specific Achievement Prerequisites (e.g. Ad Infinitum, Regalia)
+        if self.store is not None:
+            ach_sparql = """
+            SELECT ?achId ?achLabel WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      priory:requiresAchievement ?ach .
+                ?ach priory:achievementId ?achId .
+                OPTIONAL { ?ach rdfs:label ?achLabel }
+            }
+            """
+            for row in self.store.query(ach_sparql, init_bindings={"gw2Id": Literal(goal_item_id)}):
+                a_id = int(row["achId"])
+                if a_id not in account_state.completed_achievements:
+                    a_label = str(row.get("achLabel", f"Achievement {a_id}"))
+                    blockers.append(f"Missing required achievement: {a_label} (ID: {a_id}).")
+
+        can_craft_immediately = (len(blockers) == 0)
+
+        return PrerequisiteReport(
+            goal_item_id=goal_item_id,
+            goal_name=goal_name,
+            has_world_completion=has_world_comp,
+            world_completion_source=world_comp_source,
+            mastery_requirements_met=mastery_requirements_met,
+            missing_masteries=missing_masteries,
+            active_crafting_ready=active_crafting_ready,
+            crafting_assignment_recommendations=crafting_assignment_recommendations,
+            precursor_collection_step=precursor_collection_step,
+            precursor_collection_bits_done=precursor_collection_bits_done,
+            precursor_collection_bits_total=precursor_collection_bits_total,
+            can_craft_immediately=can_craft_immediately,
+            blockers=blockers,
+            character_discipline_assignments=character_discipline_assignments
+        )
+
+
+# ==============================================================================
+# Legendary Item Metadata & Grandmaster Hobbs Precursor Collection Definitions
+# ==============================================================================
+
+GEN1_WEAPONS: Dict[int, Dict[str, Any]] = {
+    30704: {"name": "Twilight", "precursor_id": 29185, "precursor_name": "Dusk", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30703: {"name": "Sunrise", "precursor_id": 29184, "precursor_name": "Dawn", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30689: {"name": "Eternity", "precursor_id": 30704, "precursor_name": "Twilight", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30699: {"name": "Bolt", "precursor_id": 29167, "precursor_name": "Zap", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30684: {"name": "Frostfang", "precursor_id": 29169, "precursor_name": "Tooth of Frostfang", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30687: {"name": "Incinerator", "precursor_id": 29165, "precursor_name": "Spark", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30690: {"name": "The Juggernaut", "precursor_id": 29172, "precursor_name": "The Colossus", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30692: {"name": "The Moot", "precursor_id": 29166, "precursor_name": "The Energizer", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30696: {"name": "The Flameseeker Prophecies", "precursor_id": 29177, "precursor_name": "The Chosen", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30691: {"name": "Kamohoali'i Kotaki", "precursor_id": 29183, "precursor_name": "Carcharias", "type": "Spear", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    30685: {"name": "Kudzu", "precursor_id": 29171, "precursor_name": "Leaf of Kudzu", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    30686: {"name": "The Dreamer", "precursor_id": 29175, "precursor_name": "The Lover", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    30694: {"name": "The Predator", "precursor_id": 29173, "precursor_name": "The Hunter", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    30693: {"name": "Quip", "precursor_id": 29168, "precursor_name": "Chaos Gun", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    30700: {"name": "Rodgort", "precursor_id": 29179, "precursor_name": "Rodgort's Flame", "type": "Torch", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    30702: {"name": "Howler", "precursor_id": 29180, "precursor_name": "Howl", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    30697: {"name": "Frenzy", "precursor_id": 29181, "precursor_name": "Rage", "type": "HarpoonGun", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    30698: {"name": "The Bifrost", "precursor_id": 29174, "precursor_name": "The Legend", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    30695: {"name": "Meteorlogicus", "precursor_id": 29170, "precursor_name": "Storm", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    30688: {"name": "The Minstrel", "precursor_id": 29178, "precursor_name": "The Bard", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    30701: {"name": "Kraitkin", "precursor_id": 29182, "precursor_name": "Venom", "type": "Trident", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+}
+
+GEN2_WEAPONS: Dict[int, Dict[str, Any]] = {
+    71383: {"name": "Nevermore", "precursor_id": 71384, "precursor_name": "The Raven Staff", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    76158: {"name": "Astralaria", "precursor_id": 76159, "precursor_name": "The Mechanism", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    75207: {"name": "HOPE", "precursor_id": 75208, "precursor_name": "Prototype", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    78052: {"name": "Chuka and Champawat", "precursor_id": 78053, "precursor_name": "Tigris", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    79562: {"name": "Shooshadoo", "precursor_id": 79563, "precursor_name": "Friendship", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    79802: {"name": "Eureka", "precursor_id": 79803, "precursor_name": "Endeavor", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    81206: {"name": "The Shining Blade", "precursor_id": 81207, "precursor_name": "Save the Queen", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    82791: {"name": "Sharur", "precursor_id": 82792, "precursor_name": "The Call", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    86303: {"name": "The HMS Divinity", "precursor_id": 86304, "precursor_name": "The Ambition", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    86675: {"name": "The Binding of Ipos", "precursor_id": 86676, "precursor_name": "Ars Goetia", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    87687: {"name": "Claw of the Khan-Ur", "precursor_id": 87688, "precursor_name": "Touch of the Khan-Ur", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    88955: {"name": "Xiuquatl", "precursor_id": 88956, "precursor_name": "Tlehco", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    89854: {"name": "Pharus", "precursor_id": 89855, "precursor_name": "Spero", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    90551: {"name": "Exordium", "precursor_id": 90552, "precursor_name": "Epitaph", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    91876: {"name": "Verdarach", "precursor_id": 91877, "precursor_name": "Call to Arms", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+}
+
+GEN3_WEAPON_NAMES: Dict[int, str] = {
+    96203: "Aurene's Bite", 96937: "Aurene's Claw", 96652: "Aurene's Fang", 97165: "Aurene's Tail",
+    97077: "Aurene's Rending", 96228: "Aurene's Voice", 96841: "Aurene's Argument", 96603: "Aurene's Scale",
+    96356: "Aurene's Gaze", 97594: "Aurene's Insight", 95684: "Aurene's Flight", 96376: "Aurene's Persuasion",
+    97141: "Aurene's Breath", 96613: "Aurene's Wisdom", 95675: "Aurene's Wing", 95612: "Aurene's Weight"
+}
+
+GEN3_WEAPON_DISCIPLINES: Dict[int, Tuple[str, int]] = {
+    96203: ("weaponsmith", 500), 96937: ("weaponsmith", 500), 96652: ("weaponsmith", 500), 97165: ("weaponsmith", 500),
+    97077: ("weaponsmith", 500), 96228: ("huntsman", 500), 96841: ("huntsman", 500), 96603: ("weaponsmith", 500),
+    96356: ("artificer", 500), 97594: ("artificer", 500), 95684: ("huntsman", 500), 96376: ("huntsman", 500),
+    97141: ("huntsman", 500), 96613: ("artificer", 500), 95675: ("huntsman", 500), 95612: ("weaponsmith", 500)
+}
+
+ARMOR_NAMES: Dict[int, str] = {
+    80384: "Perfected Envoy Helm", 80435: "Perfected Envoy Pauldrons", 80258: "Perfected Envoy Breastplate",
+    80145: "Perfected Envoy Gauntlets", 80161: "Perfected Envoy Tassets", 80248: "Perfected Envoy Greaves",
+    80296: "Perfected Envoy Mask", 80190: "Perfected Envoy Shoulderguards", 80277: "Perfected Envoy Jerkin",
+    80252: "Perfected Envoy Vambraces", 80281: "Perfected Envoy Leggings", 80557: "Perfected Envoy Boots",
+    80200: "Perfected Envoy Hood", 80356: "Perfected Envoy Mantle", 80131: "Perfected Envoy Vestments",
+    80196: "Perfected Envoy Pants",
+    101001: "Obsidian Helm", 101002: "Obsidian Pauldrons", 101003: "Obsidian Breastplate",
+    101004: "Obsidian Gauntlets", 101005: "Obsidian Tassets", 101006: "Obsidian Greaves",
+    101007: "Obsidian Mask", 101008: "Obsidian Shoulderguards", 101009: "Obsidian Jerkin",
+    101010: "Obsidian Vambraces", 101011: "Obsidian Leggings", 101012: "Obsidian Boots"
+}
+
+LEGENDARY_ARMOR_DISCIPLINES: Dict[int, Tuple[str, int]] = {
+    # Heavy -> Armorsmith 500
+    80384: ("armorsmith", 500), 80435: ("armorsmith", 500), 80258: ("armorsmith", 500),
+    80145: ("armorsmith", 500), 80161: ("armorsmith", 500), 80248: ("armorsmith", 500),
+    101001: ("armorsmith", 500), 101002: ("armorsmith", 500), 101003: ("armorsmith", 500),
+    101004: ("armorsmith", 500), 101005: ("armorsmith", 500), 101006: ("armorsmith", 500),
+    # Medium -> Leatherworker 500
+    80296: ("leatherworker", 500), 80190: ("leatherworker", 500), 80277: ("leatherworker", 500),
+    80252: ("leatherworker", 500), 80281: ("leatherworker", 500), 80557: ("leatherworker", 500),
+    101007: ("leatherworker", 500), 101008: ("leatherworker", 500), 101009: ("leatherworker", 500),
+    101010: ("leatherworker", 500), 101011: ("leatherworker", 500), 101012: ("leatherworker", 500),
+    # Light -> Tailor 500
+    80200: ("tailor", 500), 80356: ("tailor", 500), 80131: ("tailor", 500),
+    80196: ("tailor", 500)
+}
+
+PRECURSOR_NAMES: Dict[int, str] = {
+    29185: "Dusk", 29184: "Dawn", 29167: "Zap", 29169: "Tooth of Frostfang", 29171: "Leaf of Kudzu",
+    29175: "The Lover", 29165: "Spark", 29178: "The Bard", 29172: "The Colossus", 29166: "The Energizer",
+    29177: "The Chosen", 29183: "Carcharias", 29168: "Chaos Gun", 29173: "The Hunter", 29170: "Storm",
+    29181: "Rage", 29174: "The Legend", 29179: "Rodgort's Flame", 29182: "Venom", 29180: "Howl",
+    71384: "The Raven Staff", 76159: "The Mechanism", 75208: "Prototype", 78053: "Tigris"
+}
+
+GEN1_WEAPON_IDS: Set[int] = set(GEN1_WEAPONS.keys())
+GEN1_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN1_WEAPONS.values()}
+GEN2_WEAPON_IDS: Set[int] = set(GEN2_WEAPONS.keys())
+GEN2_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN2_WEAPONS.values()}
+GEN3_WEAPON_IDS: Set[int] = set(GEN3_WEAPON_NAMES.keys())
+LEGENDARY_ARMOR_IDS: Set[int] = set(ARMOR_NAMES.keys())
+
+PRECURSOR_TO_WEAPON: Dict[int, int] = {}
+for _w_id, _w_info in GEN1_WEAPONS.items():
+    PRECURSOR_TO_WEAPON[_w_info["precursor_id"]] = _w_id
+for _w_id, _w_info in GEN2_WEAPONS.items():
+    PRECURSOR_TO_WEAPON[_w_info["precursor_id"]] = _w_id
+
+HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {
+    29185: [
+        {"tier": 1, "name": "Dusk I: The Experimental Nightsword", "ach_ids": [2420, 2379], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Dusk II: The Perfected Nightsword", "ach_ids": [2184, 2455, 2382], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Dusk III: Dusk", "ach_ids": [2183, 2380], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29184: [
+        {"tier": 1, "name": "Sunrise I: The Experimental Daysword", "ach_ids": [2253], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Sunrise II: The Perfected Daysword", "ach_ids": [2278], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Sunrise III: Dawn", "ach_ids": [2630], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29167: [
+        {"tier": 1, "name": "Bolt I: The Experimental Sword", "ach_ids": [2355], "bits_total": 21, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Bolt II: The Perfected Sword", "ach_ids": [2356], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Bolt III: Zap", "ach_ids": [2480], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29169: [
+        {"tier": 1, "name": "Frostfang I: The Experimental Axe", "ach_ids": [2478], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Frostfang II: The Perfected Axe", "ach_ids": [2606], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Frostfang III: Tooth of Frostfang", "ach_ids": [2393], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29171: [
+        {"tier": 1, "name": "Kudzu I: The Experimental Longbow", "ach_ids": [2193], "bits_total": 13, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Kudzu II: The Perfected Longbow", "ach_ids": [2311], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Kudzu III: Leaf of Kudzu", "ach_ids": [2383], "bits_total": 29, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29175: [
+        {"tier": 1, "name": "The Dreamer I: The Experimental Short Bow", "ach_ids": [2481], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Dreamer II: The Perfected Short Bow", "ach_ids": [2610], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Dreamer III: The Lover", "ach_ids": [2428], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29165: [
+        {"tier": 1, "name": "Incinerator I: The Experimental Dagger", "ach_ids": [2564], "bits_total": 18, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Incinerator II: The Perfected Dagger", "ach_ids": [2458], "bits_total": 15, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Incinerator III: Spark", "ach_ids": [2502], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29178: [
+        {"tier": 1, "name": "The Minstrel I: The Experimental Focus", "ach_ids": [2313], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Minstrel II: The Perfected Focus", "ach_ids": [2213], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Minstrel III: The Bard", "ach_ids": [2242], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29172: [
+        {"tier": 1, "name": "The Juggernaut I: The Experimental Hammer", "ach_ids": [2438], "bits_total": 32, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Juggernaut II: The Perfected Hammer", "ach_ids": [2241], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Juggernaut III: The Colossus", "ach_ids": [2468], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29166: [
+        {"tier": 1, "name": "The Moot I: The Experimental Mace", "ach_ids": [2177], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Moot II: The Perfected Mace", "ach_ids": [2291], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Moot III: The Energizer", "ach_ids": [2374], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29168: [
+        {"tier": 1, "name": "Quip I: The Experimental Pistol", "ach_ids": [2389], "bits_total": 16, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Quip II: The Perfected Pistol", "ach_ids": [2498], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Quip III: Chaos Gun", "ach_ids": [2524], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29173: [
+        {"tier": 1, "name": "The Predator I: The Experimental Rifle", "ach_ids": [2534], "bits_total": 17, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Predator II: The Perfected Rifle", "ach_ids": [2503], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Predator III: The Hunter", "ach_ids": [2280], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29170: [
+        {"tier": 1, "name": "Meteorlogicus I: The Experimental Scepter", "ach_ids": [2441], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Meteorlogicus II: The Perfected Scepter", "ach_ids": [2391], "bits_total": 11, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Meteorlogicus III: Storm", "ach_ids": [2449], "bits_total": 29, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29177: [
+        {"tier": 1, "name": "The Flameseeker Prophecies I: The Experimental Shield", "ach_ids": [2479], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Flameseeker Prophecies II: The Perfected Shield", "ach_ids": [2390], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Flameseeker Prophecies III: The Chosen", "ach_ids": [2536], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29181: [
+        {"tier": 1, "name": "Frenzy I: The Experimental Harpoon Gun", "ach_ids": [2637], "bits_total": 6, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Frenzy II: The Perfected Harpoon Gun", "ach_ids": [2232], "bits_total": 7, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Frenzy III: Rage", "ach_ids": [2409], "bits_total": 18, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29174: [
+        {"tier": 1, "name": "The Bifrost I: The Experimental Staff", "ach_ids": [2530], "bits_total": 16, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "The Bifrost II: The Perfected Staff", "ach_ids": [2500], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "The Bifrost III: The Legend", "ach_ids": [2187], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29179: [
+        {"tier": 1, "name": "Rodgort I: The Experimental Torch", "ach_ids": [2180], "bits_total": 11, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Rodgort II: The Perfected Torch", "ach_ids": [2596], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Rodgort III: Rodgort's Flame", "ach_ids": [2388], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29182: [
+        {"tier": 1, "name": "Kraitkin I: The Experimental Trident", "ach_ids": [2483], "bits_total": 7, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Kraitkin II: The Perfected Trident", "ach_ids": [2522], "bits_total": 9, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Kraitkin III: Venom", "ach_ids": [2296], "bits_total": 21, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29180: [
+        {"tier": 1, "name": "Howler I: The Experimental Warhorn", "ach_ids": [2270], "bits_total": 22, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Howler II: The Perfected Warhorn", "ach_ids": [2588], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Howler III: Howl", "ach_ids": [2260], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29183: [
+        {"tier": 1, "name": "Kamohoali'i Kotaki I: The Experimental Spear", "ach_ids": [2642], "bits_total": 6, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Kamohoali'i Kotaki II: The Perfected Spear", "ach_ids": [2306], "bits_total": 7, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Kamohoali'i Kotaki III: Carcharias", "ach_ids": [2535], "bits_total": 28, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    71384: [
+        {"tier": 1, "name": "Nevermore I: Ravenswood Branch", "ach_ids": [2528], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Nevermore II: Ravenswood Staff", "ach_ids": [2288], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Nevermore III: The Raven Staff", "ach_ids": [2336], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "Nevermore IV: The Raven Spirit", "ach_ids": [2550], "bits_total": 63, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ],
+    76159: [
+        {"tier": 1, "name": "Astralaria I: The Device", "ach_ids": [2571], "bits_total": 19, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Astralaria II: The Apparatus", "ach_ids": [2447], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Astralaria III: The Mechanism", "ach_ids": [2433], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "Astralaria IV: The Cosmos", "ach_ids": [2268], "bits_total": 54, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ],
+    75208: [
+        {"tier": 1, "name": "HOPE I: Research", "ach_ids": [2450], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "HOPE II: Development", "ach_ids": [2354], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "HOPE III: Prototype", "ach_ids": [2556], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "HOPE IV: The Catalyst", "ach_ids": [2250], "bits_total": 59, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ],
+    78053: [
+        {"tier": 1, "name": "Chuka and Champawat I: Hunter's Journal", "ach_ids": [2920, 2990], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Chuka and Champawat II: Ambush", "ach_ids": [2921], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Chuka and Champawat III: Tigris", "ach_ids": [2951, 2946], "bits_total": 20, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "Chuka and Champawat IV: Baby Book", "ach_ids": [2913, 2943, 2974], "bits_total": 15, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ]
+}
+
+# Also map weapon ID to collection tiers
+for _p_id, _tiers in list(HOBBS_COLLECTIONS.items()):
+    _w_id = PRECURSOR_TO_WEAPON.get(_p_id)
+    if _w_id and _w_id not in HOBBS_COLLECTIONS:
+        HOBBS_COLLECTIONS[_w_id] = _tiers
+
+
+def verify_legendary_prerequisites(
+    goal_item_id: int,
+    account_state: AccountState,
+    graph_store: Optional[PrioryGraphStore] = None
+) -> PrerequisiteReport:
+    """Convenience standalone wrapper for AccountDiffEngine.verify_legendary_prerequisites."""
+    engine = AccountDiffEngine(graph_store=graph_store)
+    return engine.verify_legendary_prerequisites(goal_item_id, account_state)

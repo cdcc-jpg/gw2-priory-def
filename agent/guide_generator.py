@@ -820,3 +820,339 @@ class GuideGenerator:
             vip_lounge_callout=ranking_lounge_callout
         )
 
+    def generate_session_itinerary_guide(
+        self,
+        itinerary: Any,
+        goal: Optional[ResolvedGoal] = None,
+        user_prompt: Optional[str] = None,
+        account_state: Optional[Any] = None
+    ) -> PersonalizedGuide:
+        """Synthesizes a time-budgeted daily knapsack session itinerary guide with spatial navigation."""
+        goal_name = getattr(itinerary, "goal_name", None) or (goal.resolved_item_name if goal else None) or "Daily Session Itinerary"
+        time_budget = getattr(itinerary, "time_budget_minutes", 120)
+        scheduled_mins = getattr(itinerary, "total_scheduled_minutes", 0)
+        utilization = getattr(itinerary, "time_utilization_pct", 0.0)
+        tasks = getattr(itinerary, "tasks", [])
+        summary = getattr(itinerary, "summary", "") or f"Tonight's {scheduled_mins}-minute session scheduled for {goal_name} ({utilization}% utilization of {time_budget}m budget)."
+
+        recs = []
+        for t in tasks:
+            rec = f"⏱️ **{t.title} ({t.estimated_duration_minutes} min)**: {t.instructions}"
+            if t.waypoint_code:
+                rec += f" Location: {t.location_name} `{t.waypoint_code}`."
+            if t.character_name:
+                rec += f" Recommended Character: **{t.character_name}**."
+            recs.append(rec)
+
+        char_recs = [f"👤 **{t.character_name}**: Assigned to {t.title}" for t in tasks if getattr(t, "character_name", None)]
+
+        roadmap = [f"Phase {idx+1}: {t.title} ({t.estimated_duration_minutes}m) at {t.location_name} `{t.waypoint_code}`" for idx, t in enumerate(tasks)]
+
+        checklist = [
+            ActionStep(
+                step_number=idx + 1,
+                title=t.title,
+                estimated_time_minutes=t.estimated_duration_minutes,
+                game_mode=getattr(t, "category", "DailyRoutine"),
+                description=f"{t.instructions} [{t.location_name} {t.waypoint_code}]",
+                chat_code=t.waypoint_code,
+                assigned_character=getattr(t, "character_name", None)
+            )
+            for idx, t in enumerate(tasks)
+        ]
+
+        chat_code = tasks[0].waypoint_code if tasks else (goal.chat_code if goal else None)
+        tip = f"💡 **Session Planning Tip:** Knapsack optimization scheduled {scheduled_mins} minutes of high-priority time-gated activities for {goal_name}, achieving {utilization}% playtime efficiency."
+
+        return PersonalizedGuide(
+            goal_name=goal_name,
+            target_quantity=getattr(goal, "target_quantity", 1),
+            chat_code=chat_code,
+            readiness_percentage=utilization,
+            executive_summary=summary,
+            strategic_recommendations=recs,
+            character_recommendations=char_recs,
+            master_roadmap_phases=roadmap,
+            session_checklist=checklist,
+            missing_materials_summary={},
+            missing_disciplines_summary=[],
+            motivational_tip=tip
+        )
+
+    def generate_arbitrage_guide(
+        self,
+        arbitrage_report: Any,
+        goal: Optional[ResolvedGoal] = None,
+        account_state: Optional[Any] = None
+    ) -> PersonalizedGuide:
+        """Synthesizes a multi-way arbitrage and acquisition decision matrix guide adhering to 15% TP tax."""
+        goal_name = getattr(arbitrage_report, "goal_name", None) or (goal.resolved_item_name if goal else None) or "Item Arbitrage"
+        action = getattr(arbitrage_report, "recommended_action", "CRAFT_FOR_SELF")
+        scratch_cost = getattr(arbitrage_report, "craft_from_scratch_total", 0)
+        account_cost = getattr(arbitrage_report, "my_account_craft_cost", scratch_cost)
+        buy_order = getattr(arbitrage_report, "buy_order_total", 0)
+        instant_buy = getattr(arbitrage_report, "instant_buy_total", 0)
+        net_sell = getattr(arbitrage_report, "net_sell_if_sold", None)
+        profit = getattr(arbitrage_report, "profit_margin_if_sold", None)
+
+        def _fmt_copper(copper: Optional[int]) -> str:
+            if copper is None:
+                return "0g"
+            g = copper // 10000
+            s = (copper % 10000) // 100
+            c = copper % 100
+            if g > 0:
+                return f"{g:,}g {s:02d}s {c:02d}c" if (s or c) else f"{g:,}g"
+            if s > 0:
+                return f"{s}s {c:02d}c" if c else f"{s}s"
+            return f"{c}c"
+
+        summary = (
+            f"⚖️ **Arbitrage Evaluation for {goal_name}:** "
+            f"Recommended Action: **{action}**. "
+            f"Craft from scratch: {_fmt_copper(scratch_cost)} | "
+            f"Account craft cost: {_fmt_copper(account_cost)} | "
+            f"TP Buy Order: {_fmt_copper(buy_order)} | "
+            f"TP Instant Buy: {_fmt_copper(instant_buy)}."
+        )
+        if profit is not None:
+            summary += f" Net TP liquidation: {_fmt_copper(net_sell)} (Profit Margin: {_fmt_copper(profit)})."
+
+        recs = [f"📊 **Market Decision:** **{action}** provides the best financial return."]
+
+        p_strat = getattr(arbitrage_report, "precursor_strategy", {})
+        if p_strat:
+            p_name = p_strat.get("precursor_name", "Precursor")
+            p_rec = p_strat.get("recommended_option", "TP")
+            p_cost = _fmt_copper(p_strat.get("buy_order_copper", p_strat.get("instant_buy_copper", 0)))
+            recs.append(f"🗡️ **Precursor Strategy ({p_name}):** Option **{p_rec}** recommended (Estimated cost: {p_cost}).")
+
+        c_strat = getattr(arbitrage_report, "clover_strategy", {})
+        if c_strat:
+            c_rec = c_strat.get("recommended_option", "WIZARDS_VAULT")
+            recs.append(f"🎲 **Mystic Clover Strategy:** Option **{c_rec}** recommended.")
+
+        t6_strat = getattr(arbitrage_report, "t6_promotion_strategy", {})
+        if t6_strat:
+            promoted = [cat for cat, s in t6_strat.items() if isinstance(s, dict) and s.get("recommended_action") == "PROMOTE_T5_FORGE"]
+            bought = [cat for cat, s in t6_strat.items() if isinstance(s, dict) and s.get("recommended_action") == "BUY_DIRECT"]
+            if promoted:
+                recs.append(f"🧪 **T6 Forge Promotion:** Promoted T5->T6 saves gold on: {', '.join(promoted)}.")
+            if bought:
+                recs.append(f"🛒 **Direct TP Purchase:** Buy directly from TP for: {', '.join(bought)}.")
+
+        if net_sell is not None:
+            recs.append(f"🧾 **Trading Post Tax Model:** Evaluated with 15% TP listing & exchange fee (Net payout: {_fmt_copper(net_sell)}).")
+
+        roadmap = [
+            f"Phase 1: Precursor Resolution ({p_strat.get('recommended_option', 'Trading Post') if p_strat else 'Trading Post'})",
+            f"Phase 2: Mystic Clover Acquisition ({c_strat.get('recommended_option', 'Vault') if c_strat else 'Vault'})",
+            f"Phase 3: Material Consolidation & Arbitrage Execution ({action})"
+        ]
+
+        checklist = [
+            ActionStep(
+                step_number=1,
+                title=f"Execute {action} Strategy",
+                estimated_time_minutes=15,
+                game_mode="TradingPost",
+                description=f"Follow recommended acquisition path for {goal_name}: {action}.",
+                chat_code=None
+            )
+        ]
+
+        tip = f"💡 **Arbitrage Tip:** Calculating 15% Trading Post fees before crafting or buying ensures optimal gold preservation for {goal_name}."
+
+        readiness = 100 if action == "BUY_FINISHED_DIRECT" else (round((1.0 - (account_cost / max(scratch_cost, 1))) * 100, 1) if scratch_cost > 0 else 50.0)
+        readiness = max(0.0, min(100.0, readiness))
+
+        return PersonalizedGuide(
+            goal_name=goal_name,
+            target_quantity=getattr(goal, "target_quantity", 1),
+            chat_code=goal.chat_code if goal else None,
+            readiness_percentage=readiness,
+            executive_summary=summary,
+            strategic_recommendations=recs,
+            character_recommendations=[],
+            master_roadmap_phases=roadmap,
+            session_checklist=checklist,
+            missing_materials_summary={},
+            missing_disciplines_summary=[],
+            motivational_tip=tip
+        )
+
+    def generate_prerequisite_guide(
+        self,
+        prereq_report: Any,
+        goal: Optional[ResolvedGoal] = None,
+        account_state: Optional[Any] = None
+    ) -> PersonalizedGuide:
+        """Synthesizes an account prerequisite audit guide (masteries, world completion, active crafting, collections)."""
+        goal_name = getattr(prereq_report, "goal_name", None) or (goal.resolved_item_name if goal else None) or "Legendary Prerequisite Audit"
+        can_craft = getattr(prereq_report, "can_craft_immediately", False)
+        blockers = getattr(prereq_report, "blockers", [])
+        has_world_comp = getattr(prereq_report, "has_world_completion", False)
+        world_source = getattr(prereq_report, "world_completion_source", None)
+        mastery_met = getattr(prereq_report, "mastery_requirements_met", False)
+        missing_masteries = getattr(prereq_report, "missing_masteries", [])
+        active_crafting = getattr(prereq_report, "active_crafting_ready", False)
+        craft_recs = getattr(prereq_report, "crafting_assignment_recommendations", [])
+        p_step = getattr(prereq_report, "precursor_collection_step", None)
+        p_done = getattr(prereq_report, "precursor_collection_bits_done", 0)
+        p_total = getattr(prereq_report, "precursor_collection_bits_total", 0)
+        char_disc_assign = getattr(prereq_report, "character_discipline_assignments", {})
+
+        if can_craft:
+            summary = f"✅ **Prerequisites Clear:** Your account satisfies all requirements to craft **{goal_name}** immediately!"
+        else:
+            summary = f"🔍 **Prerequisite Audit for {goal_name}:** Identified {len(blockers)} blocker(s) before crafting can begin."
+
+        recs = []
+        if blockers:
+            for b in blockers:
+                recs.append(f"⛔ **Blocker:** {b}")
+        else:
+            recs.append("🎉 All account prerequisites, masteries, world exploration, and crafting discipline requirements are met!")
+
+        world_status = f"✅ World Completion: Unlocked ({world_source})" if has_world_comp else "❌ Missing 100% Core Tyria World Completion"
+        recs.append(f"🗺️ **Exploration:** {world_status}")
+
+        mastery_status = "✅ All required masteries unlocked" if mastery_met else f"❌ Missing Masteries: {', '.join(missing_masteries)}"
+        recs.append(f"🎓 **Masteries:** {mastery_status}")
+
+        if p_step:
+            recs.append(f"📜 **Precursor Collection ({p_step}):** {p_done}/{p_total} objectives completed.")
+
+        char_recs = []
+        for disc, routing in char_disc_assign.items():
+            if isinstance(routing, dict):
+                char = routing.get("character", "Unassigned")
+                action = routing.get("action", "UNKNOWN")
+                wp = routing.get("waypoint", "")
+                char_recs.append(f"👤 **{disc.title()}**: Assigned to **{char}** ({action}) at station `{wp}`")
+
+        roadmap = [
+            f"Audit 1: Core Exploration — {'Satisfied' if has_world_comp else 'Pending'}",
+            f"Audit 2: Mastery Tracks — {'Satisfied' if mastery_met else 'Pending'}",
+            f"Audit 3: Crafting Disciplines — {'Ready' if active_crafting else 'Pending'}",
+            f"Audit 4: Precursor Collection — {p_step or 'Satisfied / Non-Collection'}"
+        ]
+
+        checklist = []
+        step_idx = 1
+        for m in missing_masteries:
+            checklist.append(ActionStep(
+                step_number=step_idx,
+                title=f"Train Mastery: {m}",
+                estimated_time_minutes=30,
+                game_mode="Mastery",
+                description=f"Earn mastery experience and points to unlock {m}.",
+                chat_code=None
+            ))
+            step_idx += 1
+        for rec_craft in craft_recs:
+            if isinstance(rec_craft, dict):
+                checklist.append(ActionStep(
+                    step_number=step_idx,
+                    title=f"Activate {rec_craft.get('discipline', '').title()} on {rec_craft.get('character', '')}",
+                    estimated_time_minutes=5,
+                    game_mode="Crafting",
+                    description=rec_craft.get("warning") or f"Switch active discipline to {rec_craft.get('discipline')}.",
+                    chat_code=rec_craft.get("waypoint")
+                ))
+                step_idx += 1
+        if not checklist:
+            checklist.append(ActionStep(
+                step_number=1,
+                title=f"Begin Crafting {goal_name}",
+                estimated_time_minutes=10,
+                game_mode="Crafting",
+                description="All prerequisites verified. Proceed to crafting stations.",
+                chat_code=None
+            ))
+
+        missing_discs = [f"{r.get('discipline', '').title()} (Level {r.get('required_rating')})" for r in craft_recs if isinstance(r, dict)]
+        readiness = 100 if can_craft else max(0, 100 - len(blockers) * 20)
+        tip = f"💡 **Priory Prerequisite Tip:** Completing mastery tiers and world completion unlocks permanent account abilities beyond just crafting {goal_name}."
+
+        return PersonalizedGuide(
+            goal_name=goal_name,
+            target_quantity=getattr(goal, "target_quantity", 1),
+            chat_code=goal.chat_code if goal else None,
+            readiness_percentage=readiness,
+            executive_summary=summary,
+            strategic_recommendations=recs,
+            character_recommendations=char_recs,
+            master_roadmap_phases=roadmap,
+            session_checklist=checklist,
+            missing_materials_summary={},
+            missing_disciplines_summary=missing_discs,
+            motivational_tip=tip
+        )
+
+    def generate_opportunity_cost_guide(
+        self,
+        opportunity_cost: Dict[str, Any],
+        goal: Optional[ResolvedGoal] = None,
+        account_state: Optional[Any] = None
+    ) -> PersonalizedGuide:
+        """Synthesizes a cross-role currency/material opportunity cost evaluation guide."""
+        goal_name = (goal.currency_name if goal else None) or (goal.resolved_item_name if goal else None) or f"Item {opportunity_cost.get('item_id')}"
+        opt_disp = opportunity_cost.get("optimal_role_disposition", "HOLD_AS_CRAFTING_MAT")
+        qty = opportunity_cost.get("quantity", 1)
+        direct_val = opportunity_cost.get("direct_exchange_value", 0.0)
+        tp_val = opportunity_cost.get("tp_liquidation_value", 0.0)
+        salvage_val = opportunity_cost.get("salvage_liquidation_value", 0.0)
+        tp_gross = opportunity_cost.get("tp_gross", 0.0)
+        tp_fee = opportunity_cost.get("tp_fee", 0.0)
+        roles = opportunity_cost.get("roles_evaluated", [])
+
+        summary = (
+            f"💎 **Opportunity Cost & Role Disposition for {qty}x {goal_name}:** "
+            f"Recommended disposition: **{opt_disp}**. "
+            f"Direct currency value: {direct_val:,.1f} | "
+            f"Trading Post net liquidation: {tp_val:,.1f} | "
+            f"Salvage expected liquidation: {salvage_val:,.1f}."
+        )
+
+        recs = [
+            f"🎯 **Optimal Disposition:** **{opt_disp}** yields the highest comparative economic return across all game modes.",
+            f"🪙 **Direct Exchange Value:** {direct_val:,.1f} gold-equivalent purchasing power.",
+            f"📈 **Trading Post Value:** Gross {tp_gross:,.1f} - 15% TP fee {tp_fee:,.1f} = Net {tp_val:,.1f}.",
+            f"🔨 **Salvage Expected Value:** {salvage_val:,.1f}.",
+            f"🌐 **Roles Evaluated in Knowledge Graph:** {', '.join(roles) if roles else 'Currency, Material, Liquidation'}."
+        ]
+
+        roadmap = [
+            f"Role Evaluation: Comparative analysis across {len(roles)} roles in Knowledge Graph",
+            f"Liquidation Execution: Carry out {opt_disp} for {qty}x {goal_name}"
+        ]
+
+        checklist = [
+            ActionStep(
+                step_number=1,
+                title=f"Execute {opt_disp} for {goal_name}",
+                estimated_time_minutes=5,
+                game_mode="Economy",
+                description=f"Liquidate or utilize {qty}x {goal_name} via {opt_disp} to maximize net account wealth.",
+                chat_code=None
+            )
+        ]
+
+        tip = f"💡 **Opportunity Cost Tip:** Evaluating currency purchasing power versus Trading Post fees ensures you never convert resources at an economic loss."
+
+        return PersonalizedGuide(
+            goal_name=goal_name,
+            target_quantity=qty,
+            chat_code=goal.chat_code if goal else None,
+            readiness_percentage=100,
+            executive_summary=summary,
+            strategic_recommendations=recs,
+            character_recommendations=[],
+            master_roadmap_phases=roadmap,
+            session_checklist=checklist,
+            missing_materials_summary={},
+            missing_disciplines_summary=[],
+            motivational_tip=tip
+        )
+

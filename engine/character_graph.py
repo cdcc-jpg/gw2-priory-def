@@ -7,6 +7,7 @@ content diffing, and 120s TTL caching.
 """
 
 from __future__ import annotations
+import base64
 import hashlib
 import json
 import time
@@ -323,4 +324,275 @@ class CharacterGraphHydrator:
     def get_all_hydrated_character_graphs(self) -> List[URIRef]:
         """Returns list of currently active ephemeral character graph URIs."""
         return list(self._hydrated_graphs.keys())
+
+    def route_crafting_discipline(
+        self,
+        discipline: str,
+        required_rating: int,
+        account_state: Optional[Any] = None
+    ) -> Dict[str, Any]:
+        """Maps crafting requirements to specific characters with active licenses, avoiding 50 silver fees."""
+        return route_crafting_discipline(discipline, required_rating, account_state=account_state, graph_store=self.store)
+
+
+# ==============================================================================
+# Canonical Crafting Stations & Discipline Routing
+# ==============================================================================
+
+CRAFTING_DISCIPLINE_STATIONS: Dict[str, Dict[str, Any]] = {
+    "weaponsmith": {
+        "station_name": "Weaponsmithing Station",
+        "vendor_npc": "Master Craftsman Hobbs",
+        "chat_link": "[&BBAEAAA=]",  # Trader's Forum Waypoint, Lion's Arch
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BKgDAAA=]",  # Memorial Waypoint, Black Citadel
+    },
+    "armorsmith": {
+        "station_name": "Armorsmithing Station",
+        "vendor_npc": "Master Armorsmith",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BKgDAAA=]",
+    },
+    "artificer": {
+        "station_name": "Artificing Station",
+        "vendor_npc": "Master Artificer",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BLcEAAA=]",  # Accountancy Waypoint, Rata Sum
+    },
+    "huntsman": {
+        "station_name": "Huntsman's Station",
+        "vendor_npc": "Master Huntsman",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BCkDAAA=]",  # Minister's Waypoint, Divinity's Reach
+    },
+    "tailor": {
+        "station_name": "Tailoring Station",
+        "vendor_npc": "Master Tailor",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BLcEAAA=]",
+    },
+    "leatherworker": {
+        "station_name": "Leatherworking Station",
+        "vendor_npc": "Master Leatherworker",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BCkDAAA=]",
+    },
+    "jeweler": {
+        "station_name": "Jeweler's Station",
+        "vendor_npc": "Master Jeweler",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BLcEAAA=]",
+    },
+    "chef": {
+        "station_name": "Cooking Station",
+        "vendor_npc": "Master Chef",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BKgDAAA=]",
+    },
+    "mystic_forge": {
+        "station_name": "Mystic Forge",
+        "vendor_npc": "Miyani",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&DYEFAAA=]",  # Mistlock Observatory Waypoint
+    }
+}
+
+
+def encode_item_chat_link(item_id: int, quantity: int = 1) -> str:
+    """Generates authentic in-game chat link [&...] for any Guild Wars 2 item ID."""
+    b0 = 0x02  # Item header
+    b1 = min(255, max(1, quantity))
+    b2 = item_id & 0xFF
+    b3 = (item_id >> 8) & 0xFF
+    b4 = (item_id >> 16) & 0xFF
+    b5 = 0x00  # Null terminator
+    b64 = base64.b64encode(bytes([b0, b1, b2, b3, b4, b5])).decode("ascii")
+    return f"[&{b64}]"
+
+
+def route_crafting_discipline(
+    discipline: str,
+    required_rating: int,
+    account_state: Optional[Any] = None,
+    graph_store: Optional[Any] = None
+) -> Dict[str, Any]:
+    """Multi-character discipline routing: maps crafting requirements to specific characters
+    with active licenses (e.g. Kerling for Weaponsmith, Legacy Of Harathi for Artificer),
+    avoiding 50 silver reactivation fees.
+    """
+    disc_lower = discipline.strip().lower()
+    station = CRAFTING_DISCIPLINE_STATIONS.get(disc_lower, {
+        "station_name": f"{disc_lower.title()} Station",
+        "vendor_npc": f"Master {disc_lower.title()}",
+        "chat_link": "[&BBAEAAA=]",
+        "zone": "Lion's Arch",
+        "alternate_waypoint": "[&BBAEAAA=]"
+    })
+
+    active_candidates: List[Dict[str, Any]] = []
+    inactive_candidates: List[Dict[str, Any]] = []
+    underleveled_candidates: List[Dict[str, Any]] = []
+
+    # 1. Check account_state data structures
+    if account_state is not None:
+        if hasattr(account_state, "character_disciplines") and account_state.character_disciplines:
+            for char_name, discs in account_state.character_disciplines.items():
+                if disc_lower in discs:
+                    info = discs[disc_lower]
+                    r = int(info.get("rating", 0))
+                    act = bool(info.get("active", True))
+                    cand = {"name": char_name, "rating": r, "active": act}
+                    if act and r >= required_rating:
+                        active_candidates.append(cand)
+                    elif not act and r >= required_rating:
+                        inactive_candidates.append(cand)
+                    elif r < required_rating:
+                        underleveled_candidates.append(cand)
+
+        if not active_candidates and not inactive_candidates and hasattr(account_state, "characters") and account_state.characters:
+            for c in account_state.characters:
+                c_name = c.get("name", "")
+                for cd in c.get("crafting", []):
+                    if cd.get("discipline", "").lower() == disc_lower:
+                        r = int(cd.get("rating", 0))
+                        act = bool(cd.get("active", True))
+                        cand = {"name": c_name, "rating": r, "active": act}
+                        if act and r >= required_rating:
+                            if cand not in active_candidates:
+                                active_candidates.append(cand)
+                        elif not act and r >= required_rating:
+                            if cand not in inactive_candidates:
+                                inactive_candidates.append(cand)
+                        elif r < required_rating:
+                            if cand not in underleveled_candidates:
+                                underleveled_candidates.append(cand)
+
+    # 2. Check graph_store (SPARQL across hydrated ephemeral character named graphs)
+    if graph_store is not None and (not active_candidates and not inactive_candidates):
+        sparql = """
+        SELECT DISTINCT ?charName ?rating ?isActive WHERE {
+            ?char a priory:Character ;
+                  priory:characterName ?charName ;
+                  priory:hasCraftingDiscipline ?cd .
+            ?cd priory:discipline ?discipline ;
+                priory:craftingRating ?rating .
+            OPTIONAL { ?cd priory:isActive ?isActive }
+            FILTER (LCASE(STRAFTER(STR(?discipline), "ref/discipline/")) = ?discLower || LCASE(STR(?discipline)) = ?discLower)
+        } ORDER BY DESC(?isActive) DESC(?rating)
+        """
+        res = graph_store.query(sparql, init_bindings={"discLower": Literal(disc_lower)})
+        for row in res:
+            c_name = str(row["charName"])
+            r = int(row.get("rating", 0))
+            act = str(row.get("isActive", "true")).lower() == "true"
+            cand = {"name": c_name, "rating": r, "active": act}
+            if act and r >= required_rating:
+                if cand not in active_candidates:
+                    active_candidates.append(cand)
+            elif not act and r >= required_rating:
+                if cand not in inactive_candidates:
+                    inactive_candidates.append(cand)
+            elif r < required_rating:
+                if cand not in underleveled_candidates:
+                    underleveled_candidates.append(cand)
+
+    # 3. Formulate character routing decision
+    if active_candidates:
+        active_candidates.sort(key=lambda x: x["rating"], reverse=True)
+        best = active_candidates[0]
+        return {
+            "discipline": disc_lower,
+            "character": best["name"],
+            "action": "ASSIGNED_ACTIVE",
+            "current_rating": best["rating"],
+            "required_rating": required_rating,
+            "is_active": True,
+            "reactivation_fee_copper": 0,
+            "reactivation_fee_silver": 0,
+            "waypoint": station["chat_link"],
+            "station_name": station["station_name"],
+            "vendor_npc": station["vendor_npc"],
+            "warning": None,
+            "recommendation": (
+                f"Craft on {best['name']} (Active {disc_lower.title()} rating {best['rating']} >= {required_rating}) "
+                f"at {station['station_name']} {station['chat_link']} with 0 copper reactivation fee."
+            )
+        }
+
+    if inactive_candidates:
+        inactive_candidates.sort(key=lambda x: x["rating"], reverse=True)
+        best = inactive_candidates[0]
+        fee_copper = min(5000, best["rating"] * 10)
+        fee_silver = fee_copper // 100
+        warning_msg = (
+            f"⚠️ Inactive license on {best['name']} would incur a 50 silver reactivation fee "
+            f"({fee_silver} silver / {fee_copper} copper) to swap back to active."
+        )
+        return {
+            "discipline": disc_lower,
+            "character": best["name"],
+            "action": "ACTIVATE",
+            "current_rating": best["rating"],
+            "required_rating": required_rating,
+            "is_active": False,
+            "reactivation_fee_copper": fee_copper,
+            "reactivation_fee_silver": fee_silver,
+            "waypoint": station["chat_link"],
+            "station_name": station["station_name"],
+            "vendor_npc": station["vendor_npc"],
+            "warning": warning_msg,
+            "recommendation": (
+                f"Activate inactive {disc_lower.title()} (rating {best['rating']}) on {best['name']} "
+                f"at {station['station_name']} {station['chat_link']}. {warning_msg}"
+            )
+        }
+
+    if underleveled_candidates:
+        underleveled_candidates.sort(key=lambda x: x["rating"], reverse=True)
+        best = underleveled_candidates[0]
+        return {
+            "discipline": disc_lower,
+            "character": best["name"],
+            "action": "LEVEL_UP",
+            "current_rating": best["rating"],
+            "required_rating": required_rating,
+            "is_active": best["active"],
+            "reactivation_fee_copper": 0 if best["active"] else min(5000, best["rating"] * 10),
+            "reactivation_fee_silver": 0 if best["active"] else min(5000, best["rating"] * 10) // 100,
+            "waypoint": station["chat_link"],
+            "station_name": station["station_name"],
+            "vendor_npc": station["vendor_npc"],
+            "warning": None if best["active"] else f"⚠️ Inactive license on {best['name']} will incur reactivation fee.",
+            "recommendation": f"Level up {disc_lower.title()} on {best['name']} from {best['rating']} to {required_rating} at {station['station_name']} {station['chat_link']}."
+        }
+
+    # Fallback to account.disciplines summary if characters list empty
+    cur_r = 0
+    if account_state is not None and hasattr(account_state, "disciplines"):
+        cur_r = account_state.disciplines.get(disc_lower, 0)
+    action = "LEVEL_UP" if cur_r > 0 else "TRAIN"
+    return {
+        "discipline": disc_lower,
+        "character": None,
+        "action": action,
+        "current_rating": cur_r,
+        "required_rating": required_rating,
+        "is_active": False,
+        "reactivation_fee_copper": 0,
+        "reactivation_fee_silver": 0,
+        "waypoint": station["chat_link"],
+        "station_name": station["station_name"],
+        "vendor_npc": station["vendor_npc"],
+        "warning": None,
+        "recommendation": f"{action.replace('_', ' ').title()} {disc_lower.title()} to rating {required_rating} at {station['station_name']} {station['chat_link']}."
+    }
+
 

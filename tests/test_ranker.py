@@ -70,8 +70,8 @@ class TestAccountRanker(unittest.TestCase):
         """Verifies SotO Obsidian Armor ranking accounts for essences and stardust."""
         account = AccountState(
             materials={
-                100114: 500, # Essence of Despair
-                100414: 250, # Essence of Greed
+                100849: 500, # Essence of Despair
+                100429: 250, # Essence of Greed
                 100852: 250, # Pinch of Stardust
             }
         )

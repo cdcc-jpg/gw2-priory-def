@@ -5,6 +5,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix item: <https://priory.gw2/id/item/> .
+@prefix currency: <https://priory.gw2/ref/currency/> .
 
 # ==============================================================================
 # Real-World Time-Gates, Daily Cooldowns & Weekly Rate Limits
@@ -44,16 +45,18 @@ item:43773 priory:dailyCraftingLimit 1 ;
 # ------------------------------------------------------------------------------
 
 # --- Antique Summoning Stones (Leivas in Arborstone) ---
-item:vendor_leivas_ass a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_leivas_ass a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Leivas Antique Summoning Stones Weekly Discount"@en ;
     priory:weeklyVendorLimit 5 ;
+    priory:requiresCurrency currency:ImperialFavor ;
+    priory:requiredQuantity 500 ;
     priory:vendorNPC "Leivas"@en ;
     priory:zoneName "Arborstone"@en ;
     priory:nearestWaypoint "[&BEwMAAA=]" ;
     skos:definition "Sells up to 5 discounted Antique Summoning Stones per account per calendar week for Imperial Favors and Laurels."@en .
 
 # --- Provisioner Tokens (Major City Faction Provisioners) ---
-item:vendor_provisioner_daily a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_provisioner_daily a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Faction Provisioner Daily Exchanges"@en ;
     priory:dailyCraftingLimit 31 ;
     skos:definition "Up to 31 Provisioner Tokens can be obtained daily across Central Tyria and Expansion Provisioner vendors."@en .

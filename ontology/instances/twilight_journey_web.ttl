@@ -240,7 +240,8 @@ recipe:EctoGamble a priory:MysticForgeRecipe ;
 # SECTION 10: FINAL ASSEMBLY AT MYSTIC FORGE
 # -----------------------------------------------------------------------------
 
-recipe:TwilightFinalAssembly a priory:MysticForgeRecipe ;
+recipe:TwilightFinalAssembly a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    owl:sameAs recipe:forge_twilight ;
     rdfs:label "Twilight Final Assembly" ;
     priory:producesItem item:30704 ;
     priory:outputQuantity 1 ;

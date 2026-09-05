@@ -27,7 +27,11 @@ from engine.graph_store import (
     ARMOR,
     SLOT,
     PROFESSION,
-    RACE
+    RACE,
+    BFO,
+    IAO,
+    ROLE,
+    DEFAULT_NAMESPACES
 )
 
 SKOS = rdflib.SKOS
@@ -92,6 +96,206 @@ class SemanticQueryService:
         }}
         """
         return self.store.query(sparql)
+
+    def find_items_by_role(self, role_identifier: str) -> List[Dict[str, Any]]:
+        """Resolves items playing role_identifier (accepts prefixed name like 'role:CurrencyExchange', bare 'CurrencyExchange', or full URI).
+        
+        Uses SPARQL with subsumption (?role_node rdfs:subClassOf* ?targetRole) to return item URI,
+        label, GW2 ID, and substrate type ('priory:AccountWalletScalar' or 'priory:ContainerizedToken').
+        """
+        if isinstance(role_identifier, URIRef):
+            target_role = role_identifier
+        elif role_identifier.startswith("http://") or role_identifier.startswith("https://"):
+            target_role = URIRef(role_identifier)
+        elif ":" in role_identifier:
+            prefix, local = role_identifier.split(":", 1)
+            if prefix == "role":
+                target_role = ROLE[local]
+            elif prefix in DEFAULT_NAMESPACES:
+                target_role = DEFAULT_NAMESPACES[prefix][local]
+            else:
+                target_role = URIRef(f"https://priory.gw2/ref/role/{local}")
+        else:
+            target_role = ROLE[role_identifier]
+
+        sparql = """
+        SELECT DISTINCT ?item ?label ?gw2Id ?substrateType WHERE {
+            ?item priory:playsRole ?role .
+            {
+                ?role rdfs:subClassOf* ?targetRole .
+            } UNION {
+                ?role a ?roleClass .
+                ?roleClass rdfs:subClassOf* ?targetRole .
+            }
+            OPTIONAL { ?item rdfs:label ?label }
+            OPTIONAL { ?item priory:gw2Id ?rawGw2Id }
+            OPTIONAL { ?item priory:apiWalletId ?rawApiWid }
+            OPTIONAL { ?item skos:notation ?notation }
+            BIND(COALESCE(?rawGw2Id, ?rawApiWid) AS ?gw2Id)
+            OPTIONAL {
+                {
+                    { ?item a/rdfs:subClassOf* priory:AccountWalletScalar }
+                    UNION { ?item priory:apiWalletId ?wid }
+                    BIND("priory:AccountWalletScalar" AS ?sub1)
+                }
+            }
+            OPTIONAL {
+                {
+                    { ?item a/rdfs:subClassOf* priory:ContainerizedToken }
+                    UNION { ?item priory:isContainerized true }
+                    UNION { ?item a/rdfs:subClassOf* priory:Item }
+                    BIND("priory:ContainerizedToken" AS ?sub2)
+                }
+            }
+            BIND(COALESCE(?sub1, ?sub2, "priory:ContainerizedToken") AS ?substrateType)
+        } ORDER BY ?label
+        """
+        results = self.store.query(sparql, init_bindings={"targetRole": target_role})
+        formatted = []
+        for r in results:
+            sub = r.get("substrateType", "priory:ContainerizedToken")
+            item_uri = r.get("item")
+            item_id = r.get("gw2Id")
+            formatted.append({
+                "item": item_uri,
+                "item_uri": item_uri,
+                "label": r.get("label"),
+                "gw2Id": item_id,
+                "gw2_id": item_id,
+                "substrateType": sub,
+                "substrate": sub,
+                "substrate_type": sub
+            })
+        return formatted
+
+    def get_token_economic_affordances(self, item_id: int) -> Dict[str, Any]:
+        """Returns economic profile of an item: substrate, all roles played, isContainerized, isSalvageable, isTradeable, maxStackSize."""
+        sparql = """
+        SELECT DISTINCT ?item ?label ?isWallet ?isContainer ?isSalvageable ?isTradeable ?isBound ?maxStackSize ?apiWid WHERE {
+            {
+                ?item priory:gw2Id ?gw2Id .
+            } UNION {
+                ?item priory:apiWalletId ?gw2Id .
+            }
+            OPTIONAL { ?item rdfs:label ?label }
+            OPTIONAL {
+                { ?item a/rdfs:subClassOf* priory:AccountWalletScalar }
+                UNION { ?item priory:apiWalletId ?apiWid }
+                BIND(true AS ?isWallet)
+            }
+            OPTIONAL {
+                { ?item a/rdfs:subClassOf* priory:ContainerizedToken }
+                UNION { ?item priory:isContainerized true }
+                UNION { ?item a/rdfs:subClassOf* priory:Item }
+                BIND(true AS ?isContainer)
+            }
+            OPTIONAL { ?item priory:isSalvageable ?isSalvageable }
+            OPTIONAL { ?item priory:isTradeable ?isTradeable }
+            OPTIONAL { ?item priory:isAccountBound ?isBound }
+            OPTIONAL { ?item priory:maxStackSize ?maxStackSize }
+        } LIMIT 1
+        """
+        meta_res = self.store.query(sparql, init_bindings={"gw2Id": Literal(item_id)})
+        meta = meta_res[0] if meta_res else {}
+        item_uri = meta.get("item")
+
+        roles = []
+        if item_uri:
+            role_sparql = """
+            SELECT DISTINCT ?role ?roleLabel WHERE {
+                ?item priory:playsRole ?role .
+                OPTIONAL { ?role rdfs:label ?roleLabel }
+            }
+            """
+            role_res = self.store.query(role_sparql, init_bindings={"item": URIRef(item_uri)})
+            for r in role_res:
+                role_uri = str(r["role"])
+                roles.append(role_uri)
+
+        is_wallet = bool(meta.get("isWallet"))
+        if is_wallet:
+            substrate = "priory:AccountWalletScalar"
+            is_containerized = False
+            is_salvageable = False
+            is_tradeable = False
+            max_stack_size = 0
+        else:
+            substrate = "priory:ContainerizedToken"
+            is_containerized = True
+            is_salvageable = meta.get("isSalvageable") if meta.get("isSalvageable") is not None else False
+            if meta.get("isTradeable") is not None:
+                is_tradeable = bool(meta["isTradeable"])
+            elif meta.get("isBound") is not None:
+                is_tradeable = not bool(meta["isBound"])
+            else:
+                is_tradeable = True
+            max_stack_size = int(meta["maxStackSize"]) if meta.get("maxStackSize") is not None else 250
+
+        return {
+            "item_id": item_id,
+            "item_uri": item_uri,
+            "label": meta.get("label"),
+            "substrate": substrate,
+            "substrate_type": substrate,
+            "substrateType": substrate,
+            "roles": roles,
+            "plays_roles": roles,
+            "playsRole": roles,
+            "is_containerized": is_containerized,
+            "isContainerized": is_containerized,
+            "is_salvageable": is_salvageable,
+            "isSalvageable": is_salvageable,
+            "is_tradeable": is_tradeable,
+            "isTradeable": is_tradeable,
+            "max_stack_size": max_stack_size,
+            "maxStackSize": max_stack_size
+        }
+
+    def get_manifested_gear_catalog(self) -> List[Dict[str, Any]]:
+        """Queries all priory:ManifestedArtifact entities (or entities with priory:hasEquipmentSlot),
+        returning clean gear records while excluding pure ledger tokens.
+        """
+        sparql = """
+        SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?weaponType ?armorWeight ?equipmentSlot ?rarity WHERE {
+            {
+                ?item a/rdfs:subClassOf* priory:ManifestedArtifact .
+            } UNION {
+                ?item priory:hasEquipmentSlot ?equipmentSlot .
+            } UNION {
+                ?item priory:hasWeaponType ?weaponType .
+            } UNION {
+                ?item priory:hasArmorWeight ?armorWeight .
+            }
+            ?item priory:gw2Id ?gw2Id ;
+                  rdfs:label ?label .
+            FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:LedgerToken }
+            OPTIONAL { ?item priory:chatCode ?chatCode }
+            OPTIONAL { ?item priory:hasWeaponType ?weaponType }
+            OPTIONAL { ?item priory:hasArmorWeight ?armorWeight }
+            OPTIONAL { ?item priory:hasEquipmentSlot ?equipmentSlot }
+            OPTIONAL { ?item priory:hasRarity ?rarity }
+        } ORDER BY ?label
+        """
+        results = self.store.query(sparql)
+        catalog = []
+        for r in results:
+            catalog.append({
+                "item": r.get("item"),
+                "item_uri": r.get("item"),
+                "gw2Id": r.get("gw2Id"),
+                "gw2_id": r.get("gw2Id"),
+                "label": r.get("label"),
+                "chatCode": r.get("chatCode"),
+                "chat_code": r.get("chatCode"),
+                "weaponType": str(r["weaponType"]).split("/")[-1] if r.get("weaponType") else None,
+                "weapon_type": str(r["weaponType"]).split("/")[-1] if r.get("weaponType") else None,
+                "armorWeight": str(r["armorWeight"]).split("/")[-1] if r.get("armorWeight") else None,
+                "armor_weight": str(r["armorWeight"]).split("/")[-1] if r.get("armorWeight") else None,
+                "equipmentSlot": str(r["equipmentSlot"]).split("/")[-1] if r.get("equipmentSlot") else None,
+                "equipment_slot": str(r["equipmentSlot"]).split("/")[-1] if r.get("equipmentSlot") else None,
+                "rarity": str(r["rarity"]).split("/")[-1] if r.get("rarity") else None,
+            })
+        return catalog
 
     def discover_acquisition_paths(self, item_id: int) -> Dict[str, Any]:
         """Discovers all known acquisition methods and spatial waypoints for an item."""

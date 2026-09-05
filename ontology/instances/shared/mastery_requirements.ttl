@@ -98,7 +98,7 @@ item:vendor_lyhr priory:requiresMasteryTrack priory:track_astral_ward ;
     priory:masteryName "Astral Ward Flight (Level 2)"@en .
 
 # --- Grandmaster Craftsman Hobbs (Central Tyria Mastery Tier 1-4) ---
-item:vendor_hobbs a priory:VendorExchangePath, owl:NamedIndividual ;
+item:vendor_hobbs a priory:AcquisitionPath, owl:NamedIndividual ;
     rdfs:label "Grandmaster Craftsman Hobbs"@en ;
     priory:vendorNPC "Grandmaster Craftsman Hobbs"@en ;
     priory:zoneName "Lion's Arch"@en ;

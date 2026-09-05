@@ -40,6 +40,18 @@ class TestOntologyAndSHACL(unittest.TestCase):
         eternity_ttl = DEF_REPO / "ontology" / "instances" / "shared" / "eternity_and_post_craft.ttl"
         if eternity_ttl.exists():
             data_graph.parse(eternity_ttl, format="turtle")
+        regional_ttl = DEF_REPO / "ontology" / "instances" / "shared" / "regional_expansion_materials.ttl"
+        if regional_ttl.exists():
+            data_graph.parse(regional_ttl, format="turtle")
+        vendors_ttl = DEF_REPO / "ontology" / "instances" / "shared" / "legendary_milestone_vendors.ttl"
+        if vendors_ttl.exists():
+            data_graph.parse(vendors_ttl, format="turtle")
+        common_items_ttl = DEF_REPO / "ontology" / "instances" / "shared" / "common_items.ttl"
+        if common_items_ttl.exists():
+            data_graph.parse(common_items_ttl, format="turtle")
+        base_comp_ttl = DEF_REPO / "ontology" / "instances" / "shared" / "legendary_base_components.ttl"
+        if base_comp_ttl.exists():
+            data_graph.parse(base_comp_ttl, format="turtle")
 
         # 4. Load SHACL Shapes
         shacl_graph = rdflib.Graph()
@@ -273,6 +285,106 @@ class TestOntologyAndSHACL(unittest.TestCase):
             self.assertIn((bag_uri, rdflib.RDFS.label, rdflib.Literal(expected_label, lang="en")), g)
             self.assertIn((bag_uri, PRIORY.chatCode, rdflib.Literal(expected_chat_link)), g)
             self.assertIn((bag_uri, PRIORY.bagSlots, rdflib.Literal(20)), g)
+
+    def test_regional_expansion_leaf_gifts_and_vendors(self):
+        """Validates the grounding of intermediate expansion leaf gifts to vendor exchanges, map currencies, and recipes."""
+        g = rdflib.Graph()
+        g.parse(DEF_REPO / "ontology" / "priory_core.ttl", format="turtle")
+        for ttl in (DEF_REPO / "ontology" / "vocab").glob("*.ttl"):
+            g.parse(ttl, format="turtle")
+        g.parse(DEF_REPO / "ontology" / "instances" / "shared" / "regional_expansion_materials.ttl", format="turtle")
+        g.parse(DEF_REPO / "ontology" / "instances" / "shared" / "legendary_milestone_vendors.ttl", format="turtle")
+        g.parse(DEF_REPO / "ontology" / "instances" / "shared" / "legendary_base_components.ttl", format="turtle")
+
+        PRIORY = rdflib.Namespace("https://priory.gw2/def/")
+        ITEM = rdflib.Namespace("https://priory.gw2/id/item/")
+        RECIPE = rdflib.Namespace("https://priory.gw2/id/recipe/")
+        CURRENCY = rdflib.Namespace("https://priory.gw2/ref/currency/")
+
+        # 1. Heart of Thorns Grounding
+        fleet_gift = ITEM["70797"]
+        vendor_fleet = ITEM["vendor_fleet"]
+        self.assertIn((fleet_gift, PRIORY.acquiredVia, vendor_fleet), g)
+        self.assertIn((vendor_fleet, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((vendor_fleet, PRIORY.requiresCurrency, CURRENCY.AirshipPart), g)
+        self.assertIn((vendor_fleet, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+        self.assertIn((vendor_fleet, PRIORY.producesItem, fleet_gift), g)
+
+        tarir_gift = ITEM["71943"]
+        vendor_tarir = ITEM["vendor_tarir"]
+        self.assertIn((tarir_gift, PRIORY.acquiredVia, vendor_tarir), g)
+        self.assertIn((vendor_tarir, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((vendor_tarir, PRIORY.requiresCurrency, CURRENCY.LumpOfAurillium), g)
+        self.assertIn((vendor_tarir, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+        self.assertIn((vendor_tarir, PRIORY.producesItem, tarir_gift), g)
+
+        chak_gift = ITEM["74677"]
+        vendor_chak = ITEM["vendor_chak"]
+        self.assertIn((chak_gift, PRIORY.acquiredVia, vendor_chak), g)
+        self.assertIn((vendor_chak, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((vendor_chak, PRIORY.requiresCurrency, CURRENCY.LeyLineCrystal), g)
+        self.assertIn((vendor_chak, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+        self.assertIn((vendor_chak, PRIORY.producesItem, chak_gift), g)
+
+        maguuma_gift = ITEM["75919"]
+        maguuma_path = ITEM["path_maguuma_map_completion"]
+        self.assertIn((maguuma_gift, PRIORY.acquiredVia, maguuma_path), g)
+        self.assertIn((maguuma_path, rdflib.RDF.type, PRIORY.AchievementCollectionPath), g)
+
+        # 2. Path of Fire Grounding
+        desert_mastery = ITEM["82414"]
+        forge_desert = RECIPE["forge_gift_of_desert_mastery"]
+        self.assertIn((desert_mastery, PRIORY.producedBy, forge_desert), g)
+        self.assertIn((forge_desert, rdflib.RDF.type, PRIORY.MysticForgeRecipe), g)
+
+        pof_regional_gifts = [
+            (ITEM["83694"], ITEM["vendor_oasis"], "Gift of the Oasis"),
+            (ITEM["83008"], ITEM["vendor_highlands"], "Gift of the Highlands"),
+            (ITEM["83471"], ITEM["vendor_riverlands"], "Gift of the Riverlands"),
+            (ITEM["83416"], ITEM["vendor_desolation"], "Gift of the Desolation"),
+        ]
+        for gift_uri, vendor_uri, label in pof_regional_gifts:
+            self.assertIn((gift_uri, PRIORY.acquiredVia, vendor_uri), g)
+            self.assertIn((vendor_uri, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+            self.assertIn((vendor_uri, PRIORY.requiresCurrency, CURRENCY.TradeContract), g)
+            self.assertIn((vendor_uri, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+
+        incense = ITEM["83318"]
+        vendor_vabbi = ITEM["vendor_vabbi"]
+        self.assertIn((incense, PRIORY.acquiredVia, vendor_vabbi), g)
+        self.assertIn((vendor_vabbi, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((vendor_vabbi, PRIORY.requiresCurrency, CURRENCY.ElegyMosaic), g)
+
+        # 3. Secrets of the Obscure Grounding
+        amnytas_gift = ITEM["100140"]
+        lyhr_amnytas = ITEM["vendor_lyhr_amnytas"]
+        self.assertIn((amnytas_gift, PRIORY.acquiredVia, ITEM["vendor_lyhr"]), g)
+        self.assertIn((amnytas_gift, PRIORY.acquiredVia, lyhr_amnytas), g)
+        self.assertIn((lyhr_amnytas, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((lyhr_amnytas, PRIORY.requiresCurrency, CURRENCY.PinchOfStardust), g)
+        self.assertIn((lyhr_amnytas, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+
+        cosmos_gift = ITEM["100424"]
+        lyhr_cosmos = ITEM["vendor_lyhr_cosmos"]
+        self.assertIn((cosmos_gift, PRIORY.acquiredVia, ITEM["vendor_lyhr"]), g)
+        self.assertIn((cosmos_gift, PRIORY.acquiredVia, lyhr_cosmos), g)
+        self.assertIn((lyhr_cosmos, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((lyhr_cosmos, PRIORY.requiresCurrency, CURRENCY.StaticCharge), g)
+        self.assertIn((lyhr_cosmos, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+
+        celestial_gift = ITEM["100063"]
+        lyhr_celestial = ITEM["vendor_lyhr_celestial"]
+        self.assertIn((celestial_gift, PRIORY.acquiredVia, ITEM["vendor_lyhr"]), g)
+        self.assertIn((celestial_gift, PRIORY.acquiredVia, lyhr_celestial), g)
+        self.assertIn((lyhr_celestial, rdflib.RDF.type, PRIORY.VendorExchangePath), g)
+        self.assertIn((lyhr_celestial, PRIORY.requiresCurrency, CURRENCY.CaseOfCapturedLightning), g)
+        self.assertIn((lyhr_celestial, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
+
+        # 4. Competitive Grounding
+        mists_gift = ITEM["79549"]
+        forge_mists = RECIPE["forge_gift_of_the_mists"]
+        self.assertIn((mists_gift, PRIORY.producedBy, forge_mists), g)
+        self.assertIn((forge_mists, rdflib.RDF.type, PRIORY.MysticForgeRecipe), g)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,12 @@ import unittest
 from pathlib import Path
 from engine.graph_store import PrioryGraphStore
 from engine.account_diff import AccountDiffEngine, AccountState
+from engine.path_solver import (
+    PathSolver,
+    ScheduledSessionTask,
+    DailySessionItinerary,
+    schedule_daily_session_itinerary
+)
 
 DEF_REPO = Path(__file__).parent.parent
 REF_REPO = Path("/Users/clementd/Documents/GitHub/gw2-priory-ref")
@@ -314,9 +320,141 @@ class TestEngine(unittest.TestCase):
         self.assertIn("Skuta Rantakallio", eligible_completed)
         self.assertIn("Sara Loy", eligible_completed)
 
+    def test_substrate_agnostic_purchasing_power_and_currency_methods(self):
+        """Verifies get_available_purchasing_power across wallet scalars and containerized tokens."""
+        engine = AccountDiffEngine(self.store)
+        account = AccountState(
+            wallet={
+                68: 550,   # Astral Acclaim
+                29: 45,    # Provisioner Tokens
+                23: 120,   # Spirit Shards
+                69: 300    # Tales of Dungeon Delving
+            },
+            materials={
+                19675: 40  # Mystic Clovers
+            },
+            bank={
+                19675: 15  # Mystic Clovers
+            },
+            inventory={
+                19675: 5   # Mystic Clovers
+            }
+        )
+
+        # 1. Wallet currency resolution via URI, name, and apiWalletId
+        self.assertEqual(engine.get_available_purchasing_power("currency:AstralAcclaim", account), 550)
+        self.assertEqual(engine._get_astral_acclaim(account), 550)
+        self.assertEqual(engine._get_provisioner_tokens(account), 45)
+        self.assertEqual(engine._get_spirit_shards(account), 120)
+        self.assertEqual(engine._get_dungeon_tales(account), 300)
+
+        # 2. Containerized token (Mystic Clover 19675) across materials, bank, bags
+        clover_balance = engine.get_available_purchasing_power(19675, account)
+        self.assertEqual(clover_balance, 60)  # 40 + 15 + 5 = 60
+        self.assertEqual(account.get_item_count(19675), 60)
+
+        # 3. Graceful fallback when graph store is None
+        fallback_engine = AccountDiffEngine(None)
+        self.assertEqual(fallback_engine._get_astral_acclaim(account), 550)
+        self.assertEqual(fallback_engine.get_available_purchasing_power(19675, account), 60)
+
+    def test_cross_role_opportunity_cost_evaluation(self):
+        """Verifies multi-role opportunity cost calculations and optimal role recommendation."""
+        solver = PathSolver(self.store)
+
+        # Case 1: TP Liquidation exceeds salvage and currency -> SELL_ON_TP
+        tp_lead = solver.evaluate_cross_role_opportunity_cost(
+            item_id=19721,  # Glob of Ectoplasm (Tradeable, salvageable)
+            quantity=100,
+            tp_sell_unit_price=100,
+            salvage_expected_unit_value=50
+        )
+        self.assertEqual(tp_lead["optimal_role_disposition"], "SELL_ON_TP")
+        self.assertEqual(tp_lead["tp_liquidation_value"], 100 * 100 * 0.85)
+        self.assertEqual(tp_lead["salvage_liquidation_value"], 5000)
+
+        # Case 2: Salvage liquidation exceeds TP (after 15% fee) -> SALVAGE
+        salvage_lead = solver.evaluate_cross_role_opportunity_cost(
+            item_id=19721,
+            quantity=100,
+            tp_sell_unit_price=100,
+            salvage_expected_unit_value=90
+        )
+        self.assertEqual(salvage_lead["optimal_role_disposition"], "SALVAGE")
+        self.assertEqual(salvage_lead["salvage_liquidation_value"], 9000)
+        self.assertEqual(salvage_lead["tp_liquidation_value"], 8500)
+
+        # Case 3: Direct currency exchange exceeds liquidation -> SPEND_AS_CURRENCY
+        currency_lead = solver.evaluate_cross_role_opportunity_cost(
+            item_id=68,
+            quantity=50,
+            tp_sell_unit_price=0,
+            salvage_expected_unit_value=0,
+            direct_exchange_unit_value=2.0
+        )
+        self.assertEqual(currency_lead["optimal_role_disposition"], "SPEND_AS_CURRENCY")
+        self.assertEqual(currency_lead["direct_exchange_value"], 100.0)
+
+        # Case 4: Zero liquidation value or crafting ingredient hold -> HOLD_AS_CRAFTING_MAT
+        craft_hold = solver.evaluate_cross_role_opportunity_cost(
+            item_id=19721,
+            quantity=100,
+            tp_sell_unit_price=0,
+            salvage_expected_unit_value=0
+        )
+        self.assertEqual(craft_hold["optimal_role_disposition"], "HOLD_AS_CRAFTING_MAT")
+
+    def test_daily_session_itinerary_knapsack_scheduling(self):
+        """Verifies PathSolver.schedule_daily_session_itinerary computes optimal daily itinerary."""
+        solver = PathSolver(self.store)
+        account = AccountState(
+            characters=[{
+                "name": "Kerling",
+                "crafting": [{"discipline": "Weaponsmith", "rating": 500, "active": True}]
+            }]
+        )
+        itinerary = solver.schedule_daily_session_itinerary(
+            goal_item_id=30704,  # Twilight
+            time_budget_minutes=90,
+            account_state=account
+        )
+        self.assertIsInstance(itinerary, DailySessionItinerary)
+        self.assertEqual(itinerary.goal_name, "Twilight")
+        self.assertEqual(itinerary.total_scheduled_minutes, 45)
+        self.assertEqual(itinerary.time_utilization_pct, 50.0)
+
+        # Check tasks and order
+        task_categories = [t.category for t in itinerary.tasks]
+        self.assertEqual(task_categories, [
+            "QUARTZ_CHARGING",
+            "DAILY_REFINEMENT",
+            "WORLD_BOSS_ANOMALY",
+            "DAILY_FRACTAL_CLOVERS"
+        ])
+
+        # Waypoint validation
+        quartz = itinerary.tasks[0]
+        self.assertEqual(quartz.waypoint_code, "[&BPwCAAA=]")
+        self.assertEqual(quartz.estimated_duration_minutes, 2)
+        self.assertEqual(quartz.required_inputs["count"], 25)
+
+        refinement = itinerary.tasks[1]
+        self.assertEqual(refinement.estimated_duration_minutes, 3)
+        self.assertEqual(refinement.character_name, "Kerling")
+
+        anomaly = itinerary.tasks[2]
+        self.assertEqual(anomaly.waypoint_code, "[&BEoCAAA=]")
+        self.assertEqual(anomaly.estimated_duration_minutes, 10)
+        self.assertEqual(anomaly.reward_output["name"], "Mystic Coin")
+
+        fractals = itinerary.tasks[3]
+        self.assertEqual(fractals.estimated_duration_minutes, 30)
+        self.assertEqual(fractals.reward_output["name"], "Mystic Clover")
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
 
 
