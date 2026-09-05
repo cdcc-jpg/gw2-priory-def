@@ -1,12 +1,12 @@
 /**
  * THE PRIORY GRIMOIRE — GUILD WARS 2 LEGENDARY TOME CONTROLLER
  * Multi-page navigation, persistent recipe journal, handwritten ink annotations,
- * and 3D page turn transitions.
+ * smooth 2D page turn transitions, and neuro-symbolic solver suite.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // State
+  // ── State Management ────────────────────────────────────────────────────────
   let currentSpreadIndex = 0;
   let savedRecipes = [];
   let accountTelemetry = null;
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let prereqData = null;
   let prereqLoading = false;
 
-  // Global Quick Jump Handlers
+  // ── Global Quick Jump Handlers ──────────────────────────────────────────────
   window.jumpToPlanner = (goalId) => {
     plannerGoalId = Number(goalId) || 30704;
     plannerItineraryData = null;
@@ -48,10 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
     turnPageTo(3, 3 > currentSpreadIndex ? "forward" : "backward");
   };
 
-  // DOM Handles
+  // ── DOM Handles (Coordinated with web/templates/index.html) ──────────────────
   const tome = document.getElementById("grimoire-tome");
   const scene = document.getElementById("scene");
   const bookAura = document.getElementById("book-aura");
+  const pagesSpread = document.getElementById("pages-spread");
+  const pageLeft = document.getElementById("page-left-content") || document.querySelector(".page-left");
+  const pageRight = document.getElementById("page-right-content") || document.querySelector(".page-right");
   const leftPageBody = document.getElementById("left-page-body");
   const rightPageBody = document.getElementById("right-page-body");
   const flipperLeaf = document.getElementById("flipper-leaf");
@@ -63,12 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabPlanner = document.getElementById("tab-planner");
   const tabArbitrage = document.getElementById("tab-arbitrage");
   const tabPrereqs = document.getElementById("tab-prereqs");
-  const pageLeft = document.querySelector(".page-left");
-  const pageRight = document.querySelector(".page-right");
-  
-  // Audio toggle button - Assume it exists or we add a listener to it
-  // Audio toggle button with active state indicators
   const audioToggle = document.getElementById("audio-toggle");
+
+  // Audio toggle button with active state indicators
   if (audioToggle) {
     const updateAudioButton = () => {
       audioToggle.classList.toggle("active", audioEnabled);
@@ -83,54 +83,48 @@ document.addEventListener("DOMContentLoaded", () => {
       audioEnabled = !audioEnabled;
       localStorage.setItem("priory_audio_enabled", audioEnabled);
       updateAudioButton();
+      if (audioEnabled) {
+        getAudioContext();
+        playForgeChimeSound();
+      }
     });
   }
 
-  // Viewport Auto-Scaling Engine
-  function initResponsiveScaling() {
-    function updateBookScale() {
-      const availW = window.innerWidth - 60;
-      const availH = window.innerHeight - 90;
-      const baseW = 1040;
-      const baseH = 680;
-      const scale = Math.min(availW / baseW, availH / baseH, 1.45);
-      const safeScale = Math.max(scale, 0.62);
-      document.documentElement.style.setProperty('--book-scale', safeScale.toFixed(3));
-    }
-    window.addEventListener('resize', updateBookScale);
-    updateBookScale();
-  }
-  
   let gw2Tooltip = document.getElementById("gw2-tooltip");
 
-  // Initialize
-  initResponsiveScaling();
+  // ── Initialization ──────────────────────────────────────────────────────────
   initParticles();
-  initMouseParallax();
   loadSavedRecipesFromStorage();
   fetchAccountStatus();
   renderCurrentSpread();
   initTooltipDelegation();
+  addDynamicStyles();
 
-  // Navigation Button Handlers
-  btnPrev.addEventListener("click", () => {
-    if (currentSpreadIndex > 0 && !isFlipping) {
-      turnPageTo(currentSpreadIndex - 1, "backward");
-    }
-  });
+  // ── Navigation Button Handlers ──────────────────────────────────────────────
+  if (btnPrev) {
+    btnPrev.addEventListener("click", () => {
+      if (currentSpreadIndex > 0 && !isFlipping) {
+        turnPageTo(currentSpreadIndex - 1, "backward");
+      }
+    });
+  }
 
-  btnNext.addEventListener("click", () => {
-    const totalSpreads = 4 + savedRecipes.length;
-    if (currentSpreadIndex < totalSpreads - 1 && !isFlipping) {
-      turnPageTo(currentSpreadIndex + 1, "forward");
-    }
-  });
+  if (btnNext) {
+    btnNext.addEventListener("click", () => {
+      const totalSpreads = 4 + savedRecipes.length;
+      if (currentSpreadIndex < totalSpreads - 1 && !isFlipping) {
+        turnPageTo(currentSpreadIndex + 1, "forward");
+      }
+    });
+  }
 
-  tabInscribe.addEventListener("click", () => {
-    if (currentSpreadIndex !== 0 && !isFlipping) {
-      turnPageTo(0, "backward");
-    }
-  });
+  if (tabInscribe) {
+    tabInscribe.addEventListener("click", () => {
+      if (currentSpreadIndex !== 0 && !isFlipping) {
+        turnPageTo(0, "backward");
+      }
+    });
+  }
 
   if (tabPlanner) {
     tabPlanner.addEventListener("click", () => {
@@ -158,8 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("keydown", (e) => {
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
-    if (e.key === "ArrowRight") btnNext.click();
-    else if (e.key === "ArrowLeft") btnPrev.click();
+    if (e.key === "ArrowRight") {
+      if (btnNext && !btnNext.disabled && !isFlipping) btnNext.click();
+    } else if (e.key === "ArrowLeft") {
+      if (btnPrev && !btnPrev.disabled && !isFlipping) btnPrev.click();
+    }
   });
 
   // ── Procedural Web Audio API Synthesizer (Zero 404s, 100% Offline) ──────────
@@ -318,7 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const gain = ctx.createGain();
       gain.gain.setValueAtTime(0.001, now);
-      // Double micro-stroke burst simulating pen nib
       gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.02, now + 0.08);
       gain.gain.linearRampToValueAtTime(0.16, now + 0.11);
@@ -357,6 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   window.playSound = playSound;
 
+  // ── Account Telemetry ───────────────────────────────────────────────────────
   async function fetchAccountStatus() {
     try {
       const res = await fetch("/api/status");
@@ -373,7 +370,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const stored = localStorage.getItem("priory_grimoire_recipes");
       if (stored) {
-        savedRecipes = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          savedRecipes = parsed;
+        } else {
+          savedRecipes = [];
+        }
       }
     } catch (e) {
       savedRecipes = [];
@@ -389,54 +391,120 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateRecipeTabs() {
-    savedRecipesTabs.innerHTML = "";
-    savedRecipes.forEach((recipe, idx) => {
-      const tab = document.createElement("button");
-      const targetSpread = 4 + idx;
-      tab.className = `tome-tab recipe-tab ${currentSpreadIndex === targetSpread ? "active" : ""}`;
-      tab.innerHTML = `<span>${escapeHtml(recipe.goal_name)}</span>`;
-      tab.addEventListener("click", () => {
-        if (isFlipping) return;
-        if (targetSpread !== currentSpreadIndex) {
-          turnPageTo(targetSpread, targetSpread > currentSpreadIndex ? "forward" : "backward");
-        }
+    if (savedRecipesTabs) {
+      savedRecipesTabs.innerHTML = "";
+      savedRecipes.forEach((recipe, idx) => {
+        const tab = document.createElement("button");
+        const targetSpread = 4 + idx;
+        tab.className = `tome-tab recipe-tab ${currentSpreadIndex === targetSpread ? "active" : ""}`;
+        tab.title = `Chapter V: ${recipe.goal_name}`;
+        tab.innerHTML = `<span class="tab-label">${escapeHtml(recipe.goal_name)}</span>`;
+        tab.addEventListener("click", () => {
+          if (isFlipping) return;
+          if (targetSpread !== currentSpreadIndex) {
+            turnPageTo(targetSpread, targetSpread > currentSpreadIndex ? "forward" : "backward");
+          }
+        });
+        savedRecipesTabs.appendChild(tab);
       });
-      savedRecipesTabs.appendChild(tab);
-    });
+    }
 
-    tabInscribe.classList.toggle("active", currentSpreadIndex === 0);
+    if (tabInscribe) tabInscribe.classList.toggle("active", currentSpreadIndex === 0);
     if (tabPlanner) tabPlanner.classList.toggle("active", currentSpreadIndex === 1);
     if (tabArbitrage) tabArbitrage.classList.toggle("active", currentSpreadIndex === 2);
     if (tabPrereqs) tabPrereqs.classList.toggle("active", currentSpreadIndex === 3);
   }
 
+  // ── Smooth 2D Page Turn Controller ──────────────────────────────────────────
+  function turnPageTo(targetIndex, direction = "forward") {
+    if (targetIndex === currentSpreadIndex || isFlipping) return;
+    isFlipping = true;
+    document.body.classList.add('no-select');
+
+    // Procedural Web Audio API sound synthesis
+    playPaperTurnSound();
+
+    if (bookAura) {
+      bookAura.classList.add("casting");
+    }
+
+    // Keep legacy 3D flipper completely hidden
+    if (flipperLeaf) {
+      flipperLeaf.classList.add("hidden");
+    }
+
+    const turnClass = direction === "forward" ? "turning-forward" : "turning-backward";
+
+    if (pagesSpread) {
+      pagesSpread.classList.remove("turning-forward", "turning-backward");
+      pagesSpread.classList.add(turnClass);
+    }
+    if (pageLeft) {
+      pageLeft.classList.remove("turning-forward", "turning-backward");
+      pageLeft.classList.add(turnClass);
+    }
+    if (pageRight) {
+      pageRight.classList.remove("turning-forward", "turning-backward");
+      pageRight.classList.add(turnClass);
+    }
+
+    // Midpoint: swap content when opacity is low, reset scroll
+    setTimeout(() => {
+      currentSpreadIndex = targetIndex;
+      renderCurrentSpread();
+      if (leftPageBody) leftPageBody.scrollTop = 0;
+      if (rightPageBody) rightPageBody.scrollTop = 0;
+    }, 220);
+
+    // Completion: cleanly remove all transition classes
+    setTimeout(() => {
+      if (pagesSpread) {
+        pagesSpread.classList.remove("turning-forward", "turning-backward");
+      }
+      if (pageLeft) {
+        pageLeft.classList.remove("turning-forward", "turning-backward");
+        pageLeft.style.boxShadow = "";
+      }
+      if (pageRight) {
+        pageRight.classList.remove("turning-forward", "turning-backward");
+        pageRight.style.boxShadow = "";
+      }
+      if (bookAura) {
+        bookAura.classList.remove("casting");
+      }
+      document.body.classList.remove('no-select');
+      isFlipping = false;
+    }, 450);
+  }
+
   function renderCurrentSpread() {
     const totalSpreads = 4 + savedRecipes.length;
-    btnPrev.disabled = currentSpreadIndex === 0;
-    btnNext.disabled = currentSpreadIndex >= totalSpreads - 1;
+    if (btnPrev) btnPrev.disabled = currentSpreadIndex === 0;
+    if (btnNext) btnNext.disabled = currentSpreadIndex >= totalSpreads - 1;
 
     if (currentSpreadIndex === 0) {
-      pageCounterDisplay.textContent = `Chapter I • Inscription • Spread 1 of ${totalSpreads}`;
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter I • Inscription • Spread 1 of ${totalSpreads}`;
       renderInscriptionSpread();
     } else if (currentSpreadIndex === 1) {
-      pageCounterDisplay.textContent = `Chapter II • Daily Session Planner • Spread 2 of ${totalSpreads}`;
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter II • Daily Session Planner • Spread 2 of ${totalSpreads}`;
       renderSessionPlannerSpread();
     } else if (currentSpreadIndex === 2) {
-      pageCounterDisplay.textContent = `Chapter III • Buy vs Craft Arbitrage • Spread 3 of ${totalSpreads}`;
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter III • Buy vs Craft Arbitrage • Spread 3 of ${totalSpreads}`;
       renderArbitrageSpread();
     } else if (currentSpreadIndex === 3) {
-      pageCounterDisplay.textContent = `Chapter IV • Prerequisite Audit • Spread 4 of ${totalSpreads}`;
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter IV • Prerequisite Audit • Spread 4 of ${totalSpreads}`;
       renderPrerequisitesSpread();
     } else {
       const recipeIdx = currentSpreadIndex - 4;
       const recipe = savedRecipes[recipeIdx];
-      pageCounterDisplay.textContent = `Chapter V • ${recipe ? recipe.goal_name : 'Recipe'} • Spread ${currentSpreadIndex + 1} of ${totalSpreads}`;
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter V • ${recipe ? recipe.goal_name : 'Recipe'} • Spread ${currentSpreadIndex + 1} of ${totalSpreads}`;
       if (recipe) renderRecipeSpread(recipe);
     }
 
     updateRecipeTabs();
   }
 
+  // ── CHAPTER I: INSCRIPTION ──────────────────────────────────────────────────
   function renderInscriptionSpread() {
     const armory = accountTelemetry?.account_armory_count ?? "—";
     const mats = accountTelemetry?.account_materials_count ?? "—";
@@ -447,110 +515,138 @@ document.addEventListener("DOMContentLoaded", () => {
     const aa = accountTelemetry?.wallet?.astral_acclaim?.toLocaleString() ?? "—";
     const vm = accountTelemetry?.wallet?.volatile_magic?.toLocaleString() ?? "—";
 
-    leftPageBody.innerHTML = `
-      <div class="runic-header">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ</div>
-      <h2 class="page-title">Chapter I: Inscription</h2>
-      <div class="handwritten-subtitle">~ The Scholar's Ledger ~</div>
-      <div class="ink-divider">✦</div>
+    if (leftPageBody) {
+      leftPageBody.innerHTML = `
+        <div class="runic-header">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ</div>
+        <h2 class="page-title">Chapter I: Inscription</h2>
+        <div class="handwritten-subtitle">~ The Scholar's Ledger ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div class="essence-journal-box">
-        <div class="essence-journal-title">
-          <span>Live Account Essence</span>
-          <span style="font-size:0.7em;color:#c8963e;">${accountTelemetry?.api_key_masked || "Live"}</span>
-        </div>
-        <div class="essence-stats-grid">
-          <div class="stat-item"><span class="lbl">Armory Legendaries:</span><span class="val">${armory}</span></div>
-          <div class="stat-item"><span class="lbl">Tracked Materials:</span><span class="val">${mats}</span></div>
-          <div class="stat-item"><span class="lbl">Liquid Gold:</span><span class="val">${gold}</span></div>
-          <div class="stat-item"><span class="lbl">Spirit Shards:</span><span class="val">${shards}</span></div>
-          <div class="stat-item"><span class="lbl">Astral Acclaim:</span><span class="val">${aa}</span></div>
-          <div class="stat-item"><span class="lbl">Volatile Magic:</span><span class="val">${vm}</span></div>
-        </div>
-      </div>
-
-      <form class="inscribe-form" id="inscribe-query-form">
-        <label class="inscribe-label" for="inscribe-query-input">Inscribe thy desire upon this parchment:</label>
-        <textarea id="inscribe-query-input" class="ink-textarea" rows="3" placeholder="e.g. 'Which 2 legendaries can I quickly craft?', 'How do I craft Twilight?'..."></textarea>
-        <button type="submit" class="btn-forge-inscribe" id="btn-forge-submit">
-          <span id="btn-forge-text">Turn the Page & Forge Truth</span>
-          <span id="btn-forge-spinner" class="spinner-ink hidden"></span>
-        </button>
-      </form>
-
-      <div class="quick-incantations">
-        <button type="button" class="incantation-btn" data-q="Which 2 legendaries can I quickly craft?">Fastest 2 Legendaries</button>
-        <button type="button" class="incantation-btn" data-q="How do I craft Twilight?">Craft Twilight</button>
-        <button type="button" class="incantation-btn" data-q="How do I craft Eternity?">Forge Eternity</button>
-        <button type="button" class="incantation-btn" data-q="What do I need for Aurene's Bite (Zhaitan Variant)?">Zhaitan Variant</button>
-        <button type="button" class="incantation-btn" data-q="How do I craft WvW Legendary Armor?">WvW Armor</button>
-      </div>
-    `;
-
-    rightPageBody.innerHTML = `
-      <div class="runic-header">ᛈ ᛇ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛟ ᛞ</div>
-      <h2 class="page-title">The Scrying Matrix</h2>
-      <div class="handwritten-subtitle">~ Alchemical Geometry ~</div>
-      <div class="ink-divider">✦</div>
-
-      <div class="arcane-diagram-stage">
-        <div class="vitruvian-circle-wrap">
-          <svg class="arcane-circle-svg" viewBox="0 0 200 200">
-            <g class="spin-cw-slow" transform-origin="100 100">
-              <circle cx="100" cy="100" r="95" fill="none" stroke="#c8963e" stroke-width="1.5" stroke-dasharray="4,4"/>
-              <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(0 100 100)">ᚠ</text>
-              <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(60 100 100)">ᚢ</text>
-              <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(120 100 100)">ᚦ</text>
-              <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(180 100 100)">ᚨ</text>
-              <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(240 100 100)">ᚱ</text>
-              <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(300 100 100)">ᚲ</text>
-            </g>
-            <g class="spin-ccw-medium" transform-origin="100 100">
-              <circle cx="100" cy="100" r="80" fill="none" stroke="#70338a" stroke-width="1.2"/>
-              <polygon points="100,20 169,140 31,140" fill="none" stroke="#c8963e" stroke-width="1"/>
-              <polygon points="100,180 31,60 169,60" fill="none" stroke="#c8963e" stroke-width="1"/>
-            </g>
-            <g class="spin-cw-fast" transform-origin="100 100">
-              <circle cx="100" cy="100" r="45" fill="none" stroke="#70338a" stroke-width="1" stroke-dasharray="2,2"/>
-              <circle cx="100" cy="100" r="40" fill="none" stroke="#c8963e" stroke-width="0.5"/>
-            </g>
-          </svg>
-          <div class="center-silhouette pulse-anim">◈</div>
+        <div class="essence-journal-box">
+          <div class="essence-journal-title">
+            <span>Live Account Essence</span>
+            <span style="font-size:0.7em;color:#c8963e;">${accountTelemetry?.api_key_masked || "Live"}</span>
+          </div>
+          <div class="essence-stats-grid">
+            <div class="stat-item"><span class="lbl">Armory Legendaries:</span><span class="val">${armory}</span></div>
+            <div class="stat-item"><span class="lbl">Tracked Materials:</span><span class="val">${mats}</span></div>
+            <div class="stat-item"><span class="lbl">Liquid Gold:</span><span class="val">${gold}</span></div>
+            <div class="stat-item"><span class="lbl">Spirit Shards:</span><span class="val">${shards}</span></div>
+            <div class="stat-item"><span class="lbl">Astral Acclaim:</span><span class="val">${aa}</span></div>
+            <div class="stat-item"><span class="lbl">Volatile Magic:</span><span class="val">${vm}</span></div>
+          </div>
         </div>
 
-        <div class="handwritten-lore">
-          "The Mystic Forge recognizes neither gold nor glory alone, but the harmonious combination of the four gifts."
-          <div style="font-family:var(--font-head);font-size:0.75em;color:#c8963e;margin-top:6px;">— Archivist of the Durmand Priory</div>
+        <form class="inscribe-form" id="inscribe-query-form">
+          <label class="inscribe-label" for="inscribe-query-input">Inscribe thy desire upon this parchment:</label>
+          <textarea id="inscribe-query-input" class="ink-textarea" rows="3" placeholder="e.g. 'Which 2 legendaries can I quickly craft?', 'How do I craft Twilight?'..."></textarea>
+          <button type="submit" class="btn-forge-inscribe" id="btn-forge-submit">
+            <span id="btn-forge-text">Turn the Page & Forge Truth</span>
+            <span id="btn-forge-spinner" class="spinner-ink hidden"></span>
+          </button>
+        </form>
+
+        <div class="quick-incantations">
+          <button type="button" class="incantation-btn" data-q="Which 2 legendaries can I quickly craft?">Fastest 2 Legendaries</button>
+          <button type="button" class="incantation-btn" data-q="How do I craft Twilight?">Craft Twilight</button>
+          <button type="button" class="incantation-btn" data-q="How do I craft Eternity?">Forge Eternity</button>
+          <button type="button" class="incantation-btn" data-q="What do I need for Aurene's Bite (Zhaitan Variant)?">Zhaitan Variant</button>
+          <button type="button" class="incantation-btn" data-q="How do I craft WvW Legendary Armor?">WvW Armor</button>
         </div>
-      </div>
-    `;
+      `;
+    }
+
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="runic-header">ᛈ ᛇ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛟ ᛞ</div>
+        <h2 class="page-title">The Scrying Matrix</h2>
+        <div class="handwritten-subtitle">~ Alchemical Geometry ~</div>
+        <div class="ink-divider">✦</div>
+
+        <div class="arcane-diagram-stage">
+          <div class="vitruvian-circle-wrap">
+            <svg class="arcane-circle-svg" viewBox="0 0 200 200">
+              <g class="spin-cw-slow" transform-origin="100 100">
+                <circle cx="100" cy="100" r="95" fill="none" stroke="#c8963e" stroke-width="1.5" stroke-dasharray="4,4"/>
+                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(0 100 100)">ᚠ</text>
+                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(60 100 100)">ᚢ</text>
+                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(120 100 100)">ᚦ</text>
+                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(180 100 100)">ᚨ</text>
+                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(240 100 100)">ᚱ</text>
+                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(300 100 100)">ᚲ</text>
+              </g>
+              <g class="spin-ccw-medium" transform-origin="100 100">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#70338a" stroke-width="1.2"/>
+                <polygon points="100,20 169,140 31,140" fill="none" stroke="#c8963e" stroke-width="1"/>
+                <polygon points="100,180 31,60 169,60" fill="none" stroke="#c8963e" stroke-width="1"/>
+              </g>
+              <g class="spin-cw-fast" transform-origin="100 100">
+                <circle cx="100" cy="100" r="45" fill="none" stroke="#70338a" stroke-width="1" stroke-dasharray="2,2"/>
+                <circle cx="100" cy="100" r="40" fill="none" stroke="#c8963e" stroke-width="0.5"/>
+              </g>
+            </svg>
+            <div class="center-silhouette pulse-anim">◈</div>
+          </div>
+
+          <div class="handwritten-lore">
+            "The Mystic Forge recognizes neither gold nor glory alone, but the harmonious combination of the four gifts."
+            <div style="font-family:var(--font-head);font-size:0.75em;color:#c8963e;margin-top:6px;">— Archivist of the Durmand Priory</div>
+          </div>
+        </div>
+      `;
+    }
 
     const form = document.getElementById("inscribe-query-form");
     const input = document.getElementById("inscribe-query-input");
     
-    input.addEventListener("input", playQuillSound);
+    if (input) {
+      input.addEventListener("input", playQuillSound);
+    }
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const q = input.value.trim();
-      if (q) executeNewQuery(q);
-    });
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const q = input ? input.value.trim() : "";
+        if (q) executeNewQuery(q);
+      });
+    }
 
     document.querySelectorAll(".incantation-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const q = btn.getAttribute("data-q");
-        input.value = q;
-        executeNewQuery(q);
+        if (input) input.value = q;
+        if (q) executeNewQuery(q);
       });
     });
-    
-    addDynamicStyles();
   }
-  
+
   function addDynamicStyles() {
-    if(document.getElementById('app-dynamic-styles')) return;
+    if (document.getElementById('app-dynamic-styles')) return;
     const style = document.createElement('style');
     style.id = 'app-dynamic-styles';
     style.innerHTML = `
+      /* ── 2D Smooth Page Turn Transitions ── */
+      .pages-spread.turning-forward .page-sheet,
+      .page-sheet.turning-forward {
+        animation: pageTurnForward 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      .pages-spread.turning-backward .page-sheet,
+      .page-sheet.turning-backward {
+        animation: pageTurnBackward 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      @keyframes pageTurnForward {
+        0% { opacity: 1; transform: translateX(0); filter: brightness(1); }
+        48% { opacity: 0.12; transform: translateX(-16px) scale(0.99); filter: brightness(0.85); box-shadow: inset -24px 0 32px rgba(40, 20, 5, 0.35); }
+        52% { opacity: 0.12; transform: translateX(16px) scale(0.99); filter: brightness(0.85); box-shadow: inset 24px 0 32px rgba(40, 20, 5, 0.35); }
+        100% { opacity: 1; transform: translateX(0); filter: brightness(1); }
+      }
+      @keyframes pageTurnBackward {
+        0% { opacity: 1; transform: translateX(0); filter: brightness(1); }
+        48% { opacity: 0.12; transform: translateX(16px) scale(0.99); filter: brightness(0.85); box-shadow: inset 24px 0 32px rgba(40, 20, 5, 0.35); }
+        52% { opacity: 0.12; transform: translateX(-16px) scale(0.99); filter: brightness(0.85); box-shadow: inset -24px 0 32px rgba(40, 20, 5, 0.35); }
+        100% { opacity: 1; transform: translateX(0); filter: brightness(1); }
+      }
+
       @keyframes spin-cw { 100% { transform: rotate(360deg); } }
       @keyframes spin-ccw { 100% { transform: rotate(-360deg); } }
       .spin-cw-slow { animation: spin-cw 60s linear infinite; }
@@ -678,7 +774,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!line) continue;
       const clean = line.replace(/\*\*/g, "").trim();
 
-      // Format: #1 The Moot (Mace): 78.4% Ready | Est. Cost: ~412.0g | [Precursor Crafting / Drop] [🎁 Bank Kit Ready]
       const match = clean.match(/^#(\d+)\s+([^(]+?)(?:\s*\(([^)]+)\))?:\s*([\d.]+)%?\s*Ready\s*\|\s*(?:Est\.?\s*Cost:\s*)?~?([\d.,]+)g\s*\|\s*\[([^\]]+)\](.*)/i);
       if (match) {
         const gateMatch = clean.match(/⏳\s*(~?[\w\s]+gate)/i);
@@ -696,7 +791,6 @@ document.addEventListener("DOMContentLoaded", () => {
         continue;
       }
 
-      // Loose fallback match
       const m2 = clean.match(/#(\d+)\s+([A-Za-z0-9' -]+?)(?:\s*\(([^)]+)\))?[:\s-]+(\d+(?:\.\d+)?)%/i);
       if (m2) {
         const goldM = clean.match(/([\d.,]+)\s*g\b/);
@@ -754,101 +848,99 @@ document.addEventListener("DOMContentLoaded", () => {
     const starterKitRec = (guide.strategic_recommendations || []).find(r => r.includes("Starter Kit") || r.includes("Bank Kit"));
     const boosterRec = (guide.strategic_recommendations || []).find(r => r.includes("Booster") || r.includes("Speed Analysis") || r.includes("Zhaitaffy") || r.includes("Speed Tips") || r.includes("Wizard"));
 
-    // ── LEFT PAGE: THE PRIORY LEADERBOARD ────────────────────────────────────
-    leftPageBody.innerHTML = `
-      <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
-      <h3 class="page-title">${escapeHtml(title)}</h3>
-      <div class="handwritten-subtitle">~ Top Ranked Recommendations ~</div>
-      <div class="ink-divider">✦</div>
+    if (leftPageBody) {
+      leftPageBody.innerHTML = `
+        <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
+        <h3 class="page-title">${escapeHtml(title)}</h3>
+        <div class="handwritten-subtitle">~ Top Ranked Recommendations ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div class="priory-leaderboard-spread">
-        <!-- Hero Card: #1 Top Pick -->
-        <div class="priory-hero-card">
-          <div class="hero-card-header">
-            <div class="rank-badge rank-top">
-              <span>#1</span>
-              <span class="top-pick-sub">TOP PICK</span>
-            </div>
-            <div class="hero-item-info">
-              <div class="hero-item-title">
-                <span class="hero-name">${escapeHtml(topItem.name)}</span>
-                <span class="hero-subtype">(${escapeHtml(topItem.subtype)})</span>
+        <div class="priory-leaderboard-spread">
+          <div class="priory-hero-card">
+            <div class="hero-card-header">
+              <div class="rank-badge rank-top">
+                <span>#1</span>
+                <span class="top-pick-sub">TOP PICK</span>
               </div>
-              <div class="hero-archetype-row">
-                <span class="archetype-badge">${escapeHtml(topItem.archetype)}</span>
-                ${topItem.hasKit ? `<span class="kit-badge">🎁 Bank Starter Kit Ready (0g Precursor)</span>` : ''}
-                ${topItem.hasGate ? `<span class="gate-badge">⏳ ${escapeHtml(topItem.gateText || 'Time-Gated')}</span>` : ''}
+              <div class="hero-item-info">
+                <div class="hero-item-title">
+                  <span class="hero-name">${escapeHtml(topItem.name)}</span>
+                  <span class="hero-subtype">(${escapeHtml(topItem.subtype)})</span>
+                </div>
+                <div class="hero-archetype-row">
+                  <span class="archetype-badge">${escapeHtml(topItem.archetype)}</span>
+                  ${topItem.hasKit ? `<span class="kit-badge">🎁 Bank Starter Kit Ready (0g Precursor)</span>` : ''}
+                  ${topItem.hasGate ? `<span class="gate-badge">⏳ ${escapeHtml(topItem.gateText || 'Time-Gated')}</span>` : ''}
+                </div>
+              </div>
+              <div class="hero-metrics">
+                <div class="hero-readiness-label">Account Readiness</div>
+                <div class="hero-readiness-val">${topItem.readiness}%</div>
+                <div class="hero-cost-val">${topItem.cost > 0 ? `Est. Cost: ~${topItem.cost.toLocaleString()}g` : 'Est. Cost: ~0g (Kit Ready)'}</div>
               </div>
             </div>
-            <div class="hero-metrics">
-              <div class="hero-readiness-label">Account Readiness</div>
-              <div class="hero-readiness-val">${topItem.readiness}%</div>
-              <div class="hero-cost-val">${topItem.cost > 0 ? `Est. Cost: ~${topItem.cost.toLocaleString()}g` : 'Est. Cost: ~0g (Kit Ready)'}</div>
+
+            <div class="hero-bar-wrap">
+              <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, topItem.readiness))}%;"></div>
+            </div>
+
+            ${topItem.hasKit || starterKitRec ? `
+              <div class="starter-kit-callout">
+                <span class="kit-icon">🎁</span>
+                <div class="kit-callout-text">
+                  ${starterKitRec ? formatTextWithWaypoints(starterKitRec) : `<strong>Bank Starter Kit Ready:</strong> Select this weapon to claim its Precursor and Gift for <strong>0 gold</strong> from your Legendary Weapon Starter Kit!`}
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="recipe-jump-bar hero-jump-bar">
+              <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${heroItemId})">⏱ Plan Session</button>
+              <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${heroItemId})">⚖ Arbitrage Matrix</button>
+              <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${heroItemId})">📜 Prerequisite Audit</button>
             </div>
           </div>
 
-          <div class="hero-bar-wrap">
-            <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, topItem.readiness))}%;"></div>
-          </div>
-
-          ${topItem.hasKit || starterKitRec ? `
-            <div class="starter-kit-callout">
-              <span class="kit-icon">🎁</span>
-              <div class="kit-callout-text">
-                ${starterKitRec ? formatTextWithWaypoints(starterKitRec) : `<strong>Bank Starter Kit Ready:</strong> Select this weapon to claim its Precursor and Gift for <strong>0 gold</strong> from your Legendary Weapon Starter Kit!`}
-              </div>
-            </div>
-          ` : ''}
-
-          <div class="recipe-jump-bar hero-jump-bar">
-            <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${heroItemId})">⏱ Plan Session</button>
-            <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${heroItemId})">⚖ Arbitrage Matrix</button>
-            <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${heroItemId})">📜 Prerequisite Audit</button>
-          </div>
-        </div>
-
-        <!-- Sub Cards: #2 through #5 -->
-        ${subItems.length > 0 ? `
-          <div class="priory-subcards-list">
-            ${subItems.map(item => {
-              const subId = getLegendaryIdByName(item.name, guide.goal_item_id || 30704);
-              return `
-                <div class="priory-sub-card">
-                  <div class="rank-badge rank-sub">#${item.rank}</div>
-                  <div class="sub-card-main">
-                    <div class="sub-card-title-row">
-                      <span class="sub-item-name">${escapeHtml(item.name)}</span>
-                      <span class="sub-item-subtype">(${escapeHtml(item.subtype)})</span>
-                      <span class="sub-item-cost">${item.cost > 0 ? `~${item.cost.toLocaleString()}g` : '~0g'}</span>
-                      <span class="sub-item-readiness">${item.readiness}%</span>
-                    </div>
-                    <div class="sub-bar-wrap">
-                      <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, item.readiness))}%;"></div>
-                    </div>
-                    <div class="sub-badges-row">
-                      <span class="archetype-pill">${escapeHtml(item.archetype)}</span>
-                      ${item.hasKit ? `<span class="kit-pill">🎁 Kit Ready</span>` : ''}
-                      ${item.hasGate ? `<span class="gate-pill">⏳ ${escapeHtml(item.gateText || 'Time-Gated')}</span>` : ''}
-                      <div class="sub-card-actions">
-                        <button type="button" class="btn-sub-jump" onclick="jumpToPlanner(${subId})" title="Plan Session">⏱ Plan</button>
-                        <button type="button" class="btn-sub-jump" onclick="jumpToArbitrage(${subId})" title="Buy vs Craft">⚖ Arbitrage</button>
-                        <button type="button" class="btn-sub-jump" onclick="jumpToPrereqs(${subId})" title="Prerequisite Audit">📜 Prereqs</button>
+          ${subItems.length > 0 ? `
+            <div class="priory-subcards-list">
+              ${subItems.map(item => {
+                const subId = getLegendaryIdByName(item.name, guide.goal_item_id || 30704);
+                return `
+                  <div class="priory-sub-card">
+                    <div class="rank-badge rank-sub">#${item.rank}</div>
+                    <div class="sub-card-main">
+                      <div class="sub-card-title-row">
+                        <span class="sub-item-name">${escapeHtml(item.name)}</span>
+                        <span class="sub-item-subtype">(${escapeHtml(item.subtype)})</span>
+                        <span class="sub-item-cost">${item.cost > 0 ? `~${item.cost.toLocaleString()}g` : '~0g'}</span>
+                        <span class="sub-item-readiness">${item.readiness}%</span>
+                      </div>
+                      <div class="sub-bar-wrap">
+                        <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, item.readiness))}%;"></div>
+                      </div>
+                      <div class="sub-badges-row">
+                        <span class="archetype-pill">${escapeHtml(item.archetype)}</span>
+                        ${item.hasKit ? `<span class="kit-pill">🎁 Kit Ready</span>` : ''}
+                        ${item.hasGate ? `<span class="gate-pill">⏳ ${escapeHtml(item.gateText || 'Time-Gated')}</span>` : ''}
+                        <div class="sub-card-actions">
+                          <button type="button" class="btn-sub-jump" onclick="jumpToPlanner(${subId})" title="Plan Session">⏱ Plan</button>
+                          <button type="button" class="btn-sub-jump" onclick="jumpToArbitrage(${subId})" title="Buy vs Craft">⚖ Arbitrage</button>
+                          <button type="button" class="btn-sub-jump" onclick="jumpToPrereqs(${subId})" title="Prerequisite Audit">📜 Prereqs</button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        ` : ''}
-      </div>
+                `;
+              }).join('')}
+            </div>
+          ` : ''}
+        </div>
 
-      <div class="handwritten-marginalia" style="margin-top: 6px;">
-        "The wise arcanist observes all paths before committing the first ingot."
-      </div>
-    `;
+        <div class="handwritten-marginalia" style="margin-top: 6px;">
+          "The wise arcanist observes all paths before committing the first ingot."
+        </div>
+      `;
+    }
 
-    // ── RIGHT PAGE: STRATEGIC ACCELERATION & ACTIONABLE CHECKLIST ────────────
     const checklist = guide.session_checklist && guide.session_checklist.length > 0
       ? guide.session_checklist
       : [
@@ -874,52 +966,52 @@ document.addEventListener("DOMContentLoaded", () => {
       ? boosterRec
       : "⚡ **Speed Analysis & Boosters:** Stack Experience + Heroic + Guild Tavern WvW buff (Gift of Battle in ~4.5h vs 8h). Convert Astral Acclaim into Mystic Clovers from Wizard's Vault to bypass Mystic Forge gambling.";
 
-    rightPageBody.innerHTML = `
-      <div class="runic-header">ᛋ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᚲ ✦ ᛈ ᚨ ᚦ</div>
-      <h3 class="page-title">Strategic Acceleration</h3>
-      <div class="handwritten-subtitle">~ Priority Action Items & Speed Protocol ~</div>
-      <div class="ink-divider">✦</div>
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="runic-header">ᛋ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᚲ ✦ ᛈ ᚨ ᚦ</div>
+        <h3 class="page-title">Strategic Acceleration</h3>
+        <div class="handwritten-subtitle">~ Priority Action Items & Speed Protocol ~</div>
+        <div class="ink-divider">✦</div>
 
-      <!-- Booster & Speed Acceleration Box -->
-      <div class="leaderboard-synergy-box booster-synergy-box">
-        <div class="synergy-box-title">
-          <span class="synergy-icon">⚡</span>
-          <span>Speed Tips & Booster Acceleration</span>
+        <div class="leaderboard-synergy-box booster-synergy-box">
+          <div class="synergy-box-title">
+            <span class="synergy-icon">⚡</span>
+            <span>Speed Tips & Booster Acceleration</span>
+          </div>
+          <div class="synergy-box-content">
+            ${formatTextWithWaypoints(boosterText)}
+          </div>
         </div>
-        <div class="synergy-box-content">
-          ${formatTextWithWaypoints(boosterText)}
-        </div>
-      </div>
 
-      <!-- Actionable Session Checklist -->
-      <div class="journal-section" style="margin-top: 4px;">
-        <h4>Actionable Session Checklist</h4>
-        <div class="leaderboard-checklist">
-          ${checklist.map(step => `
-            <div class="leaderboard-ck-item">
-              <div class="ck-item-top">
-                <span class="ck-step-num">Step ${step.step_number}</span>
-                <span class="ck-step-title"><strong>${escapeHtml(step.title)}</strong></span>
-                <span class="ck-step-time">~${step.estimated_time_minutes}m</span>
-                ${step.game_mode ? `<span class="ck-mode-badge mode-${escapeHtml((step.game_mode||'').toLowerCase())}">[${escapeHtml(step.game_mode)}]</span>` : ''}
-              </div>
-              <div class="ck-item-desc">
-                ${formatTextWithWaypoints(step.description)}
-              </div>
-              ${step.chat_code ? `
-                <div class="ck-item-footer">
-                  <button class="chatcode-stamp ck-wp-btn" onclick="copyChatCode('${step.chat_code}', this, event)" title="Click to copy waypoint">
-                    <span>📍</span> WP: ${escapeHtml(step.chat_code)}
-                  </button>
+        <div class="journal-section" style="margin-top: 4px;">
+          <h4>Actionable Session Checklist</h4>
+          <div class="leaderboard-checklist">
+            ${checklist.map(step => `
+              <div class="leaderboard-ck-item">
+                <div class="ck-item-top">
+                  <span class="ck-step-num">Step ${step.step_number}</span>
+                  <span class="ck-step-title"><strong>${escapeHtml(step.title)}</strong></span>
+                  <span class="ck-step-time">~${step.estimated_time_minutes}m</span>
+                  ${step.game_mode ? `<span class="ck-mode-badge mode-${escapeHtml((step.game_mode||'').toLowerCase())}">[${escapeHtml(step.game_mode)}]</span>` : ''}
                 </div>
-              ` : ''}
-            </div>
-          `).join('')}
+                <div class="ck-item-desc">
+                  ${formatTextWithWaypoints(step.description)}
+                </div>
+                ${step.chat_code ? `
+                  <div class="ck-item-footer">
+                    <button class="chatcode-stamp ck-wp-btn" onclick="copyChatCode('${step.chat_code}', this, event)" title="Click to copy waypoint">
+                      <span>📍</span> WP: ${escapeHtml(step.chat_code)}
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
         </div>
-      </div>
 
-      ${renderMarginaliaTip(guide.motivational_tip || "Archivist Note: Align your daily routines with live currency conversion spikes.")}
-    `;
+        ${renderMarginaliaTip(guide.motivational_tip || "Archivist Note: Align your daily routines with live currency conversion spikes.")}
+      `;
+    }
   }
 
   function renderRecipeSpread(guide) {
@@ -931,47 +1023,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = `${qty}${guide.goal_name}`;
     const chatCode = guide.chat_code || "[&AgErZgAA]";
 
-    leftPageBody.innerHTML = `
-      <div class="gw2-legendary-banner">
-        <div class="gw2-banner-header">
-          <div class="legendary-icon-frame">◈</div>
-          <div class="legendary-title-block">
-            <div class="legendary-title-text">${escapeHtml(name)}</div>
-            <div class="legendary-type-subtitle">Legendary Progression Itinerary</div>
+    if (leftPageBody) {
+      leftPageBody.innerHTML = `
+        <div class="gw2-legendary-banner">
+          <div class="gw2-banner-header">
+            <div class="legendary-icon-frame">◈</div>
+            <div class="legendary-title-block">
+              <div class="legendary-title-text">${escapeHtml(name)}</div>
+              <div class="legendary-type-subtitle">Legendary Progression Itinerary</div>
+            </div>
+            <button class="chatcode-stamp" onclick="copyChatCode('${chatCode}', this, event)" title="Copy Chat Code">
+              ${escapeHtml(chatCode)}
+            </button>
           </div>
-          <button class="chatcode-stamp" onclick="copyChatCode('${chatCode}', this, event)" title="Copy Chat Code">
-            ${escapeHtml(chatCode)}
-          </button>
+          <div class="legendary-lore-quote">
+            "${escapeHtml(guide.executive_summary || 'An artifact of tremendous power.')}"
+          </div>
+          <div class="readiness-meter-row">
+            <span>Account Readiness:</span>
+            <span class="readiness-pct">${guide.readiness_percentage}%</span>
+          </div>
+          <div class="recipe-jump-bar">
+            <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${guide.goal_item_id || 30704})">⏱ Plan Session</button>
+            <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${guide.goal_item_id || 30704})">⚖ Arbitrage Matrix</button>
+            <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${guide.goal_item_id || 30704})">📜 Prerequisite Audit</button>
+          </div>
         </div>
-        <div class="legendary-lore-quote">
-          "${escapeHtml(guide.executive_summary || 'An artifact of tremendous power.')}"
-        </div>
-        <div class="readiness-meter-row">
-          <span>Account Readiness:</span>
-          <span class="readiness-pct">${guide.readiness_percentage}%</span>
-        </div>
-        <div class="recipe-jump-bar">
-          <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${guide.goal_item_id || 30704})">⏱ Plan Session</button>
-          <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${guide.goal_item_id || 30704})">⚖ Arbitrage Matrix</button>
-          <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${guide.goal_item_id || 30704})">📜 Prerequisite Audit</button>
-        </div>
-      </div>
 
-      ${renderRecommendationsSection(guide.strategic_recommendations)}
-      ${renderRoadmapSection(guide.master_roadmap_phases)}
-    `;
+        ${renderRecommendationsSection(guide.strategic_recommendations)}
+        ${renderRoadmapSection(guide.master_roadmap_phases)}
+      `;
+    }
 
-    rightPageBody.innerHTML = `
-      <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
-      <h3 class="page-title">Actionable Itinerary</h3>
-      <div class="handwritten-subtitle">~ Master Crafter's Notes ~</div>
-      <div class="ink-divider">✦</div>
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
+        <h3 class="page-title">Actionable Itinerary</h3>
+        <div class="handwritten-subtitle">~ Master Crafter's Notes ~</div>
+        <div class="ink-divider">✦</div>
 
-      ${renderMysticForgeSockets(guide.missing_materials_summary)}
-      ${renderChecklistSection(guide.session_checklist)}
-      ${renderMaterialsSection(guide.missing_materials_summary)}
-      ${renderMarginaliaTip(guide.motivational_tip)}
-    `;
+        ${renderMysticForgeSockets(guide.missing_materials_summary)}
+        ${renderChecklistSection(guide.session_checklist)}
+        ${renderMaterialsSection(guide.missing_materials_summary)}
+        ${renderMarginaliaTip(guide.motivational_tip)}
+      `;
+    }
   }
   window.renderRecipeSpread = renderRecipeSpread;
   window.isComparativeRanking = isComparativeRanking;
@@ -1060,7 +1156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  /* ── CHAPTER II: SESSION PLANNER ─────────────────────────────────────────── */
+  // ── CHAPTER II: SESSION PLANNER ─────────────────────────────────────────────
   function renderGoalSelectOptions(selectedId) {
     return LEGENDARY_PRESETS.map(p => 
       `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${escapeHtml(p.name)} (${p.type})</option>`
@@ -1088,52 +1184,56 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderSessionPlannerSpread() {
     const goalOptions = renderGoalSelectOptions(plannerGoalId);
 
-    leftPageBody.innerHTML = `
-      <div class="runic-header">ᛟ ᚱ ᛞ ᛖ ᚱ ✦ ᚲ ᛚ ᛟ ᚲ ᚲ</div>
-      <h2 class="page-title">Chapter II: Session Planner</h2>
-      <div class="handwritten-subtitle">~ Knapsack Activity Scheduler ~</div>
-      <div class="ink-divider">✦</div>
+    if (leftPageBody) {
+      leftPageBody.innerHTML = `
+        <div class="runic-header">ᛟ ᚱ ᛞ ᛖ ᚱ ✦ ᚲ ᛚ ᛟ ᚲ ᚲ</div>
+        <h2 class="page-title">Chapter II: Session Planner</h2>
+        <div class="handwritten-subtitle">~ Knapsack Activity Scheduler ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div class="inscribe-form">
-        <label class="inscribe-label" for="planner-goal-select">Target Legendary Goal:</label>
-        <select id="planner-goal-select" class="priory-select">
-          ${goalOptions}
-        </select>
+        <div class="inscribe-form">
+          <label class="inscribe-label" for="planner-goal-select">Target Legendary Goal:</label>
+          <select id="planner-goal-select" class="priory-select">
+            ${goalOptions}
+          </select>
 
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px;">
-          <label class="inscribe-label" for="planner-budget-slider" style="font-size: 1.15rem;">Playtime Budget:</label>
-          <span id="budget-val-display" style="font-family: var(--font-head); font-weight: 700; color: var(--leather-gold); font-size: 1.05rem;">${plannerBudgetMinutes} mins</span>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px;">
+            <label class="inscribe-label" for="planner-budget-slider" style="font-size: 1.15rem;">Playtime Budget:</label>
+            <span id="budget-val-display" style="font-family: var(--font-head); font-weight: 700; color: var(--leather-gold); font-size: 1.05rem;">${plannerBudgetMinutes} mins</span>
+          </div>
+          <input type="range" id="planner-budget-slider" min="30" max="120" step="30" value="${plannerBudgetMinutes}" class="priory-slider">
+          
+          <div class="playtime-quick-btns">
+            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 30 ? 'active' : ''}" data-mins="30">30m</button>
+            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 60 ? 'active' : ''}" data-mins="60">60m</button>
+            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 90 ? 'active' : ''}" data-mins="90">90m</button>
+            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 120 ? 'active' : ''}" data-mins="120">120m</button>
+          </div>
+
+          <button type="button" class="btn-forge-inscribe" id="btn-calc-itinerary" style="margin-top: 10px;">
+            <span id="btn-itinerary-text">${plannerLoading ? 'Computing Knapsack Schedule...' : 'Schedule Optimal Itinerary'}</span>
+            <span id="btn-itinerary-spinner" class="spinner-ink ${plannerLoading ? '' : 'hidden'}"></span>
+          </button>
         </div>
-        <input type="range" id="planner-budget-slider" min="30" max="120" step="30" value="${plannerBudgetMinutes}" class="priory-slider">
-        
-        <div class="playtime-quick-btns">
-          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 30 ? 'active' : ''}" data-mins="30">30m</button>
-          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 60 ? 'active' : ''}" data-mins="60">60m</button>
-          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 90 ? 'active' : ''}" data-mins="90">90m</button>
-          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 120 ? 'active' : ''}" data-mins="120">120m</button>
+
+        <div id="planner-summary-container" style="margin-top: 10px;">
+          ${renderPlannerSummaryBox()}
         </div>
+      `;
+    }
 
-        <button type="button" class="btn-forge-inscribe" id="btn-calc-itinerary" style="margin-top: 10px;">
-          <span id="btn-itinerary-text">${plannerLoading ? 'Computing Knapsack Schedule...' : 'Schedule Optimal Itinerary'}</span>
-          <span id="btn-itinerary-spinner" class="spinner-ink ${plannerLoading ? '' : 'hidden'}"></span>
-        </button>
-      </div>
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="runic-header">ᚱ ᛟ ᚢ ᛏ ᛖ ✦ ᛏ ᚨ ᛊ ᚲ ᛊ</div>
+        <h3 class="page-title">Prioritized Tasks</h3>
+        <div class="handwritten-subtitle">~ Logical Waypoint Route ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div id="planner-summary-container" style="margin-top: 10px;">
-        ${renderPlannerSummaryBox()}
-      </div>
-    `;
-
-    rightPageBody.innerHTML = `
-      <div class="runic-header">ᚱ ᛟ ᚢ ᛏ ᛖ ✦ ᛏ ᚨ ᛊ ᚲ ᛊ</div>
-      <h3 class="page-title">Prioritized Tasks</h3>
-      <div class="handwritten-subtitle">~ Logical Waypoint Route ~</div>
-      <div class="ink-divider">✦</div>
-
-      <div id="planner-tasks-container">
-        ${renderPlannerTasksList()}
-      </div>
-    `;
+        <div id="planner-tasks-container">
+          ${renderPlannerTasksList()}
+        </div>
+      `;
+    }
 
     const goalSelect = document.getElementById("planner-goal-select");
     if (goalSelect) {
@@ -1282,42 +1382,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* ── CHAPTER III: BUY VS CRAFT ARBITRAGE ─────────────────────────────────── */
+  // ── CHAPTER III: BUY VS CRAFT ARBITRAGE ─────────────────────────────────────
   function renderArbitrageSpread() {
     const goalOptions = renderGoalSelectOptions(arbitrageGoalId);
 
-    leftPageBody.innerHTML = `
-      <div class="runic-header">ᚷ ᛟ ᛚ ᛞ ✦ ᛏ ᚨ ᛪ ✦ ᛗ ᚨ ᛏ</div>
-      <h2 class="page-title">Chapter III: Arbitrage Matrix</h2>
-      <div class="handwritten-subtitle">~ Buy vs Craft vs Vault ~</div>
-      <div class="ink-divider">✦</div>
+    if (leftPageBody) {
+      leftPageBody.innerHTML = `
+        <div class="runic-header">ᚷ ᛟ ᛚ ᛞ ✦ ᛏ ᚨ ᛪ ✦ ᛗ ᚨ ᛏ</div>
+        <h2 class="page-title">Chapter III: Arbitrage Matrix</h2>
+        <div class="handwritten-subtitle">~ Buy vs Craft vs Vault ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div class="inscribe-form">
-        <label class="inscribe-label" for="arbitrage-goal-select">Analyze Legendary Item:</label>
-        <select id="arbitrage-goal-select" class="priory-select">
-          ${goalOptions}
-        </select>
-        <button type="button" class="btn-forge-inscribe" id="btn-run-arbitrage" style="margin-top: 6px;">
-          <span id="btn-arb-text">${arbitrageLoading ? 'Evaluating Arbitrage Matrix...' : 'Evaluate Multi-Way Arbitrage'}</span>
-          <span id="btn-arb-spinner" class="spinner-ink ${arbitrageLoading ? '' : 'hidden'}"></span>
-        </button>
-      </div>
+        <div class="inscribe-form">
+          <label class="inscribe-label" for="arbitrage-goal-select">Analyze Legendary Item:</label>
+          <select id="arbitrage-goal-select" class="priory-select">
+            ${goalOptions}
+          </select>
+          <button type="button" class="btn-forge-inscribe" id="btn-run-arbitrage" style="margin-top: 6px;">
+            <span id="btn-arb-text">${arbitrageLoading ? 'Evaluating Arbitrage Matrix...' : 'Evaluate Multi-Way Arbitrage'}</span>
+            <span id="btn-arb-spinner" class="spinner-ink ${arbitrageLoading ? '' : 'hidden'}"></span>
+          </button>
+        </div>
 
-      <div id="arbitrage-left-results" style="margin-top: 10px;">
-        ${renderArbitrageLeftContent()}
-      </div>
-    `;
+        <div id="arbitrage-left-results" style="margin-top: 10px;">
+          ${renderArbitrageLeftContent()}
+        </div>
+      `;
+    }
 
-    rightPageBody.innerHTML = `
-      <div class="runic-header">ᛊ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᛖ ᛊ</div>
-      <h3 class="page-title">Component Paths & Costs</h3>
-      <div class="handwritten-subtitle">~ Precursor, Clovers & Opportunity Cost ~</div>
-      <div class="ink-divider">✦</div>
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="runic-header">ᛊ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᛖ ᛊ</div>
+        <h3 class="page-title">Component Paths & Costs</h3>
+        <div class="handwritten-subtitle">~ Precursor, Clovers & Opportunity Cost ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div id="arbitrage-right-results">
-        ${renderArbitrageRightContent()}
-      </div>
-    `;
+        <div id="arbitrage-right-results">
+          ${renderArbitrageRightContent()}
+        </div>
+      `;
+    }
 
     const goalSelect = document.getElementById("arbitrage-goal-select");
     if (goalSelect) {
@@ -1576,42 +1680,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* ── CHAPTER IV: PREREQUISITE AUDIT ───────────────────────────────────────── */
+  // ── CHAPTER IV: PREREQUISITE AUDIT ──────────────────────────────────────────
   function renderPrerequisitesSpread() {
     const goalOptions = renderGoalSelectOptions(prereqGoalId);
 
-    leftPageBody.innerHTML = `
-      <div class="runic-header">ᚨ ᚢ ᛞ ᛁ ᛏ ✦ ᚱ ᛖ ᚨ ᛞ ᛁ</div>
-      <h2 class="page-title">Chapter IV: Prerequisite Audit</h2>
-      <div class="handwritten-subtitle">~ Masteries, Crafting & Collections ~</div>
-      <div class="ink-divider">✦</div>
+    if (leftPageBody) {
+      leftPageBody.innerHTML = `
+        <div class="runic-header">ᚨ ᚢ ᛞ ᛁ ᛏ ✦ ᚱ ᛖ ᚨ ᛞ ᛁ</div>
+        <h2 class="page-title">Chapter IV: Prerequisite Audit</h2>
+        <div class="handwritten-subtitle">~ Masteries, Crafting & Collections ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div class="inscribe-form">
-        <label class="inscribe-label" for="prereq-goal-select">Audit Account for Legendary:</label>
-        <select id="prereq-goal-select" class="priory-select">
-          ${goalOptions}
-        </select>
-        <button type="button" class="btn-forge-inscribe" id="btn-run-prereqs" style="margin-top: 6px;">
-          <span id="btn-prereq-text">${prereqLoading ? 'Auditing Account Readiness...' : 'Audit Account Prerequisites'}</span>
-          <span id="btn-prereq-spinner" class="spinner-ink ${prereqLoading ? '' : 'hidden'}"></span>
-        </button>
-      </div>
+        <div class="inscribe-form">
+          <label class="inscribe-label" for="prereq-goal-select">Audit Account for Legendary:</label>
+          <select id="prereq-goal-select" class="priory-select">
+            ${goalOptions}
+          </select>
+          <button type="button" class="btn-forge-inscribe" id="btn-run-prereqs" style="margin-top: 6px;">
+            <span id="btn-prereq-text">${prereqLoading ? 'Auditing Account Readiness...' : 'Audit Account Prerequisites'}</span>
+            <span id="btn-prereq-spinner" class="spinner-ink ${prereqLoading ? '' : 'hidden'}"></span>
+          </button>
+        </div>
 
-      <div id="prereq-left-results" style="margin-top: 10px;">
-        ${renderPrereqLeftContent()}
-      </div>
-    `;
+        <div id="prereq-left-results" style="margin-top: 10px;">
+          ${renderPrereqLeftContent()}
+        </div>
+      `;
+    }
 
-    rightPageBody.innerHTML = `
-      <div class="runic-header">ᛒ ᛚ ᛟ ᚲ ᚲ ᛖ ᚱ ᛊ ✦ ᚱ ᛟ ᚢ ᛏ ᛖ</div>
-      <h3 class="page-title">Discipline Routing & Blockers</h3>
-      <div class="handwritten-subtitle">~ Zero-Fee Character Assignments ~</div>
-      <div class="ink-divider">✦</div>
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="runic-header">ᛒ ᛚ ᛟ ᚲ ᚲ ᛖ ᚱ ᛊ ✦ ᚱ ᛟ ᚢ ᛏ ᛖ</div>
+        <h3 class="page-title">Discipline Routing & Blockers</h3>
+        <div class="handwritten-subtitle">~ Zero-Fee Character Assignments ~</div>
+        <div class="ink-divider">✦</div>
 
-      <div id="prereq-right-results">
-        ${renderPrereqRightContent()}
-      </div>
-    `;
+        <div id="prereq-right-results">
+          ${renderPrereqRightContent()}
+        </div>
+      `;
+    }
 
     const goalSelect = document.getElementById("prereq-goal-select");
     if (goalSelect) {
@@ -1774,36 +1882,42 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function turnPageTo(targetIndex, direction = "forward") {
-    if (targetIndex === currentSpreadIndex) return;
-    isFlipping = true;
-    document.body.classList.add('no-select');
-    playSound('sfx-page-turn');
+  async function executeFetchPrerequisites(goalId) {
+    prereqLoading = true;
+    const btnText = document.getElementById("btn-prereq-text");
+    const btnSpinner = document.getElementById("btn-prereq-spinner");
+    if (btnText) btnText.textContent = "Auditing Account Readiness...";
+    if (btnSpinner) btnSpinner.classList.remove("hidden");
 
-    bookAura.classList.add("casting");
+    const leftCont = document.getElementById("prereq-left-results");
+    if (leftCont) leftCont.innerHTML = renderPrereqLeftContent();
 
-    if (pageLeft) pageLeft.style.boxShadow = "inset -20px 0 30px rgba(0,0,0,0.8)";
-    if (pageRight) pageRight.style.boxShadow = "inset 20px 0 30px rgba(0,0,0,0.8)";
-
-    flipperLeaf.className = `flipper-leaf ${direction === "forward" ? "flipping-forward" : "flipping-backward"}`;
-    flipperLeaf.classList.remove("hidden");
-
-    setTimeout(() => {
-      currentSpreadIndex = targetIndex;
-      renderCurrentSpread();
-    }, 420);
-
-    setTimeout(() => {
-      flipperLeaf.className = "flipper-leaf hidden";
-      bookAura.classList.remove("casting");
-      isFlipping = false;
-      document.body.classList.remove('no-select');
-      
-      if (pageLeft) pageLeft.style.boxShadow = "";
-      if (pageRight) pageRight.style.boxShadow = "";
-    }, 850);
+    try {
+      const res = await fetch("/api/solver/prerequisites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal_item_id: goalId })
+      });
+      const data = await res.json();
+      if (data.success && data.prerequisites) {
+        prereqData = data.prerequisites;
+        if (leftCont) leftCont.innerHTML = renderPrereqLeftContent();
+        const rightCont = document.getElementById("prereq-right-results");
+        if (rightCont) rightCont.innerHTML = renderPrereqRightContent();
+      } else {
+        alert(data.error || "Failed to audit prerequisites.");
+      }
+    } catch (e) {
+      console.error("Prerequisites audit error:", e);
+    } finally {
+      prereqLoading = false;
+      if (btnText) btnText.textContent = "Audit Account Prerequisites";
+      if (btnSpinner) btnSpinner.classList.add("hidden");
+      if (leftCont && !prereqData) leftCont.innerHTML = renderPrereqLeftContent();
+    }
   }
 
+  // ── CHAPTER I: QUERY SUBMISSION ─────────────────────────────────────────────
   async function executeNewQuery(query) {
     const btnSubmit = document.getElementById("btn-forge-submit");
     const btnText = document.getElementById("btn-forge-text");
@@ -1811,11 +1925,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnSubmit) {
       btnSubmit.disabled = true;
-      btnText.classList.add("hidden");
-      btnSpinner.classList.remove("hidden");
+      if (btnText) btnText.classList.add("hidden");
+      if (btnSpinner) btnSpinner.classList.remove("hidden");
     }
 
-    bookAura.classList.add("casting");
+    if (bookAura) {
+      bookAura.classList.add("casting");
+    }
 
     try {
       const res = await fetch("/api/query", {
@@ -1844,13 +1960,16 @@ document.addEventListener("DOMContentLoaded", () => {
     } finally {
       if (btnSubmit) {
         btnSubmit.disabled = false;
-        btnText.classList.remove("hidden");
-        btnSpinner.classList.add("hidden");
+        if (btnText) btnText.classList.remove("hidden");
+        if (btnSpinner) btnSpinner.classList.add("hidden");
       }
-      bookAura.classList.remove("casting");
+      if (bookAura) {
+        bookAura.classList.remove("casting");
+      }
     }
   }
 
+  // ── Formatting & Chat Code Copy Helpers ─────────────────────────────────────
   function formatTextWithWaypoints(text) {
     if (!text) return "";
     let s = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -1871,7 +1990,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.copyChatCode = (code, el, e) => {
-    navigator.clipboard.writeText(code);
+    if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).catch(() => {});
+    }
     
     const clickX = e ? e.clientX : window.innerWidth / 2;
     const clickY = e ? e.clientY : window.innerHeight / 2;
@@ -1890,28 +2011,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 800);
   };
 
-  function initMouseParallax() {
-    scene.addEventListener("mousemove", (e) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = (e.clientX - cx) / cx;
-      const dy = (e.clientY - cy) / cy;
-      const rotY = dx * 4;
-      const rotX = 6 - dy * 3.5;
-      tome.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-
-      document.querySelectorAll('.desk-prop').forEach(prop => {
-        const propDx = dx * cx * 0.3;
-        const propDy = dy * cy * 0.3;
-        prop.style.transform = `translate(${propDx}px, ${propDy}px)`;
-      });
-    });
-  }
-
+  // ── Ambient Arcane Canvas Particles ────────────────────────────────────────
   function initParticles() {
     const c = document.getElementById("particles");
-    if (!c) return;
+    if (!c || typeof c.getContext !== "function") return;
     const ctx = c.getContext("2d");
+    if (!ctx) return;
     let W, H;
     function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
     resize();
@@ -1972,12 +2077,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillStyle = `rgba(${d.color[0]},${d.color[1]},${d.color[2]},${d.a})`;
         ctx.fill();
       }
-      requestAnimationFrame(frame);
+      if (typeof requestAnimationFrame === "function") {
+        requestAnimationFrame(frame);
+      }
     })();
   }
   
+  // ── Tooltip Delegation ──────────────────────────────────────────────────────
   function initTooltipDelegation() {
-    if(!gw2Tooltip) {
+    if (!gw2Tooltip) {
       const tt = document.createElement('div');
       tt.id = "gw2-tooltip";
       tt.style.position = "absolute";
@@ -1997,9 +2105,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     document.addEventListener("mouseenter", (e) => {
       const el = e.target;
-      if(el && el.classList && el.classList.contains("has-tooltip")) {
+      if (el && el.classList && el.classList.contains("has-tooltip")) {
         const dataStr = el.getAttribute("data-tooltip");
-        if(dataStr) {
+        if (dataStr) {
           try {
             const data = JSON.parse(dataStr);
             showGw2Tooltip(el, data, e);
@@ -2010,13 +2118,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     document.addEventListener("mousemove", (e) => {
       const el = e.target;
-      if(el && el.classList && el.classList.contains("has-tooltip")) {
-        if(gw2Tooltip && gw2Tooltip.style.display !== "none") {
+      if (el && el.classList && el.classList.contains("has-tooltip")) {
+        if (gw2Tooltip && gw2Tooltip.style.display !== "none") {
           let x = e.clientX + 15;
           let y = e.clientY + 10;
           const rect = gw2Tooltip.getBoundingClientRect();
-          if(x + rect.width > window.innerWidth) x = window.innerWidth - rect.width - 10;
-          if(y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 10;
+          if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width - 10;
+          if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 10;
           gw2Tooltip.style.left = x + "px";
           gw2Tooltip.style.top = y + "px";
         }
@@ -2025,14 +2133,14 @@ document.addEventListener("DOMContentLoaded", () => {
     
     document.addEventListener("mouseleave", (e) => {
       const el = e.target;
-      if(el && el.classList && el.classList.contains("has-tooltip")) {
-        if(gw2Tooltip) gw2Tooltip.style.display = "none";
+      if (el && el.classList && el.classList.contains("has-tooltip")) {
+        if (gw2Tooltip) gw2Tooltip.style.display = "none";
       }
     }, true);
   }
 
   function showGw2Tooltip(el, data, e) {
-    if(!gw2Tooltip) return;
+    if (!gw2Tooltip) return;
     
     const colorMap = {
       'legendary': '#8a2be2',
@@ -2058,12 +2166,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let x = e.clientX + 15;
     let y = e.clientY + 10;
-    
-    // Quick layout application for bounds checking
-    let xStr = x + "px";
-    let yStr = y + "px";
-    gw2Tooltip.style.left = xStr;
-    gw2Tooltip.style.top = yStr;
+    gw2Tooltip.style.left = x + "px";
+    gw2Tooltip.style.top = y + "px";
   }
 
 });
