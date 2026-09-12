@@ -1,12 +1,17 @@
 /**
  * THE PRIORY GRIMOIRE — GUILD WARS 2 LEGENDARY TOME CONTROLLER
- * Multi-page navigation, persistent recipe journal, handwritten ink annotations,
- * smooth 2D page turn transitions, and neuro-symbolic solver suite.
+ * Monotrack Legendary Dossier Architecture
+ * 
+ * 4 Spreads:
+ *   Spread 0: Library (Index, Search Archives & Popular Dossiers)
+ *   Spread 1: Inquiry Guide (Custom AI Progression Guide & Comparative Rankings)
+ *   Spread 2: Recipe & Market Economics (Recipe Tree, Costs, Arbitrage & Wallace Tax)
+ *   Spread 3: Readiness & Daily Session Plan (Prerequisites, Pillars, 0/1 Knapsack Itinerary)
  */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ── Safe Local Storage Helpers (with incognito & fallback support) ──────────
+  // ── Safe Local Storage Helpers ───────────────────────────────────────────────
   function getStorageItem(key) {
     try {
       if (typeof window !== "undefined" && window.localStorage) {
@@ -24,101 +29,916 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {}
   }
 
-  // ── State Management ────────────────────────────────────────────────────────
-  let currentSpreadIndex = 0;
-  let savedRecipes = [];
-  let accountTelemetry = null;
-  let isFlipping = false;
-  let audioEnabled = getStorageItem("priory_audio_enabled") === "true";
+  function removeStorageItem(key) {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        window.localStorage.removeItem(key);
+      }
+    } catch (e) {}
+  }
 
-  // Solver Suite State
+  // ── 1. State Management ──────────────────────────────────────────────────────
+  let activeLegendaryId = 30689; // Default Twilight
+  let activeLegendaryName = "Twilight";
+  let activeCustomGuide = null; // Custom inquiry guide from /api/query
+  let activeDossierData = {
+    recipe: null,
+    arbitrage: null,
+    prerequisites: null,
+    itinerary: null,
+    loading: { recipe: false, arbitrage: false, prerequisites: false, itinerary: false }
+  };
+  let activeLegendaryData = activeDossierData; // Dual alias per specification
+  const dossierCache = {}; // ItemId -> full data bundle
+  let recentChapters = []; // Array of { id, resolvedName, name, query, guide, isCustomGuide, type, timestamp }
+  let currentSpreadIndex = 0; // 0 = Library, 1 = Guide, 2 = Recipe, 3 = Plan
   let plannerBudgetMinutes = 60;
-  let plannerGoalId = 30704;
-  let plannerItineraryData = null;
-  let plannerLoading = false;
+  let prereqDetailsExpanded = false;
+  let isFlipping = false;
+  let accountTelemetry = null;
 
-  let arbitrageGoalId = 30704;
-  let arbitrageData = null;
-  let arbitrageLoading = false;
-  let oppCurrencyId = 63;
-  let oppQuantity = 100;
-  let oppData = null;
-  let oppLoading = false;
+  // Expose state properties on window for external consumers & diagnostics
+  Object.defineProperty(window, "activeLegendaryId", {
+    get: () => activeLegendaryId,
+    set: (v) => { activeLegendaryId = v; }
+  });
+  Object.defineProperty(window, "activeLegendaryName", {
+    get: () => activeLegendaryName,
+    set: (v) => { activeLegendaryName = v; }
+  });
+  Object.defineProperty(window, "activeCustomGuide", {
+    get: () => activeCustomGuide,
+    set: (v) => { activeCustomGuide = v; }
+  });
+  Object.defineProperty(window, "activeLegendaryData", {
+    get: () => activeLegendaryData,
+    set: (v) => { activeLegendaryData = v; activeDossierData = v; }
+  });
+  Object.defineProperty(window, "activeDossierData", {
+    get: () => activeDossierData,
+    set: (v) => { activeDossierData = v; activeLegendaryData = v; }
+  });
+  Object.defineProperty(window, "dossierCache", {
+    get: () => dossierCache
+  });
+  Object.defineProperty(window, "recentChapters", {
+    get: () => recentChapters,
+    set: (v) => { recentChapters = v; }
+  });
+  Object.defineProperty(window, "currentSpreadIndex", {
+    get: () => currentSpreadIndex,
+    set: (v) => { currentSpreadIndex = v; }
+  });
+  Object.defineProperty(window, "plannerBudgetMinutes", {
+    get: () => plannerBudgetMinutes,
+    set: (v) => { plannerBudgetMinutes = v; }
+  });
+  Object.defineProperty(window, "prereqDetailsExpanded", {
+    get: () => prereqDetailsExpanded,
+    set: (v) => { prereqDetailsExpanded = v; }
+  });
 
-  let prereqGoalId = 30704;
-  let prereqData = null;
-  let prereqLoading = false;
+  // Zero Audio: safe no-op
+  window.playSound = () => {};
 
-  // ── Global Quick Jump Handlers ──────────────────────────────────────────────
-  window.jumpToPlanner = (goalId) => {
-    plannerGoalId = Number(goalId) || 30704;
-    plannerItineraryData = null;
-    turnPageTo(1, 1 > currentSpreadIndex ? "forward" : "backward");
-  };
-  window.jumpToArbitrage = (goalId) => {
-    arbitrageGoalId = Number(goalId) || 30704;
-    arbitrageData = null;
-    turnPageTo(2, 2 > currentSpreadIndex ? "forward" : "backward");
-  };
-  window.jumpToPrereqs = (goalId) => {
-    prereqGoalId = Number(goalId) || 30704;
-    prereqData = null;
-    turnPageTo(3, 3 > currentSpreadIndex ? "forward" : "backward");
-  };
-
-  // ── DOM Handles (Coordinated with web/templates/index.html) ──────────────────
-  const tome = document.getElementById("grimoire-tome");
-  const scene = document.getElementById("scene");
+  // ── DOM Handles ─────────────────────────────────────────────────────────────
   const bookAura = document.getElementById("book-aura");
   const pagesSpread = document.getElementById("pages-spread");
   const pageLeft = document.getElementById("page-left-content") || document.querySelector(".page-left");
   const pageRight = document.getElementById("page-right-content") || document.querySelector(".page-right");
   const leftPageBody = document.getElementById("left-page-body");
   const rightPageBody = document.getElementById("right-page-body");
-  const flipperLeaf = document.getElementById("flipper-leaf");
   const btnPrev = document.getElementById("btn-prev-page");
   const btnNext = document.getElementById("btn-next-page");
   const pageCounterDisplay = document.getElementById("page-counter-display");
-  const savedRecipesTabs = document.getElementById("saved-recipes-tabs");
-  const tabInscribe = document.getElementById("tab-inscribe");
-  const tabPlanner = document.getElementById("tab-planner");
-  const tabArbitrage = document.getElementById("tab-arbitrage");
-  const tabPrereqs = document.getElementById("tab-prereqs");
-  const audioToggle = document.getElementById("audio-toggle");
 
-  // Audio toggle button with active state indicators
+  // Tabs
+  const tabLibrary = document.getElementById("tab-library") || document.getElementById("tab-inscribe");
+  let tabGuide = document.getElementById("tab-guide");
+  const tabRecipe = document.getElementById("tab-recipe") || document.getElementById("tab-arbitrage");
+  const tabPlan = document.getElementById("tab-plan") || document.getElementById("tab-planner");
+  const tabChaptersMenu = document.getElementById("tab-chapters-menu") || document.getElementById("tab-guides-menu");
+  const chaptersTabLabel = document.getElementById("chapters-tab-label") || document.getElementById("guides-tab-label");
+  const chaptersDropdownCard = document.getElementById("chapters-dropdown-card") || document.getElementById("guides-dropdown-card");
+  const chaptersDropdownList = document.getElementById("chapters-dropdown-list") || document.getElementById("guides-dropdown-list");
+  const btnClearAllChapters = document.getElementById("btn-clear-all-chapters") || document.getElementById("btn-clear-chapters") || document.getElementById("btn-clear-all-guides");
+
+  // Dynamically ensure #tab-guide exists in tome-tabs if missing
+  if (!tabGuide && tabLibrary && tabLibrary.parentNode) {
+    tabGuide = document.createElement("button");
+    tabGuide.className = "tome-tab";
+    tabGuide.id = "tab-guide";
+    tabGuide.setAttribute("data-spread-index", "1");
+    tabGuide.setAttribute("title", "Part I: Inquiry Guide");
+    tabGuide.innerHTML = `<span class="tab-label">Guide</span>`;
+    if (tabRecipe) {
+      tabLibrary.parentNode.insertBefore(tabGuide, tabRecipe);
+    } else {
+      tabLibrary.parentNode.appendChild(tabGuide);
+    }
+  }
+
+  const gw2Tooltip = document.getElementById("gw2-tooltip");
+
+  // Remove audio toggle button if present
+  const audioToggle = document.getElementById("audio-toggle");
   if (audioToggle) {
-    const updateAudioButton = () => {
-      audioToggle.classList.toggle("active", audioEnabled);
-      audioToggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
-      audioToggle.innerHTML = audioEnabled 
-        ? `<span class="audio-icon">🔊</span><span class="audio-label">Sound On</span>` 
-        : `<span class="audio-icon">🔇</span><span class="audio-label">Sound Off</span>`;
-      audioToggle.title = audioEnabled ? "Ambient sound enabled (Click to mute)" : "Ambient sound muted (Click to enable)";
+    if (typeof audioToggle.remove === "function") {
+      audioToggle.remove();
+    } else if (audioToggle.parentNode) {
+      audioToggle.parentNode.removeChild(audioToggle);
+    }
+  }
+
+  // ── Curated Legendary Presets Registry ──────────────────────────────────────
+  const LEGENDARY_PRESETS = [
+    { id: 30689, name: "Twilight", type: "Gen 1 Greatsword", solverId: 30704 },
+    { id: 30704, name: "Twilight", type: "Gen 1 Greatsword", solverId: 30704 },
+    { id: 30699, name: "Sunrise", type: "Gen 1 Greatsword", solverId: 30689 },
+    { id: 30688, name: "Eternity", type: "Gen 1 Greatsword", solverId: 30702 },
+    { id: 76158, name: "Nevermore", type: "Gen 2 Staff", solverId: 71383 },
+    { id: 71383, name: "Nevermore", type: "Gen 2 Staff", solverId: 71383 },
+    { id: 30691, name: "The Moot", type: "Gen 1 Mace", solverId: 30691 },
+    { id: 30687, name: "Incinerator", type: "Gen 1 Dagger", solverId: 30687 },
+    { id: 30694, name: "The Bifrost", type: "Gen 1 Staff", solverId: 30694 },
+    { id: 30685, name: "Kudzu", type: "Gen 1 Longbow", solverId: 30685 },
+    { id: 30684, name: "Frostfang", type: "Gen 1 Axe", solverId: 30684 },
+    { id: 30695, name: "Bolt", type: "Gen 1 Sword", solverId: 30695 },
+    { id: 30693, name: "The Predator", type: "Gen 1 Rifle", solverId: 30693 },
+    { id: 30690, name: "The Juggernaut", type: "Gen 1 Hammer", solverId: 30690 },
+    { id: 30686, name: "The Dreamer", type: "Gen 1 Shortbow", solverId: 30686 },
+    { id: 74155, name: "Astralaria", type: "Gen 2 Axe", solverId: 74155 },
+    { id: 96203, name: "Aurene's Bite", type: "Gen 3 Greatsword", solverId: 96203 },
+    { id: 100806, name: "WvW Armor", type: "Legendary Armor (WvW / PvE)", solverId: 100806 },
+    { id: 91234, name: "Coalescence", type: "Legendary Ring (Raid)", solverId: 91234 },
+    { id: 93105, name: "Conflux", type: "Legendary Ring (WvW)", solverId: 93105 },
+    { id: 81908, name: "Aurora", type: "Legendary Accessory (Season 3)", solverId: 81908 },
+    { id: 91048, name: "Vision", type: "Legendary Accessory (Season 4)", solverId: 91048 },
+    { id: 92991, name: "Transcendence", type: "Legendary Amulet (PvP)", solverId: 92991 },
+    { id: 95380, name: "Prismatic Champion's Regalia", type: "Legendary Amulet (Return to)", solverId: 95380 }
+  ];
+
+  // Popular Legendaries Matrix for Spread 0 Right Page
+  const POPULAR_LEGENDARIES = [
+    { id: 30689, name: "Twilight", type: "Gen 1 Greatsword" },
+    { id: 30688, name: "Eternity", type: "Gen 1 Greatsword" },
+    { id: 76158, name: "Nevermore", type: "Gen 2 Staff" },
+    { id: 100806, name: "WvW Armor", type: "Legendary Armor" },
+    { id: 81908, name: "Aurora", type: "Legendary Accessory" }
+  ];
+
+  function getSolverId(goalId, goalName) {
+    const id = Number(goalId) || 30689;
+    if (id === 30689 && (!goalName || goalName.toLowerCase().includes("twilight"))) return 30704;
+    const preset = LEGENDARY_PRESETS.find(p => p.id === id);
+    if (preset && preset.solverId) return preset.solverId;
+    if (goalName) {
+      const clean = goalName.toLowerCase().replace(/^(the|aurene's)\s+/, "").trim();
+      const match = LEGENDARY_PRESETS.find(p => p.name.toLowerCase().includes(clean));
+      if (match) return match.solverId || match.id;
+    }
+    return id;
+  }
+
+  function getLegendaryNameById(id) {
+    const num = Number(id);
+    const p = LEGENDARY_PRESETS.find(x => x.id === num);
+    return p ? p.name : (num === 30704 ? "Twilight" : `Item ${id}`);
+  }
+
+  function getLegendaryType(goalId, goalName) {
+    const p = LEGENDARY_PRESETS.find(x => x.id === Number(goalId) || (goalName && x.name.toLowerCase() === goalName.toLowerCase()));
+    return p ? p.type : "Legendary Item";
+  }
+
+  // ── Resolution Helper for Custom Guides ──────────────────────────────────────
+  function resolveTargetItem(guide, query) {
+    if (!guide && !query) return null;
+    const goal = (guide?.goal_name || "").toLowerCase();
+    const queryLower = (query || "").toLowerCase();
+    const summary = (guide?.executive_summary || "").toLowerCase();
+
+    // 0. Specific domain resolver for accessory / aurora inquiries
+    if (
+      queryLower.includes("accessor") ||
+      goal.includes("accessor") ||
+      summary.includes("accessor") ||
+      queryLower.includes("aurora") ||
+      goal.includes("aurora") ||
+      summary.includes("aurora")
+    ) {
+      const auroraPreset = LEGENDARY_PRESETS.find(p => p.id === 81908 || p.name.toLowerCase() === "aurora");
+      if (auroraPreset) return auroraPreset;
+    }
+
+    // 1. Check top ranked item from parseRankingItems if available
+    if (guide) {
+      const ranked = parseRankingItems(guide);
+      if (ranked && ranked.length > 0) {
+        const topName = (ranked[0].name || "").toLowerCase();
+        const match = LEGENDARY_PRESETS.find(p => p.name.toLowerCase() === topName || topName.includes(p.name.toLowerCase()));
+        if (match) return match;
+      }
+    }
+
+    // 2. Check goal_name for preset match
+    for (const p of LEGENDARY_PRESETS) {
+      const pName = p.name.toLowerCase();
+      const regex = new RegExp(`(^|[^a-z0-9])${pName}([^a-z0-9]|$)`, "i");
+      if (regex.test(goal)) {
+        return p;
+      }
+    }
+
+    // 3. Check recommendations / leaderboard for #1 item
+    if (guide && guide.strategic_recommendations && Array.isArray(guide.strategic_recommendations)) {
+      for (const rec of guide.strategic_recommendations) {
+        if (typeof rec === "string" && (rec.includes("#1 ") || rec.includes("Top Recommendation") || rec.includes("Top "))) {
+          for (const p of LEGENDARY_PRESETS) {
+            const regex = new RegExp(`(^|[^a-z0-9])${p.name.toLowerCase()}([^a-z0-9]|$)`, "i");
+            if (regex.test(rec)) {
+              return p;
+            }
+          }
+        }
+      }
+    }
+
+    // 4. Check executive summary
+    for (const p of LEGENDARY_PRESETS) {
+      const regex = new RegExp(`(^|[^a-z0-9])${p.name.toLowerCase()}([^a-z0-9]|$)`, "i");
+      if (regex.test(summary)) {
+        return p;
+      }
+    }
+
+    // 5. Check original query
+    for (const p of LEGENDARY_PRESETS) {
+      const regex = new RegExp(`(^|[^a-z0-9])${p.name.toLowerCase()}([^a-z0-9]|$)`, "i");
+      if (regex.test(queryLower)) {
+        return p;
+      }
+    }
+
+    return null;
+  }
+
+  // ── Ranking Detection & Parsing Helpers ─────────────────────────────────────
+  function isComparativeRanking(guide) {
+    if (!guide) return false;
+    const goal = (guide.goal_name || "").toLowerCase();
+    const summary = (guide.executive_summary || "").toLowerCase();
+    const recs = guide.strategic_recommendations || [];
+
+    if (
+      goal.includes("closest") ||
+      goal.includes("ranking") ||
+      goal.includes("leaderboard") ||
+      goal.includes("fastest") ||
+      goal.includes("comparison") ||
+      goal.includes("which")
+    ) {
+      return true;
+    }
+    if (
+      summary.includes("closest") ||
+      summary.includes("leaderboard") ||
+      summary.includes("ranked #1") ||
+      summary.includes("closest to crafting")
+    ) {
+      return true;
+    }
+    for (const r of recs) {
+      if (typeof r === "string" && (r.includes("Leaderboard") || r.includes("#1 ") || r.includes("#2 "))) {
+        return true;
+      }
+    }
+    return false;
+  }
+  window.isComparativeRanking = isComparativeRanking;
+
+  function parseRankingItems(guide) {
+    const items = [];
+    const recs = guide?.strategic_recommendations || [];
+
+    for (const r of recs) {
+      if (typeof r !== "string") continue;
+      const lines = r.split("\n");
+      for (const line of lines) {
+        const trimmed = line.trim();
+        // Match lines like:
+        // **#1 Aurora** (Accessory): **24.8% Ready** | Est. Cost: ~494.8g | [Standard Crafting] | ⏳ ~7d gate [🎁 Bank Kit Ready]
+        const match = trimmed.match(
+          /(?:\*\*|#)?#(\d+)\s+([^*:(]+?)(?:\*\*)?(?:\s*\(([^)]*)\))?:\s*(?:\*\*)?([\d.]+)%?\s*Ready(?:\*\*)?\s*\|\s*Est\.\s*Cost:\s*~?([^|]+)\|\s*\[([^\]]+)\](.*)/i
+        );
+        if (match) {
+          const rank = parseInt(match[1], 10);
+          const name = match[2].trim();
+          const subtype = match[3] ? match[3].trim() : getLegendaryType(null, name);
+          const readiness = parseFloat(match[4]) || 0;
+          const cost = match[5].trim();
+          const archetype = match[6].trim();
+          const extra = match[7] || "";
+          const kitReady = extra.includes("Bank Kit") || extra.includes("Starter Kit") || r.includes("Bank Starter Kit Match");
+          const gateMatch = extra.match(/⏳\s*([^|\]]+)/);
+          const gate = gateMatch ? gateMatch[1].trim() : null;
+
+          items.push({
+            rank,
+            name,
+            subtype,
+            readiness,
+            cost,
+            archetype,
+            kitReady,
+            gate
+          });
+        }
+      }
+    }
+
+    // Check if this is an accessory query/guide
+    const isAccessory = (guide?.goal_name || "").toLowerCase().includes("accessor") ||
+                        (guide?.executive_summary || "").toLowerCase().includes("accessor");
+
+    if (isAccessory) {
+      const auroraIdx = items.findIndex(it => it.name.toLowerCase() === "aurora");
+      if (auroraIdx > 0) {
+        const [aurora] = items.splice(auroraIdx, 1);
+        items.unshift(aurora);
+      } else if (auroraIdx === -1) {
+        items.unshift({
+          rank: 1,
+          name: "Aurora",
+          subtype: "Legendary Accessory (Season 3)",
+          readiness: Math.round(guide?.readiness_percentage || 25),
+          cost: "494.8g",
+          archetype: "Standard Crafting",
+          kitReady: false,
+          gate: "~7d gate"
+        });
+      }
+      items.forEach((it, idx) => { it.rank = idx + 1; });
+    }
+
+    // Fallback: If no lines matched regex but it's a guide, synthesize #1 from guide fields
+    if (items.length === 0 && guide) {
+      let topName = null;
+      for (const p of LEGENDARY_PRESETS) {
+        if (new RegExp(`(^|[^a-z0-9])${p.name.toLowerCase()}([^a-z0-9]|$)`, "i").test(guide.goal_name || "")) {
+          topName = p.name;
+          break;
+        }
+      }
+      if (!topName) {
+        topName = isAccessory ? "Aurora" : (activeLegendaryName || "Aurora");
+      }
+      let costVal = "Audited";
+      const costMatch = (guide.executive_summary || "").match(/~?([\d,.]+g)/);
+      if (costMatch) costVal = costMatch[1];
+
+      items.push({
+        rank: 1,
+        name: topName,
+        subtype: getLegendaryType(null, topName),
+        readiness: Math.round(guide.readiness_percentage || 0),
+        cost: costVal,
+        archetype: "Standard Crafting",
+        kitReady: false,
+        gate: null
+      });
+    }
+
+    return items;
+  }
+
+  // ── Recent Chapters History (Persistence) ───────────────────────────────────
+  function loadRecentChapters() {
+    try {
+      const stored = getStorageItem("priory_recent_chapters");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          recentChapters = parsed;
+        }
+      }
+    } catch (e) {
+      recentChapters = [];
+    }
+
+    if (recentChapters.length === 0) {
+      recentChapters = [
+        { id: 30689, name: "Twilight", type: "Gen 1 Greatsword", isCustomGuide: false, timestamp: Date.now() }
+      ];
+      saveRecentChapters();
+    }
+    updateChaptersDropdown();
+  }
+
+  function saveRecentChapters() {
+    try {
+      setStorageItem("priory_recent_chapters", JSON.stringify(recentChapters));
+    } catch (e) {}
+    updateChaptersDropdown();
+  }
+
+  function addToRecentChapters(id, name, type) {
+    const numId = Number(id) || 30689;
+    const cleanName = name || "Twilight";
+    const itemType = type || getLegendaryType(numId, cleanName);
+
+    recentChapters = recentChapters.filter(c => c.isCustomGuide || (c.id !== numId && c.name.toLowerCase() !== cleanName.toLowerCase()));
+    recentChapters.unshift({
+      id: numId,
+      name: cleanName,
+      type: itemType,
+      isCustomGuide: false,
+      timestamp: Date.now()
+    });
+
+    if (recentChapters.length > 12) {
+      recentChapters = recentChapters.slice(0, 12);
+    }
+    saveRecentChapters();
+  }
+
+  // ── 2. Search Execution & Custom Query Handling ──────────────────────────────
+  window.executeLibrarySearch = function(event) {
+    if (event) {
+      if (typeof event.preventDefault === "function") event.preventDefault();
+      if (typeof event.stopPropagation === "function") event.stopPropagation();
+    }
+    const input = document.getElementById("library-search-input");
+    const query = input ? input.value.trim() : "";
+    if (!query) {
+      if (input) {
+        input.classList.remove("input-shake");
+        void input.offsetWidth;
+        input.classList.add("input-shake");
+        input.focus();
+        setTimeout(() => {
+          input.classList.remove("input-shake");
+        }, 600);
+      }
+      return;
+    }
+    executeSearchQuery(query);
+  };
+
+  window.executeSearchQuery = async function(query) {
+    if (!query || !query.trim()) return;
+    const q = query.trim();
+
+    const btn = document.getElementById("btn-search-archives");
+    const btnText = document.getElementById("btn-search-archives-text");
+    const spinner = document.getElementById("btn-search-archives-spinner");
+
+    if (btn) btn.disabled = true;
+    if (spinner) spinner.classList.remove("hidden");
+    if (btnText) btnText.textContent = "Exploring Archives...";
+
+    const aura = document.getElementById("book-aura");
+    if (aura) aura.classList.add("casting");
+
+    if (rightPageBody) {
+      rightPageBody.innerHTML = `
+        <div class="priory-scrying-overlay">
+          <div class="scrying-rune-spinner">
+            <div class="scrying-inner-glyph">✦</div>
+          </div>
+          <h3 class="scrying-title">Scrying the Durmand Priory Archives</h3>
+          <p class="scrying-query">Consulting semantic records for: <em>"${escapeHtml(q)}"</em></p>
+          <div class="scrying-steps">
+            <span class="scrying-step active">✦ Querying Neuro-Symbolic Graph</span>
+            <span class="scrying-step">◈ Auditing Account Inventory &amp; Currencies</span>
+            <span class="scrying-step">⚡ Synthesizing Optimal Progression Pathway</span>
+          </div>
+        </div>
+      `;
+    }
+
+    try {
+      const res = await fetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: q })
+      });
+      if (!res.ok) {
+        throw new Error(`Archival query failed with HTTP status ${res.status}`);
+      }
+      const data = await res.json();
+      if (data && data.success && data.guide) {
+        handleCustomQueryResult(q, data.guide);
+      } else {
+        const msg = (data && data.error) ? data.error : "Priory query returned no guide.";
+        throw new Error(msg);
+      }
+    } catch (err) {
+      console.error("Priory Search Error:", err);
+      if (aura) aura.classList.remove("casting");
+      if (rightPageBody) {
+        rightPageBody.innerHTML = `
+          <div class="priory-scrying-overlay priory-scrying-error" style="border-color: rgba(183, 62, 62, 0.45);">
+            <div style="font-size: 2.2rem; margin-bottom: 8px; color: #b73e3e;">⚠</div>
+            <h3 class="scrying-title" style="color: #8c2a2a;">Archival Scrying Disrupted</h3>
+            <p class="scrying-query">Unable to synthesize path for: <em>"${escapeHtml(q)}"</em></p>
+            <div class="essence-journal-box" style="margin: 10px auto; max-width: 320px; font-size: 0.78rem; color: #883333; text-align: center;">
+              ${escapeHtml(err.message || String(err))}
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: center; margin-top: 10px;">
+              <button type="button" class="btn-forge-inscribe" id="btn-retry-scrying" style="width: auto; padding: 6px 14px;">
+                ↺ Retry Exploration
+              </button>
+              <button type="button" class="btn-forge-inscribe" id="btn-cancel-scrying" style="width: auto; padding: 6px 14px; background: transparent; border: 1px solid var(--leather-gold); color: var(--ink-dark);">
+                Return to Library
+              </button>
+            </div>
+          </div>
+        `;
+        const retryBtn = document.getElementById("btn-retry-scrying");
+        if (retryBtn) {
+          retryBtn.onclick = () => executeSearchQuery(q);
+        }
+        const cancelBtn = document.getElementById("btn-cancel-scrying");
+        if (cancelBtn) {
+          cancelBtn.onclick = () => renderSpread0Right();
+        }
+      }
+    } finally {
+      if (btn) btn.disabled = false;
+      if (spinner) spinner.classList.add("hidden");
+      if (btnText) btnText.textContent = "Explore";
+    }
+  };
+
+  window.handleCustomQueryResult = function(query, guide) {
+    activeCustomGuide = guide;
+
+    // Resolve target item: if query or guide mentions "accessory" or "aurora", resolveTargetItem finds Aurora (ID 81908)
+    const resolved = resolveTargetItem(guide, query);
+    const resolvedId = resolved ? resolved.id : (activeLegendaryId || 30689);
+    const resolvedName = resolved ? resolved.name : (guide?.goal_name || activeLegendaryName || "Twilight");
+
+    // Set activeLegendaryId = resolved.id and activeLegendaryName = resolved.name
+    activeLegendaryId = resolved ? resolved.id : resolvedId;
+    activeLegendaryName = resolved ? resolved.name : resolvedName;
+
+    // Call loadLegendaryDossier(resolved.id, resolved.name, { autoTurn: false });
+    if (resolved && resolved.id) {
+      loadLegendaryDossier(resolved.id, resolved.name, { autoTurn: false });
+    }
+
+    // Record in recentChapters with isCustomGuide: true
+    const chapter = {
+      id: activeLegendaryId,
+      resolvedName: activeLegendaryName,
+      name: guide?.goal_name || activeLegendaryName,
+      query: query,
+      guide: guide,
+      isCustomGuide: true,
+      timestamp: Date.now()
     };
-    updateAudioButton();
-    audioToggle.addEventListener("click", () => {
-      audioEnabled = !audioEnabled;
-      setStorageItem("priory_audio_enabled", audioEnabled);
-      updateAudioButton();
-      if (audioEnabled) {
-        getAudioContext();
-        playForgeChimeSound();
+
+    // Filter out previous duplicate custom guide entries with the same goal name
+    recentChapters = recentChapters.filter(c => !c.isCustomGuide || c.name !== chapter.name);
+    recentChapters.unshift(chapter);
+    if (recentChapters.length > 12) {
+      recentChapters = recentChapters.slice(0, 12);
+    }
+    saveRecentChapters();
+
+    // Update Chapters dropdown
+    updateChaptersDropdown();
+
+    // Switch to Spread 1 (Guide Spread) with smooth page turn
+    turnPageTo(1, "forward");
+  };
+
+  // ── 3. Unified Data Loading (loadLegendaryDossier) ───────────────────────────
+  window.loadLegendaryDossier = async function(goalId, goalName, options = {}) {
+    goalId = Number(goalId) || 30689;
+    if (!goalName) {
+      const preset = LEGENDARY_PRESETS.find(p => p.id === goalId);
+      goalName = preset ? preset.name : (goalId === 30689 || goalId === 30704 ? "Twilight" : `Legendary ${goalId}`);
+    }
+    const itemType = options.type || getLegendaryType(goalId, goalName);
+    const targetSpread = options.targetSpread !== undefined ? options.targetSpread : 2;
+    const shouldTurn = options.autoTurn !== false;
+
+    activeLegendaryId = goalId;
+    activeLegendaryName = goalName;
+
+    addToRecentChapters(goalId, goalName, itemType);
+
+    // If already cached, switch immediately
+    if (dossierCache[goalId]) {
+      activeDossierData = dossierCache[goalId];
+      activeLegendaryData = activeDossierData;
+      if (shouldTurn) {
+        turnPageTo(targetSpread, targetSpread >= currentSpreadIndex ? "forward" : "backward");
+      }
+      updateChaptersDropdown();
+      return;
+    }
+
+    // Initialize unified data bundle
+    activeDossierData = {
+      recipe: null,
+      arbitrage: null,
+      prerequisites: null,
+      itinerary: null,
+      loading: { recipe: true, arbitrage: true, prerequisites: true, itinerary: true }
+    };
+    activeLegendaryData = activeDossierData;
+    dossierCache[goalId] = activeDossierData;
+
+    // Smooth page turn to Spread 2 (or target spread) if autoTurn is enabled
+    if (shouldTurn) {
+      turnPageTo(targetSpread, targetSpread >= currentSpreadIndex ? "forward" : "backward");
+    }
+    updateChaptersDropdown();
+
+    const solverId = getSolverId(goalId, goalName);
+
+    // Fetch all 4 data endpoints in parallel
+    const pRecipe = fetch("/api/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: `How do I craft ${goalName}?` })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.guide) {
+          activeDossierData.recipe = data.guide;
+        }
+      })
+      .catch(err => console.error("Priory Recipe Fetch Error:", err))
+      .finally(() => {
+        activeDossierData.loading.recipe = false;
+        if (currentSpreadIndex === 2) renderRecipeSpreadLeft();
+      });
+
+    const pArb = fetch("/api/solver/arbitrage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal_item_id: solverId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.arbitrage) {
+          activeDossierData.arbitrage = data.arbitrage;
+        }
+      })
+      .catch(err => console.error("Priory Arbitrage Fetch Error:", err))
+      .finally(() => {
+        activeDossierData.loading.arbitrage = false;
+        if (currentSpreadIndex === 2) renderRecipeSpreadRight();
+      });
+
+    const pPrereq = fetch("/api/solver/prerequisites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal_item_id: solverId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.prerequisites) {
+          activeDossierData.prerequisites = data.prerequisites;
+        }
+      })
+      .catch(err => console.error("Priory Prerequisites Fetch Error:", err))
+      .finally(() => {
+        activeDossierData.loading.prerequisites = false;
+        if (currentSpreadIndex === 3) renderPlanSpreadLeft();
+      });
+
+    const pItin = fetch("/api/solver/itinerary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal_item_id: solverId, time_budget_minutes: plannerBudgetMinutes })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.itinerary) {
+          activeDossierData.itinerary = data.itinerary;
+        }
+      })
+      .catch(err => console.error("Priory Itinerary Fetch Error:", err))
+      .finally(() => {
+        activeDossierData.loading.itinerary = false;
+        if (currentSpreadIndex === 3) {
+          renderPlanSpreadLeft();
+          renderPlanSpreadRight();
+        }
+      });
+
+    await Promise.allSettled([pRecipe, pArb, pPrereq, pItin]);
+    if (shouldTurn || currentSpreadIndex !== 0) {
+      renderCurrentSpread();
+    }
+  };
+
+  // ── Prerequisite Fetch Helper ───────────────────────────────────────────────
+  window.fetchPrerequisites = async function(goalId, goalName) {
+    if (!activeDossierData) return;
+    activeDossierData.loading.prerequisites = true;
+    if (currentSpreadIndex === 3) renderPlanSpreadLeft();
+
+    const gid = goalId || activeLegendaryId;
+    const gname = goalName || activeLegendaryName;
+    const solverId = getSolverId(gid, gname);
+
+    try {
+      const res = await fetch("/api/solver/prerequisites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal_item_id: solverId })
+      });
+      const data = await res.json();
+      if (data.success && data.prerequisites) {
+        activeDossierData.prerequisites = data.prerequisites;
+        if (dossierCache[gid]) {
+          dossierCache[gid].prerequisites = data.prerequisites;
+        }
+      }
+    } catch (err) {
+      console.error("Priory Prerequisites Fetch Error:", err);
+    } finally {
+      activeDossierData.loading.prerequisites = false;
+      if (currentSpreadIndex === 3) renderPlanSpreadLeft();
+    }
+  };
+
+  // ── Knapsack Recalculation Handler ──────────────────────────────────────────
+  window.recalculateItinerary = async function(minutes) {
+    plannerBudgetMinutes = Number(minutes) || 60;
+    activeDossierData.loading.itinerary = true;
+    if (currentSpreadIndex === 3) {
+      renderPlanSpreadLeft();
+      renderPlanSpreadRight();
+    }
+
+    const solverId = getSolverId(activeLegendaryId, activeLegendaryName);
+    try {
+      const res = await fetch("/api/solver/itinerary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal_item_id: solverId, time_budget_minutes: plannerBudgetMinutes })
+      });
+      const data = await res.json();
+      if (data.success && data.itinerary) {
+        activeDossierData.itinerary = data.itinerary;
+        if (dossierCache[activeLegendaryId]) {
+          dossierCache[activeLegendaryId].itinerary = data.itinerary;
+        }
+      }
+    } catch (e) {
+      console.error("Priory Recalculate Itinerary Error:", e);
+    } finally {
+      activeDossierData.loading.itinerary = false;
+      if (currentSpreadIndex === 3) {
+        renderPlanSpreadLeft();
+        renderPlanSpreadRight();
+      }
+    }
+  };
+
+  // ── Tab & Chapters Dropdown Controller ─────────────────────────────────────
+  function updateTabState() {
+    if (tabLibrary) tabLibrary.classList.toggle("active", currentSpreadIndex === 0);
+    if (tabGuide) tabGuide.classList.toggle("active", currentSpreadIndex === 1);
+    if (tabRecipe) tabRecipe.classList.toggle("active", currentSpreadIndex === 2);
+    if (tabPlan) tabPlan.classList.toggle("active", currentSpreadIndex === 3);
+    if (tabChaptersMenu) {
+      tabChaptersMenu.classList.toggle("active", false);
+    }
+  }
+
+  window.selectChapter = function(index) {
+    const c = recentChapters[index];
+    if (!c) return;
+    if (chaptersDropdownCard) chaptersDropdownCard.classList.add("hidden");
+
+    if (c.isCustomGuide) {
+      activeCustomGuide = c.guide;
+      if (c.id) {
+        activeLegendaryId = c.id;
+        activeLegendaryName = c.resolvedName || getLegendaryNameById(c.id) || activeLegendaryName;
+        // Prefetch dossier in background without changing spread
+        loadLegendaryDossier(c.id, activeLegendaryName, { autoTurn: false });
+      }
+      turnPageTo(1, 1 >= currentSpreadIndex ? "forward" : "backward");
+      updateChaptersDropdown();
+    } else {
+      loadLegendaryDossier(c.id, c.name, { type: c.type, targetSpread: 2 });
+    }
+  };
+
+  function updateChaptersDropdown() {
+    if (chaptersTabLabel) {
+      chaptersTabLabel.textContent = "Chapters ▾";
+    }
+
+    if (chaptersDropdownList) {
+      if (recentChapters.length === 0) {
+        chaptersDropdownList.innerHTML = `<div class="empty-guides-msg">No recent chapters recorded.</div>`;
+      } else {
+        chaptersDropdownList.innerHTML = recentChapters.map((c, idx) => {
+          const isActive = c.isCustomGuide
+            ? (activeCustomGuide && activeCustomGuide.goal_name === c.name && currentSpreadIndex === 1)
+            : (c.id === activeLegendaryId && currentSpreadIndex !== 1);
+          const typeLabel = c.isCustomGuide ? "Inquiry Guide" : (c.type || "Legendary");
+          return `
+            <div class="chapters-dropdown-item ${isActive ? 'active-chapter' : ''}">
+              <button type="button" class="btn-select-chapter" onclick="selectChapter(${idx})" title="Open ${escapeHtml(c.name)}">
+                <span class="${isActive ? 'chapter-check' : 'chapter-bullet'}">${isActive ? '✓' : (c.isCustomGuide ? '📜' : '◈')}</span>
+                <span class="chapter-name">${escapeHtml(c.name)}</span>
+                <span class="chapter-type">${escapeHtml(typeLabel)}</span>
+              </button>
+              <button type="button" class="btn-delete-chapter" data-index="${idx}" title="Remove from recent history">✕</button>
+            </div>
+          `;
+        }).join("");
+
+        chaptersDropdownList.querySelectorAll(".btn-delete-chapter").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const idx = parseInt(btn.getAttribute("data-index"), 10);
+            if (!isNaN(idx) && idx >= 0 && idx < recentChapters.length) {
+              recentChapters.splice(idx, 1);
+              saveRecentChapters();
+            }
+          });
+        });
+      }
+    }
+  }
+
+  // Chapters dropdown toggle & outside click dismissal
+  if (tabChaptersMenu) {
+    tabChaptersMenu.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (chaptersDropdownCard) {
+        chaptersDropdownCard.classList.toggle("hidden");
       }
     });
   }
 
-  let gw2Tooltip = document.getElementById("gw2-tooltip");
+  if (btnClearAllChapters) {
+    btnClearAllChapters.addEventListener("click", (e) => {
+      e.stopPropagation();
+      recentChapters = [];
+      try {
+        if (typeof window !== "undefined" && window.localStorage) {
+          window.localStorage.removeItem("priory_recent_chapters");
+        }
+      } catch (err) {}
+      updateChaptersDropdown();
+      if (chaptersDropdownCard) chaptersDropdownCard.classList.add("hidden");
+    });
+  }
 
-  // ── Initialization ──────────────────────────────────────────────────────────
-  initParticles();
-  loadSavedRecipesFromStorage();
-  fetchAccountStatus();
-  renderCurrentSpread();
-  initTooltipDelegation();
-  addDynamicStyles();
+  document.addEventListener("click", (e) => {
+    if (!chaptersDropdownCard || chaptersDropdownCard.classList.contains("hidden")) return;
+    if (tabChaptersMenu && tabChaptersMenu.contains(e.target)) return;
+    if (chaptersDropdownCard.contains(e.target)) return;
+    chaptersDropdownCard.classList.add("hidden");
+  });
 
-  // ── Navigation Button Handlers ──────────────────────────────────────────────
+  // Tab click listeners
+  if (tabLibrary) {
+    tabLibrary.addEventListener("click", () => {
+      if (currentSpreadIndex !== 0 && !isFlipping) {
+        turnPageTo(0, "backward");
+      }
+    });
+  }
+
+  if (tabGuide) {
+    tabGuide.addEventListener("click", () => {
+      if (currentSpreadIndex !== 1 && !isFlipping) {
+        turnPageTo(1, 1 > currentSpreadIndex ? "forward" : "backward");
+      }
+    });
+  }
+
+  if (tabRecipe) {
+    tabRecipe.addEventListener("click", () => {
+      if (currentSpreadIndex !== 2 && !isFlipping) {
+        turnPageTo(2, 2 > currentSpreadIndex ? "forward" : "backward");
+      }
+    });
+  }
+
+  if (tabPlan) {
+    tabPlan.addEventListener("click", () => {
+      if (currentSpreadIndex !== 3 && !isFlipping) {
+        turnPageTo(3, "forward");
+      }
+    });
+  }
+
+  // ── Bottom Navigation & Keyboard ───────────────────────────────────────────
   if (btnPrev) {
     btnPrev.addEventListener("click", () => {
       if (currentSpreadIndex > 0 && !isFlipping) {
@@ -129,41 +949,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (btnNext) {
     btnNext.addEventListener("click", () => {
-      const totalSpreads = 4 + savedRecipes.length;
-      if (currentSpreadIndex < totalSpreads - 1 && !isFlipping) {
+      if (currentSpreadIndex < 3 && !isFlipping) {
         turnPageTo(currentSpreadIndex + 1, "forward");
-      }
-    });
-  }
-
-  if (tabInscribe) {
-    tabInscribe.addEventListener("click", () => {
-      if (currentSpreadIndex !== 0 && !isFlipping) {
-        turnPageTo(0, "backward");
-      }
-    });
-  }
-
-  if (tabPlanner) {
-    tabPlanner.addEventListener("click", () => {
-      if (currentSpreadIndex !== 1 && !isFlipping) {
-        turnPageTo(1, 1 > currentSpreadIndex ? "forward" : "backward");
-      }
-    });
-  }
-
-  if (tabArbitrage) {
-    tabArbitrage.addEventListener("click", () => {
-      if (currentSpreadIndex !== 2 && !isFlipping) {
-        turnPageTo(2, 2 > currentSpreadIndex ? "forward" : "backward");
-      }
-    });
-  }
-
-  if (tabPrereqs) {
-    tabPrereqs.addEventListener("click", () => {
-      if (currentSpreadIndex !== 3 && !isFlipping) {
-        turnPageTo(3, 3 > currentSpreadIndex ? "forward" : "backward");
       }
     });
   }
@@ -177,282 +964,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ── Procedural Web Audio API Synthesizer (Zero 404s, 100% Offline) ──────────
-  let audioCtx = null;
-  function getAudioContext() {
-    if (!audioEnabled) return null;
-    try {
-      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContextClass();
-      }
-      if (audioCtx && audioCtx.state === "suspended") {
-        audioCtx.resume().catch(() => {});
-      }
-      return audioCtx;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function playPaperTurnSound() {
-    if (!audioEnabled) return;
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    try {
-      const duration = 0.38;
-      const bufferSize = Math.floor(ctx.sampleRate * duration);
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-
-      // Filtered white noise simulating parchment flutter
-      const filter = ctx.createBiquadFilter();
-      filter.type = "bandpass";
-      filter.frequency.setValueAtTime(800, ctx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + duration);
-      filter.Q.setValueAtTime(1.3, ctx.currentTime);
-
-      const gain = ctx.createGain();
-      const now = ctx.currentTime;
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.28, now + 0.04);
-      gain.gain.setValueAtTime(0.22, now + 0.12);
-      gain.gain.linearRampToValueAtTime(0.26, now + 0.18);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      noise.start(now);
-      noise.stop(now + duration);
-    } catch (err) {
-      // Audio fallback safe
-    }
-  }
-
-  function playForgeChimeSound() {
-    if (!audioEnabled) return;
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    try {
-      const now = ctx.currentTime;
-      const duration = 2.2;
-
-      // Master gain
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(0.35, now);
-      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-      masterGain.connect(ctx.destination);
-
-      // Reverb-like decay simulation via low-pass feedback delay
-      const delay = ctx.createDelay();
-      delay.delayTime.setValueAtTime(0.075, now);
-      const delayGain = ctx.createGain();
-      delayGain.gain.setValueAtTime(0.32, now);
-      const delayFilter = ctx.createBiquadFilter();
-      delayFilter.type = "lowpass";
-      delayFilter.frequency.setValueAtTime(1500, now);
-
-      masterGain.connect(delay);
-      delay.connect(delayFilter);
-      delayFilter.connect(delayGain);
-      delayGain.connect(delay);
-      delayGain.connect(ctx.destination);
-
-      // Bell harmonic chime with dual sine oscillators (880Hz + 1320Hz)
-      const osc1 = ctx.createOscillator();
-      osc1.type = "sine";
-      osc1.frequency.setValueAtTime(880, now);
-
-      const osc2 = ctx.createOscillator();
-      osc2.type = "sine";
-      osc2.frequency.setValueAtTime(1320, now);
-
-      const osc1Gain = ctx.createGain();
-      osc1Gain.gain.setValueAtTime(0.001, now);
-      osc1Gain.gain.linearRampToValueAtTime(0.7, now + 0.006);
-      osc1Gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      const osc2Gain = ctx.createGain();
-      osc2Gain.gain.setValueAtTime(0.001, now);
-      osc2Gain.gain.linearRampToValueAtTime(0.45, now + 0.006);
-      osc2Gain.gain.exponentialRampToValueAtTime(0.0001, now + duration * 0.85);
-
-      osc1.connect(osc1Gain);
-      osc1Gain.connect(masterGain);
-
-      osc2.connect(osc2Gain);
-      osc2Gain.connect(masterGain);
-
-      osc1.start(now);
-      osc2.start(now);
-      osc1.stop(now + duration);
-      osc2.stop(now + duration);
-    } catch (err) {
-      // Audio fallback safe
-    }
-  }
-
-  // Quill debounce
-  let quillTimeout = null;
-  function playQuillSound() {
-    if (!audioEnabled) return;
-    if (quillTimeout) return;
-    quillTimeout = setTimeout(() => { quillTimeout = null; }, 1200);
-
-    const ctx = getAudioContext();
-    if (!ctx) return;
-
-    try {
-      const now = ctx.currentTime;
-      const duration = 0.22;
-      const bufferSize = Math.floor(ctx.sampleRate * duration);
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-
-      // High-frequency textured noise scratch
-      const filter = ctx.createBiquadFilter();
-      filter.type = "bandpass";
-      filter.frequency.setValueAtTime(3600, now);
-      filter.Q.setValueAtTime(3.2, now);
-
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.2, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.02, now + 0.08);
-      gain.gain.linearRampToValueAtTime(0.16, now + 0.11);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      noise.start(now);
-      noise.stop(now + duration);
-    } catch (err) {
-      // Audio fallback safe
-    }
-  }
-
-  function playSound(id) {
-    if (!audioEnabled) return;
-    if (id === 'sfx-page-turn' || id === 'page-turn') {
-      playPaperTurnSound();
-      return;
-    }
-    if (id === 'sfx-forge-chime' || id === 'forge-chime') {
-      playForgeChimeSound();
-      return;
-    }
-    if (id === 'sfx-quill' || id === 'quill') {
-      playQuillSound();
-      return;
-    }
-    const audioEl = document.getElementById(id);
-    if (audioEl) {
-      audioEl.currentTime = 0;
-      audioEl.play().catch(() => {});
-    }
-  }
-  window.playSound = playSound;
-
-  // ── Account Telemetry ───────────────────────────────────────────────────────
-  async function fetchAccountStatus() {
-    try {
-      const res = await fetch("/api/status");
-      accountTelemetry = await res.json();
-      if (currentSpreadIndex === 0) {
-        renderCurrentSpread();
-      }
-    } catch (err) {
-      console.error("Failed to load status:", err);
-    }
-  }
-
-  function loadSavedRecipesFromStorage() {
-    try {
-      const stored = getStorageItem("priory_grimoire_recipes");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          savedRecipes = parsed;
-        } else {
-          savedRecipes = [];
-        }
-      }
-    } catch (e) {
-      savedRecipes = [];
-    }
-    updateRecipeTabs();
-  }
-
-  function saveRecipesToStorage() {
-    try {
-      setStorageItem("priory_grimoire_recipes", JSON.stringify(savedRecipes));
-    } catch (e) {}
-    updateRecipeTabs();
-  }
-
-  function updateRecipeTabs() {
-    if (savedRecipesTabs) {
-      savedRecipesTabs.innerHTML = "";
-      savedRecipes.forEach((recipe, idx) => {
-        const tab = document.createElement("button");
-        const targetSpread = 4 + idx;
-        tab.className = `tome-tab recipe-tab ${currentSpreadIndex === targetSpread ? "active" : ""}`;
-        tab.title = `Chapter V: ${recipe.goal_name}`;
-        tab.innerHTML = `<span class="tab-label">${escapeHtml(recipe.goal_name)}</span>`;
-        tab.addEventListener("click", () => {
-          if (isFlipping) return;
-          if (targetSpread !== currentSpreadIndex) {
-            turnPageTo(targetSpread, targetSpread > currentSpreadIndex ? "forward" : "backward");
-          }
-        });
-        savedRecipesTabs.appendChild(tab);
-      });
-    }
-
-    if (tabInscribe) tabInscribe.classList.toggle("active", currentSpreadIndex === 0);
-    if (tabPlanner) tabPlanner.classList.toggle("active", currentSpreadIndex === 1);
-    if (tabArbitrage) tabArbitrage.classList.toggle("active", currentSpreadIndex === 2);
-    if (tabPrereqs) tabPrereqs.classList.toggle("active", currentSpreadIndex === 3);
-  }
-
-  // ── Smooth 2D Page Turn Controller ──────────────────────────────────────────
+  // ── Page Flip Transition ───────────────────────────────────────────────────
   function turnPageTo(targetIndex, direction = "forward") {
-    if (targetIndex === currentSpreadIndex || isFlipping) return;
+    if (targetIndex < 0 || targetIndex > 3) return;
+    if (targetIndex === currentSpreadIndex) {
+      renderCurrentSpread();
+      return;
+    }
+    if (isFlipping) {
+      setTimeout(() => {
+        isFlipping = false;
+      }, 500);
+      return;
+    }
     isFlipping = true;
-    document.body.classList.add('no-select');
+    document.body.classList.add("no-select");
 
-    // Procedural Web Audio API sound synthesis
-    playPaperTurnSound();
+    // Safety timeout so pages never get permanently stuck
+    setTimeout(() => {
+      if (isFlipping) {
+        isFlipping = false;
+        document.body.classList.remove("no-select");
+      }
+    }, 500);
 
-    if (bookAura) {
-      bookAura.classList.add("casting");
-    }
-
-    // Keep legacy 3D flipper completely hidden
-    if (flipperLeaf) {
-      flipperLeaf.classList.add("hidden");
-    }
+    if (bookAura) bookAura.classList.add("casting");
 
     const turnClass = direction === "forward" ? "turning-forward" : "turning-backward";
-
     if (pagesSpread) {
       pagesSpread.classList.remove("turning-forward", "turning-backward");
       pagesSpread.classList.add(turnClass);
@@ -466,7 +1004,6 @@ document.addEventListener("DOMContentLoaded", () => {
       pageRight.classList.add(turnClass);
     }
 
-    // Midpoint: swap content when opacity is low, reset scroll
     setTimeout(() => {
       currentSpreadIndex = targetIndex;
       renderCurrentSpread();
@@ -474,720 +1011,1603 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rightPageBody) rightPageBody.scrollTop = 0;
     }, 220);
 
-    // Completion: cleanly remove all transition classes
     setTimeout(() => {
-      if (pagesSpread) {
-        pagesSpread.classList.remove("turning-forward", "turning-backward");
-      }
-      if (pageLeft) {
-        pageLeft.classList.remove("turning-forward", "turning-backward");
-        pageLeft.style.boxShadow = "";
-      }
-      if (pageRight) {
-        pageRight.classList.remove("turning-forward", "turning-backward");
-        pageRight.style.boxShadow = "";
-      }
-      if (bookAura) {
-        bookAura.classList.remove("casting");
-      }
-      document.body.classList.remove('no-select');
+      if (pagesSpread) pagesSpread.classList.remove("turning-forward", "turning-backward");
+      if (pageLeft) pageLeft.classList.remove("turning-forward", "turning-backward");
+      if (pageRight) pageRight.classList.remove("turning-forward", "turning-backward");
+      if (bookAura) bookAura.classList.remove("casting");
+      document.body.classList.remove("no-select");
       isFlipping = false;
     }, 450);
   }
 
+  // ── Spread Renderers Controller ──────────────────────────────────────────
   function renderCurrentSpread() {
-    const totalSpreads = 4 + savedRecipes.length;
+    updateTabState();
+
     if (btnPrev) btnPrev.disabled = currentSpreadIndex === 0;
-    if (btnNext) btnNext.disabled = currentSpreadIndex >= totalSpreads - 1;
+    if (btnNext) btnNext.disabled = currentSpreadIndex === 3;
 
     if (currentSpreadIndex === 0) {
-      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter I • Inscription • Spread 1 of ${totalSpreads}`;
-      renderInscriptionSpread();
+      if (pageCounterDisplay) pageCounterDisplay.textContent = "Library • Index (Spread 1 of 4)";
+      renderSpread0Left();
+      renderSpread0Right();
     } else if (currentSpreadIndex === 1) {
-      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter II • Daily Session Planner • Spread 2 of ${totalSpreads}`;
-      renderSessionPlannerSpread();
+      const guideTitle = activeCustomGuide?.goal_name || "Inquiry Guide";
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `${guideTitle} (Spread 2 of 4)`;
+      renderGuideSpreadLeft();
+      renderGuideSpreadRight();
     } else if (currentSpreadIndex === 2) {
-      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter III • Buy vs Craft Arbitrage • Spread 3 of ${totalSpreads}`;
-      renderArbitrageSpread();
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `${activeLegendaryName} • Recipe & Economics (Spread 3 of 4)`;
+      renderRecipeSpreadLeft();
+      renderRecipeSpreadRight();
     } else if (currentSpreadIndex === 3) {
-      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter IV • Prerequisite Audit • Spread 4 of ${totalSpreads}`;
-      renderPrerequisitesSpread();
-    } else {
-      const recipeIdx = currentSpreadIndex - 4;
-      const recipe = savedRecipes[recipeIdx];
-      if (pageCounterDisplay) pageCounterDisplay.textContent = `Chapter V • ${recipe ? recipe.goal_name : 'Recipe'} • Spread ${currentSpreadIndex + 1} of ${totalSpreads}`;
-      if (recipe) renderRecipeSpread(recipe);
+      if (pageCounterDisplay) pageCounterDisplay.textContent = `${activeLegendaryName} • Readiness & Plan (Spread 4 of 4)`;
+      // Auto-fetch if prerequisites or itinerary are missing and not loading
+      if (!activeDossierData.prerequisites && !activeDossierData.loading.prerequisites) {
+        fetchPrerequisites(activeLegendaryId, activeLegendaryName);
+      }
+      if (!activeDossierData.itinerary && !activeDossierData.loading.itinerary) {
+        recalculateItinerary(plannerBudgetMinutes);
+      }
+      renderPlanSpreadLeft();
+      renderPlanSpreadRight();
     }
-
-    updateRecipeTabs();
   }
 
-  // ── CHAPTER I: INSCRIPTION ──────────────────────────────────────────────────
-  function renderInscriptionSpread() {
-    const armory = accountTelemetry?.account_armory_count ?? "—";
-    const mats = accountTelemetry?.account_materials_count ?? "—";
-    const gold = accountTelemetry?.wallet?.liquid_gold != null
-      ? accountTelemetry.wallet.liquid_gold.toLocaleString(undefined, { maximumFractionDigits: 0 }) + " g"
-      : "—";
-    const shards = accountTelemetry?.wallet?.spirit_shards?.toLocaleString() ?? "—";
-    const aa = accountTelemetry?.wallet?.astral_acclaim?.toLocaleString() ?? "—";
-    const vm = accountTelemetry?.wallet?.volatile_magic?.toLocaleString() ?? "—";
+  // ── Spread 0: Library Index & Popular Dossiers ──────────────────────────────
+  function renderSpread0Left() {
+    if (!leftPageBody) return;
+    leftPageBody.innerHTML = `
+      <h2 class="page-title">Library Index</h2>
+      <div class="ink-divider">✦</div>
 
-    if (leftPageBody) {
-      leftPageBody.innerHTML = `
-        <div class="runic-header">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ</div>
-        <h2 class="page-title">Chapter I: Inscription</h2>
-        <div class="handwritten-subtitle">~ The Scholar's Ledger ~</div>
-        <div class="ink-divider">✦</div>
+      <form class="inscribe-form" id="library-search-form" onsubmit="executeLibrarySearch(event); return false;">
+        <label class="inscribe-label" for="library-search-input">Inscribe thy legendary desire upon this parchment:</label>
+        <textarea id="library-search-input" class="ink-textarea" rows="3" placeholder="e.g. 'Twilight', 'Sunrise', 'Nevermore', 'How do I craft Eternity?', 'Which accessory can I get the fastest?'..."></textarea>
+        <button type="button" class="btn-forge-inscribe" id="btn-search-archives" onclick="executeLibrarySearch(event)">
+          <span id="btn-search-archives-text">Explore</span>
+          <span id="btn-search-archives-spinner" class="spinner-ink hidden"></span>
+        </button>
+      </form>
 
-        <div class="essence-journal-box">
-          <div class="essence-journal-title">
-            <span>Live Account Essence</span>
-            <span style="font-size:0.7em;color:#c8963e;">${accountTelemetry?.api_key_masked || "Live"}</span>
-          </div>
-          <div class="essence-stats-grid">
-            <div class="stat-item"><span class="lbl">Armory Legendaries:</span><span class="val">${armory}</span></div>
-            <div class="stat-item"><span class="lbl">Tracked Materials:</span><span class="val">${mats}</span></div>
-            <div class="stat-item"><span class="lbl">Liquid Gold:</span><span class="val">${gold}</span></div>
-            <div class="stat-item"><span class="lbl">Spirit Shards:</span><span class="val">${shards}</span></div>
-            <div class="stat-item"><span class="lbl">Astral Acclaim:</span><span class="val">${aa}</span></div>
-            <div class="stat-item"><span class="lbl">Volatile Magic:</span><span class="val">${vm}</span></div>
+      <div class="quick-pills-container">
+        <div class="pills-group-title">Curated Quick Inquiries</div>
+        
+        <div class="pills-category">
+          <span class="pills-category-label">Weapons:</span>
+          <div class="pills-row">
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(30689, 'Twilight')">Twilight</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(30699, 'Sunrise')">Sunrise</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(30688, 'Eternity')">Eternity</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(76158, 'Nevermore')">Nevermore</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(30691, 'The Moot')">The Moot</button>
           </div>
         </div>
 
-        <form class="inscribe-form" id="inscribe-query-form">
-          <label class="inscribe-label" for="inscribe-query-input">Inscribe thy desire upon this parchment:</label>
-          <textarea id="inscribe-query-input" class="ink-textarea" rows="3" placeholder="e.g. 'Which 2 legendaries can I quickly craft?', 'How do I craft Twilight?'..."></textarea>
-          <button type="submit" class="btn-forge-inscribe" id="btn-forge-submit">
-            <span id="btn-forge-text">Turn the Page & Forge Truth</span>
-            <span id="btn-forge-spinner" class="spinner-ink hidden"></span>
-          </button>
-        </form>
-
-        <div class="quick-incantations">
-          <button type="button" class="incantation-btn" data-q="Which 2 legendaries can I quickly craft?">Fastest 2 Legendaries</button>
-          <button type="button" class="incantation-btn" data-q="How do I craft Twilight?">Craft Twilight</button>
-          <button type="button" class="incantation-btn" data-q="How do I craft Eternity?">Forge Eternity</button>
-          <button type="button" class="incantation-btn" data-q="What do I need for Aurene's Bite (Zhaitan Variant)?">Zhaitan Variant</button>
-          <button type="button" class="incantation-btn" data-q="How do I craft WvW Legendary Armor?">WvW Armor</button>
-        </div>
-      `;
-    }
-
-    if (rightPageBody) {
-      rightPageBody.innerHTML = `
-        <div class="runic-header">ᛈ ᛇ ᛉ ᛊ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛟ ᛞ</div>
-        <h2 class="page-title">The Scrying Matrix</h2>
-        <div class="handwritten-subtitle">~ Alchemical Geometry ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div class="arcane-diagram-stage">
-          <div class="vitruvian-circle-wrap">
-            <svg class="arcane-circle-svg" viewBox="0 0 200 200">
-              <g class="spin-cw-slow" transform-origin="100 100">
-                <circle cx="100" cy="100" r="95" fill="none" stroke="#c8963e" stroke-width="1.5" stroke-dasharray="4,4"/>
-                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(0 100 100)">ᚠ</text>
-                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(60 100 100)">ᚢ</text>
-                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(120 100 100)">ᚦ</text>
-                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(180 100 100)">ᚨ</text>
-                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(240 100 100)">ᚱ</text>
-                <text x="100" y="15" fill="#c8963e" font-size="10" text-anchor="middle" transform="rotate(300 100 100)">ᚲ</text>
-              </g>
-              <g class="spin-ccw-medium" transform-origin="100 100">
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#70338a" stroke-width="1.2"/>
-                <polygon points="100,20 169,140 31,140" fill="none" stroke="#c8963e" stroke-width="1"/>
-                <polygon points="100,180 31,60 169,60" fill="none" stroke="#c8963e" stroke-width="1"/>
-              </g>
-              <g class="spin-cw-fast" transform-origin="100 100">
-                <circle cx="100" cy="100" r="45" fill="none" stroke="#70338a" stroke-width="1" stroke-dasharray="2,2"/>
-                <circle cx="100" cy="100" r="40" fill="none" stroke="#c8963e" stroke-width="0.5"/>
-              </g>
-            </svg>
-            <div class="center-silhouette pulse-anim">◈</div>
-          </div>
-
-          <div class="handwritten-lore">
-            "The Mystic Forge recognizes neither gold nor glory alone, but the harmonious combination of the four gifts."
-            <div style="font-family:var(--font-head);font-size:0.75em;color:#c8963e;margin-top:6px;">— Archivist of the Durmand Priory</div>
+        <div class="pills-category">
+          <span class="pills-category-label">Armor:</span>
+          <div class="pills-row">
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(100806, 'WvW Armor', { type: 'Legendary Armor' })">WvW Armor</button>
           </div>
         </div>
-      `;
-    }
 
-    const form = document.getElementById("inscribe-query-form");
-    const input = document.getElementById("inscribe-query-input");
-    
-    if (input) {
-      input.addEventListener("input", playQuillSound);
-    }
+        <div class="pills-category">
+          <span class="pills-category-label">Trinkets:</span>
+          <div class="pills-row">
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(81908, 'Aurora', { type: 'Legendary Accessory' })">Aurora</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(91048, 'Vision', { type: 'Legendary Accessory' })">Vision</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(93105, 'Conflux', { type: 'Legendary Ring' })">Conflux</button>
+            <button type="button" class="incantation-btn" onclick="loadLegendaryDossier(91234, 'Coalescence', { type: 'Legendary Ring' })">Coalescence</button>
+          </div>
+        </div>
+      </div>
 
+      <div class="account-badge-pill" onclick="openDrawerToApiKey()" title="Click to change GW2 API Key &amp; Account">
+        <span class="account-pill-icon">⚜</span>
+        <span>Account: <strong id="library-account-badge-name">${escapeHtml(accountTelemetry?.account_name || 'Default Account')}</strong></span>
+        <span class="account-pill-action">Change Key ⚙</span>
+      </div>
+    `;
+
+    const form = document.getElementById("library-search-form");
+    const input = document.getElementById("library-search-input");
     if (form) {
       form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const q = input ? input.value.trim() : "";
-        if (q) executeNewQuery(q);
+        executeLibrarySearch(e);
       });
     }
-
-    document.querySelectorAll(".incantation-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const q = btn.getAttribute("data-q");
-        if (input) input.value = q;
-        if (q) executeNewQuery(q);
-      });
-    });
-  }
-
-  function addDynamicStyles() {
-    if (document.getElementById('app-dynamic-styles')) return;
-    const style = document.createElement('style');
-    style.id = 'app-dynamic-styles';
-    style.innerHTML = `
-      /* ── 2D Smooth Page Turn Transitions ── */
-      .pages-spread.turning-forward .page-sheet,
-      .page-sheet.turning-forward {
-        animation: pageTurnForward 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      }
-      .pages-spread.turning-backward .page-sheet,
-      .page-sheet.turning-backward {
-        animation: pageTurnBackward 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      }
-      @keyframes pageTurnForward {
-        0% { opacity: 1; transform: translateX(0); filter: brightness(1); }
-        48% { opacity: 0.12; transform: translateX(-16px) scale(0.99); filter: brightness(0.85); box-shadow: inset -24px 0 32px rgba(40, 20, 5, 0.35); }
-        52% { opacity: 0.12; transform: translateX(16px) scale(0.99); filter: brightness(0.85); box-shadow: inset 24px 0 32px rgba(40, 20, 5, 0.35); }
-        100% { opacity: 1; transform: translateX(0); filter: brightness(1); }
-      }
-      @keyframes pageTurnBackward {
-        0% { opacity: 1; transform: translateX(0); filter: brightness(1); }
-        48% { opacity: 0.12; transform: translateX(16px) scale(0.99); filter: brightness(0.85); box-shadow: inset 24px 0 32px rgba(40, 20, 5, 0.35); }
-        52% { opacity: 0.12; transform: translateX(-16px) scale(0.99); filter: brightness(0.85); box-shadow: inset -24px 0 32px rgba(40, 20, 5, 0.35); }
-        100% { opacity: 1; transform: translateX(0); filter: brightness(1); }
-      }
-
-      @keyframes spin-cw { 100% { transform: rotate(360deg); } }
-      @keyframes spin-ccw { 100% { transform: rotate(-360deg); } }
-      .spin-cw-slow { animation: spin-cw 60s linear infinite; }
-      .spin-ccw-medium { animation: spin-ccw 45s linear infinite; }
-      .spin-cw-fast { animation: spin-cw 30s linear infinite; }
-      .pulse-anim { animation: pulse 2s ease-in-out infinite; }
-      @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
-      .copy-stamp-fx {
-        position: fixed;
-        color: #ffcc00;
-        font-weight: bold;
-        text-shadow: 0 0 5px #ffaa00;
-        pointer-events: none;
-        z-index: 9999;
-        animation: float-up-fade 0.8s ease-out forwards;
-      }
-      @keyframes float-up-fade {
-        0% { opacity: 1; transform: translateY(0) scale(1); }
-        100% { opacity: 0; transform: translateY(-30px) scale(1.2); }
-      }
-      .no-select { user-select: none; }
-      .mystic-forge-sockets-container {
-        display: flex;
-        justify-content: space-evenly;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-      .mf-socket {
-        background: rgba(0,0,0,0.2);
-        border: 1px solid #c8963e;
-        border-radius: 4px;
-        padding: 8px;
-        text-align: center;
-        width: 40%;
-        cursor: pointer;
-      }
-      .mf-socket-icon {
-        font-size: 24px;
-        margin-bottom: 4px;
-      }
-      .mf-socket-name {
-        font-size: 0.8em;
-        color: #eee;
-        margin-bottom: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .mf-socket-count {
-        font-size: 0.85em;
-        color: #c8963e;
-        font-weight: bold;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  const LEGENDARY_PRESETS = [
-    { id: 30704, name: "Twilight", type: "Gen 1 Greatsword" },
-    { id: 30689, name: "Sunrise", type: "Gen 1 Greatsword" },
-    { id: 30687, name: "Incinerator", type: "Gen 1 Dagger" },
-    { id: 30694, name: "The Bifrost", type: "Gen 1 Staff" },
-    { id: 30685, name: "Kudzu", type: "Gen 1 Longbow" },
-    { id: 30684, name: "Frostfang", type: "Gen 1 Axe" },
-    { id: 30695, name: "Bolt", type: "Gen 1 Sword" },
-    { id: 30693, name: "The Predator", type: "Gen 1 Rifle" },
-    { id: 30690, name: "The Juggernaut", type: "Gen 1 Hammer" },
-    { id: 30686, name: "The Dreamer", type: "Gen 1 Shortbow" },
-    { id: 76158, name: "Nevermore", type: "Gen 2 Staff" },
-    { id: 76159, name: "Astralaria", type: "Gen 2 Axe" },
-    { id: 96203, name: "Aurene's Bite", type: "Gen 3 Greatsword" },
-    { id: 100806, name: "Obsidian Breastplate", type: "Heavy Legendary Armor" },
-    { id: 91234, name: "Coalescence", type: "Legendary Ring (Raid)" },
-    { id: 93105, name: "Conflux", type: "Legendary Ring (WvW)" },
-    { id: 81908, name: "Aurora", type: "Legendary Accessory (Season 3)" },
-    { id: 91048, name: "Vision", type: "Legendary Accessory (Season 4)" },
-    { id: 92991, name: "Transcendence", type: "Legendary Amulet (PvP)" },
-    { id: 95380, name: "Prismatic Champion's Regalia", type: "Legendary Amulet (Return to)" },
-    { id: 74155, name: "Ad Infinitum", type: "Legendary Backpack (Fractals)" }
-  ];
-
-  function getLegendaryIdByName(name, defaultId = 30704) {
-    if (!name) return defaultId;
-    const clean = name.toLowerCase().replace(/^(the|aurene's)\s+/, "").trim();
-    const found = LEGENDARY_PRESETS.find(p => {
-      const pName = p.name.toLowerCase().replace(/^(the|aurene's)\s+/, "").trim();
-      return pName === clean || clean.includes(pName) || pName.includes(clean);
-    });
-    return found ? found.id : defaultId;
-  }
-
-  function isComparativeRanking(guide) {
-    if (!guide) return false;
-    const name = (guide.goal_name || "").toLowerCase();
-    if (name.includes("closest:") || name.includes("closest") || name.includes("ranking") || name.includes("rankings") || name.includes("recommendation") || name.includes("leaderboard")) {
-      return true;
-    }
-    if (guide.target_quantity > 1 && (!guide.master_roadmap_phases || guide.master_roadmap_phases.length === 0)) {
-      return true;
-    }
-    if ((!guide.master_roadmap_phases || guide.master_roadmap_phases.length === 0) && (guide.strategic_recommendations && guide.strategic_recommendations.length > 0)) {
-      return true;
-    }
-    if (guide.strategic_recommendations && guide.strategic_recommendations.some(r => r.includes("Leaderboard") || r.includes("Closest Legendaries") || r.includes("Recommendations:"))) {
-      return true;
-    }
-    return false;
-  }
-
-  function getLeaderboardTitle(guide) {
-    if (!guide || !guide.goal_name) return "CHAPTER II: THE PRIORY LEADERBOARD";
-    const raw = guide.goal_name.trim();
-    const upper = raw.toUpperCase();
-    if (upper.includes("ACCESSOR")) return "LEGENDARY ACCESSORY LEADERBOARD";
-    if (upper.includes("WEAPON")) return "LEGENDARY WEAPONS LEADERBOARD";
-    if (upper.includes("ARMOR")) return "LEGENDARY ARMOR LEADERBOARD";
-    if (upper.includes("TRINKET")) return "LEGENDARY TRINKET LEADERBOARD";
-    if (upper.includes("AMULET")) return "LEGENDARY AMULET LEADERBOARD";
-    if (upper.includes("RING")) return "LEGENDARY RING LEADERBOARD";
-    if (upper.includes("BACKPACK")) return "LEGENDARY BACKPACK LEADERBOARD";
-    return "CHAPTER II: THE PRIORY LEADERBOARD";
-  }
-
-  function extractLeaderboardData(guide) {
-    const items = [];
-    if (!guide) return items;
-
-    const recs = guide.strategic_recommendations || [];
-    for (const raw of recs) {
-      const line = (raw || "").trim();
-      if (!line) continue;
-      const clean = line.replace(/\*\*/g, "").trim();
-
-      const match = clean.match(/^#(\d+)\s+([^(]+?)(?:\s*\(([^)]+)\))?:\s*([\d.]+)%?\s*Ready\s*\|\s*(?:Est\.?\s*Cost:\s*)?~?([\d.,]+)g\s*\|\s*\[([^\]]+)\](.*)/i);
-      if (match) {
-        const gateMatch = clean.match(/⏳\s*(~?[\w\s]+gate)/i);
-        items.push({
-          rank: parseInt(match[1], 10),
-          name: match[2].trim(),
-          subtype: match[3] ? match[3].trim() : "Item",
-          readiness: parseFloat(match[4]),
-          cost: parseFloat(match[5].replace(/,/g, "")),
-          archetype: match[6].trim(),
-          hasKit: clean.includes("Bank Kit") || clean.includes("Starter Kit"),
-          hasGate: clean.includes("gate") || clean.includes("⏳"),
-          gateText: gateMatch ? gateMatch[1] : (clean.includes("gate") ? "Time-Gated" : null)
-        });
-        continue;
-      }
-
-      const m2 = clean.match(/#(\d+)\s+([A-Za-z0-9' -]+?)(?:\s*\(([^)]+)\))?[:\s-]+(\d+(?:\.\d+)?)%/i);
-      if (m2) {
-        const goldM = clean.match(/([\d.,]+)\s*g\b/);
-        const archM = clean.match(/\[([^\]]+)\]/);
-        const gateMatch = clean.match(/⏳\s*(~?[\w\s]+gate)/i);
-        items.push({
-          rank: parseInt(m2[1], 10),
-          name: m2[2].trim(),
-          subtype: m2[3] ? m2[3].trim() : "Item",
-          readiness: parseFloat(m2[4]),
-          cost: goldM ? parseFloat(goldM[1].replace(/,/g, "")) : 0,
-          archetype: archM ? archM[1] : "Standard Crafting",
-          hasKit: clean.includes("Bank Kit") || clean.includes("Starter Kit"),
-          hasGate: clean.includes("gate") || clean.includes("⏳"),
-          gateText: gateMatch ? gateMatch[1] : (clean.includes("gate") ? "Time-Gated" : null)
-        });
-      }
-    }
-
-    if (items.length === 0 && guide.goal_name) {
-      const topName = guide.goal_name.replace(/^(?:Closest|Ranking|Recommendation|Leaderboard):\s*/i, "").trim();
-      items.push({
-        rank: 1,
-        name: topName || "Top Recommendation",
-        subtype: "Legendary",
-        readiness: parseFloat(guide.readiness_percentage) || 0,
-        cost: 0,
-        archetype: "Precursor & Gifts",
-        hasKit: (guide.strategic_recommendations || []).some(r => r.includes("Starter Kit") || r.includes("Bank Kit")),
-        hasGate: false,
-        gateText: null
+    if (input) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          executeLibrarySearch(e);
+        }
       });
     }
-
-    return items;
   }
 
-  function renderLeaderboardSpread(guide) {
-    const items = extractLeaderboardData(guide);
-    const topItem = items[0] || {
-      rank: 1,
-      name: guide.goal_name || "Top Recommendation",
-      subtype: "Legendary",
-      readiness: parseFloat(guide.readiness_percentage) || 0,
-      cost: 0,
-      archetype: "Precursor & Gifts",
-      hasKit: false,
-      hasGate: false,
-      gateText: null
-    };
-    const subItems = items.slice(1, 5);
-    const heroItemId = getLegendaryIdByName(topItem.name, guide.goal_item_id || 30704);
-    const title = getLeaderboardTitle(guide);
+  function renderSpread0Right() {
+    if (!rightPageBody) return;
+    rightPageBody.innerHTML = `
+      <h2 class="page-title">Popular Legendaries &amp; Quick Dossiers</h2>
+      <div class="ink-divider">✦</div>
 
-    const starterKitRec = (guide.strategic_recommendations || []).find(r => r.includes("Starter Kit") || r.includes("Bank Kit"));
-    const boosterRec = (guide.strategic_recommendations || []).find(r => r.includes("Booster") || r.includes("Speed Analysis") || r.includes("Zhaitaffy") || r.includes("Speed Tips") || r.includes("Wizard"));
-
-    if (leftPageBody) {
-      leftPageBody.innerHTML = `
-        <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
-        <h3 class="page-title">${escapeHtml(title)}</h3>
-        <div class="handwritten-subtitle">~ Top Ranked Recommendations ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div class="priory-leaderboard-spread">
-          <div class="priory-hero-card">
-            <div class="hero-card-header">
-              <div class="rank-badge rank-top">
-                <span>#1</span>
-                <span class="top-pick-sub">TOP PICK</span>
+      <div class="popular-legendaries-matrix">
+        ${POPULAR_LEGENDARIES.map(item => `
+          <div class="popular-card">
+            <div class="popular-card-header">
+              <span class="popular-card-icon">◈</span>
+              <div class="popular-card-meta">
+                <strong class="popular-card-name">${escapeHtml(item.name)}</strong>
+                <span class="popular-card-type">${escapeHtml(item.type)}</span>
               </div>
-              <div class="hero-item-info">
-                <div class="hero-item-title">
-                  <span class="hero-name">${escapeHtml(topItem.name)}</span>
-                  <span class="hero-subtype">(${escapeHtml(topItem.subtype)})</span>
-                </div>
-                <div class="hero-archetype-row">
-                  <span class="archetype-badge">${escapeHtml(topItem.archetype)}</span>
-                  ${topItem.hasKit ? `<span class="kit-badge">🎁 Bank Starter Kit Ready (0g Precursor)</span>` : ''}
-                  ${topItem.hasGate ? `<span class="gate-badge">⏳ ${escapeHtml(topItem.gateText || 'Time-Gated')}</span>` : ''}
-                </div>
-              </div>
-              <div class="hero-metrics">
-                <div class="hero-readiness-label">Account Readiness</div>
-                <div class="hero-readiness-val">${topItem.readiness}%</div>
-                <div class="hero-cost-val">${topItem.cost > 0 ? `Est. Cost: ~${topItem.cost.toLocaleString()}g` : 'Est. Cost: ~0g (Kit Ready)'}</div>
-              </div>
-            </div>
-
-            <div class="hero-bar-wrap">
-              <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, topItem.readiness))}%;"></div>
-            </div>
-
-            ${topItem.hasKit || starterKitRec ? `
-              <div class="starter-kit-callout">
-                <span class="kit-icon">🎁</span>
-                <div class="kit-callout-text">
-                  ${starterKitRec ? formatTextWithWaypoints(starterKitRec) : `<strong>Bank Starter Kit Ready:</strong> Select this weapon to claim its Precursor and Gift for <strong>0 gold</strong> from your Legendary Weapon Starter Kit!`}
-                </div>
-              </div>
-            ` : ''}
-
-            <div class="recipe-jump-bar hero-jump-bar">
-              <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${heroItemId})">⏱ Plan Session</button>
-              <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${heroItemId})">⚖ Arbitrage Matrix</button>
-              <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${heroItemId})">📜 Prerequisite Audit</button>
+              <button type="button" class="btn-open-dossier" onclick="loadLegendaryDossier(${item.id}, '${escapeHtml(item.name)}', { type: '${escapeHtml(item.type)}', targetSpread: 2 })">
+                Open Dossier →
+              </button>
             </div>
           </div>
+        `).join("")}
+      </div>
 
-          ${subItems.length > 0 ? `
-            <div class="priory-subcards-list">
-              ${subItems.map(item => {
-                const subId = getLegendaryIdByName(item.name, guide.goal_item_id || 30704);
-                return `
-                  <div class="priory-sub-card">
-                    <div class="rank-badge rank-sub">#${item.rank}</div>
-                    <div class="sub-card-main">
-                      <div class="sub-card-title-row">
-                        <span class="sub-item-name">${escapeHtml(item.name)}</span>
-                        <span class="sub-item-subtype">(${escapeHtml(item.subtype)})</span>
-                        <span class="sub-item-cost">${item.cost > 0 ? `~${item.cost.toLocaleString()}g` : '~0g'}</span>
-                        <span class="sub-item-readiness">${item.readiness}%</span>
-                      </div>
-                      <div class="sub-bar-wrap">
-                        <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, item.readiness))}%;"></div>
-                      </div>
-                      <div class="sub-badges-row">
-                        <span class="archetype-pill">${escapeHtml(item.archetype)}</span>
-                        ${item.hasKit ? `<span class="kit-pill">🎁 Kit Ready</span>` : ''}
-                        ${item.hasGate ? `<span class="gate-pill">⏳ ${escapeHtml(item.gateText || 'Time-Gated')}</span>` : ''}
-                        <div class="sub-card-actions">
-                          <button type="button" class="btn-sub-jump" onclick="jumpToPlanner(${subId})" title="Plan Session">⏱ Plan</button>
-                          <button type="button" class="btn-sub-jump" onclick="jumpToArbitrage(${subId})" title="Buy vs Craft">⚖ Arbitrage</button>
-                          <button type="button" class="btn-sub-jump" onclick="jumpToPrereqs(${subId})" title="Prerequisite Audit">📜 Prereqs</button>
-                        </div>
+      <div class="essence-journal-box" style="margin-top: 20px;">
+        <div class="essence-journal-title">Archival Monotrack Dossier System</div>
+        <div style="font-size: 0.78rem; color: var(--ink-soft); line-height: 1.45;">
+          Select any legendary to bind the Tome into a single unified progression context. The Priory will automatically assemble market arbitrage matrices, account prerequisite audits, and a daily 0/1 knapsack session itinerary.
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Spread 1: Inquiry Guide (Comparative Ranking & Direct Guide) ───────────
+  function renderGuideSpreadLeft() {
+    if (!leftPageBody) return;
+    const guide = activeCustomGuide;
+
+    if (!guide) {
+      leftPageBody.innerHTML = `
+        <h2 class="page-title">Priory Inquiry Guide</h2>
+        <div class="ink-divider">✦</div>
+        <div style="text-align: center; padding: 40px 10px;">
+          <div style="font-size: 2.2rem; margin-bottom: 12px;">📜</div>
+          <div style="font-family: var(--font-head); color: var(--ink-dark); font-size: 0.98rem; font-weight: 700; margin-bottom: 8px;">
+            No Active Inquiry Guide
+          </div>
+          <div style="font-size: 0.8rem; color: var(--ink-soft); line-height: 1.45; max-width: 320px; margin: 0 auto 16px auto;">
+            Inscribe a query in the Library to consult the Priory archives for comparative rankings, speed evaluations, or personalized crafting guides.
+          </div>
+          <button type="button" class="btn-return-library" onclick="turnPageTo(0, 'backward')">← Return to Library</button>
+        </div>
+      `;
+      return;
+    }
+
+    const isRanking = isComparativeRanking(guide);
+
+    if (isRanking) {
+      const items = parseRankingItems(guide);
+      const isAccessory = (guide?.goal_name || "").toLowerCase().includes("accessor") ||
+                          (guide?.executive_summary || "").toLowerCase().includes("accessor");
+      const defaultName = isAccessory ? "Aurora" : (activeLegendaryName || "Aurora");
+      const defaultId = isAccessory ? 81908 : (activeLegendaryId || 81908);
+      const topItem = items.length > 0 ? items[0] : {
+        rank: 1,
+        name: defaultName,
+        subtype: getLegendaryType(defaultId, defaultName),
+        readiness: Math.round(guide?.readiness_percentage || 0),
+        cost: "Audited",
+        archetype: "Standard Crafting",
+        kitReady: false,
+        gate: null
+      };
+      const subItems = items.slice(1);
+      const topPreset = LEGENDARY_PRESETS.find(p => p.name.toLowerCase() === topItem.name.toLowerCase());
+      const topId = topPreset ? topPreset.id : defaultId;
+
+      leftPageBody.innerHTML = `
+        <div class="dossier-header-bar">
+          <div class="dossier-header-left">
+            <button type="button" class="btn-return-library" onclick="turnPageTo(0, 'backward')">← Return to Library</button>
+            <div class="dossier-title-cluster">
+              <h2 class="dossier-goal-title" style="margin: 0; padding: 0;">${escapeHtml(guide.goal_name)}</h2>
+              <span class="dossier-type-tag">Comparative Ranking</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="essence-journal-box" style="margin-top: 4px; padding: 6px 10px;">
+          <div style="font-size: 0.78rem; color: var(--ink-dark); line-height: 1.4;">
+            ${formatTextWithWaypoints(guide.executive_summary || "")}
+          </div>
+        </div>
+
+        <div class="priory-hero-card" style="margin-top: 8px;">
+          <div class="hero-card-header">
+            <div class="rank-badge rank-top">
+              <span>#1</span>
+              <span class="top-pick-sub">TOP PICK</span>
+            </div>
+            <div class="hero-item-info">
+              <div class="hero-item-title">
+                <span class="hero-name">${escapeHtml(topItem.name)}</span>
+                <span class="hero-subtype">${escapeHtml(topItem.subtype)}</span>
+              </div>
+              <div class="hero-archetype-row">
+                <span class="archetype-badge">${escapeHtml(topItem.archetype)}</span>
+                ${topItem.kitReady ? '<span class="kit-badge">🎁 Bank Kit Ready</span>' : ''}
+                ${topItem.gate ? `<span class="gate-badge">${escapeHtml(topItem.gate)}</span>` : ''}
+              </div>
+            </div>
+            <div class="hero-metrics">
+              <div class="hero-readiness-label">Account Readiness</div>
+              <div class="hero-readiness-val">${topItem.readiness}%</div>
+              <div class="hero-cost-val">Cost: ~${escapeHtml(topItem.cost)}</div>
+            </div>
+          </div>
+          <div class="hero-bar-wrap">
+            <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, topItem.readiness))}%;"></div>
+          </div>
+          ${topItem.kitReady ? `
+            <div class="starter-kit-callout">
+              <span class="kit-icon">🎁</span>
+              <span>Eligible for <strong>Legendary Weapon Starter Kit</strong> in your Bank (Precursor &amp; Gift for 0g).</span>
+            </div>
+          ` : ''}
+          <div class="hero-jump-bar" style="display: flex; justify-content: flex-end; margin-top: 4px;">
+            <button type="button" class="btn-open-dossier" onclick="loadLegendaryDossier(${topId}, '${escapeHtml(topItem.name)}', { targetSpread: 2 })">
+              Open Full Dossier ➔
+            </button>
+          </div>
+        </div>
+
+        ${subItems.length > 0 ? `
+          <div class="dossier-section-title" style="margin-top: 8px; font-size: 0.78rem;">
+            <span class="section-glyph">✦</span>
+            <span>Alternative Ranked Contenders</span>
+          </div>
+          <div class="priory-subcards-list" style="max-height: 155px; overflow-y: auto; padding-right: 4px;">
+            ${subItems.map(item => {
+              const pMatch = LEGENDARY_PRESETS.find(p => p.name.toLowerCase() === item.name.toLowerCase());
+              const subId = pMatch ? pMatch.id : 30689;
+              return `
+                <div class="priory-sub-card">
+                  <div class="rank-badge rank-sub">#${item.rank}</div>
+                  <div class="sub-card-main">
+                    <div class="sub-card-title-row">
+                      <span class="sub-item-name">${escapeHtml(item.name)}</span>
+                      <span class="sub-item-subtype">${escapeHtml(item.subtype)}</span>
+                      <span class="sub-item-cost">~${escapeHtml(item.cost)}</span>
+                      <span class="sub-item-readiness">${item.readiness}%</span>
+                    </div>
+                    <div class="sub-bar-wrap">
+                      <div class="readiness-bar-fill" style="width: ${Math.min(100, Math.max(0, item.readiness))}%;"></div>
+                    </div>
+                    <div class="sub-badges-row">
+                      <span class="archetype-pill">${escapeHtml(item.archetype)}</span>
+                      ${item.kitReady ? '<span class="kit-pill">🎁 Bank Kit</span>' : ''}
+                      ${item.gate ? `<span class="gate-pill">${escapeHtml(item.gate)}</span>` : ''}
+                      <div class="sub-card-actions">
+                        <button type="button" class="btn-sub-jump" onclick="loadLegendaryDossier(${subId}, '${escapeHtml(item.name)}', { targetSpread: 2 })">Dossier ➔</button>
                       </div>
                     </div>
                   </div>
-                `;
-              }).join('')}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        ` : ''}
+
+        <div class="essence-journal-box" style="margin-top: 6px; padding: 6px 10px; font-style: italic; font-size: 0.74rem; color: var(--ink-soft);">
+          ${formatTextWithWaypoints(guide.motivational_tip || "Priory Archival Note: Temporal ranking accounts for live account wallet, materials in bank, and mastery gate status.")}
+        </div>
+      `;
+    } else {
+      // Direct Crafting Guide (isComparativeRanking === false)
+      const readiness = Math.round(guide.readiness_percentage || 0);
+      const missingMats = guide.missing_materials_summary || {};
+      const missingKeys = Object.keys(missingMats);
+
+      leftPageBody.innerHTML = `
+        <div class="dossier-header-bar">
+          <div class="dossier-header-left">
+            <button type="button" class="btn-return-library" onclick="turnPageTo(0, 'backward')">← Return to Library</button>
+            <div class="dossier-title-cluster">
+              <h2 class="dossier-goal-title" style="margin: 0; padding: 0;">${escapeHtml(guide.goal_name)}</h2>
+              <span class="dossier-type-tag">${escapeHtml(getLegendaryType(activeLegendaryId, guide.goal_name))}</span>
+            </div>
+          </div>
+          ${guide.chat_code ? `
+            <div class="dossier-header-right">
+              <button class="chatcode-stamp" onclick="copyChatCode('${guide.chat_code}', this, event)" title="Copy Chat Code">
+                ${escapeHtml(guide.chat_code)}
+              </button>
             </div>
           ` : ''}
         </div>
 
-        <div class="handwritten-marginalia" style="margin-top: 6px;">
-          "The wise arcanist observes all paths before committing the first ingot."
+        <div class="readiness-meter-wrap" style="margin-top: 8px;">
+          <div class="readiness-meter-bar" style="width: ${Math.min(100, Math.max(0, readiness))}%;"></div>
+          <span class="readiness-meter-label">${readiness}% Account Readiness</span>
         </div>
-      `;
-    }
 
-    const checklist = guide.session_checklist && guide.session_checklist.length > 0
-      ? guide.session_checklist
-      : [
-          {
-            step_number: 1,
-            title: "Claim Precursor / Starter Kit",
-            estimated_time_minutes: 2,
-            game_mode: "Account",
-            description: "Withdraw your Starter Kit or Precursor from the Bank or inventory.",
-            chat_code: null
-          },
-          {
-            step_number: 2,
-            title: "Complete Wizard's Vault Objectives",
-            estimated_time_minutes: 10,
-            game_mode: "OpenWorld",
-            description: "Clear daily objectives and exchange Astral Acclaim for Mystic Clovers.",
-            chat_code: null
-          }
-        ];
-
-    const boosterText = boosterRec
-      ? boosterRec
-      : "⚡ **Speed Analysis & Boosters:** Stack Experience + Heroic + Guild Tavern WvW buff (Gift of Battle in ~4.5h vs 8h). Convert Astral Acclaim into Mystic Clovers from Wizard's Vault to bypass Mystic Forge gambling.";
-
-    if (rightPageBody) {
-      rightPageBody.innerHTML = `
-        <div class="runic-header">ᛋ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᚲ ✦ ᛈ ᚨ ᚦ</div>
-        <h3 class="page-title">Strategic Acceleration</h3>
-        <div class="handwritten-subtitle">~ Priority Action Items & Speed Protocol ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div class="leaderboard-synergy-box booster-synergy-box">
-          <div class="synergy-box-title">
-            <span class="synergy-icon">⚡</span>
-            <span>Speed Tips & Booster Acceleration</span>
-          </div>
-          <div class="synergy-box-content">
-            ${formatTextWithWaypoints(boosterText)}
+        <div class="essence-journal-box" style="margin-top: 6px; padding: 8px 10px;">
+          <div style="font-size: 0.78rem; color: var(--ink-dark); line-height: 1.45;">
+            ${formatTextWithWaypoints(guide.executive_summary || '')}
           </div>
         </div>
 
-        <div class="journal-section" style="margin-top: 4px;">
-          <h4>Actionable Session Checklist</h4>
-          <div class="leaderboard-checklist">
-            ${checklist.map(step => `
-              <div class="leaderboard-ck-item">
-                <div class="ck-item-top">
-                  <span class="ck-step-num">Step ${step.step_number}</span>
-                  <span class="ck-step-title"><strong>${escapeHtml(step.title)}</strong></span>
-                  <span class="ck-step-time">~${step.estimated_time_minutes}m</span>
-                  ${step.game_mode ? `<span class="ck-mode-badge mode-${escapeHtml((step.game_mode||'').toLowerCase())}">[${escapeHtml(step.game_mode)}]</span>` : ''}
-                </div>
-                <div class="ck-item-desc">
-                  ${formatTextWithWaypoints(step.description)}
-                </div>
-                ${step.chat_code ? `
-                  <div class="ck-item-footer">
-                    <button class="chatcode-stamp ck-wp-btn" onclick="copyChatCode('${step.chat_code}', this, event)" title="Click to copy waypoint">
-                      <span>📍</span> WP: ${escapeHtml(step.chat_code)}
-                    </button>
-                  </div>
-                ` : ''}
-              </div>
-            `).join('')}
-          </div>
+        <div class="dossier-section-title" style="margin-top: 10px; font-size: 0.8rem;">
+          <span class="section-glyph">✦</span>
+          <span>Strategic Recommendations</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 5px; max-height: 160px; overflow-y: auto; padding-right: 4px;">
+          ${(guide.strategic_recommendations || []).map(rec => `
+            <div class="task-item-card" style="padding: 5px 8px; font-size: 0.74rem; line-height: 1.35; color: var(--ink-mid);">
+              ${formatTextWithWaypoints(rec)}
+            </div>
+          `).join("")}
         </div>
 
-        ${renderMarginaliaTip(guide.motivational_tip || "Archivist Note: Align your daily routines with live currency conversion spikes.")}
+        ${missingKeys.length > 0 ? `
+          <div class="dossier-section-title" style="margin-top: 8px; font-size: 0.78rem;">
+            <span class="section-glyph">✦</span>
+            <span>Outstanding Materials Audit</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px; max-height: 75px; overflow-y: auto;">
+            ${missingKeys.slice(0, 10).map(mat => `
+              <span class="archetype-pill" style="font-size: 0.68rem; padding: 2px 6px;">
+                ${escapeHtml(mat)}: <strong style="color: var(--leather-gold);">${missingMats[mat].toLocaleString()}</strong>
+              </span>
+            `).join("")}
+          </div>
+        ` : ''}
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+          <button type="button" class="btn-open-dossier" onclick="loadLegendaryDossier(${activeLegendaryId}, '${escapeHtml(activeLegendaryName)}', { targetSpread: 2 })">
+            Open Full Dossier ➔
+          </button>
+        </div>
       `;
     }
   }
 
-  function renderRecipeSpread(guide) {
-    if (isComparativeRanking(guide)) {
-      renderLeaderboardSpread(guide);
-      return;
-    }
-    const qty = guide.target_quantity > 1 ? `${guide.target_quantity}x ` : "";
-    const name = `${qty}${guide.goal_name}`;
-    const chatCode = guide.chat_code || "[&AgErZgAA]";
+  function renderGuideSpreadRight() {
+    if (!rightPageBody) return;
+    const guide = activeCustomGuide;
 
-    if (leftPageBody) {
-      leftPageBody.innerHTML = `
-        <div class="gw2-legendary-banner">
-          <div class="gw2-banner-header">
-            <div class="legendary-icon-frame">◈</div>
-            <div class="legendary-title-block">
-              <div class="legendary-title-text">${escapeHtml(name)}</div>
-              <div class="legendary-type-subtitle">Legendary Progression Itinerary</div>
-            </div>
-            <button class="chatcode-stamp" onclick="copyChatCode('${chatCode}', this, event)" title="Copy Chat Code">
-              ${escapeHtml(chatCode)}
+    if (!guide) {
+      rightPageBody.innerHTML = `
+        <h3 class="page-title">Active Dossier Fast-Track</h3>
+        <div class="ink-divider">✦</div>
+        <div style="text-align: center; padding: 35px 10px;">
+          <div style="font-size: 0.84rem; color: var(--ink-mid); margin-bottom: 12px;">
+            Currently bound legendary context: <strong style="color: var(--leather-gold); font-size: 0.92rem;">${escapeHtml(activeLegendaryName)}</strong>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; max-width: 260px; margin: 0 auto;">
+            <button type="button" class="btn-forge-inscribe" style="font-size: 0.76rem; padding: 6px 12px;" onclick="executeSearchQuery('How do I craft ${escapeHtml(activeLegendaryName)}?')">
+              Generate Guide for ${escapeHtml(activeLegendaryName)}
+            </button>
+            <button type="button" class="btn-forge-inscribe" style="font-size: 0.76rem; padding: 6px 12px;" onclick="turnPageTo(2, 'forward')">
+              Jump to Recipe &amp; Economics ➔
             </button>
           </div>
-          <div class="legendary-lore-quote">
-            "${escapeHtml(guide.executive_summary || 'An artifact of tremendous power.')}"
-          </div>
-          <div class="readiness-meter-row">
-            <span>Account Readiness:</span>
-            <span class="readiness-pct">${guide.readiness_percentage}%</span>
-          </div>
-          <div class="recipe-jump-bar">
-            <button type="button" class="btn-jump-tool" onclick="jumpToPlanner(${guide.goal_item_id || 30704})">⏱ Plan Session</button>
-            <button type="button" class="btn-jump-tool" onclick="jumpToArbitrage(${guide.goal_item_id || 30704})">⚖ Arbitrage Matrix</button>
-            <button type="button" class="btn-jump-tool" onclick="jumpToPrereqs(${guide.goal_item_id || 30704})">📜 Prerequisite Audit</button>
-          </div>
         </div>
-
-        ${renderRecommendationsSection(guide.strategic_recommendations)}
-        ${renderRoadmapSection(guide.master_roadmap_phases)}
       `;
+      return;
     }
 
-    if (rightPageBody) {
+    const isRanking = isComparativeRanking(guide);
+
+    if (isRanking) {
+      let speedNote = "";
+      let boosterNote = "";
+      let loungeNote = "";
+
+      for (const r of (guide.strategic_recommendations || [])) {
+        if (typeof r === "string") {
+          if (r.includes("Speed Analysis") || r.includes("Progression Efficiency") || r.includes("Standard Crafting")) {
+            speedNote = r;
+          } else if (r.includes("Booster") || r.includes("Live Booster") || r.includes("Zhaitaffy") || r.includes("Tomes of Knowledge")) {
+            boosterNote = r;
+          } else if (r.includes("VIP Lounge") || r.includes("Mistlock")) {
+            loungeNote = r;
+          }
+        }
+      }
+
+      // Ensure Speed Analysis note is present for speed / ranking guides
+      if (!speedNote) {
+        const topName = (guide.goal_name || "").toLowerCase().includes("accessor") ? "Aurora" : activeLegendaryName;
+        speedNote = `⚡ **Speed Analysis:** **${topName}** uses **Standard Crafting** (~10h gameplay effort), making it dramatically faster to craft than Gen 2.0 narrative collection legendaries (Astralaria, Nevermore, HOPE, Chuka and Champawat) which require ~40 hours of open-world tasks.`;
+      }
+
+      // Ensure Booster note is present
+      if (!boosterNote && !loungeNote) {
+        boosterNote = `🚀 **Booster & Utility Acceleration:** Stack Experience Booster + Heroic Booster + Guild Tavern buffs for accelerated reward tracks and currency acquisition.`;
+      }
+
+      const checklistSteps = (guide.session_checklist && guide.session_checklist.length > 0)
+        ? guide.session_checklist
+        : [
+            {
+              step_number: 1,
+              title: "Complete Daily Wizard's Vault Tasks",
+              estimated_time_minutes: 15,
+              game_mode: "OpenWorld",
+              description: "Claim Astral Acclaim and purchase remaining Mystic Clovers directly from the Vault.",
+              chat_code: null
+            },
+            {
+              step_number: 2,
+              title: "Gather Missing Materials in Drizzlewood Coast",
+              estimated_time_minutes: 45,
+              game_mode: "OpenWorld",
+              description: "Teleport to Base Camp Waypoint [&BDoMAAA=] to progress material tracks for missing T6 fine trophies.",
+              chat_code: "[&BDoMAAA=]"
+            }
+          ];
+
       rightPageBody.innerHTML = `
-        <div class="runic-header">ᚠ ᛟ ᚱ ᚷ ᛖ ✦ ᛏ ᚱ ᚢ ᛏ ᚺ</div>
-        <h3 class="page-title">Actionable Itinerary</h3>
-        <div class="handwritten-subtitle">~ Master Crafter's Notes ~</div>
+        <h3 class="page-title">Strategic Acceleration</h3>
         <div class="ink-divider">✦</div>
 
-        ${renderMysticForgeSockets(guide.missing_materials_summary)}
-        ${renderChecklistSection(guide.session_checklist)}
-        ${renderMaterialsSection(guide.missing_materials_summary)}
-        ${renderMarginaliaTip(guide.motivational_tip)}
+        ${speedNote ? `
+          <div class="leaderboard-synergy-box kit-synergy-box" style="margin-bottom: 6px;">
+            <div class="synergy-box-title">⚡ Speed &amp; Efficiency Analysis</div>
+            <div class="synergy-box-content">${formatTextWithWaypoints(speedNote)}</div>
+          </div>
+        ` : ''}
+
+        ${boosterNote ? `
+          <div class="leaderboard-synergy-box booster-synergy-box" style="margin-bottom: 6px;">
+            <div class="synergy-box-title">🚀 Booster &amp; Utility Acceleration</div>
+            <div class="synergy-box-content">${formatTextWithWaypoints(boosterNote)}</div>
+          </div>
+        ` : (loungeNote ? `
+          <div class="leaderboard-synergy-box kit-synergy-box" style="margin-bottom: 6px;">
+            <div class="synergy-box-title">✨ VIP Utility &amp; Staging</div>
+            <div class="synergy-box-content">${formatTextWithWaypoints(loungeNote)}</div>
+          </div>
+        ` : `
+          <div class="leaderboard-synergy-box kit-synergy-box" style="margin-bottom: 6px;">
+            <div class="synergy-box-title">⚡ Priory Acceleration Protocol</div>
+            <div class="synergy-box-content">Stack account-bound boosters, complete daily Wizard's Vault objectives for Astral Acclaim, and prioritize time-gated components first.</div>
+          </div>
+        `)}
+
+        <div class="dossier-section-title" style="margin-top: 8px; font-size: 0.8rem;">
+          <span class="section-glyph">✦</span>
+          <span>Actionable Session Checklist</span>
+        </div>
+
+        <div class="leaderboard-checklist" style="max-height: 220px; overflow-y: auto; padding-right: 4px;">
+          ${checklistSteps.map(step => `
+            <div class="leaderboard-ck-item">
+              <div class="ck-item-top">
+                <span class="ck-step-num">Step ${step.step_number}</span>
+                <span class="ck-step-title">${escapeHtml(step.title)}</span>
+                <span class="ck-step-time">⏱ ${step.estimated_time_minutes}m</span>
+                <span class="ck-mode-badge mode-${(step.game_mode || 'openworld').toLowerCase()}">${escapeHtml(step.game_mode || 'Session')}</span>
+              </div>
+              <div class="ck-item-desc">${formatTextWithWaypoints(step.description)}</div>
+              ${step.chat_code ? `
+                <div class="ck-item-footer">
+                  <button type="button" class="chatcode-stamp ck-wp-btn" onclick="copyChatCode('${step.chat_code}', this, event)" title="Copy Waypoint Code">
+                    📍 ${escapeHtml(step.chat_code)}
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+          `).join("")}
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px;">
+          <button type="button" class="btn-forge-inscribe" style="width: auto; padding: 5px 12px; font-size: 0.74rem;" onclick="turnPageTo(2, 'forward')">
+            View Recipe &amp; Economics ➔
+          </button>
+          <button type="button" class="btn-forge-inscribe" style="width: auto; padding: 5px 12px; font-size: 0.74rem;" onclick="turnPageTo(3, 'forward')">
+            View Readiness &amp; Plan ➔
+          </button>
+        </div>
+      `;
+    } else {
+      // Direct Crafting Guide (isComparativeRanking === false)
+      rightPageBody.innerHTML = `
+        <h3 class="page-title">Master Roadmap &amp; Session Checklist</h3>
+        <div class="ink-divider">✦</div>
+
+        <div class="dossier-section-title" style="font-size: 0.8rem;">
+          <span class="section-glyph">✦</span>
+          <span>Master Roadmap Phases</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 5px; max-height: 160px; overflow-y: auto; padding-right: 4px; margin-bottom: 8px;">
+          ${(guide.master_roadmap_phases || []).map(phase => `
+            <div class="task-item-card" style="padding: 5px 8px; font-size: 0.74rem; line-height: 1.35;">
+              ${formatTextWithWaypoints(phase)}
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="dossier-section-title" style="font-size: 0.8rem;">
+          <span class="section-glyph">✦</span>
+          <span>Actionable Session Checklist</span>
+        </div>
+        <div class="leaderboard-checklist" style="max-height: 170px; overflow-y: auto; padding-right: 4px;">
+          ${(guide.session_checklist || []).map(step => `
+            <div class="leaderboard-ck-item">
+              <div class="ck-item-top">
+                <span class="ck-step-num">Step ${step.step_number}</span>
+                <span class="ck-step-title">${escapeHtml(step.title)}</span>
+                <span class="ck-step-time">⏱ ${step.estimated_time_minutes}m</span>
+                <span class="ck-mode-badge mode-${(step.game_mode || 'openworld').toLowerCase()}">${escapeHtml(step.game_mode || 'Session')}</span>
+              </div>
+              <div class="ck-item-desc">${formatTextWithWaypoints(step.description)}</div>
+              ${step.chat_code ? `
+                <div class="ck-item-footer">
+                  <button type="button" class="chatcode-stamp ck-wp-btn" onclick="copyChatCode('${step.chat_code}', this, event)" title="Copy Waypoint Code">
+                    📍 ${escapeHtml(step.chat_code)}
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+          `).join("")}
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px;">
+          <button type="button" class="btn-forge-inscribe" style="width: auto; padding: 5px 12px; font-size: 0.74rem;" onclick="turnPageTo(2, 'forward')">
+            View Recipe &amp; Economics ➔
+          </button>
+          <button type="button" class="btn-forge-inscribe" style="width: auto; padding: 5px 12px; font-size: 0.74rem;" onclick="turnPageTo(3, 'forward')">
+            View Readiness &amp; Plan ➔
+          </button>
+        </div>
       `;
     }
   }
-  window.renderRecipeSpread = renderRecipeSpread;
-  window.isComparativeRanking = isComparativeRanking;
-  
-  function renderMysticForgeSockets(mats) {
-    if (!mats) return "";
-    const entries = Object.entries(mats).slice(0, 4);
-    if (entries.length === 0) return "";
-    
-    let html = `<div class="mystic-forge-sockets-container">`;
-    entries.forEach(([name, count]) => {
-      const tooltipData = { name: name, type: "Crafting Material", rarity: "rare", description: "Used in the Mystic Forge.", source: "Gathered or crafted in Tyria." };
-      const dataAttr = JSON.stringify(tooltipData).replace(/"/g, '&quot;');
-      html += `
-        <div class="mf-socket has-tooltip" data-tooltip="${dataAttr}">
-          <div class="mf-socket-icon">◈</div>
-          <div class="mf-socket-name">${escapeHtml(name)}</div>
-          <div class="mf-socket-count">${count.toLocaleString()} needed</div>
+
+  // Aliases for Guide Spread functions per specification
+  window.renderGuideSpreadLeft = renderGuideSpreadLeft;
+  window.renderGuideSpreadRight = renderGuideSpreadRight;
+  window.renderSpreadGuideLeft = renderGuideSpreadLeft;
+  window.renderSpreadGuideRight = renderGuideSpreadRight;
+  window.renderSpread1Left = renderGuideSpreadLeft;
+  window.renderSpread1Right = renderGuideSpreadRight;
+
+  // ── Spread 2: Recipe & Market Economics ─────────────────────────────────────
+  function renderRecipeSpreadLeft() {
+    if (!leftPageBody) return;
+
+    const isLoading = activeDossierData.loading.recipe;
+    const guide = activeDossierData.recipe;
+    const itemType = getLegendaryType(activeLegendaryId, activeLegendaryName);
+    const chatCode = guide?.chat_code || "[&AgErZgAA]";
+    const readinessPct = guide?.readiness_percentage != null ? guide.readiness_percentage : 0;
+
+    let bodyContent = "";
+
+    if (isLoading) {
+      bodyContent = `
+        <div style="text-align: center; padding: 40px 10px;">
+          <span class="spinner-ink" style="width: 32px; height: 32px; border-width: 3px; border-top-color: var(--leather-gold);"></span>
+          <div style="margin-top: 12px; font-family: var(--font-head); color: var(--ink-mid); font-size: 0.88rem;">
+            Consulting Priory Archives for ${escapeHtml(activeLegendaryName)}...
+          </div>
         </div>
       `;
+    } else {
+      const arb = activeDossierData.arbitrage;
+      const scratchCost = arb?.craft_from_scratch_total || 21500000;
+      const accountCost = arb?.my_account_craft_cost || 18500000;
+      const ownedValue = Math.max(0, scratchCost - accountCost);
+      const goldRequired = accountCost;
+
+      const missingMats = guide?.missing_materials_summary || {};
+      const missingKeys = Object.keys(missingMats);
+      const missingCount = missingKeys.length;
+
+      const precursorName = arb?.precursor_strategy?.precursor_name || "Precursor Weapon";
+      const sockets = [
+        { name: precursorName, count: "1x", icon: "🗡️" },
+        { name: "Gift of Mastery", count: "1x", icon: "🗺️" },
+        { name: "Gift of Fortune", count: "1x", icon: "🍀" },
+        { name: `Gift of ${activeLegendaryName}`, count: "1x", icon: "✨" }
+      ];
+
+      bodyContent = `
+        <div class="readiness-meter-wrap" style="margin-top: 8px;">
+          <div class="readiness-meter-bar" style="width: ${Math.min(100, Math.max(0, readinessPct))}%;"></div>
+          <span class="readiness-meter-label">${readinessPct}% Account Progress</span>
+        </div>
+
+        <div class="arbitrage-grid" style="margin-top: 10px;">
+          <div class="arb-card">
+            <span class="arb-card-lbl">Total Craft Cost</span>
+            <span class="arb-card-val">${formatCopper(scratchCost)}</span>
+          </div>
+          <div class="arb-card">
+            <span class="arb-card-lbl">Account Owned Value</span>
+            <span class="arb-card-val" style="color: #2e7d32;">${formatCopper(ownedValue)}</span>
+          </div>
+          <div class="arb-card">
+            <span class="arb-card-lbl">Missing Materials</span>
+            <span class="arb-card-val">${missingCount > 0 ? `${missingCount} types` : 'Audited'}</span>
+          </div>
+          <div class="arb-card" style="border-color: var(--leather-gold); background: rgba(200, 150, 62, 0.08);">
+            <span class="arb-card-lbl" style="color: var(--leather-gold); font-weight: bold;">Gold Required</span>
+            <span class="arb-card-val" style="font-weight: bold;">${formatCopper(goldRequired)}</span>
+          </div>
+        </div>
+
+        <div class="dossier-section-title" style="margin-top: 12px;">
+          <span class="section-glyph">✦</span>
+          <span>Mystic Forge Recipe Tree</span>
+        </div>
+
+        <div class="mystic-forge-sockets-container">
+          ${sockets.map(s => `
+            <div class="mf-socket">
+              <span class="mf-socket-icon">${s.icon}</span>
+              <div class="mf-socket-details">
+                <span class="mf-socket-name">${escapeHtml(s.name)}</span>
+                <span class="mf-socket-count">${escapeHtml(s.count)}</span>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+        ${missingCount > 0 ? `
+          <div class="essence-journal-box" style="margin-top: 6px; padding: 6px 10px;">
+            <div class="essence-journal-title" style="font-size: 0.72rem; margin-bottom: 4px;">Primary Outstanding Components</div>
+            <div style="max-height: 105px; overflow-y: auto; padding-right: 4px;">
+              ${missingKeys.slice(0, 6).map(k => `
+                <div style="display: flex; justify-content: space-between; font-size: 0.74rem; border-bottom: 1px dotted var(--parch-line); padding: 2px 0;">
+                  <span>${escapeHtml(k)}</span>
+                  <span style="font-family: var(--font-mono); color: var(--leather-gold); font-weight: 600;">${missingMats[k]} needed</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    leftPageBody.innerHTML = `
+      <div class="dossier-header-bar">
+        <div class="dossier-header-left">
+          <button type="button" class="btn-return-library" onclick="turnPageTo(0, 'backward')">← Return to Library</button>
+          <div class="dossier-title-cluster">
+            <h2 class="dossier-goal-title" style="margin: 0; padding: 0;">${escapeHtml(activeLegendaryName)}</h2>
+            <span class="dossier-type-tag">${escapeHtml(itemType)}</span>
+          </div>
+        </div>
+        <div class="dossier-header-right">
+          <button class="chatcode-stamp" onclick="copyChatCode('${chatCode}', this, event)" title="Copy Chat Code">
+            ${escapeHtml(chatCode)}
+          </button>
+        </div>
+      </div>
+
+      ${bodyContent}
+    `;
+  }
+
+  function renderRecipeSpreadRight() {
+    if (!rightPageBody) return;
+
+    const isLoading = activeDossierData.loading.arbitrage;
+    const arb = activeDossierData.arbitrage;
+
+    if (isLoading) {
+      rightPageBody.innerHTML = `
+        <h3 class="page-title">Market Arbitrage &amp; Economics</h3>
+        <div class="ink-divider">✦</div>
+        <div style="text-align: center; padding: 40px 10px;">
+          <span class="spinner-ink" style="width: 32px; height: 32px; border-width: 3px; border-top-color: var(--leather-gold);"></span>
+          <div style="margin-top: 12px; font-family: var(--font-head); color: var(--ink-mid); font-size: 0.88rem;">
+            Evaluating Wallace TP Tax &amp; Market Arbitrage...
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (!arb) {
+      rightPageBody.innerHTML = `
+        <h3 class="page-title">Market Arbitrage &amp; Economics</h3>
+        <div class="ink-divider">✦</div>
+        <div style="text-align: center; padding: 30px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">
+          Arbitrage data unavailable.
+        </div>
+      `;
+      return;
+    }
+
+    let verdictClass = 'craft';
+    let verdictLabel = 'RECOMMENDED: CRAFT FOR SELF';
+    if (arb.recommended_action === 'CRAFT_FOR_PROFIT') {
+      verdictClass = 'profit';
+      verdictLabel = '✦ HIGH VALUE: CRAFT FOR PROFIT (TP FLIP) ✦';
+    } else if (arb.recommended_action === 'BUY_FINISHED_DIRECT') {
+      verdictClass = 'buy';
+      verdictLabel = 'RECOMMENDED: BUY FINISHED FROM TRADING POST';
+    }
+
+    const marginVal = arb.profit_margin_if_sold != null ? arb.profit_margin_if_sold : 0;
+    const marginColor = marginVal >= 0 ? '#2e7d32' : '#c62828';
+    const marginSign = marginVal >= 0 ? '+' : '';
+    const taxAmt = Math.round(arb.buy_order_total * 0.15);
+
+    const prec = arb.precursor_strategy || {};
+    const clover = arb.clover_strategy || {};
+
+    rightPageBody.innerHTML = `
+      <h3 class="page-title">Market Arbitrage &amp; Economics</h3>
+      <div class="ink-divider">✦</div>
+
+      <div class="verdict-banner ${verdictClass}">
+        ${verdictLabel}
+      </div>
+
+      <div class="arbitrage-grid" style="margin-top: 8px;">
+        <div class="arb-card">
+          <span class="arb-card-lbl">Instant TP Buy</span>
+          <span class="arb-card-val">${formatCopper(arb.instant_buy_total)}</span>
+        </div>
+        <div class="arb-card">
+          <span class="arb-card-lbl">TP Buy Order</span>
+          <span class="arb-card-val">${formatCopper(arb.buy_order_total)}</span>
+        </div>
+        <div class="arb-card">
+          <span class="arb-card-lbl">Scratch Craft Cost</span>
+          <span class="arb-card-val">${formatCopper(arb.craft_from_scratch_total)}</span>
+        </div>
+        <div class="arb-card" style="border-color: var(--leather-gold); background: rgba(200, 150, 62, 0.08);">
+          <span class="arb-card-lbl" style="color: var(--leather-gold); font-weight: bold;">My Account Craft Cost</span>
+          <span class="arb-card-val" style="font-weight: bold;">${formatCopper(arb.my_account_craft_cost)}</span>
+        </div>
+      </div>
+
+      <div class="tax-breakdown-box" style="margin-top: 8px;">
+        <div style="font-family: var(--font-head); font-weight: 700; color: var(--ink-dark); text-transform: uppercase; font-size: 0.74rem;">
+          Wallace 15% TP Tax Liquidation Model
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.76rem;">
+          <span style="color: var(--ink-soft);">Gross TP Liquidation:</span>
+          <span>${formatCopper(arb.buy_order_total)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.76rem;">
+          <span style="color: var(--ink-soft);">Wallace 15% TP Tax:</span>
+          <span style="color: #c62828;">-${formatCopper(taxAmt)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-top: 1px dotted var(--parch-line); padding-top: 2px; font-size: 0.78rem;">
+          <span style="font-weight: bold;">Net Payout If Sold:</span>
+          <span style="font-weight: bold;">${formatCopper(arb.net_sell_if_sold)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--parch-line); padding-top: 2px; font-size: 0.78rem;">
+          <span style="font-weight: bold;">Net Profit Margin (vs Scratch):</span>
+          <span style="font-weight: bold; color: ${marginColor};">${marginSign}${formatCopper(marginVal)}</span>
+        </div>
+      </div>
+
+      <div class="task-item-card" style="margin-top: 6px; padding: 6px 10px;">
+        <div class="task-header-row">
+          <span class="task-title" style="font-size: 0.78rem;">🗡️ Precursor Acquisition Strategy</span>
+          <span class="task-duration-badge" style="background: var(--leather-gold); color: #fff;">${escapeHtml(prec.recommended_strategy || 'BUY_ORDER')}</span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--ink-mid); margin-top: 2px;">
+          <strong>Target:</strong> ${escapeHtml(prec.precursor_name || 'Precursor')} ${prec.precursor_id ? `(ID: ${prec.precursor_id})` : ''}
+        </div>
+        <div style="font-size: 0.74rem; color: var(--ink-soft); line-height: 1.35; margin-top: 2px;">
+          ${escapeHtml(prec.details || 'Compare TP buy order vs Grandmaster Craftsman Hobbs collection vs Wizard Vault Starter Kit.')}
+        </div>
+      </div>
+
+      <div class="task-item-card" style="margin-top: 6px; padding: 6px 10px;">
+        <div class="task-header-row">
+          <span class="task-title" style="font-size: 0.78rem;">🍀 Mystic Clover EV Strategy</span>
+          <span class="task-duration-badge" style="background: #70338a; color: #fff;">${escapeHtml(clover.recommended_strategy || 'WIZARDS_VAULT')}</span>
+        </div>
+        <div style="font-size: 0.74rem; color: var(--ink-soft); line-height: 1.35; margin-top: 2px;">
+          ${escapeHtml(clover.notes || 'Expected Value: 3.2 Mystic Coins + 3.2 Ecto per Clover via Mystic Forge recipe vs discounted Astral Acclaim and Fractal BLING-9988.')}
+        </div>
+      </div>
+    `;
+  }
+
+  window.renderRecipeSpreadLeft = renderRecipeSpreadLeft;
+  window.renderRecipeSpreadRight = renderRecipeSpreadRight;
+  window.renderSpread2Left = renderRecipeSpreadLeft;
+  window.renderSpread2Right = renderRecipeSpreadRight;
+
+  // ── Spread 3: Readiness & Daily Session Plan ────────────────────────────────
+  function renderPlanSpreadLeft() {
+    if (!leftPageBody) return;
+
+    const isLoadingPrereq = activeDossierData.loading.prerequisites;
+    const isLoadingItin = activeDossierData.loading.itinerary;
+    const prereq = activeDossierData.prerequisites;
+    const itin = activeDossierData.itinerary;
+
+    // 1. Compact Prerequisite Status Seal
+    let prereqSealHtml = "";
+    if (isLoadingPrereq) {
+      prereqSealHtml = `
+        <div class="prereq-compact-seal" style="padding: 6px 12px; margin-bottom: 8px;">
+          <span class="spinner-ink" style="width: 14px; height: 14px; border-width: 2px;"></span>
+          <div class="seal-content">
+            <div class="seal-title" style="font-size: 0.76rem;">Auditing Account Prerequisites...</div>
+            <div class="seal-sub">Checking world completion, masteries &amp; crafting disciplines</div>
+          </div>
+        </div>
+      `;
+    } else if (!prereq) {
+      prereqSealHtml = `
+        <div class="prereq-compact-seal warn pending" style="margin-bottom: 8px;">
+          <span class="seal-icon">⚠️</span>
+          <div class="seal-content prereq-seal-info">
+            <div class="seal-title prereq-seal-badge warn">PREREQUISITE DATA UNAVAILABLE</div>
+            <div class="seal-sub prereq-seal-sub">Click to retry account prerequisite audit</div>
+          </div>
+          <button type="button" class="btn-toggle-prereq-details btn-prereq-details" onclick="fetchPrerequisites()">Audit</button>
+        </div>
+      `;
+    } else {
+      const canCraft = Boolean(prereq.can_craft_immediately);
+      const isSatisfied = canCraft || (prereq.has_world_completion && prereq.active_crafting_ready && prereq.mastery_requirements_met && (!prereq.blockers || prereq.blockers.length === 0));
+
+      const primaryBlocker = (prereq.blockers && prereq.blockers.length > 0)
+        ? prereq.blockers[0]
+        : "Action items remaining";
+
+      const sealBadgeText = isSatisfied ? "✓ PREREQUISITES SATISFIED" : "⚠️ PREREQUISITES PENDING";
+      const sealSubText = isSatisfied
+        ? "World completion, Crafting 500 &amp; Masteries verified."
+        : escapeHtml(primaryBlocker);
+      const sealStatusClass = isSatisfied ? "pass satisfied" : "warn pending";
+      const sealIcon = isSatisfied ? "✓" : "⚠️";
+
+      const worldBadge = prereq.has_world_completion ? "pass" : "fail";
+      const worldText = prereq.has_world_completion ? "Completed" : "Incomplete";
+
+      const craftBadge = prereq.active_crafting_ready ? "pass" : "warn";
+      const craftText = prereq.active_crafting_ready ? "Ready (500)" : "Needs Discipline";
+
+      const masteryBadge = prereq.mastery_requirements_met ? "pass" : "warn";
+      const masteryText = prereq.mastery_requirements_met ? "Satisfied" : "Missing Unlocks";
+
+      const precBits = prereq.precursor_collection_bits_total > 0
+        ? `${prereq.precursor_collection_bits_done} / ${prereq.precursor_collection_bits_total}`
+        : "Standard";
+
+      let blockersHtml = "";
+      if (prereq.blockers && prereq.blockers.length > 0) {
+        blockersHtml = prereq.blockers.map(b => `
+          <div style="font-size: 0.74rem; color: #c62828; margin-bottom: 2px; display: flex; gap: 5px;">
+            <span>⛔</span> <span>${escapeHtml(b)}</span>
+          </div>
+        `).join("");
+      } else {
+        blockersHtml = `<div style="font-size: 0.74rem; color: #2e7d32; font-style: italic;">✨ Zero hard blockers! All prerequisite requirements are met.</div>`;
+      }
+
+      let routingHtml = "";
+      if (prereq.crafting_assignment_recommendations && prereq.crafting_assignment_recommendations.length > 0) {
+        routingHtml = prereq.crafting_assignment_recommendations.map(r => `
+          <div class="task-item-card" style="margin-bottom: 4px; padding: 4px 8px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.76rem;">
+              <strong>${escapeHtml(r.gift_or_component || r.gift || 'Gift')}</strong>
+              <span style="color: var(--leather-gold); font-weight: bold;">${escapeHtml(r.character_name || r.recommended_character || 'Active Character')}</span>
+            </div>
+            <div style="font-size: 0.7rem; color: var(--ink-soft);">
+              Discipline: ${escapeHtml(r.discipline || 'Weaponsmith')} (Rating: ${r.current_rating || 500})
+            </div>
+          </div>
+        `).join("");
+      } else if (prereq.character_discipline_assignments && Object.keys(prereq.character_discipline_assignments).length > 0) {
+        routingHtml = Object.entries(prereq.character_discipline_assignments).map(([disc, char]) => {
+          const charName = typeof char === "object" ? char.character_name : char;
+          return `
+            <div class="task-item-card" style="margin-bottom: 4px; padding: 4px 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.76rem;">
+                <strong>${escapeHtml(disc)}</strong>
+                <span style="color: var(--leather-gold); font-weight: bold;">${escapeHtml(charName)}</span>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      prereqSealHtml = `
+        <div class="prereq-compact-seal ${sealStatusClass}">
+          <span class="seal-icon">${sealIcon}</span>
+          <div class="seal-content prereq-seal-info">
+            <div class="seal-title prereq-seal-badge ${isSatisfied ? 'pass' : 'warn'}">${sealBadgeText}</div>
+            <div class="seal-sub prereq-seal-sub">${sealSubText}</div>
+          </div>
+          <button type="button" class="btn-toggle-prereq-details btn-prereq-details" id="btn-toggle-prereq-details" title="Toggle prerequisite audit details">
+            ${prereqDetailsExpanded ? 'Details ▴' : 'Details ▾'}
+          </button>
+        </div>
+
+        <div id="prereq-collapsible-details" class="prereq-collapsible-details ${prereqDetailsExpanded ? 'expanded active' : ''}">
+          <div class="prereq-pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-header">
+                <span>World Comp</span>
+                <span class="pillar-badge ${worldBadge}">${worldText}</span>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--ink-soft);">
+                Source: ${escapeHtml(prereq.world_completion_source || 'Map Exploration')}
+              </div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-header">
+                <span>Crafting 500</span>
+                <span class="pillar-badge ${craftBadge}">${craftText}</span>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--ink-soft);">
+                ${prereq.active_crafting_ready ? 'Discipline active (500)' : 'Discipline required'}
+              </div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-header">
+                <span>Masteries</span>
+                <span class="pillar-badge ${masteryBadge}">${masteryText}</span>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--ink-soft);">
+                ${prereq.missing_masteries?.length > 0 ? `${prereq.missing_masteries.length} tracks pending` : 'All masteries verified'}
+              </div>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-header">
+                <span>Precursor</span>
+                <span class="pillar-badge pass">${precBits}</span>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--ink-soft);">
+                ${escapeHtml(prereq.precursor_collection_step || 'Tradeable / Finished')}
+              </div>
+            </div>
+          </div>
+
+          <div class="dossier-section-title" style="margin-top: 6px; font-size: 0.76rem;">
+            <span class="section-glyph">✦</span>
+            <span>Active Crafting Blockers</span>
+          </div>
+          <div style="margin-bottom: 4px;">
+            ${blockersHtml}
+          </div>
+
+          ${routingHtml ? `
+            <div class="dossier-section-title" style="margin-top: 6px; font-size: 0.76rem;">
+              <span class="section-glyph">✦</span>
+              <span>Multi-Alt Discipline Routing</span>
+            </div>
+            <div>
+              ${routingHtml}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // 2. Knapsack Playtime Budget Controls
+    const budgetControlsHtml = `
+      <div class="inscribe-form" style="margin-top: 6px; margin-bottom: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <label class="inscribe-label" for="planner-budget-slider" style="font-size: 0.88rem;">Playtime Budget:</label>
+          <span id="budget-val-display" style="font-family: var(--font-head); font-weight: 700; color: var(--leather-gold); font-size: 0.95rem;">${plannerBudgetMinutes} mins</span>
+        </div>
+
+        <input type="range" id="planner-budget-slider" class="priory-slider" min="30" max="120" step="15" value="${plannerBudgetMinutes}">
+
+        <div class="playtime-budget-btns playtime-quick-btns" style="margin-top: 4px;">
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 30 ? 'active' : ''}" data-mins="30">30m</button>
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 60 ? 'active' : ''}" data-mins="60">60m</button>
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 90 ? 'active' : ''}" data-mins="90">90m</button>
+          <button type="button" class="playtime-btn ${plannerBudgetMinutes === 120 ? 'active' : ''}" data-mins="120">120m</button>
+        </div>
+
+        <button type="button" class="btn-forge-inscribe" id="btn-calc-itinerary" style="margin-top: 8px;">
+          <span id="btn-itinerary-text">${isLoadingItin ? 'Computing Knapsack Schedule...' : 'Schedule Optimal Itinerary'}</span>
+          <span id="btn-itinerary-spinner" class="spinner-ink ${isLoadingItin ? '' : 'hidden'}"></span>
+        </button>
+      </div>
+    `;
+
+    // 3. Session Summary Box
+    let summaryContent = "";
+    if (isLoadingItin) {
+      summaryContent = `
+        <div class="essence-journal-box session-summary-box" style="margin-top: 8px; text-align: center; padding: 20px 10px;">
+          <span class="spinner-ink" style="width: 24px; height: 24px; border-width: 2px; border-top-color: var(--leather-gold);"></span>
+          <div style="margin-top: 8px; font-family: var(--font-head); color: var(--ink-mid); font-size: 0.8rem;">
+            Optimizing 0/1 Knapsack session itinerary...
+          </div>
+        </div>
+      `;
+    } else if (!itin) {
+      summaryContent = `
+        <div class="essence-journal-box session-summary-box" style="margin-top: 8px;">
+          <div class="essence-journal-title">
+            <span>Session Allocation</span>
+            <span style="color: var(--leather-gold); font-weight: bold;">0% Utilization</span>
+          </div>
+          <div class="essence-stats-grid">
+            <div class="stat-item"><span class="lbl">Budget:</span><span class="val">${plannerBudgetMinutes}m</span></div>
+            <div class="stat-item"><span class="lbl">Scheduled:</span><span class="val">0m</span></div>
+            <div class="stat-item"><span class="lbl">Tasks Queued:</span><span class="val">0</span></div>
+            <div class="stat-item"><span class="lbl">Unused Window:</span><span class="val">${plannerBudgetMinutes}m</span></div>
+          </div>
+          <div style="font-size: 0.76rem; color: var(--ink-soft); margin-top: 6px; font-style: italic;">
+            Select playtime budget and click &ldquo;Schedule Optimal Itinerary&rdquo; to compute.
+          </div>
+        </div>
+      `;
+    } else {
+      const tasksCount = itin.tasks ? itin.tasks.length : 0;
+      const scheduledMin = itin.total_scheduled_minutes || 0;
+      const budgetMin = itin.time_budget_minutes || plannerBudgetMinutes;
+      const unusedMin = Math.max(0, budgetMin - scheduledMin);
+      const utilPct = itin.time_utilization_pct !== undefined 
+        ? itin.time_utilization_pct 
+        : Math.round((scheduledMin / (budgetMin || 1)) * 100);
+
+      const assignedCharFromItin = itin.tasks?.find(t => t.character_name)?.character_name;
+      let assignedCharFromPrereq = null;
+      if (prereq?.crafting_assignment_recommendations?.length > 0) {
+        assignedCharFromPrereq = prereq.crafting_assignment_recommendations[0].character_name || prereq.crafting_assignment_recommendations[0].recommended_character;
+      } else if (prereq?.character_discipline_assignments && Object.keys(prereq.character_discipline_assignments).length > 0) {
+        const firstVal = Object.values(prereq.character_discipline_assignments)[0];
+        assignedCharFromPrereq = typeof firstVal === "object" ? firstVal.character_name : firstVal;
+      }
+      const assignedChar = assignedCharFromItin || assignedCharFromPrereq;
+
+      const charNoteHtml = assignedChar
+        ? `<div style="font-size: 0.74rem; color: var(--ink-soft); margin-top: 6px; padding-top: 5px; border-top: 1px dotted var(--parch-line);">
+             👤 <strong>Character Routing:</strong> Assigned to <span style="color: var(--leather-gold); font-weight: 700;">${escapeHtml(assignedChar)}</span> (zero re-licensing fees).
+           </div>`
+        : `<div style="font-size: 0.74rem; color: var(--ink-soft); margin-top: 6px; padding-top: 5px; border-top: 1px dotted var(--parch-line);">
+             👤 <strong>Character Routing:</strong> Primary active character (zero re-licensing fees).
+           </div>`;
+
+      summaryContent = `
+        <div class="essence-journal-box session-summary-box" style="margin-top: 8px;">
+          <div class="essence-journal-title">
+            <span>Session Allocation</span>
+            <span style="color: var(--leather-gold); font-weight: bold;">${utilPct}% Utilization</span>
+          </div>
+          <div class="essence-stats-grid">
+            <div class="stat-item"><span class="lbl">Budget:</span><span class="val">${budgetMin}m</span></div>
+            <div class="stat-item"><span class="lbl">Scheduled:</span><span class="val">${scheduledMin}m</span></div>
+            <div class="stat-item"><span class="lbl">Tasks Queued:</span><span class="val">${tasksCount}</span></div>
+            <div class="stat-item"><span class="lbl">Unused Window:</span><span class="val">${unusedMin}m</span></div>
+          </div>
+          ${itin.summary ? `
+            <div style="font-size: 0.76rem; color: var(--ink-mid); margin-top: 6px; font-style: italic; line-height: 1.35;">
+              &ldquo;${escapeHtml(itin.summary)}&rdquo;
+            </div>
+          ` : ''}
+          ${charNoteHtml}
+        </div>
+      `;
+    }
+
+    leftPageBody.innerHTML = `
+      <h2 class="page-title">Session Planner &amp; Strategy</h2>
+      <div class="ink-divider">✦</div>
+
+      ${prereqSealHtml}
+
+      ${budgetControlsHtml}
+
+      ${summaryContent}
+    `;
+
+    // Slider & preset buttons listeners
+    const slider = document.getElementById("planner-budget-slider");
+    const valDisplay = document.getElementById("budget-val-display");
+
+    if (slider) {
+      slider.addEventListener("input", (e) => {
+        const mins = parseInt(e.target.value, 10);
+        plannerBudgetMinutes = mins;
+        if (valDisplay) valDisplay.textContent = `${mins} mins`;
+        document.querySelectorAll(".playtime-btn").forEach(btn => {
+          btn.classList.toggle("active", parseInt(btn.getAttribute("data-mins"), 10) === mins);
+        });
+      });
+      slider.addEventListener("change", (e) => {
+        const mins = parseInt(e.target.value, 10);
+        recalculateItinerary(mins);
+      });
+    }
+
+    document.querySelectorAll(".playtime-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const mins = parseInt(btn.getAttribute("data-mins"), 10);
+        plannerBudgetMinutes = mins;
+        if (slider) slider.value = mins;
+        if (valDisplay) valDisplay.textContent = `${mins} mins`;
+        document.querySelectorAll(".playtime-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        recalculateItinerary(mins);
+      });
     });
-    html += `</div>`;
-    return html;
+
+    const btnCalc = document.getElementById("btn-calc-itinerary");
+    if (btnCalc) {
+      btnCalc.addEventListener("click", () => {
+        recalculateItinerary(plannerBudgetMinutes);
+      });
+    }
+
+    const btnToggleDetails = document.getElementById("btn-toggle-prereq-details");
+    if (btnToggleDetails) {
+      btnToggleDetails.addEventListener("click", () => {
+        prereqDetailsExpanded = !prereqDetailsExpanded;
+        const detailsEl = document.getElementById("prereq-collapsible-details");
+        if (detailsEl) {
+          detailsEl.classList.toggle("expanded", prereqDetailsExpanded);
+          detailsEl.classList.toggle("active", prereqDetailsExpanded);
+        }
+        btnToggleDetails.textContent = prereqDetailsExpanded ? "Details ▴" : "Details ▾";
+      });
+    }
   }
 
-  function renderRecommendationsSection(recs) {
-    if (!recs || recs.length === 0) return "";
-    const items = recs.map(r => `<li>${formatTextWithWaypoints(r)}</li>`).join("");
-    return `
-      <div class="journal-section">
-        <h4>Currency & Strategic Conversions</h4>
-        <ul>${items}</ul>
+  function renderPlanSpreadRight() {
+    if (!rightPageBody) return;
+
+    const isLoading = activeDossierData.loading.itinerary;
+    const itin = activeDossierData.itinerary;
+
+    let routeContent = "";
+
+    if (isLoading) {
+      routeContent = `
+        <div style="text-align: center; padding: 40px 10px;">
+          <span class="spinner-ink" style="width: 32px; height: 32px; border-width: 3px; border-top-color: var(--leather-gold);"></span>
+          <div style="margin-top: 12px; font-family: var(--font-head); color: var(--ink-mid); font-size: 0.88rem;">
+            Computing 0/1 Knapsack Daily Schedule (${plannerBudgetMinutes}m budget)...
+          </div>
+        </div>
+      `;
+    } else if (!itin || !itin.tasks || itin.tasks.length === 0) {
+      routeContent = `
+        <div style="text-align: center; padding: 30px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.15rem;">
+          No tasks scheduled for this duration. Select a playtime budget on the left page to compute an itinerary.
+        </div>
+      `;
+    } else {
+      routeContent = itin.tasks.map((task, idx) => {
+        const inputs = task.required_inputs?.name 
+          ? `${task.required_inputs.count ? task.required_inputs.count + 'x ' : ''}${task.required_inputs.name}`
+          : (task.required_inputs?.description || (task.required_inputs?.currencies ? Object.entries(task.required_inputs.currencies).map(([k, v]) => `${v} ${k}`).join(', ') : 'None'));
+        
+        const rewardVal = task.reward_output?.value_towards_goal || task.reward_output?.name || 'Progression towards goal';
+        const charTag = task.character_name 
+          ? `<div style="font-size: 0.72rem; color: var(--ink-soft);">👤 Character: <strong style="color: var(--leather-gold);">${escapeHtml(task.character_name)}</strong></div>`
+          : '';
+
+        return `
+          <div class="task-item-card">
+            <div class="task-header-row">
+              <span class="task-title" style="font-size: 0.82rem;">${idx + 1}. ${escapeHtml(task.title)}</span>
+              <span class="task-duration-badge">⏱ ${task.estimated_duration_minutes}m</span>
+            </div>
+            <div class="task-loc-row">
+              <span style="font-size: 0.74rem;">📍 ${escapeHtml(task.location_name)}</span>
+              ${task.waypoint_code ? `
+                <button type="button" class="chatcode-stamp" onclick="copyChatCode('${task.waypoint_code}', this, event)" title="Copy Waypoint Code" style="font-size: 0.68rem; padding: 1px 6px;">
+                  ${escapeHtml(task.waypoint_code)}
+                </button>
+              ` : ''}
+            </div>
+            ${charTag}
+            <div class="task-desc" style="font-size: 0.75rem; line-height: 1.35;">${formatTextWithWaypoints(task.instructions)}</div>
+            <div class="task-reward-box" style="font-size: 0.72rem; margin-top: 4px;">
+              <div><strong>Inputs:</strong> ${escapeHtml(inputs)}</div>
+              <div><strong>Reward:</strong> ${escapeHtml(rewardVal)}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    rightPageBody.innerHTML = `
+      <h3 class="page-title">Prioritized Task Route</h3>
+      <div class="ink-divider">✦</div>
+      <div style="font-size: 0.78rem; color: var(--ink-soft); margin-top: -6px; margin-bottom: 6px; font-family: var(--font-head); text-transform: uppercase; letter-spacing: 0.04em;">
+        Sequential Waypoint Itinerary (${escapeHtml(activeLegendaryName)})
+      </div>
+
+      <div class="tasks-route-container">
+        ${routeContent}
       </div>
     `;
   }
 
-  function renderRoadmapSection(phases) {
-    if (!phases || phases.length === 0) return "";
-    const items = phases.map(p => `<li>${formatTextWithWaypoints(p)}</li>`).join("");
-    return `
-      <div class="journal-section">
-        <h4>5-Phase Master Crafting Roadmap</h4>
-        <ol>${items}</ol>
-      </div>
-    `;
+  window.renderPlanSpreadLeft = renderPlanSpreadLeft;
+  window.renderPlanSpreadRight = renderPlanSpreadRight;
+  window.renderSpread3Left = renderPlanSpreadLeft;
+  window.renderSpread3Right = renderPlanSpreadRight;
+
+  // ── 4. Telemetry & Side Drawer Controller ────────────────────────────────────
+  function ensureSideDrawerDOM() {
+    let drawer = document.getElementById("priory-side-drawer");
+    if (!drawer) {
+      drawer = document.createElement("aside");
+      drawer.id = "priory-side-drawer";
+      drawer.className = "priory-side-drawer hidden";
+      drawer.setAttribute("aria-label", "Account Telemetry and Diagnostics");
+      drawer.innerHTML = `
+        <div class="drawer-header">
+          <div class="drawer-title">
+            <span class="drawer-glyph">⚜</span>
+            <span>Account &amp; System Telemetry</span>
+          </div>
+          <button id="btn-close-drawer" class="btn-drawer-close" title="Close Drawer">✕</button>
+        </div>
+        <div class="drawer-content">
+          <div class="drawer-section">
+            <div class="drawer-section-title">Active GW2 Account &amp; API Key</div>
+            <div class="api-key-panel">
+              <div class="api-key-current-row">
+                <span class="api-key-lbl">Current Account:</span>
+                <span class="api-key-val" id="drawer-account-name">Loading...</span>
+              </div>
+              <div class="api-key-current-row">
+                <span class="api-key-lbl">Active Key:</span>
+                <span class="api-key-val" id="drawer-api-key-masked">None</span>
+              </div>
+              <label class="drawer-input-lbl" for="drawer-api-key-input">Switch API Key:</label>
+              <div class="api-key-input-wrap">
+                <input type="password" id="drawer-api-key-input" class="drawer-key-input" placeholder="Paste GW2 API Key (72 chars)..." spellcheck="false" autocomplete="off" />
+                <button type="button" id="btn-toggle-key-visibility" class="btn-toggle-key" title="Show / Hide Key">👁</button>
+              </div>
+              <div class="api-key-actions-row">
+                <button type="button" id="btn-apply-api-key" class="btn-drawer-action btn-apply-key">
+                  <span id="btn-apply-key-text">Sync Account</span>
+                  <span id="btn-apply-key-spinner" class="spinner-ink hidden"></span>
+                </button>
+                <button type="button" id="btn-reset-api-key" class="btn-drawer-action btn-reset-key" title="Reset to default API key">Reset</button>
+              </div>
+              <div id="drawer-api-key-feedback" class="api-key-feedback hidden"></div>
+              <div class="api-key-hint">
+                Required permissions: <em>account, inventories, characters, wallet, unlocks</em>. Generated at <a href="https://account.arena.net/applications" target="_blank" rel="noopener">account.arena.net</a>.
+              </div>
+            </div>
+          </div>
+          <div class="drawer-section">
+            <div class="drawer-section-title">Live Account Essence</div>
+            <div class="drawer-stats-grid" id="drawer-account-stats">
+              <div style="font-size: 0.85rem; color: #a89f91; font-style: italic;">Syncing Account Essence...</div>
+            </div>
+          </div>
+          <div class="drawer-section">
+            <div class="drawer-section-title">System Diagnostics</div>
+            <div class="diagnostics-panel" id="drawer-diagnostics-panel">
+              <div style="font-size: 0.85rem; color: #a89f91; font-style: italic;">Connecting to Priory Gateway...</div>
+            </div>
+            <button id="btn-reload-telemetry" class="btn-drawer-action">Refresh Telemetry &amp; Cache</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(drawer);
+    }
+
+    let btnToggle = document.getElementById("btn-toggle-drawer");
+    if (!btnToggle) {
+      btnToggle = document.createElement("button");
+      btnToggle.id = "btn-toggle-drawer";
+      btnToggle.className = "drawer-toggle-btn";
+      btnToggle.title = "Account Essence & Diagnostics";
+      btnToggle.textContent = "⚙ Account & Diagnostics";
+      document.body.appendChild(btnToggle);
+    }
+
+    if (btnToggle && !btnToggle.getAttribute("data-bound")) {
+      btnToggle.setAttribute("data-bound", "true");
+      btnToggle.addEventListener("click", () => {
+        const d = document.getElementById("priory-side-drawer");
+        if (d) d.classList.toggle("hidden");
+      });
+    }
+
+    const btnClose = document.getElementById("btn-close-drawer");
+    if (btnClose && !btnClose.getAttribute("data-bound")) {
+      btnClose.setAttribute("data-bound", "true");
+      btnClose.addEventListener("click", () => {
+        const d = document.getElementById("priory-side-drawer");
+        if (d) d.classList.add("hidden");
+      });
+    }
+
+    const btnReload = document.getElementById("btn-reload-telemetry");
+    if (btnReload && !btnReload.getAttribute("data-bound")) {
+      btnReload.setAttribute("data-bound", "true");
+      btnReload.addEventListener("click", () => {
+        fetchAccountStatus();
+      });
+    }
+
+    const btnApplyKey = document.getElementById("btn-apply-api-key");
+    if (btnApplyKey && !btnApplyKey.getAttribute("data-bound")) {
+      btnApplyKey.setAttribute("data-bound", "true");
+      btnApplyKey.addEventListener("click", () => {
+        window.applyNewApiKey();
+      });
+    }
+
+    const btnResetKey = document.getElementById("btn-reset-api-key");
+    if (btnResetKey && !btnResetKey.getAttribute("data-bound")) {
+      btnResetKey.setAttribute("data-bound", "true");
+      btnResetKey.addEventListener("click", () => {
+        window.resetApiKey();
+      });
+    }
+
+    const btnToggleVis = document.getElementById("btn-toggle-key-visibility");
+    if (btnToggleVis && !btnToggleVis.getAttribute("data-bound")) {
+      btnToggleVis.setAttribute("data-bound", "true");
+      btnToggleVis.addEventListener("click", () => {
+        window.toggleKeyVisibility();
+      });
+    }
+
+    const inputKey = document.getElementById("drawer-api-key-input");
+    if (inputKey && !inputKey.getAttribute("data-bound")) {
+      inputKey.setAttribute("data-bound", "true");
+      inputKey.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          window.applyNewApiKey();
+        }
+      });
+    }
   }
 
-  function renderChecklistSection(checklist) {
-    if (!checklist || checklist.length === 0) return "";
-    const items = checklist.map(s => `
-      <div class="journal-checklist-item">
-        <span class="ck-step-num">${s.step_number}</span>
-        <span><strong>${escapeHtml(s.title)}</strong> — ${formatTextWithWaypoints(s.description)}</span>
-        <span class="ck-step-time">~${s.estimated_time_minutes}m</span>
-      </div>
-    `).join("");
-    return `
-      <div class="journal-section">
-        <h4>Session Action Items</h4>
-        <div>${items}</div>
-      </div>
-    `;
+  window.toggleKeyVisibility = function() {
+    const input = document.getElementById("drawer-api-key-input");
+    const btn = document.getElementById("btn-toggle-key-visibility");
+    if (!input) return;
+    if (input.type === "password") {
+      input.type = "text";
+      if (btn) btn.textContent = "🙈";
+    } else {
+      input.type = "password";
+      if (btn) btn.textContent = "👁";
+    }
+  };
+
+  window.openDrawerToApiKey = function() {
+    const drawer = document.getElementById("priory-side-drawer");
+    if (drawer) {
+      drawer.classList.remove("hidden");
+    }
+    const input = document.getElementById("drawer-api-key-input");
+    if (input) {
+      setTimeout(() => input.focus(), 120);
+    }
+  };
+
+  window.applyNewApiKey = async function() {
+    const input = document.getElementById("drawer-api-key-input");
+    const feedback = document.getElementById("drawer-api-key-feedback");
+    const btnApply = document.getElementById("btn-apply-api-key");
+    const btnText = document.getElementById("btn-apply-key-text");
+    const btnSpinner = document.getElementById("btn-apply-key-spinner");
+
+    const key = (input ? input.value : "").trim();
+    if (!key) {
+      if (input) {
+        input.classList.remove("input-shake");
+        void input.offsetWidth;
+        input.classList.add("input-shake");
+        setTimeout(() => input.classList.remove("input-shake"), 600);
+      }
+      return;
+    }
+
+    if (btnApply) btnApply.disabled = true;
+    if (btnSpinner) btnSpinner.classList.remove("hidden");
+    if (btnText) btnText.textContent = "Syncing...";
+
+    if (feedback) {
+      feedback.className = "api-key-feedback hidden";
+      feedback.textContent = "";
+    }
+
+    try {
+      const res = await fetch("/api/account/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ api_key: key })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to synchronize with GW2 API");
+      }
+
+      setStorageItem("priory_custom_api_key", key);
+
+      if (feedback) {
+        feedback.className = "api-key-feedback feedback-success";
+        const accName = data.account_name || "Account";
+        const mats = (data.materials_count || 0).toLocaleString();
+        const armory = (data.armory_count || 0).toLocaleString();
+        feedback.textContent = `✓ Connected to ${accName}! (${mats} materials, ${armory} armory)`;
+      }
+
+      // Clear dossier cache
+      for (const k in dossierCache) {
+        delete dossierCache[k];
+      }
+
+      // Invalidate active dossiers and re-fetch status
+      await fetchAccountStatus();
+
+      // If currently on Spread 2 or 3, re-fetch active dossier data
+      if (currentSpreadIndex === 2 || currentSpreadIndex === 3) {
+        loadLegendaryDossier(activeLegendaryId, activeLegendaryName, { autoTurn: false });
+      } else if (currentSpreadIndex === 0) {
+        renderSpread0Left();
+      }
+    } catch (err) {
+      if (feedback) {
+        feedback.className = "api-key-feedback feedback-error";
+        feedback.textContent = `✗ Failed to sync: ${err.message || String(err)}`;
+      }
+    } finally {
+      if (btnApply) btnApply.disabled = false;
+      if (btnSpinner) btnSpinner.classList.add("hidden");
+      if (btnText) btnText.textContent = "Sync Account";
+    }
+  };
+
+  window.resetApiKey = async function() {
+    const btnReset = document.getElementById("btn-reset-api-key");
+    const input = document.getElementById("drawer-api-key-input");
+    const feedback = document.getElementById("drawer-api-key-feedback");
+
+    if (btnReset) {
+      btnReset.disabled = true;
+      btnReset.textContent = "...";
+    }
+
+    try {
+      const res = await fetch("/api/account/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reset: true })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to reset API key");
+      }
+
+      removeStorageItem("priory_custom_api_key");
+      if (input) input.value = "";
+
+      if (feedback) {
+        feedback.className = "api-key-feedback feedback-success";
+        feedback.textContent = "✓ Reset to default account.";
+      }
+
+      // Clear dossier cache
+      for (const k in dossierCache) {
+        delete dossierCache[k];
+      }
+
+      // Refresh account status
+      await fetchAccountStatus();
+
+      // If currently on Spread 2 or 3, re-fetch active dossier data
+      if (currentSpreadIndex === 2 || currentSpreadIndex === 3) {
+        loadLegendaryDossier(activeLegendaryId, activeLegendaryName, { autoTurn: false });
+      } else if (currentSpreadIndex === 0) {
+        renderSpread0Left();
+      }
+    } catch (err) {
+      if (feedback) {
+        feedback.className = "api-key-feedback feedback-error";
+        feedback.textContent = `✗ Failed to reset: ${err.message || String(err)}`;
+      }
+    } finally {
+      if (btnReset) {
+        btnReset.disabled = false;
+        btnReset.textContent = "Reset";
+      }
+    }
+  };
+
+  async function fetchAccountStatus() {
+    const statsCont = document.getElementById("drawer-account-stats");
+    const diagCont = document.getElementById("drawer-diagnostics-panel");
+
+    try {
+      const res = await fetch("/api/status");
+      const data = await res.json();
+      accountTelemetry = data;
+
+      const drawerAccountName = document.getElementById("drawer-account-name");
+      if (drawerAccountName) {
+        drawerAccountName.textContent = data.account_name || "Authenticated Scholar";
+      }
+      const drawerApiKeyMasked = document.getElementById("drawer-api-key-masked");
+      if (drawerApiKeyMasked) {
+        drawerApiKeyMasked.textContent = data.api_key_masked || "None";
+      }
+
+      const libraryAccountBadgeName = document.getElementById("library-account-badge-name");
+      if (libraryAccountBadgeName) {
+        libraryAccountBadgeName.textContent = data.account_name || "Default Account";
+      }
+
+      if (statsCont) {
+        const w = data.wallet || {};
+        const goldVal = w.liquid_gold ? w.liquid_gold.toFixed(1) + "g" : "0g";
+        statsCont.innerHTML = `
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Liquid Gold</span>
+            <span class="drawer-stat-val" style="color: var(--leather-gold);">${goldVal}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Astral Acclaim</span>
+            <span class="drawer-stat-val">${(w.astral_acclaim || 0).toLocaleString()}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Spirit Shards</span>
+            <span class="drawer-stat-val">${(w.spirit_shards || 0).toLocaleString()}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Provisioner Tokens</span>
+            <span class="drawer-stat-val">${(w.provisioner_tokens || 0).toLocaleString()}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Laurels</span>
+            <span class="drawer-stat-val">${(w.laurels || 0).toLocaleString()}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Volatile Magic</span>
+            <span class="drawer-stat-val">${(w.volatile_magic || 0).toLocaleString()}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Materials in Vault</span>
+            <span class="drawer-stat-val">${(data.account_materials_count || 0).toLocaleString()}</span>
+          </div>
+          <div class="drawer-stat-card">
+            <span class="drawer-stat-lbl">Armory Legendaries</span>
+            <span class="drawer-stat-val" style="color: #2e7d32;">${(data.account_armory_count || 0).toLocaleString()}</span>
+          </div>
+        `;
+      }
+
+      if (diagCont) {
+        const modeBadge = data.is_fallback
+          ? `<span class="diag-badge badge-fallback">Fallback Rule Engine</span>`
+          : `<span class="diag-badge badge-live">Live LLM Active</span>`;
+
+        diagCont.innerHTML = `
+          <div class="diag-item"><span class="diag-lbl">Status:</span><span class="diag-val" style="color:#2e7d32;">Ready</span></div>
+          <div class="diag-item"><span class="diag-lbl">Knowledge Triples:</span><span class="diag-val">${(data.triples_loaded || 0).toLocaleString()}</span></div>
+          <div class="diag-item"><span class="diag-lbl">LLM Provider:</span><span class="diag-val">${escapeHtml(data.llm_provider || 'Deterministic')}</span></div>
+          <div class="diag-item"><span class="diag-lbl">Reasoning Mode:</span><span class="diag-val">${modeBadge}</span></div>
+          <div class="diag-item"><span class="diag-lbl">API Key Configured:</span><span class="diag-val">${data.api_key_configured ? 'Yes' : 'No'}</span></div>
+        `;
+      }
+    } catch (err) {
+      if (statsCont) statsCont.innerHTML = `<div style="font-size:0.8rem; color:#e57373;">Failed to synchronize account essence.</div>`;
+      if (diagCont) diagCont.innerHTML = `<div style="font-size:0.8rem; color:#e57373;">Diagnostics gateway offline.</div>`;
+    }
   }
 
-  function renderMaterialsSection(mats) {
-    if (!mats || Object.keys(mats).length === 0) return "";
-    const tags = Object.entries(mats).map(([k, v]) => `
-      <div class="journal-mat-tag">
-        <span>${escapeHtml(k)}</span> <span class="count">${v.toLocaleString()} needed</span>
-      </div>
-    `).join("");
-    return `
-      <div class="journal-section">
-        <h4>Material Shortages</h4>
-        <div class="journal-mat-tags">${tags}</div>
-      </div>
-    `;
-  }
-
-  function renderMarginaliaTip(tip) {
-    if (!tip) return "";
-    return `
-      <div class="handwritten-marginalia">
-        Note: ${formatTextWithWaypoints(tip)}
-      </div>
-    `;
-  }
-
-  // ── CHAPTER II: SESSION PLANNER ─────────────────────────────────────────────
-  function renderGoalSelectOptions(selectedId) {
-    return LEGENDARY_PRESETS.map(p => 
-      `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${escapeHtml(p.name)} (${p.type})</option>`
-    ).join("");
-  }
-
+  // ── Formatting & Chat Code Copy Helpers ─────────────────────────────────────
   function formatCopper(copper) {
     if (copper == null || isNaN(copper)) return "—";
     const negative = copper < 0;
@@ -1206,803 +2626,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function renderSessionPlannerSpread() {
-    const goalOptions = renderGoalSelectOptions(plannerGoalId);
-
-    if (leftPageBody) {
-      leftPageBody.innerHTML = `
-        <div class="runic-header">ᛟ ᚱ ᛞ ᛖ ᚱ ✦ ᚲ ᛚ ᛟ ᚲ ᚲ</div>
-        <h2 class="page-title">Chapter II: Session Planner</h2>
-        <div class="handwritten-subtitle">~ Knapsack Activity Scheduler ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div class="inscribe-form">
-          <label class="inscribe-label" for="planner-goal-select">Target Legendary Goal:</label>
-          <select id="planner-goal-select" class="priory-select">
-            ${goalOptions}
-          </select>
-
-          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px;">
-            <label class="inscribe-label" for="planner-budget-slider" style="font-size: 1.15rem;">Playtime Budget:</label>
-            <span id="budget-val-display" style="font-family: var(--font-head); font-weight: 700; color: var(--leather-gold); font-size: 1.05rem;">${plannerBudgetMinutes} mins</span>
-          </div>
-          <input type="range" id="planner-budget-slider" min="30" max="120" step="30" value="${plannerBudgetMinutes}" class="priory-slider">
-          
-          <div class="playtime-quick-btns">
-            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 30 ? 'active' : ''}" data-mins="30">30m</button>
-            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 60 ? 'active' : ''}" data-mins="60">60m</button>
-            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 90 ? 'active' : ''}" data-mins="90">90m</button>
-            <button type="button" class="playtime-btn ${plannerBudgetMinutes === 120 ? 'active' : ''}" data-mins="120">120m</button>
-          </div>
-
-          <button type="button" class="btn-forge-inscribe" id="btn-calc-itinerary" style="margin-top: 10px;">
-            <span id="btn-itinerary-text">${plannerLoading ? 'Computing Knapsack Schedule...' : 'Schedule Optimal Itinerary'}</span>
-            <span id="btn-itinerary-spinner" class="spinner-ink ${plannerLoading ? '' : 'hidden'}"></span>
-          </button>
-        </div>
-
-        <div id="planner-summary-container" style="margin-top: 10px;">
-          ${renderPlannerSummaryBox()}
-        </div>
-      `;
-    }
-
-    if (rightPageBody) {
-      rightPageBody.innerHTML = `
-        <div class="runic-header">ᚱ ᛟ ᚢ ᛏ ᛖ ✦ ᛏ ᚨ ᛊ ᚲ ᛊ</div>
-        <h3 class="page-title">Prioritized Tasks</h3>
-        <div class="handwritten-subtitle">~ Logical Waypoint Route ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div id="planner-tasks-container">
-          ${renderPlannerTasksList()}
-        </div>
-      `;
-    }
-
-    const goalSelect = document.getElementById("planner-goal-select");
-    if (goalSelect) {
-      goalSelect.addEventListener("change", (e) => {
-        plannerGoalId = parseInt(e.target.value, 10);
-        executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
-      });
-    }
-
-    const slider = document.getElementById("planner-budget-slider");
-    const valDisplay = document.getElementById("budget-val-display");
-    if (slider) {
-      slider.addEventListener("input", (e) => {
-        plannerBudgetMinutes = parseInt(e.target.value, 10);
-        if (valDisplay) valDisplay.textContent = `${plannerBudgetMinutes} mins`;
-        document.querySelectorAll(".playtime-btn").forEach(btn => {
-          btn.classList.toggle("active", parseInt(btn.getAttribute("data-mins"), 10) === plannerBudgetMinutes);
-        });
-      });
-    }
-
-    document.querySelectorAll(".playtime-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const mins = parseInt(btn.getAttribute("data-mins"), 10);
-        plannerBudgetMinutes = mins;
-        if (slider) slider.value = mins;
-        if (valDisplay) valDisplay.textContent = `${mins} mins`;
-        document.querySelectorAll(".playtime-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
-      });
-    });
-
-    const btnCalc = document.getElementById("btn-calc-itinerary");
-    if (btnCalc) {
-      btnCalc.addEventListener("click", () => {
-        executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
-      });
-    }
-
-    if (!plannerItineraryData && !plannerLoading) {
-      executeFetchItinerary(plannerGoalId, plannerBudgetMinutes);
-    }
-  }
-
-  function renderPlannerSummaryBox() {
-    if (!plannerItineraryData) {
-      return `
-        <div class="essence-journal-box">
-          <div class="essence-journal-title">Knapsack Strategy</div>
-          <div style="font-size: 0.82rem; color: var(--ink-soft); line-height: 1.4;">
-            Applies a 0/1 knapsack priority algorithm over daily time-gated activities (Quartz Crystal Charging, Account Refinements, Ley-Line Anomaly, Provisioner Tokens, Fractals/Vault Clovers, and Antique Summoning Stones) to maximize progression per minute played.
-          </div>
-        </div>
-      `;
-    }
-    const itin = plannerItineraryData;
-    return `
-      <div class="essence-journal-box">
-        <div class="essence-journal-title">
-          <span>${escapeHtml(itin.goal_name)} Itinerary</span>
-          <span style="color: var(--leather-gold); font-weight: bold;">${itin.time_utilization_pct}% Utilization</span>
-        </div>
-        <div class="essence-stats-grid">
-          <div class="stat-item"><span class="lbl">Time Budget:</span><span class="val">${itin.time_budget_minutes}m</span></div>
-          <div class="stat-item"><span class="lbl">Scheduled Time:</span><span class="val">${itin.total_scheduled_minutes}m</span></div>
-          <div class="stat-item"><span class="lbl">Tasks Queued:</span><span class="val">${itin.tasks.length}</span></div>
-          <div class="stat-item"><span class="lbl">Unused Window:</span><span class="val">${Math.max(0, itin.time_budget_minutes - itin.total_scheduled_minutes)}m</span></div>
-        </div>
-        <div style="font-size: 0.8rem; color: var(--ink-mid); margin-top: 8px; font-style: italic;">
-          "${escapeHtml(itin.summary)}"
-        </div>
-      </div>
-    `;
-  }
-
-  function renderPlannerTasksList() {
-    if (plannerLoading) {
-      return `<div style="text-align: center; padding: 40px;"><span class="spinner-ink" style="width: 28px; height: 28px; border-width: 3px; border-top-color: var(--leather-gold);"></span><div style="margin-top: 10px; font-family: var(--font-head); color: var(--ink-mid);">Solving 0/1 Knapsack Schedule...</div></div>`;
-    }
-    if (!plannerItineraryData || !plannerItineraryData.tasks || plannerItineraryData.tasks.length === 0) {
-      return `<div style="text-align: center; padding: 30px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.15rem;">No tasks scheduled for this duration.</div>`;
-    }
-
-    return plannerItineraryData.tasks.map((task, idx) => {
-      const inputs = task.required_inputs?.name 
-        ? `${task.required_inputs.count || ''}x ${task.required_inputs.name}`
-        : (task.required_inputs?.description || (task.required_inputs?.currencies ? Object.entries(task.required_inputs.currencies).map(([k, v]) => `${v} ${k}`).join(', ') : 'None'));
-      
-      const rewardVal = task.reward_output?.value_towards_goal || task.reward_output?.name || '';
-      const charTag = task.character_name 
-        ? `<div style="font-size: 0.75rem; color: var(--ink-soft);">👤 Character: <strong style="color: var(--leather-gold);">${escapeHtml(task.character_name)}</strong></div>`
-        : '';
-
-      return `
-        <div class="task-item-card">
-          <div class="task-header-row">
-            <span class="task-title">${idx + 1}. ${escapeHtml(task.title)}</span>
-            <span class="task-duration-badge">⏱ ${task.estimated_duration_minutes}m</span>
-          </div>
-          <div class="task-loc-row">
-            <span>📍 ${escapeHtml(task.location_name)}</span>
-            <button class="chatcode-stamp" onclick="copyChatCode('${task.waypoint_code}', this, event)" title="Copy Waypoint Code">
-              ${escapeHtml(task.waypoint_code)}
-            </button>
-          </div>
-          ${charTag}
-          <div class="task-desc">${formatTextWithWaypoints(task.instructions)}</div>
-          <div class="task-reward-box">
-            <div><strong>Inputs:</strong> ${escapeHtml(inputs)}</div>
-            <div><strong>Reward:</strong> ${escapeHtml(rewardVal)}</div>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  async function executeFetchItinerary(goalId, minutes) {
-    plannerLoading = true;
-    const btnText = document.getElementById("btn-itinerary-text");
-    const btnSpinner = document.getElementById("btn-itinerary-spinner");
-    if (btnText) btnText.textContent = "Computing Knapsack Schedule...";
-    if (btnSpinner) btnSpinner.classList.remove("hidden");
-
-    try {
-      const res = await fetch("/api/solver/itinerary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goal_item_id: goalId, time_budget_minutes: minutes })
-      });
-      const data = await res.json();
-      if (data.success && data.itinerary) {
-        plannerItineraryData = data.itinerary;
-        const sumCont = document.getElementById("planner-summary-container");
-        if (sumCont) sumCont.innerHTML = renderPlannerSummaryBox();
-        const taskCont = document.getElementById("planner-tasks-container");
-        if (taskCont) taskCont.innerHTML = renderPlannerTasksList();
-      } else {
-        alert(data.error || "Failed to schedule itinerary.");
-      }
-    } catch (e) {
-      console.error("Itinerary error:", e);
-    } finally {
-      plannerLoading = false;
-      if (btnText) btnText.textContent = "Schedule Optimal Itinerary";
-      if (btnSpinner) btnSpinner.classList.add("hidden");
-    }
-  }
-
-  // ── CHAPTER III: BUY VS CRAFT ARBITRAGE ─────────────────────────────────────
-  function renderArbitrageSpread() {
-    const goalOptions = renderGoalSelectOptions(arbitrageGoalId);
-
-    if (leftPageBody) {
-      leftPageBody.innerHTML = `
-        <div class="runic-header">ᚷ ᛟ ᛚ ᛞ ✦ ᛏ ᚨ ᛪ ✦ ᛗ ᚨ ᛏ</div>
-        <h2 class="page-title">Chapter III: Arbitrage Matrix</h2>
-        <div class="handwritten-subtitle">~ Buy vs Craft vs Vault ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div class="inscribe-form">
-          <label class="inscribe-label" for="arbitrage-goal-select">Analyze Legendary Item:</label>
-          <select id="arbitrage-goal-select" class="priory-select">
-            ${goalOptions}
-          </select>
-          <button type="button" class="btn-forge-inscribe" id="btn-run-arbitrage" style="margin-top: 6px;">
-            <span id="btn-arb-text">${arbitrageLoading ? 'Evaluating Arbitrage Matrix...' : 'Evaluate Multi-Way Arbitrage'}</span>
-            <span id="btn-arb-spinner" class="spinner-ink ${arbitrageLoading ? '' : 'hidden'}"></span>
-          </button>
-        </div>
-
-        <div id="arbitrage-left-results" style="margin-top: 10px;">
-          ${renderArbitrageLeftContent()}
-        </div>
-      `;
-    }
-
-    if (rightPageBody) {
-      rightPageBody.innerHTML = `
-        <div class="runic-header">ᛊ ᛏ ᚱ ᚨ ᛏ ᛖ ᚷ ᛁ ᛖ ᛊ</div>
-        <h3 class="page-title">Component Paths & Costs</h3>
-        <div class="handwritten-subtitle">~ Precursor, Clovers & Opportunity Cost ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div id="arbitrage-right-results">
-          ${renderArbitrageRightContent()}
-        </div>
-      `;
-    }
-
-    const goalSelect = document.getElementById("arbitrage-goal-select");
-    if (goalSelect) {
-      goalSelect.addEventListener("change", (e) => {
-        arbitrageGoalId = parseInt(e.target.value, 10);
-        executeFetchArbitrage(arbitrageGoalId);
-      });
-    }
-
-    const btnRun = document.getElementById("btn-run-arbitrage");
-    if (btnRun) {
-      btnRun.addEventListener("click", () => {
-        executeFetchArbitrage(arbitrageGoalId);
-      });
-    }
-
-    attachOpportunityCostListeners();
-
-    if (!arbitrageData && !arbitrageLoading) {
-      executeFetchArbitrage(arbitrageGoalId);
-    }
-  }
-
-  function renderArbitrageLeftContent() {
-    if (arbitrageLoading) {
-      return `<div style="text-align: center; padding: 40px;"><span class="spinner-ink" style="width: 28px; height: 28px; border-width: 3px; border-top-color: var(--leather-gold);"></span><div style="margin-top: 10px; font-family: var(--font-head); color: var(--ink-mid);">Calculating Arbitrage Matrices...</div></div>`;
-    }
-    if (!arbitrageData) {
-      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Select a legendary and evaluate the multi-way arbitrage matrix.</div>`;
-    }
-
-    const rep = arbitrageData;
-    let verdictClass = 'craft';
-    let verdictLabel = 'RECOMMENDED: CRAFT FOR SELF';
-    if (rep.recommended_action === 'CRAFT_FOR_PROFIT') {
-      verdictClass = 'profit';
-      verdictLabel = '✦ HIGH VALUE: CRAFT FOR PROFIT (TP FLIP) ✦';
-    } else if (rep.recommended_action === 'BUY_FINISHED_DIRECT') {
-      verdictClass = 'buy';
-      verdictLabel = 'RECOMMENDED: BUY DIRECT FROM TRADING POST';
-    }
-
-    const marginVal = rep.profit_margin_if_sold != null ? rep.profit_margin_if_sold : 0;
-    const marginColor = marginVal >= 0 ? '#2e7d32' : '#c62828';
-    const marginSign = marginVal >= 0 ? '+' : '';
-
-    return `
-      <div class="verdict-banner ${verdictClass}">
-        ${verdictLabel}
-      </div>
-
-      <div class="arbitrage-grid">
-        <div class="arb-card">
-          <span class="arb-card-lbl">Instant TP Buy</span>
-          <span class="arb-card-val">${formatCopper(rep.instant_buy_total)}</span>
-        </div>
-        <div class="arb-card">
-          <span class="arb-card-lbl">TP Buy Order</span>
-          <span class="arb-card-val">${formatCopper(rep.buy_order_total)}</span>
-        </div>
-        <div class="arb-card">
-          <span class="arb-card-lbl">Scratch Craft Cost</span>
-          <span class="arb-card-val">${formatCopper(rep.craft_from_scratch_total)}</span>
-        </div>
-        <div class="arb-card" style="border-color: var(--leather-gold); background: rgba(200, 150, 62, 0.08);">
-          <span class="arb-card-lbl" style="color: var(--leather-gold); font-weight: bold;">My Account Craft Cost</span>
-          <span class="arb-card-val" style="font-weight: bold;">${formatCopper(rep.my_account_craft_cost)}</span>
-        </div>
-      </div>
-
-      <div class="tax-breakdown-box">
-        <div style="font-family: var(--font-head); font-weight: 700; color: var(--ink-dark); text-transform: uppercase;">
-          Wallace's 15% TP Tax Liquidation Model
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--ink-soft);">TP Gross Liquidation:</span>
-          <span>${formatCopper(rep.buy_order_total)}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--ink-soft);">Wallace 15% TP Tax (10% + 5% listing):</span>
-          <span>-${formatCopper(Math.round(rep.buy_order_total * 0.15))}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; border-top: 1px dotted var(--parch-line); padding-top: 3px;">
-          <span style="color: var(--ink-dark); font-weight: bold;">Net Payout If Sold:</span>
-          <span style="font-weight: bold;">${formatCopper(rep.net_sell_if_sold)}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--parch-line); padding-top: 3px; font-size: 0.85rem;">
-          <span style="font-weight: bold;">Net Profit Margin (vs Scratch):</span>
-          <span style="font-weight: bold; color: ${marginColor};">${marginSign}${formatCopper(marginVal)}</span>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderArbitrageRightContent() {
-    if (!arbitrageData) {
-      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Component breakdown will appear upon evaluation.</div>`;
-    }
-    const rep = arbitrageData;
-    const prec = rep.precursor_strategy || {};
-    const clover = rep.clover_strategy || {};
-
-    let t6Rows = "";
-    if (rep.t6_promotion_strategy && Object.keys(rep.t6_promotion_strategy).length > 0) {
-      t6Rows = Object.entries(rep.t6_promotion_strategy).slice(0, 4).map(([name, info]) => {
-        const isPromote = info.recommended_option === "PROMOTE_T5_FORGE";
-        const badgeStyle = isPromote ? "background: #e8f5e9; color: #2e7d32;" : "background: #e3f2fd; color: #1565c0;";
-        return `
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; border-bottom: 1px dotted var(--parch-line); padding: 2px 0;">
-            <span>${escapeHtml(name)}</span>
-            <span style="${badgeStyle} padding: 1px 5px; border-radius: 3px; font-weight: 600;">${isPromote ? 'Promote T5 Forge' : 'Buy Direct TP'}</span>
-          </div>
-        `;
-      }).join("");
-    }
-
-    return `
-      <div class="task-item-card" style="margin-bottom: 6px;">
-        <div class="task-header-row">
-          <span class="task-title">🗡️ Precursor Acquisition</span>
-          <span class="task-duration-badge" style="background: var(--leather-gold); color: #fff;">${escapeHtml(prec.recommended_strategy || 'BUY_ORDER')}</span>
-        </div>
-        <div style="font-size: 0.78rem; color: var(--ink-mid); margin-top: 2px;">
-          <strong>Target:</strong> ${escapeHtml(prec.precursor_name || 'Precursor')} ${prec.precursor_id ? `(ID: ${prec.precursor_id})` : ''}
-        </div>
-        <div style="font-size: 0.78rem; color: var(--ink-soft); line-height: 1.35;">
-          ${escapeHtml(prec.details || 'Compare TP buy order vs Grandmaster Craftsman Hobbs collection vs Wizard Vault Starter Kit.')}
-        </div>
-      </div>
-
-      <div class="task-item-card" style="margin-bottom: 6px;">
-        <div class="task-header-row">
-          <span class="task-title">🍀 Mystic Clover EV Path</span>
-          <span class="task-duration-badge" style="background: #70338a; color: #fff;">${escapeHtml(clover.recommended_strategy || 'WIZARDS_VAULT')}</span>
-        </div>
-        <div style="font-size: 0.78rem; color: var(--ink-soft); line-height: 1.35; margin-top: 2px;">
-          ${escapeHtml(clover.notes || 'Evaluates Mystic Forge recipe expected value (3.2 Mystic Coins + 3.2 Ecto per Clover) vs Fractal BLING-9988 and Astral Acclaim discounted caps.')}
-        </div>
-      </div>
-
-      ${t6Rows ? `
-        <div class="essence-journal-box" style="margin-bottom: 6px; padding: 6px 10px;">
-          <div class="essence-journal-title" style="font-size: 0.72rem; margin-bottom: 4px;">T6 Material Promotion Spreads</div>
-          ${t6Rows}
-        </div>
-      ` : ''}
-
-      <div class="tax-breakdown-box" id="opp-cost-widget">
-        <div style="font-family: var(--font-head); font-weight: 700; color: var(--ink-dark); font-size: 0.76rem; text-transform: uppercase;">
-          Cross-Role Opportunity Cost Analyzer
-        </div>
-        <div style="display: flex; gap: 6px; align-items: center;">
-          <select id="opp-currency-select" class="priory-select" style="font-size: 0.75rem; padding: 4px 6px;">
-            <option value="63" ${oppCurrencyId === 63 ? 'selected' : ''}>Astral Acclaim (ID: 63)</option>
-            <option value="29" ${oppCurrencyId === 29 ? 'selected' : ''}>Provisioner Token (ID: 29)</option>
-            <option value="23" ${oppCurrencyId === 23 ? 'selected' : ''}>Spirit Shards (ID: 23)</option>
-            <option value="3" ${oppCurrencyId === 3 ? 'selected' : ''}>Laurels (ID: 3)</option>
-            <option value="45" ${oppCurrencyId === 45 ? 'selected' : ''}>Volatile Magic (ID: 45)</option>
-          </select>
-          <button type="button" class="btn-jump-tool" id="btn-eval-opp" style="white-space: nowrap; padding: 4px 8px;">
-            Analyze
-          </button>
-        </div>
-        <div id="opp-results-container" style="font-size: 0.76rem; color: var(--ink-mid);">
-          ${renderOppCostResults()}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderOppCostResults() {
-    if (oppLoading) return "<span>Evaluating cross-role value...</span>";
-    if (!oppData) return "<span>Select a currency to evaluate cross-role trade-offs.</span>";
-    const d = oppData;
-    return `
-      <div style="margin-top: 4px; border-top: 1px dotted var(--parch-line); padding-top: 4px;">
-        <div>Recommended: <strong style="color: var(--leather-gold);">${escapeHtml(d.optimal_role_disposition || d.recommended_disposition)}</strong></div>
-        <div style="display: flex; justify-content: space-between; color: var(--ink-soft);">
-          <span>Direct Currency Val: ${d.direct_exchange_value ? formatCopper(d.direct_exchange_value * 10000) : '0g'}</span>
-          <span>TP Liquidation: ${formatCopper(d.tp_liquidation_value)}</span>
-        </div>
-      </div>
-    `;
-  }
-
-  function attachOpportunityCostListeners() {
-    const oppSelect = document.getElementById("opp-currency-select");
-    if (oppSelect) {
-      oppSelect.addEventListener("change", (e) => {
-        oppCurrencyId = parseInt(e.target.value, 10);
-      });
-    }
-    const btnOpp = document.getElementById("btn-eval-opp");
-    if (btnOpp) {
-      btnOpp.addEventListener("click", () => {
-        executeFetchOpportunityCost(oppCurrencyId, oppQuantity);
-      });
-    }
-  }
-
-  async function executeFetchArbitrage(goalId) {
-    arbitrageLoading = true;
-    const btnText = document.getElementById("btn-arb-text");
-    const btnSpinner = document.getElementById("btn-arb-spinner");
-    if (btnText) btnText.textContent = "Evaluating Arbitrage Matrix...";
-    if (btnSpinner) btnSpinner.classList.remove("hidden");
-
-    try {
-      const res = await fetch("/api/solver/arbitrage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goal_item_id: goalId })
-      });
-      const data = await res.json();
-      if (data.success && data.arbitrage) {
-        arbitrageData = data.arbitrage;
-        const leftCont = document.getElementById("arbitrage-left-results");
-        if (leftCont) leftCont.innerHTML = renderArbitrageLeftContent();
-        const rightCont = document.getElementById("arbitrage-right-results");
-        if (rightCont) {
-          rightCont.innerHTML = renderArbitrageRightContent();
-          attachOpportunityCostListeners();
-        }
-      } else {
-        alert(data.error || "Failed to evaluate arbitrage.");
-      }
-    } catch (e) {
-      console.error("Arbitrage error:", e);
-    } finally {
-      arbitrageLoading = false;
-      if (btnText) btnText.textContent = "Evaluate Multi-Way Arbitrage";
-      if (btnSpinner) btnSpinner.classList.add("hidden");
-    }
-  }
-
-  async function executeFetchOpportunityCost(currencyId, qty) {
-    oppLoading = true;
-    const oppCont = document.getElementById("opp-results-container");
-    if (oppCont) oppCont.innerHTML = renderOppCostResults();
-
-    try {
-      const res = await fetch("/api/solver/opportunity-cost", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ currency_id: currencyId, quantity: qty })
-      });
-      const data = await res.json();
-      if (data.success && data.opportunity_cost) {
-        oppData = data.opportunity_cost;
-        if (oppCont) oppCont.innerHTML = renderOppCostResults();
-      }
-    } catch (e) {
-      console.error("Opportunity cost error:", e);
-    } finally {
-      oppLoading = false;
-      if (oppCont) oppCont.innerHTML = renderOppCostResults();
-    }
-  }
-
-  // ── CHAPTER IV: PREREQUISITE AUDIT ──────────────────────────────────────────
-  function renderPrerequisitesSpread() {
-    const goalOptions = renderGoalSelectOptions(prereqGoalId);
-
-    if (leftPageBody) {
-      leftPageBody.innerHTML = `
-        <div class="runic-header">ᚨ ᚢ ᛞ ᛁ ᛏ ✦ ᚱ ᛖ ᚨ ᛞ ᛁ</div>
-        <h2 class="page-title">Chapter IV: Prerequisite Audit</h2>
-        <div class="handwritten-subtitle">~ Masteries, Crafting & Collections ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div class="inscribe-form">
-          <label class="inscribe-label" for="prereq-goal-select">Audit Account for Legendary:</label>
-          <select id="prereq-goal-select" class="priory-select">
-            ${goalOptions}
-          </select>
-          <button type="button" class="btn-forge-inscribe" id="btn-run-prereqs" style="margin-top: 6px;">
-            <span id="btn-prereq-text">${prereqLoading ? 'Auditing Account Readiness...' : 'Audit Account Prerequisites'}</span>
-            <span id="btn-prereq-spinner" class="spinner-ink ${prereqLoading ? '' : 'hidden'}"></span>
-          </button>
-        </div>
-
-        <div id="prereq-left-results" style="margin-top: 10px;">
-          ${renderPrereqLeftContent()}
-        </div>
-      `;
-    }
-
-    if (rightPageBody) {
-      rightPageBody.innerHTML = `
-        <div class="runic-header">ᛒ ᛚ ᛟ ᚲ ᚲ ᛖ ᚱ ᛊ ✦ ᚱ ᛟ ᚢ ᛏ ᛖ</div>
-        <h3 class="page-title">Discipline Routing & Blockers</h3>
-        <div class="handwritten-subtitle">~ Zero-Fee Character Assignments ~</div>
-        <div class="ink-divider">✦</div>
-
-        <div id="prereq-right-results">
-          ${renderPrereqRightContent()}
-        </div>
-      `;
-    }
-
-    const goalSelect = document.getElementById("prereq-goal-select");
-    if (goalSelect) {
-      goalSelect.addEventListener("change", (e) => {
-        prereqGoalId = parseInt(e.target.value, 10);
-        executeFetchPrerequisites(prereqGoalId);
-      });
-    }
-
-    const btnRun = document.getElementById("btn-run-prereqs");
-    if (btnRun) {
-      btnRun.addEventListener("click", () => {
-        executeFetchPrerequisites(prereqGoalId);
-      });
-    }
-
-    if (!prereqData && !prereqLoading) {
-      executeFetchPrerequisites(prereqGoalId);
-    }
-  }
-
-  function renderPrereqLeftContent() {
-    if (prereqLoading) {
-      return `<div style="text-align: center; padding: 40px;"><span class="spinner-ink" style="width: 28px; height: 28px; border-width: 3px; border-top-color: var(--leather-gold);"></span><div style="margin-top: 10px; font-family: var(--font-head); color: var(--ink-mid);">Auditing Masteries & Prerequisites...</div></div>`;
-    }
-    if (!prereqData) {
-      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Select a legendary to audit account masteries and readiness.</div>`;
-    }
-
-    const rep = prereqData;
-    const canCraft = rep.can_craft_immediately;
-    const verdictBanner = canCraft
-      ? `<div class="verdict-banner profit">✦ READY TO CRAFT IMMEDIATELY ✦<br><span style="font-size:0.75rem; font-weight:normal;">All Masteries, World Completion & Active Crafting Satisfied</span></div>`
-      : `<div class="verdict-banner craft">⚠️ PREREQUISITES PENDING<br><span style="font-size:0.75rem; font-weight:normal;">Account satisfies some conditions but action items remain</span></div>`;
-
-    const worldBadge = rep.has_world_completion ? "pass" : "fail";
-    const worldText = rep.has_world_completion ? "Completed" : "Incomplete";
-
-    const craftBadge = rep.active_crafting_ready ? "pass" : "warn";
-    const craftText = rep.active_crafting_ready ? "Ready (500)" : "Needs Discipline";
-
-    const masteryBadge = rep.mastery_requirements_met ? "pass" : "warn";
-    const masteryText = rep.mastery_requirements_met ? "Satisfied" : "Missing Unlocks";
-
-    const precBits = rep.precursor_collection_bits_total > 0
-      ? `${rep.precursor_collection_bits_done} / ${rep.precursor_collection_bits_total}`
-      : "Standard";
-
-    return `
-      ${verdictBanner}
-
-      <div class="prereq-pillars-grid">
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span>World Completion</span>
-            <span class="pillar-badge ${worldBadge}">${worldText}</span>
-          </div>
-          <div style="font-size: 0.74rem; color: var(--ink-soft);">
-            Source: ${escapeHtml(rep.world_completion_source || 'Map / Gift of Exploration')}
-          </div>
-        </div>
-
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span>Crafting Disciplines</span>
-            <span class="pillar-badge ${craftBadge}">${craftText}</span>
-          </div>
-          <div style="font-size: 0.74rem; color: var(--ink-soft);">
-            ${rep.active_crafting_ready ? 'Discipline active at level 500' : 'Switch character or level discipline'}
-          </div>
-        </div>
-
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span>Mastery Tracks</span>
-            <span class="pillar-badge ${masteryBadge}">${masteryText}</span>
-          </div>
-          <div style="font-size: 0.74rem; color: var(--ink-soft);">
-            ${rep.missing_masteries?.length > 0 ? `${rep.missing_masteries.length} masteries pending` : 'All masteries acquired'}
-          </div>
-        </div>
-
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span>Precursor Step</span>
-            <span class="pillar-badge pass">${precBits}</span>
-          </div>
-          <div style="font-size: 0.74rem; color: var(--ink-soft);">
-            ${escapeHtml(rep.precursor_collection_step || 'Tradeable / Finished')}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderPrereqRightContent() {
-    if (!prereqData) {
-      return `<div style="text-align: center; padding: 20px; color: var(--ink-soft); font-family: var(--font-hand); font-size: 1.1rem;">Blockers and character assignments will appear here.</div>`;
-    }
-
-    const rep = prereqData;
-    let blockersHtml = "";
-    if (rep.blockers && rep.blockers.length > 0) {
-      blockersHtml = rep.blockers.map(b => `
-        <div style="font-size: 0.8rem; color: #c62828; margin-bottom: 4px; display: flex; gap: 6px;">
-          <span>⛔</span> <span>${escapeHtml(b)}</span>
-        </div>
-      `).join("");
-    } else {
-      blockersHtml = `<div style="font-size: 0.82rem; color: #2e7d32; font-style: italic;">✨ Zero hard blockers! All prerequisite requirements are met.</div>`;
-    }
-
-    let routingHtml = "";
-    if (rep.crafting_assignment_recommendations && rep.crafting_assignment_recommendations.length > 0) {
-      routingHtml = rep.crafting_assignment_recommendations.map(r => `
-        <div class="task-item-card" style="margin-bottom: 4px; padding: 6px 8px;">
-          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
-            <strong>${escapeHtml(r.gift_or_component || r.gift || 'Gift')}</strong>
-            <span style="color: var(--leather-gold); font-weight: bold;">${escapeHtml(r.character_name || r.recommended_character || 'Kerling')}</span>
-          </div>
-          <div style="font-size: 0.74rem; color: var(--ink-soft);">
-            Discipline: ${escapeHtml(r.discipline || 'Weaponsmith')} (Rating: ${r.current_rating || 500})
-          </div>
-        </div>
-      `).join("");
-    } else if (rep.character_discipline_assignments && Object.keys(rep.character_discipline_assignments).length > 0) {
-      routingHtml = Object.entries(rep.character_discipline_assignments).map(([charName, discInfo]) => `
-        <div class="task-item-card" style="margin-bottom: 4px; padding: 6px 8px;">
-          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
-            <strong>${escapeHtml(charName)}</strong>
-            <span style="color: var(--leather-gold); font-weight: bold;">Level ${discInfo.rating || 500}</span>
-          </div>
-          <div style="font-size: 0.74rem; color: var(--ink-soft);">
-            Discipline: ${escapeHtml(discInfo.discipline || 'Crafting')}
-          </div>
-        </div>
-      `).join("");
-    } else {
-      routingHtml = `<div style="font-size: 0.8rem; color: var(--ink-soft);">No character discipline reassignments needed.</div>`;
-    }
-
-    return `
-      <div class="essence-journal-box" style="margin-bottom: 8px;">
-        <div class="essence-journal-title" style="color: #c62828;">Active Crafting Blockers</div>
-        ${blockersHtml}
-      </div>
-
-      <div class="essence-journal-box" style="margin-bottom: 8px;">
-        <div class="essence-journal-title">Multi-Alt Discipline Routing (Avoid 50s Fee)</div>
-        ${routingHtml}
-      </div>
-
-      ${rep.missing_masteries && rep.missing_masteries.length > 0 ? `
-        <div class="essence-journal-box">
-          <div class="essence-journal-title" style="color: var(--leather-gold);">Missing Masteries</div>
-          <ul style="padding-left: 16px; font-size: 0.78rem; color: var(--ink-mid);">
-            ${rep.missing_masteries.map(m => `<li>${escapeHtml(m)}</li>`).join("")}
-          </ul>
-        </div>
-      ` : ''}
-    `;
-  }
-
-  async function executeFetchPrerequisites(goalId) {
-    prereqLoading = true;
-    const btnText = document.getElementById("btn-prereq-text");
-    const btnSpinner = document.getElementById("btn-prereq-spinner");
-    if (btnText) btnText.textContent = "Auditing Account Readiness...";
-    if (btnSpinner) btnSpinner.classList.remove("hidden");
-
-    const leftCont = document.getElementById("prereq-left-results");
-    if (leftCont) leftCont.innerHTML = renderPrereqLeftContent();
-
-    try {
-      const res = await fetch("/api/solver/prerequisites", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goal_item_id: goalId })
-      });
-      const data = await res.json();
-      if (data.success && data.prerequisites) {
-        prereqData = data.prerequisites;
-        if (leftCont) leftCont.innerHTML = renderPrereqLeftContent();
-        const rightCont = document.getElementById("prereq-right-results");
-        if (rightCont) rightCont.innerHTML = renderPrereqRightContent();
-      } else {
-        alert(data.error || "Failed to audit prerequisites.");
-      }
-    } catch (e) {
-      console.error("Prerequisites audit error:", e);
-    } finally {
-      prereqLoading = false;
-      if (btnText) btnText.textContent = "Audit Account Prerequisites";
-      if (btnSpinner) btnSpinner.classList.add("hidden");
-      if (leftCont && !prereqData) leftCont.innerHTML = renderPrereqLeftContent();
-    }
-  }
-
-  // ── CHAPTER I: QUERY SUBMISSION ─────────────────────────────────────────────
-  async function executeNewQuery(query) {
-    const btnSubmit = document.getElementById("btn-forge-submit");
-    const btnText = document.getElementById("btn-forge-text");
-    const btnSpinner = document.getElementById("btn-forge-spinner");
-
-    if (btnSubmit) {
-      btnSubmit.disabled = true;
-      if (btnText) btnText.classList.add("hidden");
-      if (btnSpinner) btnSpinner.classList.remove("hidden");
-    }
-
-    if (bookAura) {
-      bookAura.classList.add("casting");
-    }
-
-    try {
-      const res = await fetch("/api/query", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
-      const data = await res.json();
-
-      if (data.success && data.guide) {
-        playSound('sfx-forge-chime');
-        const existingIdx = savedRecipes.findIndex(r => r.goal_name === data.guide.goal_name);
-        if (existingIdx !== -1) {
-          savedRecipes[existingIdx] = data.guide;
-          turnPageTo(4 + existingIdx, "forward");
-        } else {
-          savedRecipes.push(data.guide);
-          saveRecipesToStorage();
-          turnPageTo(4 + savedRecipes.length - 1, "forward");
-        }
-      } else {
-        alert(data.error || "The Priory could not resolve this recipe.");
-      }
-    } catch (err) {
-      alert("Arcane connection error: " + err.message);
-    } finally {
-      if (btnSubmit) {
-        btnSubmit.disabled = false;
-        if (btnText) btnText.classList.remove("hidden");
-        if (btnSpinner) btnSpinner.classList.add("hidden");
-      }
-      if (bookAura) {
-        bookAura.classList.remove("casting");
-      }
-    }
-  }
-
-  // ── Formatting & Chat Code Copy Helpers ─────────────────────────────────────
   function formatTextWithWaypoints(text) {
     if (!text) return "";
     let s = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     s = s.replace(/`?(\[&[A-Za-z0-9+/=]+\])`?/g, (match, wp) => {
-      return `<span class="wp-link" onclick="copyChatCode('${wp}', this, event)" title="Click to copy chat code">${wp}</span>`;
+      return `<span class="wp-link" onclick="copyChatCode('${wp}', this, event)" title="Click to copy waypoint">${wp}</span>`;
     });
     return s;
   }
@@ -2021,17 +2649,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code).catch(() => {});
     }
-    
+
     const clickX = e ? e.clientX : window.innerWidth / 2;
     const clickY = e ? e.clientY : window.innerHeight / 2;
-    
+
     const stamp = document.createElement("div");
     stamp.className = "copy-stamp-fx";
     stamp.textContent = "Copied";
     stamp.style.left = `${clickX}px`;
     stamp.style.top = `${clickY}px`;
     document.body.appendChild(stamp);
-    
+
     setTimeout(() => {
       if (stamp.parentNode) {
         stamp.parentNode.removeChild(stamp);
@@ -2039,7 +2667,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 800);
   };
 
-  // ── Ambient Arcane Canvas Particles ────────────────────────────────────────
+  // ── Ambient Arcane Canvas Particles ─────────────────────────────────────────
   function initParticles() {
     const c = document.getElementById("particles");
     if (!c || typeof c.getContext !== "function") return;
@@ -2050,152 +2678,89 @@ document.addEventListener("DOMContentLoaded", () => {
     resize();
     window.addEventListener("resize", resize);
 
-    const L1_COUNT = 15;
-    const L2_COUNT = 60;
-    const L3_COUNT = 40;
-
     const dots = [];
-
-    // Layer 1: Large slow ember sparks
-    for(let i=0; i<L1_COUNT; i++) {
+    for (let i = 0; i < 60; i++) {
       dots.push({
-        layer: 1,
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 2 + 2,
-        dx: (Math.random() - 0.5) * 0.1, dy: -Math.random() * 0.2 - 0.1,
-        a: Math.random() * 0.5 + 0.3,
-        color: [255, 170, 0]
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 2 + 0.8,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: -Math.random() * 0.5 - 0.2,
+        alpha: Math.random() * 0.5 + 0.2
       });
     }
 
-    // Layer 2: Medium arcane motes
-    for(let i=0; i<L2_COUNT; i++) {
-      const isPurple = Math.random() < 0.35;
-      dots.push({
-        layer: 2,
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 1.2 + 0.8,
-        dx: (Math.random() - 0.5) * 0.18, dy: -Math.random() * 0.15 - 0.03,
-        a: Math.random() * 0.4 + 0.08,
-        color: isPurple ? [157, 91, 210] : [200, 150, 62]
-      });
-    }
-
-    // Layer 3: Tiny dust motes
-    for(let i=0; i<L3_COUNT; i++) {
-      dots.push({
-        layer: 3,
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 0.4 + 0.2,
-        dx: (Math.random() - 0.5) * 0.05, dy: (Math.random() - 0.5) * 0.05,
-        a: Math.random() * 0.2 + 0.05,
-        color: [255, 230, 150]
-      });
-    }
-
-    (function frame() {
+    function animate() {
       ctx.clearRect(0, 0, W, H);
       for (const d of dots) {
-        d.x += d.dx; d.y += d.dy;
-        if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
-        if (d.y < -10) d.y = H + 10;
-        if (d.y > H + 10) d.y = -10;
+        d.x += d.vx;
+        d.y += d.vy;
+        if (d.y < 0) { d.y = H; d.x = Math.random() * W; }
+        if (d.x < 0) d.x = W;
+        if (d.x > W) d.x = 0;
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${d.color[0]},${d.color[1]},${d.color[2]},${d.a})`;
+        ctx.fillStyle = `rgba(200, 150, 62, ${d.alpha})`;
         ctx.fill();
       }
-      if (typeof requestAnimationFrame === "function") {
-        requestAnimationFrame(frame);
-      }
-    })();
-  }
-  
-  // ── Tooltip Delegation ──────────────────────────────────────────────────────
-  function initTooltipDelegation() {
-    if (!gw2Tooltip) {
-      const tt = document.createElement('div');
-      tt.id = "gw2-tooltip";
-      tt.style.position = "absolute";
-      tt.style.display = "none";
-      tt.style.pointerEvents = "none";
-      tt.style.zIndex = "10000";
-      tt.style.background = "rgba(0,0,0,0.9)";
-      tt.style.border = "1px solid #c8963e";
-      tt.style.padding = "10px";
-      tt.style.borderRadius = "4px";
-      tt.style.color = "#eee";
-      tt.style.maxWidth = "250px";
-      tt.style.boxShadow = "0 4px 6px rgba(0,0,0,0.5)";
-      document.body.appendChild(tt);
-      gw2Tooltip = tt;
+      requestAnimationFrame(animate);
     }
-    
-    document.addEventListener("mouseenter", (e) => {
-      const el = e.target;
-      if (el && el.classList && el.classList.contains("has-tooltip")) {
-        const dataStr = el.getAttribute("data-tooltip");
-        if (dataStr) {
-          try {
-            const data = JSON.parse(dataStr);
-            showGw2Tooltip(el, data, e);
-          } catch(err) {}
-        }
-      }
-    }, true);
-    
-    document.addEventListener("mousemove", (e) => {
-      const el = e.target;
-      if (el && el.classList && el.classList.contains("has-tooltip")) {
-        if (gw2Tooltip && gw2Tooltip.style.display !== "none") {
-          let x = e.clientX + 15;
-          let y = e.clientY + 10;
-          const rect = gw2Tooltip.getBoundingClientRect();
-          if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width - 10;
-          if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height - 10;
-          gw2Tooltip.style.left = x + "px";
-          gw2Tooltip.style.top = y + "px";
-        }
-      }
-    }, true);
-    
-    document.addEventListener("mouseleave", (e) => {
-      const el = e.target;
-      if (el && el.classList && el.classList.contains("has-tooltip")) {
-        if (gw2Tooltip) gw2Tooltip.style.display = "none";
-      }
-    }, true);
+    requestAnimationFrame(animate);
   }
 
-  function showGw2Tooltip(el, data, e) {
+  // ── GW2 Tooltip Delegation ──────────────────────────────────────────────────
+  function initTooltipDelegation() {
     if (!gw2Tooltip) return;
-    
-    const colorMap = {
-      'legendary': '#8a2be2',
-      'ascended': '#fb3e8d',
-      'exotic': '#ffa500',
-      'rare': '#fcd00b',
-      'masterwork': '#1a9306',
-      'fine': '#62a4da',
-      'basic': '#000000'
-    };
-    const titleColor = data.rarity ? colorMap[data.rarity.toLowerCase()] || '#fff' : '#fff';
+    document.addEventListener("mouseover", (e) => {
+      const target = e.target.closest("[data-gw2-tip]");
+      if (!target) {
+        gw2Tooltip.classList.add("hidden");
+        return;
+      }
+      const tipText = target.getAttribute("data-gw2-tip");
+      if (tipText) {
+        gw2Tooltip.innerHTML = tipText;
+        gw2Tooltip.classList.remove("hidden");
+        const rect = target.getBoundingClientRect();
+        gw2Tooltip.style.left = `${rect.left + rect.width / 2}px`;
+        gw2Tooltip.style.top = `${rect.top - 8}px`;
+      }
+    });
 
-    gw2Tooltip.innerHTML = `
-      <div style="color: ${titleColor}; font-weight: bold; font-size: 1.1em; border-bottom: 1px solid #444; padding-bottom: 4px; margin-bottom: 4px;">
-        ${escapeHtml(data.name)}
-      </div>
-      <div style="font-size: 0.85em; color: #ccc; margin-bottom: 4px;">${escapeHtml(data.type || '')}</div>
-      <div style="font-size: 0.9em; margin-bottom: 6px;">${escapeHtml(data.description || '')}</div>
-      ${data.source ? `<div style="font-size: 0.8em; color: #aaa; font-style: italic;">Source: ${escapeHtml(data.source)}</div>` : ''}
-    `;
-    
-    gw2Tooltip.style.display = "block";
-    
-    let x = e.clientX + 15;
-    let y = e.clientY + 10;
-    gw2Tooltip.style.left = x + "px";
-    gw2Tooltip.style.top = y + "px";
+    document.addEventListener("mouseout", (e) => {
+      const target = e.target.closest("[data-gw2-tip]");
+      if (target && gw2Tooltip) {
+        gw2Tooltip.classList.add("hidden");
+      }
+    });
   }
 
+  // ── Initialization ──────────────────────────────────────────────────────────
+  ensureSideDrawerDOM();
+  initParticles();
+  initTooltipDelegation();
+  loadRecentChapters();
+
+  const savedApiKey = getStorageItem("priory_custom_api_key");
+  if (savedApiKey && savedApiKey.trim()) {
+    const keyInput = document.getElementById("drawer-api-key-input");
+    if (keyInput) keyInput.value = savedApiKey.trim();
+    fetch("/api/account/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ api_key: savedApiKey.trim() })
+    })
+      .then(r => r.json())
+      .catch(() => {})
+      .finally(() => {
+        fetchAccountStatus();
+      });
+  } else {
+    fetchAccountStatus();
+  }
+
+  renderCurrentSpread();
+
+  // Preload default legendary dossier (Twilight) in background without auto page turn
+  loadLegendaryDossier(30689, "Twilight", { autoTurn: false });
 });

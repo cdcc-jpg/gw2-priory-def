@@ -579,6 +579,51 @@ priory:isAccountBound a owl:DatatypeProperty ;
     rdfs:range xsd:boolean ;
     rdfs:label "is account bound"@en .
 
+# --- Item Attributes, Combat Capabilities & Gear Metrics ---
+
+priory:requiredLevel a owl:DatatypeProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:integer ;
+    rdfs:label "required level"@en ;
+    rdfs:comment "Character level required to equip or use this item (0-80)."@en .
+
+priory:hasVendorValue a owl:DatatypeProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:integer ;
+    rdfs:label "vendor sell value"@en ;
+    rdfs:comment "Base merchant purchase value in copper coins."@en .
+
+priory:itemFlags a owl:DatatypeProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range xsd:string ;
+    rdfs:label "item flags"@en ;
+    rdfs:comment "Comma-separated flags controlling item behavior (e.g. AccountBound, NoSalvage)."@en .
+
+priory:damageType a owl:DatatypeProperty ;
+    rdfs:domain priory:Weapon ;
+    rdfs:range xsd:string ;
+    rdfs:label "weapon damage type"@en ;
+    rdfs:comment "Elemental or physical damage type inflicted by this weapon."@en .
+
+priory:minWeaponPower a owl:DatatypeProperty ;
+    rdfs:domain priory:Weapon ;
+    rdfs:range xsd:integer ;
+    rdfs:label "minimum weapon power"@en ;
+    rdfs:comment "Minimum weapon strike damage value."@en .
+
+priory:maxWeaponPower a owl:DatatypeProperty ;
+    rdfs:domain priory:Weapon ;
+    rdfs:range xsd:integer ;
+    rdfs:label "maximum weapon power"@en ;
+    rdfs:comment "Maximum weapon strike damage value."@en .
+
+priory:armorDefense a owl:DatatypeProperty ;
+    rdfs:domain priory:Armor ;
+    rdfs:range xsd:integer ;
+    rdfs:label "armor defense"@en ;
+    rdfs:comment "Base armor defense rating."@en .
+
+
 priory:expectedYieldRate a owl:DatatypeProperty ;
     rdfs:domain priory:MysticForgeRecipe ;
     rdfs:range xsd:decimal ;

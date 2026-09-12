@@ -19,7 +19,7 @@ from engine.graph_store import PrioryGraphStore
 from engine.account_diff import AccountState, AccountDiffEngine
 from engine.path_solver import PathSolver
 from engine.account_ranker import AccountRanker
-from ingestion.gw2_api import GW2ApiClient
+from ingestion.gw2_api import GW2ApiClient, InsufficientPermissionsError, MissingApiKeyError
 from agent.orchestrator import PrioryAgentOrchestrator, PrioryChatSession
 from agent.llm_client import (
     GeminiLLMClient,
@@ -40,6 +40,7 @@ GRAPH_STORE: Optional[PrioryGraphStore] = None
 ORCHESTRATOR: Optional[PrioryAgentOrchestrator] = None
 ACTIVE_ACCOUNT: Optional[AccountState] = None
 SESSIONS: Dict[str, PrioryChatSession] = {}
+DEFAULT_GW2_API_KEY: str = os.getenv("GW2_API_KEY", "")
 
 
 def get_or_create_store() -> PrioryGraphStore:
@@ -160,6 +161,7 @@ def api_status():
         "is_fallback": is_fallback,
         "llm_mode": "fallback" if is_fallback else "live",
         "fallback_reason": fallback_reason,
+        "account_name": getattr(account, "account_name", "") or (getattr(account, "account_created", "") and "Commander") or "Authenticated Scholar",
         "api_key_configured": has_key,
         "api_key_masked": masked_key,
         "account_materials_count": len(account.materials),
@@ -177,30 +179,57 @@ def api_status():
 
 @app.route("/api/account/refresh", methods=["POST"])
 def api_refresh_account():
-    """Refreshes live account data from GW2 API with optional new API key."""
+    """Refreshes live account data from GW2 API with optional new API key or reset to default."""
     global ACTIVE_ACCOUNT, SESSIONS
     data = request.get_json(silent=True) or {}
-    new_key = data.get("api_key") or os.getenv("GW2_API_KEY")
+    reset = data.get("reset", False)
 
-    if not new_key or not new_key.strip():
-        return jsonify({"success": False, "error": "No API key provided."}), 400
-
-    try:
-        api_client = GW2ApiClient(api_key=new_key.strip())
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        account = loop.run_until_complete(api_client.fetch_account_snapshot())
-        loop.close()
-        ACTIVE_ACCOUNT = account
-        SESSIONS.clear()  # Clear sessions to bind to updated account
+    if reset:
+        key_to_use = DEFAULT_GW2_API_KEY
+        if DEFAULT_GW2_API_KEY:
+            os.environ["GW2_API_KEY"] = DEFAULT_GW2_API_KEY
+        else:
+            os.environ.pop("GW2_API_KEY", None)
+        ACTIVE_ACCOUNT = None
+        SESSIONS.clear()
+        account = get_live_account()
         return jsonify({
             "success": True,
+            "reset": True,
+            "account_name": getattr(account, "account_name", "Default Account") or "Default Account",
             "materials_count": len(account.materials),
             "armory_count": len(account.legendary_armory),
-            "wallet": account.wallet
+            "wallet": account.wallet,
+            "api_key_masked": f"{DEFAULT_GW2_API_KEY[:6]}...{DEFAULT_GW2_API_KEY[-4:]}" if DEFAULT_GW2_API_KEY else "None"
         })
+
+    new_key = data.get("api_key") or data.get("new_key")
+    if not new_key or not isinstance(new_key, str) or not new_key.strip():
+        return jsonify({"success": False, "error": "No API key provided."}), 400
+
+    new_key = new_key.strip()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        api_client = GW2ApiClient(api_key=new_key)
+        account = loop.run_until_complete(api_client.fetch_account_snapshot())
+        ACTIVE_ACCOUNT = account
+        os.environ["GW2_API_KEY"] = new_key
+        SESSIONS.clear()
+        return jsonify({
+            "success": True,
+            "account_name": account.account_name or "Custom Account",
+            "materials_count": len(account.materials),
+            "armory_count": len(account.legendary_armory),
+            "wallet": account.wallet,
+            "api_key_masked": f"{new_key[:6]}...{new_key[-4:]}"
+        })
+    except (InsufficientPermissionsError, MissingApiKeyError) as e:
+        return jsonify({"success": False, "error": str(e)}), 401
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        loop.close()
 
 
 @app.route("/api/session/history", methods=["GET"])

@@ -9,7 +9,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+- **Domain Ontology Schema Extensions for Item & Combat Metrics (`ontology/priory_core.ttl`, `ontology/priory_shacl.ttl`):**
+  - **OWL 2 DL Item Datatype Properties (`ontology/priory_core.ttl`):** Added domain properties with explicit English labels and comments adhering strictly to the Semantic Truth in Semantic Artifacts rule:
+    - `priory:requiredLevel`: Character level required to equip or use an item (`0-80`, domain `priory:Item`, range `xsd:integer`).
+    - `priory:hasVendorValue`: Base merchant purchase value in copper coins (domain `priory:Item`, range `xsd:integer`).
+    - `priory:itemFlags`: Comma-separated flags controlling item behavior such as `AccountBound` and `NoSalvage` (domain `priory:Item`, range `xsd:string`).
+    - `priory:damageType`: Elemental or physical damage type inflicted by a weapon (domain `priory:Weapon`, range `xsd:string`).
+    - `priory:minWeaponPower`: Minimum weapon strike damage rating (domain `priory:Weapon`, range `xsd:integer`).
+    - `priory:maxWeaponPower`: Maximum weapon strike damage rating (domain `priory:Weapon`, range `xsd:integer`).
+    - `priory:armorDefense`: Base armor defense rating (domain `priory:Armor`, range `xsd:integer`).
+  - **W3C SHACL Property Shape Constraints (`ontology/priory_shacl.ttl`):** Extended `priory:ItemShape` (targeting `priory:Item`, `priory:Weapon`, `priory:Armor`, and specialized equipment subclasses) with structural validation constraints:
+    - `priory:requiredLevel`: Constrained to `xsd:integer` in range `[0, 80]`.
+    - `priory:hasVendorValue`: Constrained to `xsd:integer` with `minInclusive 0`.
+    - `priory:minWeaponPower`: Constrained to `xsd:integer` with `minInclusive 0`.
+    - `priory:maxWeaponPower`: Constrained to `xsd:integer` with `minInclusive 0`.
+    - `priory:armorDefense`: Constrained to `xsd:integer` with `minInclusive 0`.
+
+- **Item Combat Metrics, Level & Vendor Value Ontology & SHACL Grounding (`ontology/priory_core.ttl`, `ontology/priory_shacl.ttl`):**
+  - **OWL 2 DL Item Datatype Properties (`ontology/priory_core.ttl`):** Added domain properties with explicit English labels and comments adhering strictly to the Semantic Truth in Semantic Artifacts rule:
+    - `priory:requiredLevel`: Character level required to equip or use an item (`0-80`, domain `priory:Item`, range `xsd:integer`).
+    - `priory:hasVendorValue`: Base merchant purchase value in copper coins (domain `priory:Item`, range `xsd:integer`).
+    - `priory:itemFlags`: Comma-separated flags controlling item behavior such as `AccountBound` and `NoSalvage` (domain `priory:Item`, range `xsd:string`).
+    - `priory:damageType`: Elemental or physical damage type inflicted by a weapon (domain `priory:Weapon`, range `xsd:string`).
+    - `priory:minWeaponPower`: Minimum weapon strike damage rating (domain `priory:Weapon`, range `xsd:integer`).
+    - `priory:maxWeaponPower`: Maximum weapon strike damage rating (domain `priory:Weapon`, range `xsd:integer`).
+    - `priory:armorDefense`: Base armor defense rating (domain `priory:Armor`, range `xsd:integer`).
+  - **W3C SHACL Property Shape Constraints (`ontology/priory_shacl.ttl`):** Extended `priory:ItemShape` (targeting `priory:Item`, `priory:Weapon`, `priory:Armor`, and specialized equipment subclasses) with structural validation constraints:
+    - `priory:requiredLevel`: Constrained to `xsd:integer` in range `[0, 80]`.
+    - `priory:hasVendorValue`: Constrained to `xsd:integer` with `minInclusive 0`.
+    - `priory:minWeaponPower`: Constrained to `xsd:integer` with `minInclusive 0`.
+    - `priory:maxWeaponPower`: Constrained to `xsd:integer` with `minInclusive 0`.
+    - `priory:armorDefense`: Constrained to `xsd:integer` with `minInclusive 0`.
+- **Interactive GW2 API Key & Account Switcher (`web/templates/index.html`, `web/static/js/app.js`, `web/static/css/style.css`, `web/app.py`, `engine/account_diff.py`, `ingestion/gw2_api.py`):**
+  - **Side Drawer Account Switcher Panel:** Added an "Active GW2 Account & API Key" section in `#priory-side-drawer` displaying current account name, masked API key, password input with toggleable visibility (👁 / 🙈), a "Sync Account" button with loading spinner, a "Reset" button, and actionable feedback banners.
+  - **Quick-Access Account Pill on Library Spread:** Injected an interactive `.account-badge-pill` on the Library spread (`Spread 0`) showing active account name and a `Change Key ⚙` button that opens the drawer directly with autofocus.
+  - **Automatic Cache Invalidation & Re-computation:** On applying a new API key, the frontend clears `dossierCache`, saves custom keys to `localStorage` (`priory_custom_api_key`), updates active telemetry, and automatically recomputes recipes, prerequisites, and itineraries for the newly authenticated account.
+  - **Backend Runtime Key Switching:** Enhanced `POST /api/account/refresh` to validate new keys against `/v2/account`, update `os.environ["GW2_API_KEY"]`, clear conversational sessions, and return account name, materials count, armory count, and wallet. Added support for `reset: true` reverting to the default environment key. Added `account_name` tracking to `AccountState` and `fetch_account_snapshot()`.
+- **"Explore" Query Action & Durmand Priory Arcane Scrying Loader (`web/static/js/app.js`, `web/static/css/style.css`):**
+  - **Explore Button Renaming & Native Submission Prevention:** Renamed the yellow inquiry button from "Search the Archives" to **"Explore"** (`#btn-search-archives`). Converted to `type="button"` with explicit `onclick="executeLibrarySearch(event)"` and `onsubmit="executeLibrarySearch(event); return false;"`, safely terminating browser form submissions and preventing accidental page reloads.
+  - **Prominent Arcane Scrying Loading State:** Injected an immediate, rich Durmand Priory Scrying Card into `#right-page-body` upon query execution featuring a dual-rotating gold/amethyst astrolabe spinner (`.scrying-rune-spinner`), a pulsing inner rune glyph (`.scrying-inner-glyph`), an italicized citation of the user's prompt, and a live 3-step scrying progression pipeline (Neuro-Symbolic Graph ➔ Account Inventory Audit ➔ Progression Synthesis).
+  - **High-Contrast Button Indicator & Empty Query Validation:** Styled dark iron-gall spinner borders for `.spinner-ink` inside `.btn-forge-inscribe` for instant contrast on gold backgrounds. Added `.input-shake` keyframe animation for empty prompt validation on `#library-search-input`.
+  - **Seamless Custom Guide Generation & Page Turn Safety:** Ensured queries like *"Which accessory can I get the fastest?"* cleanly resolve the top pick (Aurora ID 81908), prefetch background dossiers without jumping contexts, add the inquiry to `recentChapters`, and transition the tome directly to the **Guide** spread with full comparative ranking leaderboards and acceleration checklists. Hardened `turnPageTo` to re-render if the target spread is already active and added safety resets against stuck `isFlipping` states.
+- **Thread-Safe Graph Store Query Locking (`engine/graph_store.py`):**
+  - Added `threading.Lock()` to `PrioryGraphStore` wrapping `prepareQuery` and `dataset.query`.
+  - Implemented resilient fallback to direct string queries if concurrent pyparsing AST compilation encounters cache race conditions, preventing `TypeError: expandTriples() missing 1 required positional argument: 'terms'` during burst parallel API requests.
+- **Monotrack Legendary Dossier Architecture & UI Rationalization (`web/templates/index.html`, `web/static/css/style.css`, `web/static/js/app.js`):**
+  - **Unified Monotrack Single-Context Model:** Replaced 4 fragmented yellow tabs (`Inscription`, `Session Planner`, `Buy vs Craft`, `Prerequisite Audit`) and duplicate legendary dropdown pickers with a cohesive, unified 2-spread dossier for any selected legendary. Selecting an item once locks the tome into that context across all dimensions.
+  - **Streamlined Emote-Free Tab Bar:** Established clean, minimal ribbon bookmarks: `Library`, `Recipe`, `Plan`, and `Chapters ▾` (recent dossiers dropdown).
+  - **Dossier Part I (Recipe & Market Economics):** Combines complete component recipe tree, missing account materials progress, gold to finish, instant TP vs buy order vs craft cost, Wallace 15% TP tax liquidation model, Precursor acquisition strategy, and Mystic Clover EV recommendations on a unified spread.
+  - **Dossier Part II (Readiness & Daily Session Plan):** Unifies Account Prerequisites (World completion, crafting 500, masteries), multi-alt discipline routing (zero 50s fee character assignments), and the Knapsack Activity Scheduler with interactive playtime slider (30m–120m) that dynamically recalculates for the active legendary.
+  - **Chapters History Dropdown:** Replaced overflowing dynamic tab spam with a compact dropdown menu tracking recently viewed legendaries with one-click switching and history clearing.
+  - **Collapsible Telemetry & Diagnostics Side Drawer:** Relocated live account essence (armory, materials, liquid gold, spirit shards, astral acclaim, volatile magic) and system health telemetry to a discreet floating side drawer (`⚙ Account & Diagnostics`), freeing the primary parchment for search and guides.
+  - **Total Removal of Clutter & Audio:** Permanently removed the top archival masthead banner, Live Essence pulse badge, 3D Concept Lab links, all audio tags, sound toggles, procedural Web Audio synthesis, fake runic alphabet headers, and decorative subtitles (`~ The Scholar's Ledger ~`, `~ Alchemical Geometry ~`).
+  - **Dynamic Natural Language Query Page Generation (`web/templates/index.html`, `web/static/js/app.js`):** Connected the Library search form to `POST /api/query`, eliminating hardcoded fallbacks to Twilight. Queries like *"Which accessory can I get the fastest?"* generate a dedicated **Guide** spread with comparative ranker leaderboards (#1 Aurora 24% ready with ~494.8g remaining, Vision, Coalescence runner-up cards), speed booster synergy callouts, and actionable session checklists with waypoints. Direct jump buttons (`[Open Full Dossier ➔]`, `[Recipe]`, `[Plan]`) connect the custom query directly to the active Monotrack dossier.
 - **Complete Website UI Overhaul: Majestic 2D Durmand Priory Grimoire & Total Removal of 3D Glitches (`web/templates/index.html`, `web/static/css/style.css`, `web/static/js/app.js`):**
   - **Complete Elimination of Pseudo-3D Artifacts:** Removed CSS `perspective: 2000px`, `transform-style: preserve-3d`, and `rotateX/rotateY` transforms that caused jitter, text rasterization blurring, and aliasing. Stripped out mousemove parallax listener (`initMouseParallax()`) and floating CSS desk props (`.inkpot-quill`, `.scrying-orb`, `.desk-scroll`, `.candle-holder`).
   - **Pure 2D Smooth Page Transitions:** Deprecated and eliminated the 3D `.flipper-leaf` overlay, replacing it with a fluid 2D slide/cross-fade transition with dynamic inner parchment shadow sweep and synchronized procedural paper turn audio (`playPaperTurnSound()`) via Web Audio API.

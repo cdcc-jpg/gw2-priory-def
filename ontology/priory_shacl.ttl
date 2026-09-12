@@ -10,7 +10,7 @@
 # ==============================================================================
 
 priory:ItemShape a sh:NodeShape ;
-    sh:targetClass priory:Item, priory:LegendaryWeapon, priory:PrecursorWeapon,
+    sh:targetClass priory:Item, priory:Weapon, priory:LegendaryWeapon, priory:PrecursorWeapon,
                    priory:CraftingMaterial, priory:GiftItem, priory:LegendarySigil, priory:LegendaryRune,
                    priory:Armor, priory:LightArmor, priory:MediumArmor, priory:HeavyArmor, priory:LegendaryArmor,
                    priory:Trinket, priory:LegendaryTrinket,
@@ -33,6 +33,37 @@ priory:ItemShape a sh:NodeShape ;
         sh:path priory:hasRarity ;
         sh:nodeKind sh:IRI ;
         sh:message "Item rarity must be an IRI pointing to a SKOS Rarity Concept." ;
+    ] ;
+    sh:property [
+        sh:path priory:requiredLevel ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 80 ;
+        sh:message "requiredLevel must be an integer between 0 and 80." ;
+    ] ;
+    sh:property [
+        sh:path priory:hasVendorValue ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "hasVendorValue must be an integer >= 0." ;
+    ] ;
+    sh:property [
+        sh:path priory:minWeaponPower ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "minWeaponPower must be an integer >= 0." ;
+    ] ;
+    sh:property [
+        sh:path priory:maxWeaponPower ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "maxWeaponPower must be an integer >= 0." ;
+    ] ;
+    sh:property [
+        sh:path priory:armorDefense ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:message "armorDefense must be an integer >= 0." ;
     ] .
 
 priory:ConvenienceGizmoShape a sh:NodeShape ;

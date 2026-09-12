@@ -655,6 +655,7 @@ class AccountState:
     luck: int = 0
     commander: bool = False
     account_created: str = ""
+    account_name: str = ""
     progression: Dict[str, int] = field(default_factory=dict)
     daily_dungeons: List[str] = field(default_factory=list)
     weekly_raids: List[str] = field(default_factory=list)

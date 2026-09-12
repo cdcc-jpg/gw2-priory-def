@@ -451,6 +451,7 @@ class GW2ApiClient:
             monthly_ap = 0
             commander = False
             account_created = ""
+            account_name = ""
             try:
                 acc_info, _ = await self._fetch_conditional(client, "account")
                 if isinstance(acc_info, dict):
@@ -460,6 +461,7 @@ class GW2ApiClient:
                     monthly_ap = acc_info.get("monthly_ap", 0)
                     commander = acc_info.get("commander", False)
                     account_created = acc_info.get("created", "")
+                    account_name = acc_info.get("name", "")
             except Exception:
                 pass
 
@@ -573,6 +575,7 @@ class GW2ApiClient:
                 luck=luck,
                 commander=commander,
                 account_created=account_created,
+                account_name=account_name,
                 progression=progression,
                 daily_dungeons=daily_dungeons,
                 weekly_raids=weekly_raids,

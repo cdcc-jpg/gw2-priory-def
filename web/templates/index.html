@@ -18,26 +18,63 @@
     <div class="candle-glow candle-left"></div>
     <div class="candle-glow candle-right"></div>
 
-    <!-- Top Archival Masthead -->
-    <header class="top-nav-controls priory-control-bar">
-        <div class="priory-archives-header">
-            <span class="priory-seal-insignia" aria-hidden="true">⚜</span>
-            <span class="priory-header-title">Durmand Priory Archives <span class="priory-header-sep">•</span> The Legendary Grimoire</span>
-            <div class="priory-essence-indicator" title="Live Arcane Resonance with GW2 Archives">
-                <span class="essence-pulse-orb"></span>
-                <span class="essence-status-text">Live Essence</span>
+    <!-- Floating Drawer Toggle Button -->
+    <button id="btn-toggle-drawer" class="drawer-toggle-btn" title="Account Essence & Diagnostics">⚙ Account & Diagnostics</button>
+
+    <!-- Slide-out Side Drawer Container -->
+    <aside id="priory-side-drawer" class="priory-side-drawer hidden">
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <span class="drawer-glyph">⚜</span>
+          <span>Account & System Telemetry</span>
+        </div>
+        <button id="btn-close-drawer" class="btn-drawer-close" title="Close Drawer">✕</button>
+      </div>
+      <div class="drawer-content">
+        <div class="drawer-section">
+          <div class="drawer-section-title">Active GW2 Account &amp; API Key</div>
+          <div class="api-key-panel">
+            <div class="api-key-current-row">
+              <span class="api-key-lbl">Current Account:</span>
+              <span class="api-key-val" id="drawer-account-name">Loading...</span>
             </div>
+            <div class="api-key-current-row">
+              <span class="api-key-lbl">Active Key:</span>
+              <span class="api-key-val" id="drawer-api-key-masked">None</span>
+            </div>
+            <label class="drawer-input-lbl" for="drawer-api-key-input">Switch API Key:</label>
+            <div class="api-key-input-wrap">
+              <input type="password" id="drawer-api-key-input" class="drawer-key-input" placeholder="Paste GW2 API Key (72 chars)..." spellcheck="false" autocomplete="off" />
+              <button type="button" id="btn-toggle-key-visibility" class="btn-toggle-key" title="Show / Hide Key">👁</button>
+            </div>
+            <div class="api-key-actions-row">
+              <button type="button" id="btn-apply-api-key" class="btn-drawer-action btn-apply-key">
+                <span id="btn-apply-key-text">Sync Account</span>
+                <span id="btn-apply-key-spinner" class="spinner-ink hidden"></span>
+              </button>
+              <button type="button" id="btn-reset-api-key" class="btn-drawer-action btn-reset-key" title="Reset to default API key">Reset</button>
+            </div>
+            <div id="drawer-api-key-feedback" class="api-key-feedback hidden"></div>
+            <div class="api-key-hint">
+              Required permissions: <em>account, inventories, characters, wallet, unlocks</em>. Generated at <a href="https://account.arena.net/applications" target="_blank" rel="noopener">account.arena.net</a>.
+            </div>
+          </div>
         </div>
-        <div class="top-controls-actions">
-            <a href="/3d" class="btn-concept-lab" title="Explore the experimental WebGL 3D Concept Laboratory">
-                <span class="concept-lab-glyph">🧪</span> 3D Concept Lab →
-            </a>
-            <button class="audio-toggle" id="audio-toggle" title="Toggle ambient sound" aria-label="Toggle ambient sound" aria-pressed="false">
-                <span class="audio-icon">🔇</span>
-                <span class="audio-label">Sound Off</span>
-            </button>
+        <div class="drawer-section">
+          <div class="drawer-section-title">Live Account Essence</div>
+          <div class="drawer-stats-grid" id="drawer-account-stats">
+            <!-- Dynamically populated -->
+          </div>
         </div>
-    </header>
+        <div class="drawer-section">
+          <div class="drawer-section-title">System Diagnostics</div>
+          <div class="diagnostics-panel" id="drawer-diagnostics-panel">
+            <!-- Dynamically populated -->
+          </div>
+          <button id="btn-reload-telemetry" class="btn-drawer-action">Refresh Telemetry & Cache</button>
+        </div>
+      </div>
+    </aside>
 
     <!-- Arcane Aura behind the Tome -->
     <div class="book-aura" id="book-aura"></div>
@@ -47,20 +84,23 @@
         
         <!-- Top Bookmark Ribbon Tabs -->
         <div class="tome-tabs" id="tome-tabs">
-            <button class="tome-tab active" data-page-index="0" id="tab-inscribe" title="Chapter I: Inscription">
-                <span class="tab-label">Inscription</span>
-            </button>
-            <button class="tome-tab" data-page-index="1" id="tab-planner" title="Chapter II: Daily Session Planner">
-                <span class="tab-label">Session Planner</span>
-            </button>
-            <button class="tome-tab" data-page-index="2" id="tab-arbitrage" title="Chapter III: Buy vs Craft Arbitrage">
-                <span class="tab-label">Buy vs Craft</span>
-            </button>
-            <button class="tome-tab" data-page-index="3" id="tab-prereqs" title="Chapter IV: Prerequisite Audit">
-                <span class="tab-label">Prerequisite Audit</span>
-            </button>
-            <div class="saved-recipes-tabs" id="saved-recipes-tabs">
-                <!-- Dynamic Recipe Tabs inserted here -->
+            <button class="tome-tab active" data-spread-index="0" id="tab-library" title="Library & Search"><span class="tab-label">Library</span></button>
+            <button class="tome-tab" data-spread-index="1" id="tab-guide" title="Custom Query Guide"><span class="tab-label">Guide</span></button>
+            <button class="tome-tab" data-spread-index="2" id="tab-recipe" title="Part I: Recipe & Market Economics"><span class="tab-label">Recipe</span></button>
+            <button class="tome-tab" data-spread-index="3" id="tab-plan" title="Part II: Readiness & Daily Session Plan"><span class="tab-label">Plan</span></button>
+            <div class="guides-menu-container" id="chapters-menu-container">
+                <button type="button" class="tome-tab chapters-tab-btn" id="tab-chapters-menu" title="Recent Dossiers">
+                    <span class="tab-label" id="chapters-tab-label">Chapters ▾</span>
+                </button>
+                <div class="guides-dropdown-card hidden" id="chapters-dropdown-card">
+                    <div class="guides-dropdown-header">
+                        <span>Recent Chapters</span>
+                        <button type="button" id="btn-clear-all-chapters" class="btn-clear-guides" title="Clear all recent chapters">Clear All</button>
+                    </div>
+                    <div class="guides-list" id="chapters-dropdown-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -158,11 +198,6 @@
 
         </div>
     </main>
-
-    <!-- Hidden audio elements -->
-    <audio id="sfx-page-turn" preload="auto"><source src="/static/audio/page-turn.mp3" type="audio/mpeg"></audio>
-    <audio id="sfx-forge-chime" preload="auto"><source src="/static/audio/forge-chime.mp3" type="audio/mpeg"></audio>
-    <audio id="sfx-quill" preload="auto"><source src="/static/audio/quill-scratch.mp3" type="audio/mpeg"></audio>
 
     <script src="/static/js/app.js"></script>
 

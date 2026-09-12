@@ -6,6 +6,7 @@ and instance graphs, and provides SPARQL query interfaces for recipe trees and a
 
 from __future__ import annotations
 import os
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import rdflib
@@ -77,6 +78,7 @@ class PrioryGraphStore:
         self._prepared_queries: Dict[str, Any] = {}
         self._item_cache: Dict[int, Optional[Dict[str, Any]]] = {}
         self._direct_ingredients_cache: Dict[int, List[Dict[str, Any]]] = {}
+        self._query_lock = threading.Lock()
 
         self._bind_namespaces()
 
@@ -138,10 +140,17 @@ class PrioryGraphStore:
 
     def query(self, sparql_str: str, init_bindings: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Executes a SPARQL query against the graph/dataset and returns list of dict results."""
-        if sparql_str not in self._prepared_queries:
-            self._prepared_queries[sparql_str] = prepareQuery(sparql_str, initNs=DEFAULT_NAMESPACES)
-        q = self._prepared_queries[sparql_str]
-        results = self.dataset.query(q, initBindings=init_bindings or {})
+        with self._query_lock:
+            if sparql_str not in self._prepared_queries:
+                try:
+                    self._prepared_queries[sparql_str] = prepareQuery(sparql_str, initNs=DEFAULT_NAMESPACES)
+                except Exception:
+                    self._prepared_queries[sparql_str] = None
+            q = self._prepared_queries.get(sparql_str)
+            if q is not None:
+                results = self.dataset.query(q, initBindings=init_bindings or {})
+            else:
+                results = self.dataset.query(sparql_str, initNs=DEFAULT_NAMESPACES, initBindings=init_bindings or {})
         
         output = []
         for row in results:
