@@ -163,6 +163,7 @@ priory:LedgerToken a owl:Class ;
     rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Ledger Token / Accounting Entity"@en ;
     rdfs:comment "Informational bookkeeping tokens, currencies, and intermediate crafting components."@en .
+priory:LedgerToken owl:disjointWith priory:Item .
 
 priory:CraftingMaterial a owl:Class ;
     rdfs:subClassOf priory:Item ;
