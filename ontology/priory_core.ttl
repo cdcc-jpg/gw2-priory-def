@@ -165,11 +165,11 @@ priory:LedgerToken a owl:Class ;
     rdfs:comment "Informational bookkeeping tokens, currencies, and intermediate crafting components."@en .
 
 priory:CraftingMaterial a owl:Class ;
-    rdfs:subClassOf priory:Item, priory:LedgerToken ;
+    rdfs:subClassOf priory:Item ;
     rdfs:label "Crafting Material"@en .
 
 priory:GiftItem a owl:Class ;
-    rdfs:subClassOf priory:Item, priory:LedgerToken ;
+    rdfs:subClassOf priory:Item ;
     rdfs:label "Gift Component"@en ;
     rdfs:comment "Intermediate gift components used in high-level Mystic Forge and legendary recipes."@en .
 
@@ -623,7 +623,6 @@ priory:armorDefense a owl:DatatypeProperty ;
     rdfs:label "armor defense"@en ;
     rdfs:comment "Base armor defense rating."@en .
 
-
 priory:expectedYieldRate a owl:DatatypeProperty ;
     rdfs:domain priory:MysticForgeRecipe ;
     rdfs:range xsd:decimal ;
@@ -725,32 +724,107 @@ priory:WeaponScheme a skos:ConceptScheme ;
     skos:prefLabel "Weapon Scheme"@en .
 
 weapon:TwoHandedWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "Two-Handed Weapon"@en .
+
 weapon:OneHandedWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "One-Handed Weapon"@en .
+
 weapon:OffHandWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "Off-Hand Weapon"@en .
+
 weapon:AquaticWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "Aquatic Weapon"@en .
 
-weapon:Greatsword a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon ; skos:prefLabel "Greatsword"@en .
-weapon:Hammer a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon ; skos:prefLabel "Hammer"@en .
-weapon:Longbow a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon ; skos:prefLabel "Longbow"@en .
-weapon:Rifle a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon ; skos:prefLabel "Rifle"@en .
-weapon:ShortBow a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon ; skos:prefLabel "Short Bow"@en .
-weapon:Staff a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon ; skos:prefLabel "Staff"@en .
+weapon:Greatsword a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Greatsword"@en .
 
-weapon:Axe a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OneHandedWeapon ; skos:prefLabel "Axe"@en .
-weapon:Dagger a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OneHandedWeapon ; skos:prefLabel "Dagger"@en .
-weapon:Mace a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OneHandedWeapon ; skos:prefLabel "Mace"@en .
-weapon:Pistol a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OneHandedWeapon ; skos:prefLabel "Pistol"@en .
-weapon:Scepter a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OneHandedWeapon ; skos:prefLabel "Scepter"@en .
-weapon:Sword a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OneHandedWeapon ; skos:prefLabel "Sword"@en .
+weapon:Hammer a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Hammer"@en .
 
-weapon:Focus a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OffHandWeapon ; skos:prefLabel "Focus"@en .
-weapon:Shield a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OffHandWeapon ; skos:prefLabel "Shield"@en .
-weapon:Torch a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OffHandWeapon ; skos:prefLabel "Torch"@en .
-weapon:Warhorn a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:OffHandWeapon ; skos:prefLabel "Warhorn"@en .
+weapon:Longbow a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Longbow"@en .
 
-weapon:Spear a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:TwoHandedWeapon, weapon:AquaticWeapon ; skos:prefLabel "Spear"@en .
-weapon:HarpoonGun a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:AquaticWeapon ; skos:prefLabel "Harpoon Gun"@en .
-weapon:Trident a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:broader weapon:AquaticWeapon ; skos:prefLabel "Trident"@en .
+weapon:Rifle a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Rifle"@en .
+
+weapon:ShortBow a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Short Bow"@en .
+
+weapon:Staff a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon ;
+    skos:prefLabel "Staff"@en .
+
+weapon:Axe a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Axe"@en .
+
+weapon:Dagger a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Dagger"@en .
+
+weapon:Mace a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Mace"@en .
+
+weapon:Pistol a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Pistol"@en .
+
+weapon:Scepter a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Scepter"@en .
+
+weapon:Sword a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OneHandedWeapon ;
+    skos:prefLabel "Sword"@en .
+
+weapon:Focus a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Focus"@en .
+
+weapon:Shield a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Shield"@en .
+
+weapon:Torch a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Torch"@en .
+
+weapon:Warhorn a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:OffHandWeapon ;
+    skos:prefLabel "Warhorn"@en .
+
+weapon:Spear a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:TwoHandedWeapon, weapon:AquaticWeapon ;
+    skos:prefLabel "Spear"@en .
+
+weapon:HarpoonGun a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:AquaticWeapon ;
+    skos:prefLabel "Harpoon Gun"@en .
+
+weapon:Trident a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:broader weapon:AquaticWeapon ;
+    skos:prefLabel "Trident"@en .
 
 # --- Exploration & Spatial Navigation ---
 priory:ExplorationZone a owl:Class ;
@@ -823,12 +897,19 @@ priory:RarityScheme a skos:ConceptScheme ;
     skos:prefLabel "Rarity Scheme"@en .
 
 rarity:Junk a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Junk"@en .
+
 rarity:Basic a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Basic"@en .
+
 rarity:Fine a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Fine"@en .
+
 rarity:Masterwork a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Masterwork"@en .
+
 rarity:Rare a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Rare"@en .
+
 rarity:Exotic a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Exotic"@en .
+
 rarity:Ascended a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Ascended"@en .
+
 rarity:Legendary a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Legendary"@en .
 
 # ==============================================================================
