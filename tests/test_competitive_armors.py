@@ -28,12 +28,12 @@ class TestCompetitiveArmorsAndEternity(unittest.TestCase):
         self.assertIn("Twilight", sub_labels)
 
     def test_wvw_legendary_armor_diff(self):
-        """Verifies that Triumphant Hero's Warplate computes diff with Memories of Battle and competitive gifts."""
+        """Verifies that Triumphant Hero's Breastplate computes diff with Memories of Battle and competitive gifts."""
         account = AccountState(
             materials={73248: 100}  # 100 Memories of Battle
         )
-        report = self.diff_engine.compute_diff(goal_item_id=803841, account=account)
-        self.assertEqual(report.goal_item_name, "Triumphant Hero's Warplate")
+        report = self.diff_engine.compute_diff(goal_item_id=83394, account=account)
+        self.assertEqual(report.goal_item_name, "Triumphant Hero's Breastplate")
         self.assertFalse(report.is_fully_satisfied)
         self.assertIn("Memory of Battle", report.summary_missing_materials)
 
@@ -42,7 +42,7 @@ class TestCompetitiveArmorsAndEternity(unittest.TestCase):
         account = AccountState(
             materials={79895: 200}  # 200 Ascended Shards of Glory
         )
-        report = self.diff_engine.compute_diff(goal_item_id=806121, account=account)
+        report = self.diff_engine.compute_diff(goal_item_id=83348, account=account)
         self.assertEqual(report.goal_item_name, "Ardent Glorious Breastplate")
         self.assertFalse(report.is_fully_satisfied)
         self.assertIn("Ascended Shard of Glory", report.summary_missing_materials)

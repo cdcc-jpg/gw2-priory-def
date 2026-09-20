@@ -19,10 +19,16 @@ item:8941 a priory:Item, owl:NamedIndividual ;
     priory:hasRarity rarity:Fine ;
     priory:isAccountBound false .
 
-item:100098 a priory:Item, owl:NamedIndividual ;
+item:100878 a priory:Item, owl:NamedIndividual ;
     rdfs:label "Bag of Coins"@en ;
-    priory:gw2Id 100098 ;
-    priory:hasRarity rarity:Basic ;
+    priory:gw2Id 100878 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:isAccountBound true .
+
+item:85725 a priory:Item, owl:NamedIndividual ;
+    rdfs:label "Trophy Shipment"@en ;
+    priory:gw2Id 85725 ;
+    priory:hasRarity rarity:Rare ;
     priory:isAccountBound true .
 
 # ------------------------------------------------------------------------------
@@ -31,7 +37,7 @@ item:100098 a priory:Item, owl:NamedIndividual ;
 priory:Exchange_VolatileMagic_TrophyShipment a priory:VendorExchangePath, owl:NamedIndividual ;
     rdfs:label "Exchange Volatile Magic for Trophy Shipment" ;
     priory:vendorName "Volatile Magic Collector (Dragonfall [&BNoLAAA=], Mistlock Sanctuary)" ;
-    priory:producesItem item:89141 ; # Trophy Shipment
+    priory:producesItem item:85725 ; # Trophy Shipment
     priory:outputQuantity 1 ;
     priory:requiresCurrency currency:VolatileMagic ;
     priory:requiredQuantity 250 ;
@@ -71,7 +77,7 @@ priory:Exchange_AstralAcclaim_HeavyCraftingBag a priory:VendorExchangePath, owl:
 priory:Exchange_AstralAcclaim_BagOfCoins a priory:VendorExchangePath, owl:NamedIndividual ;
     rdfs:label "Exchange Astral Acclaim for 1 Gold (Bag of Coins)" ;
     priory:vendorName "Wizard's Vault (Direct Claim)" ;
-    priory:producesItem item:100098 ;
+    priory:producesItem item:100878 ;
     priory:outputQuantity 1 ;
     priory:producesGold 1.0 ;
     priory:requiresCurrency currency:AstralAcclaim ;

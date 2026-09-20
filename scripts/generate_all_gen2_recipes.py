@@ -112,14 +112,14 @@ def generate_gen2_graph() -> rdflib.Graph:
     g.add((ITEM["73537"], PRIORY.isAccountBound, Literal(True, datatype=XSD.boolean)))
 
     # --------------------------------------------------------------------------
-    # 2. Mystic Tribute (79667)
+    # 2. Mystic Tribute (71820)
     # --------------------------------------------------------------------------
-    tribute_uri = ITEM["79667"]
+    tribute_uri = ITEM["71820"]
     g.add((tribute_uri, RDF.type, PRIORY.GiftItem))
     g.add((tribute_uri, RDF.type, PRIORY.ContainerizedToken))
     g.add((tribute_uri, RDF.type, OWL.NamedIndividual))
     g.add((tribute_uri, RDFS.label, Literal("Mystic Tribute", lang="en")))
-    g.add((tribute_uri, PRIORY.gw2Id, Literal(79667, datatype=XSD.integer)))
+    g.add((tribute_uri, PRIORY.gw2Id, Literal(71820, datatype=XSD.integer)))
     g.add((tribute_uri, PRIORY.hasRarity, RARITY.Legendary))
     g.add((tribute_uri, PRIORY.playsRole, ROLE.CraftingIngredient))
     g.add((tribute_uri, PRIORY.isContainerized, Literal(True, datatype=XSD.boolean)))
@@ -132,45 +132,45 @@ def generate_gen2_graph() -> rdflib.Graph:
     g.add((forge_trib, PRIORY.producesItem, tribute_uri))
     g.add((forge_trib, PRIORY.outputQuantity, Literal(1, datatype=XSD.integer)))
 
-    for ing_id, qty in [(19675, 77), (19721, 250), (79659, 2), (79658, 2)]:
+    for ing_id, qty in [(19675, 77), (19976, 250), (76530, 2), (70867, 2)]:
         req = RECIPE[f"req_tribute_{ing_id}"]
         g.add((forge_trib, PRIORY.hasIngredientRequirement, req))
         g.add((req, RDF.type, PRIORY.IngredientRequirement))
         g.add((req, PRIORY.requiresItem, ITEM[str(ing_id)]))
         g.add((req, PRIORY.requiredQuantity, Literal(qty, datatype=XSD.integer)))
 
-    # Gift of Condensed Magic (79659)
-    g.add((ITEM["79659"], RDF.type, PRIORY.GiftItem))
-    g.add((ITEM["79659"], RDF.type, PRIORY.ContainerizedToken))
-    g.add((ITEM["79659"], RDFS.label, Literal("Gift of Condensed Magic", lang="en")))
-    g.add((ITEM["79659"], PRIORY.gw2Id, Literal(79659, datatype=XSD.integer)))
-    g.add((ITEM["79659"], PRIORY.hasRarity, RARITY.Legendary))
-    g.add((ITEM["79659"], PRIORY.playsRole, ROLE.CraftingIngredient))
-    g.add((ITEM["79659"], PRIORY.isContainerized, Literal(True, datatype=XSD.boolean)))
-    g.add((ITEM["79659"], PRIORY.producedBy, RECIPE["forge_condensed_magic"]))
+    # Gift of Condensed Magic (76530)
+    g.add((ITEM["76530"], RDF.type, PRIORY.GiftItem))
+    g.add((ITEM["76530"], RDF.type, PRIORY.ContainerizedToken))
+    g.add((ITEM["76530"], RDFS.label, Literal("Gift of Condensed Magic", lang="en")))
+    g.add((ITEM["76530"], PRIORY.gw2Id, Literal(76530, datatype=XSD.integer)))
+    g.add((ITEM["76530"], PRIORY.hasRarity, RARITY.Legendary))
+    g.add((ITEM["76530"], PRIORY.playsRole, ROLE.CraftingIngredient))
+    g.add((ITEM["76530"], PRIORY.isContainerized, Literal(True, datatype=XSD.boolean)))
+    g.add((ITEM["76530"], PRIORY.producedBy, RECIPE["forge_condensed_magic"]))
     f_cm = RECIPE["forge_condensed_magic"]
     g.add((f_cm, RDF.type, PRIORY.MysticForgeRecipe))
-    g.add((f_cm, PRIORY.producesItem, ITEM["79659"]))
-    for ing_id in [24295, 24289, 24358, 24277]:
+    g.add((f_cm, PRIORY.producesItem, ITEM["76530"]))
+    for ing_id in [24295, 24283, 24300, 24277]:
         req = RECIPE[f"req_cm_{ing_id}"]
         g.add((f_cm, PRIORY.hasIngredientRequirement, req))
         g.add((req, RDF.type, PRIORY.IngredientRequirement))
         g.add((req, PRIORY.requiresItem, ITEM[str(ing_id)]))
         g.add((req, PRIORY.requiredQuantity, Literal(100, datatype=XSD.integer)))
 
-    # Gift of Condensed Might (79658)
-    g.add((ITEM["79658"], RDF.type, PRIORY.GiftItem))
-    g.add((ITEM["79658"], RDF.type, PRIORY.ContainerizedToken))
-    g.add((ITEM["79658"], RDFS.label, Literal("Gift of Condensed Might", lang="en")))
-    g.add((ITEM["79658"], PRIORY.gw2Id, Literal(79658, datatype=XSD.integer)))
-    g.add((ITEM["79658"], PRIORY.hasRarity, RARITY.Legendary))
-    g.add((ITEM["79658"], PRIORY.playsRole, ROLE.CraftingIngredient))
-    g.add((ITEM["79658"], PRIORY.isContainerized, Literal(True, datatype=XSD.boolean)))
-    g.add((ITEM["79658"], PRIORY.producedBy, RECIPE["forge_condensed_might"]))
+    # Gift of Condensed Might (70867)
+    g.add((ITEM["70867"], RDF.type, PRIORY.GiftItem))
+    g.add((ITEM["70867"], RDF.type, PRIORY.ContainerizedToken))
+    g.add((ITEM["70867"], RDFS.label, Literal("Gift of Condensed Might", lang="en")))
+    g.add((ITEM["70867"], PRIORY.gw2Id, Literal(70867, datatype=XSD.integer)))
+    g.add((ITEM["70867"], PRIORY.hasRarity, RARITY.Legendary))
+    g.add((ITEM["70867"], PRIORY.playsRole, ROLE.CraftingIngredient))
+    g.add((ITEM["70867"], PRIORY.isContainerized, Literal(True, datatype=XSD.boolean)))
+    g.add((ITEM["70867"], PRIORY.producedBy, RECIPE["forge_condensed_might"]))
     f_cmi = RECIPE["forge_condensed_might"]
     g.add((f_cmi, RDF.type, PRIORY.MysticForgeRecipe))
-    g.add((f_cmi, PRIORY.producesItem, ITEM["79658"]))
-    for ing_id in [24288, 24283, 24351, 24276]:
+    g.add((f_cmi, PRIORY.producesItem, ITEM["70867"]))
+    for ing_id in [24351, 24289, 24358, 24357]:
         req = RECIPE[f"req_cmi_{ing_id}"]
         g.add((f_cmi, PRIORY.hasIngredientRequirement, req))
         g.add((req, RDF.type, PRIORY.IngredientRequirement))
@@ -397,7 +397,7 @@ def generate_gen2_graph() -> rdflib.Graph:
         g.add((req_gem, PRIORY.requiresItem, ITEM["68063"])) # 250 Amalgamated Gemstones
         g.add((req_gem, PRIORY.requiredQuantity, Literal(250, datatype=XSD.integer)))
 
-        # Final 4 Weapon Forge Requirements: Precursor + Mystic Tribute (79667) + Gift of Maguuma Mastery (75498) + Weapon Gift
+        # Final 4 Weapon Forge Requirements: Precursor + Mystic Tribute (71820) + Gift of Maguuma Mastery (75498) + Weapon Gift
         g.add((forge_w_uri, RDF.type, PRIORY.MysticForgeRecipe))
         g.add((forge_w_uri, RDFS.label, Literal(f"Forge {w_name}", lang="en")))
         g.add((forge_w_uri, PRIORY.producesItem, w_uri))

@@ -23,7 +23,7 @@ item:96221 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:isAccountBound true .
 
 item:46733 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Dragonite Ingot"@en ;
+    rdfs:label "Dragonite Ore"@en ;
     priory:gw2Id 46733 ;
     priory:isAccountBound true .
 

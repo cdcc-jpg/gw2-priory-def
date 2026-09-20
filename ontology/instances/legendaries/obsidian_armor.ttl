@@ -16,376 +16,385 @@
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. Kryptis Essences & Composite Materials
+# 1. Rift Essences (Wallet Currencies & Refined Materials)
 # ------------------------------------------------------------------------------
 
-# Essence of Despair (Tier 1)
-item:100849 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+# Essence of Despair (Fine Rift Essence - Tier 1)
+currency:78 a priory:Currency, priory:AccountWalletScalar, owl:NamedIndividual ;
     rdfs:label "Essence of Despair"@en ;
-    priory:gw2Id 100849 ;
+    skos:prefLabel "Essence of Despair"@en ;
+    skos:altLabel "Fine Rift Essence"@en, "T1 Rift Essence"@en, "T1 Kryptis Essence"@en, "Despair Essence"@en ;
+    priory:apiWalletId 78 ;
+    priory:gw2Id 78 ;
     priory:hasRarity rarity:Fine ;
     priory:playsRole role:CraftingIngredient ;
-    priory:isContainerized true ;
-    priory:maxStackSize 250 ;
-    priory:isAccountBound true ;
-    skos:altLabel "T1 Kryptis Essence"@en, "Despair Essence"@en ;
-    skos:definition "Tier 1 Kryptis essence obtained from Tier 1 Rift Hunting across Tyria and Secrets of the Obscure maps."@en .
+    priory:isContainerized false ;
+    skos:definition "Tier 1 rift essence obtained from Tier 1 Rift Hunting and Convergences across Tyria and Secrets of the Obscure maps."@en ;
+    owl:sameAs currency:EssenceOfDespair .
 
-# Essence of Greed (Tier 2)
-item:100429 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+currency:EssenceOfDespair a owl:NamedIndividual ;
+    owl:sameAs currency:78 .
+
+# Essence of Greed (Masterwork Rift Essence - Tier 2)
+currency:80 a priory:Currency, priory:AccountWalletScalar, owl:NamedIndividual ;
     rdfs:label "Essence of Greed"@en ;
-    priory:gw2Id 100429 ;
+    skos:prefLabel "Essence of Greed"@en ;
+    skos:altLabel "Masterwork Rift Essence"@en, "T2 Rift Essence"@en, "T2 Kryptis Essence"@en, "Greed Essence"@en ;
+    priory:apiWalletId 80 ;
+    priory:gw2Id 80 ;
     priory:hasRarity rarity:Masterwork ;
     priory:playsRole role:CraftingIngredient ;
-    priory:isContainerized true ;
-    priory:maxStackSize 250 ;
-    priory:isAccountBound true ;
-    skos:altLabel "T2 Kryptis Essence"@en, "Greed Essence"@en ;
-    skos:definition "Tier 2 Kryptis essence obtained from Tier 2 Rift Hunting using Common Kryptis Motivations."@en .
+    priory:isContainerized false ;
+    skos:definition "Tier 2 rift essence obtained from Tier 2 Rift Hunting and Convergences using Common Kryptis Motivations."@en ;
+    owl:sameAs currency:EssenceOfGreed .
 
-# Essence of Triumph (Tier 3)
-item:100148 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+currency:EssenceOfGreed a owl:NamedIndividual ;
+    owl:sameAs currency:80 .
+
+# Essence of Triumph (Rare Rift Essence - Tier 3)
+currency:79 a priory:Currency, priory:AccountWalletScalar, owl:NamedIndividual ;
     rdfs:label "Essence of Triumph"@en ;
-    priory:gw2Id 100148 ;
+    skos:prefLabel "Essence of Triumph"@en ;
+    skos:altLabel "Rare Rift Essence"@en, "T3 Rift Essence"@en, "T3 Kryptis Essence"@en, "Triumph Essence"@en ;
+    priory:apiWalletId 79 ;
+    priory:gw2Id 79 ;
     priory:hasRarity rarity:Rare ;
     priory:playsRole role:CraftingIngredient ;
-    priory:isContainerized true ;
-    priory:maxStackSize 250 ;
-    priory:isAccountBound true ;
-    skos:altLabel "T3 Kryptis Essence"@en, "Triumph Essence"@en ;
-    skos:definition "Tier 3 Kryptis essence obtained from Tier 3 Rift Hunting using Greater Kryptis Motivations."@en .
+    priory:isContainerized false ;
+    skos:definition "Tier 3 rift essence obtained from Tier 3 Rift Hunting and Convergences using Greater Kryptis Motivations."@en ;
+    owl:sameAs currency:EssenceOfTriumph .
 
-# Purified Kryptis Essence (Intermediate Forged Component)
-item:101180 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Purified Kryptis Essence"@en ;
-    priory:gw2Id 101180 ;
+currency:EssenceOfTriumph a owl:NamedIndividual ;
+    owl:sameAs currency:79 .
+
+# Amalgamated Rift Essence (Composite Component)
+item:100930 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Amalgamated Rift Essence"@en ;
+    skos:altLabel "Amalgamated Kryptis Essence"@en ;
+    priory:gw2Id 100930 ;
     priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
     priory:maxStackSize 250 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_purified_kryptis_essence ;
-    skos:definition "Intermediate purified essence forged from 250 Essence of Despair, 100 Essence of Greed, 50 Essence of Triumph, and 1 Glob of Ectoplasm."@en .
+    priory:producedBy recipe:forge_amalgamated_rift_essence ;
+    skos:definition "Composite rift essence refined from 250 Essence of Despair, 100 Essence of Greed, 50 Essence of Triumph, and 50 Globs of Ectoplasm."@en .
 
-recipe:forge_purified_kryptis_essence a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Purified Kryptis Essence"@en ;
+recipe:forge_amalgamated_rift_essence a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Amalgamated Rift Essence"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101180 ;
+    priory:producesItem item:100930 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100849 ; priory:requiredQuantity 250 ] , # Essence of Despair (T1)
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100429 ; priory:requiredQuantity 100 ] , # Essence of Greed (T2)
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100148 ; priory:requiredQuantity 50 ] ,  # Essence of Triumph (T3)
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19721 ; priory:requiredQuantity 1 ] .   # Glob of Ectoplasm
+        [ a priory:IngredientRequirement ; priory:requiresCurrency currency:78 ; priory:requiredQuantity 250 ] , # Essence of Despair (T1)
+        [ a priory:IngredientRequirement ; priory:requiresCurrency currency:80 ; priory:requiredQuantity 100 ] , # Essence of Greed (T2)
+        [ a priory:IngredientRequirement ; priory:requiresCurrency currency:79 ; priory:requiredQuantity 50 ] ,  # Essence of Triumph (T3)
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19721 ; priory:requiredQuantity 50 ] ;   # Glob of Ectoplasm
+    owl:sameAs recipe:forge_amalgamated_kryptis_essence .
 
-# Amalgamated Kryptis Essence (Composite Component)
-item:101269 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Amalgamated Kryptis Essence"@en ;
-    priory:gw2Id 101269 ;
-    priory:hasRarity rarity:Exotic ;
+recipe:forge_amalgamated_kryptis_essence a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_amalgamated_rift_essence .
+
+# Purified Rift Essence (Intermediate Refined Component)
+item:100569 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Purified Rift Essence"@en ;
+    skos:altLabel "Purified Kryptis Essence"@en ;
+    priory:gw2Id 100569 ;
+    priory:hasRarity rarity:Ascended ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
     priory:maxStackSize 250 ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_amalgamated_kryptis_essence ;
-    skos:definition "High-tier composite Kryptis essence utilized in forging Obsidian Armor gifts and Astral components."@en .
+    priory:producedBy recipe:forge_purified_rift_essence ;
+    skos:definition "Intermediate purified essence refined from 1 Amalgamated Rift Essence and 1 Mystic Clover."@en .
 
-recipe:forge_amalgamated_kryptis_essence a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Amalgamated Kryptis Essence"@en ;
+recipe:forge_purified_rift_essence a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Purified Rift Essence"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101269 ;
+    priory:producesItem item:100569 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101180 ; priory:requiredQuantity 1 ] ,  # Purified Kryptis Essence
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19721 ; priory:requiredQuantity 60 ] ,  # Glob of Ectoplasm
-        [ a priory:IngredientRequirement ; priory:requiresItem item:68063 ; priory:requiredQuantity 5 ] ,   # Amalgamated Gemstone
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 2 ] .   # Mystic Clover
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100930 ; priory:requiredQuantity 1 ] , # Amalgamated Rift Essence
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 1 ] ;  # Mystic Clover
+    owl:sameAs recipe:forge_purified_kryptis_essence .
+
+recipe:forge_purified_kryptis_essence a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_purified_rift_essence .
 
 # ------------------------------------------------------------------------------
-# 2. Regional Expansion Gifts (Secrets of the Obscure)
+# 2. Regional Expansion Gifts & Map Currencies (Secrets of the Obscure)
 # ------------------------------------------------------------------------------
 
-# Gift of Amnytas
-item:100267 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Gift of Amnytas"@en ;
+# Regional Map Materials / Currencies
+item:100267 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Case of Captured Lightning"@en ;
+    skos:altLabel "Captured Lightning"@en, "Skywatch Map Currency"@en ;
     priory:gw2Id 100267 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:playsRole role:CraftingIngredient ;
-    priory:isContainerized true ;
-    priory:isAccountBound true ;
-    skos:definition "Regional gift component awarded for Amnytas map exploration and Bastion achievements."@en .
-
-# Gift of the Celestial
-item:100707 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Gift of the Celestial"@en ;
-    priory:gw2Id 100707 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:playsRole role:CraftingIngredient ;
-    priory:isContainerized true ;
-    priory:isAccountBound true ;
-    priory:producedBy recipe:forge_gift_of_the_celestial ;
-    skos:definition "Secrets of the Obscure legendary armor gift combining regional map gifts, essences, and mystic materials."@en .
-
-recipe:forge_gift_of_the_celestial a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Gift of the Celestial"@en ;
-    priory:outputQuantity 1 ;
-    priory:producesItem item:100707 ;
-    priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100267 ; priory:requiredQuantity 1 ] ,   # Gift of Amnytas
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100852 ; priory:requiredQuantity 250 ] , # Pinch of Stardust
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100862 ; priory:requiredQuantity 250 ] , # Static Charge
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100912 ; priory:requiredQuantity 250 ] . # Clotted Scream
-
-# Regional Map Materials
-item:100852 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Pinch of Stardust"@en ;
-    priory:gw2Id 100852 ;
-    priory:hasRarity rarity:Rare ;
-    priory:playsRole role:CraftingIngredient ;
-    priory:isContainerized true ;
-    priory:maxStackSize 250 ;
-    priory:isAccountBound true ;
-    skos:definition "SotO regional currency gathered from the Amnytas meta-event and bastions."@en .
-
-item:100862 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Static Charge"@en ;
-    priory:gw2Id 100862 ;
-    priory:hasRarity rarity:Rare ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
     priory:maxStackSize 250 ;
     priory:isAccountBound true ;
     skos:definition "SotO regional currency gathered from Skywatch Archipelago meta-events and chests."@en .
 
-item:100912 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Clotted Scream"@en ;
-    priory:gw2Id 100912 ;
-    priory:hasRarity rarity:Rare ;
+item:99964 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pouch of Stardust"@en ;
+    skos:altLabel "Stardust"@en, "Amnytas Map Currency"@en, "Pinch of Stardust"@en ;
+    priory:gw2Id 99964 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:maxStackSize 250 ;
+    priory:isAccountBound true ;
+    skos:definition "SotO regional currency gathered from the Amnytas meta-event and bastions."@en .
+
+item:100098 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Clot of Congealed Screams"@en ;
+    skos:altLabel "Congealed Screams"@en, "Inner Nayos Map Currency"@en, "Clotted Scream"@en ;
+    priory:gw2Id 100098 ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
     priory:maxStackSize 250 ;
     priory:isAccountBound true ;
     skos:definition "SotO regional currency harvested in Inner Nayos and Kryptis rifts."@en .
 
-# Gift of Astral Possession
-item:100589 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Gift of Astral Possession"@en ;
-    priory:gw2Id 100589 ;
-    priory:hasRarity rarity:Legendary ;
+# Gift of Amnytas
+item:100798 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of Amnytas"@en ;
+    priory:gw2Id 100798 ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_gift_of_astral_possession ;
-    skos:definition "Key intermediate gift combining Gift of Amnytas, Amalgamated Kryptis Essences, and Astral Acclaim materials."@en .
+    skos:definition "Regional gift component awarded for Amnytas map exploration and achievements."@en .
 
-recipe:forge_gift_of_astral_possession a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Gift of Astral Possession"@en ;
+# Gift of the Astral Ward
+item:100466 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Gift of the Astral Ward"@en ;
+    priory:gw2Id 100466 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:playsRole role:CraftingIngredient ;
+    priory:isContainerized true ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_gift_of_the_astral_ward ;
+    skos:definition "Secrets of the Obscure legendary armor gift combining regional map gifts including Gift of Amnytas and regional currencies."@en .
+
+recipe:forge_gift_of_the_astral_ward a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Gift of the Astral Ward"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:100589 ;
+    priory:producesItem item:100466 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100267 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 6 ] ,  # Amalgamated Kryptis Essence
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101180 ; priory:requiredQuantity 4 ] ,  # Purified Kryptis Essence
-        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 15 ] .  # Mystic Clover
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,   # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100267 ; priory:requiredQuantity 5 ] ,   # Case of Captured Lightning
+        [ a priory:IngredientRequirement ; priory:requiresItem item:99964 ; priory:requiredQuantity 5 ] ,    # Pouch of Stardust
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100098 ; priory:requiredQuantity 5 ] ;   # Clot of Congealed Screams
+    owl:sameAs recipe:forge_gift_of_astral_possession, recipe:forge_gift_of_the_celestial .
+
+recipe:forge_gift_of_astral_possession a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_gift_of_the_astral_ward .
+
+recipe:forge_gift_of_the_celestial a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_gift_of_the_astral_ward .
 
 # ------------------------------------------------------------------------------
 # 3. Precursor Armor Base Components (Astral Ward Armor)
 # ------------------------------------------------------------------------------
 
 # Heavy Precursors
-item:100101 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+item:100026 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Astral Ward Heavy Helm"@en ;
-    priory:gw2Id 100101 ;
+    priory:gw2Id 100026 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Helm ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100102 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Heavy Pauldrons"@en ;
-    priory:gw2Id 100102 ;
+item:100282 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Heavy Shoulders"@en ;
+    priory:gw2Id 100282 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Shoulders ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100103 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Heavy Breastplate"@en ;
-    priory:gw2Id 100103 ;
+item:100349 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Heavy Coat"@en ;
+    priory:gw2Id 100349 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Chest ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100104 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Heavy Gauntlets"@en ;
-    priory:gw2Id 100104 ;
+item:100459 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Heavy Gloves"@en ;
+    priory:gw2Id 100459 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Gloves ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100105 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Heavy Tassets"@en ;
-    priory:gw2Id 100105 ;
+item:100162 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Heavy Leggings"@en ;
+    priory:gw2Id 100162 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Legs ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100106 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Heavy Greaves"@en ;
-    priory:gw2Id 100106 ;
+item:100392 a priory:HeavyArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Heavy Boots"@en ;
+    priory:gw2Id 100392 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Boots ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
 # Medium Precursors
-item:100107 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Medium Mask"@en ;
-    priory:gw2Id 100107 ;
+item:100889 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Medium Helm"@en ;
+    priory:gw2Id 100889 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Helm ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100108 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Medium Shoulderguards"@en ;
-    priory:gw2Id 100108 ;
+item:100699 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Medium Shoulders"@en ;
+    priory:gw2Id 100699 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Shoulders ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100109 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Medium Jerkin"@en ;
-    priory:gw2Id 100109 ;
+item:100492 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Medium Coat"@en ;
+    priory:gw2Id 100492 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Chest ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100110 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Medium Vambraces"@en ;
-    priory:gw2Id 100110 ;
+item:100436 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Medium Gloves"@en ;
+    priory:gw2Id 100436 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Gloves ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100111 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+item:100538 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Astral Ward Medium Leggings"@en ;
-    priory:gw2Id 100111 ;
+    priory:gw2Id 100538 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Legs ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100112 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+item:99993 a priory:MediumArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Astral Ward Medium Boots"@en ;
-    priory:gw2Id 100112 ;
+    priory:gw2Id 99993 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Boots ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
 # Light Precursors
-item:100113 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Light Hood"@en ;
-    priory:gw2Id 100113 ;
+item:100485 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Light Helm"@en ;
+    priory:gw2Id 100485 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Helm ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100114 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Light Mantle"@en ;
-    priory:gw2Id 100114 ;
+item:100704 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Light Shoulders"@en ;
+    priory:gw2Id 100704 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Shoulders ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100115 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Light Vestments"@en ;
-    priory:gw2Id 100115 ;
+item:100504 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Light Coat"@en ;
+    priory:gw2Id 100504 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Chest ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100116 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+item:100665 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Astral Ward Light Gloves"@en ;
-    priory:gw2Id 100116 ;
+    priory:gw2Id 100665 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Gloves ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100117 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Light Pants"@en ;
-    priory:gw2Id 100117 ;
+item:100207 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Light Leggings"@en ;
+    priory:gw2Id 100207 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Legs ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true .
 
-item:100118 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Astral Ward Light Shoes"@en ;
-    priory:gw2Id 100118 ;
+item:100936 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Astral Ward Light Boots"@en ;
+    priory:gw2Id 100936 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Boots ;
-    priory:hasRarity rarity:Ascended ;
+    priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient, role:Precursor, role:EquippedGear ;
     priory:isContainerized true ;
     priory:isEquipable true ;
@@ -395,10 +404,10 @@ item:100118 a priory:LightArmor, priory:PrecursorArmor, priory:ContainerizedToke
 # 4. Heavy Obsidian Legendary Armor
 # ------------------------------------------------------------------------------
 
-item:101001 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Helm"@en ;
-    skos:altLabel "Obsidian Heavy Helm"@en, "Open World Heavy Helm"@en, "SotO Heavy Helm"@en ;
-    priory:gw2Id 101001 ;
+item:101544 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Heavy Helmet"@en ;
+    skos:altLabel "Obsidian Heavy Helm"@en, "Obsidian Helm"@en, "Open World Heavy Helm"@en, "SotO Heavy Helm"@en ;
+    priory:gw2Id 101544 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity rarity:Legendary ;
@@ -406,22 +415,26 @@ item:101001 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_helm .
+    priory:producedBy recipe:forge_obsidian_heavy_helmet .
 
-recipe:forge_obsidian_helm a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Helm"@en ;
+recipe:forge_obsidian_heavy_helmet a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Heavy Helmet"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101001 ;
+    priory:producesItem item:101544 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100101 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Helm
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,  # Gift of Astral Possession
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,  # Gift of the Celestial
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .  # Amalgamated Kryptis Essence
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100026 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Helm
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_helm .
 
-item:101002 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Pauldrons"@en ;
-    skos:altLabel "Obsidian Heavy Shoulders"@en, "Open World Heavy Shoulders"@en, "SotO Heavy Shoulders"@en ;
-    priory:gw2Id 101002 ;
+recipe:forge_obsidian_helm a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_heavy_helmet .
+
+item:101551 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Heavy Pauldrons"@en ;
+    skos:altLabel "Obsidian Pauldrons"@en, "Obsidian Heavy Shoulders"@en, "Open World Heavy Shoulders"@en, "SotO Heavy Shoulders"@en ;
+    priory:gw2Id 101551 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity rarity:Legendary ;
@@ -429,22 +442,26 @@ item:101002 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_pauldrons .
+    priory:producedBy recipe:forge_obsidian_heavy_pauldrons .
 
-recipe:forge_obsidian_pauldrons a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Pauldrons"@en ;
+recipe:forge_obsidian_heavy_pauldrons a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Heavy Pauldrons"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101002 ;
+    priory:producesItem item:101551 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100102 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100282 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Shoulders
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_pauldrons .
 
-item:101003 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Breastplate"@en ;
-    skos:altLabel "Obsidian Heavy Chest"@en, "Open World Heavy Chest"@en, "SotO Heavy Chest"@en ;
-    priory:gw2Id 101003 ;
+recipe:forge_obsidian_pauldrons a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_heavy_pauldrons .
+
+item:101521 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Heavy Breastplate"@en ;
+    skos:altLabel "Obsidian Breastplate"@en, "Obsidian Heavy Chest"@en, "Open World Heavy Chest"@en, "SotO Heavy Chest"@en ;
+    priory:gw2Id 101521 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity rarity:Legendary ;
@@ -452,22 +469,26 @@ item:101003 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_breastplate .
+    priory:producedBy recipe:forge_obsidian_heavy_breastplate .
 
-recipe:forge_obsidian_breastplate a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Breastplate"@en ;
+recipe:forge_obsidian_heavy_breastplate a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Heavy Breastplate"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101003 ;
+    priory:producesItem item:101521 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100103 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100349 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Coat
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_breastplate .
 
-item:101004 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Gauntlets"@en ;
-    skos:altLabel "Obsidian Heavy Gloves"@en, "Open World Heavy Gloves"@en, "SotO Heavy Gloves"@en ;
-    priory:gw2Id 101004 ;
+recipe:forge_obsidian_breastplate a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_heavy_breastplate .
+
+item:101609 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Heavy Gauntlets"@en ;
+    skos:altLabel "Obsidian Gauntlets"@en, "Obsidian Heavy Gloves"@en, "Open World Heavy Gloves"@en, "SotO Heavy Gloves"@en ;
+    priory:gw2Id 101609 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity rarity:Legendary ;
@@ -475,22 +496,26 @@ item:101004 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_gauntlets .
+    priory:producedBy recipe:forge_obsidian_heavy_gauntlets .
 
-recipe:forge_obsidian_gauntlets a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Gauntlets"@en ;
+recipe:forge_obsidian_heavy_gauntlets a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Heavy Gauntlets"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101004 ;
+    priory:producesItem item:101609 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100104 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100459 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Gloves
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_gauntlets .
 
-item:101005 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Tassets"@en ;
-    skos:altLabel "Obsidian Heavy Legs"@en, "Open World Heavy Legs"@en, "SotO Heavy Legs"@en ;
-    priory:gw2Id 101005 ;
+recipe:forge_obsidian_gauntlets a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_heavy_gauntlets .
+
+item:101568 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Heavy Cuisses"@en ;
+    skos:altLabel "Obsidian Tassets"@en, "Obsidian Heavy Legs"@en, "Open World Heavy Legs"@en, "SotO Heavy Legs"@en ;
+    priory:gw2Id 101568 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity rarity:Legendary ;
@@ -498,22 +523,26 @@ item:101005 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_tassets .
+    priory:producedBy recipe:forge_obsidian_heavy_cuisses .
 
-recipe:forge_obsidian_tassets a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Tassets"@en ;
+recipe:forge_obsidian_heavy_cuisses a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Heavy Cuisses"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101005 ;
+    priory:producesItem item:101568 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100105 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100162 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Leggings
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_tassets .
 
-item:101006 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Greaves"@en ;
-    skos:altLabel "Obsidian Heavy Boots"@en, "Open World Heavy Boots"@en, "SotO Heavy Boots"@en ;
-    priory:gw2Id 101006 ;
+recipe:forge_obsidian_tassets a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_heavy_cuisses .
+
+item:101460 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Heavy Greaves"@en ;
+    skos:altLabel "Obsidian Greaves"@en, "Obsidian Heavy Boots"@en, "Open World Heavy Boots"@en, "SotO Heavy Boots"@en ;
+    priory:gw2Id 101460 ;
     priory:hasArmorWeight armor:HeavyArmor ;
     priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity rarity:Legendary ;
@@ -521,26 +550,30 @@ item:101006 a priory:HeavyArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_greaves .
+    priory:producedBy recipe:forge_obsidian_heavy_greaves .
 
-recipe:forge_obsidian_greaves a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Greaves"@en ;
+recipe:forge_obsidian_heavy_greaves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Heavy Greaves"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101006 ;
+    priory:producesItem item:101460 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100106 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100392 ; priory:requiredQuantity 1 ] ,  # Astral Ward Heavy Boots
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_greaves .
+
+recipe:forge_obsidian_greaves a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_heavy_greaves .
 
 # ------------------------------------------------------------------------------
 # 5. Medium Obsidian Legendary Armor
 # ------------------------------------------------------------------------------
 
-item:101007 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Mask"@en ;
-    skos:altLabel "Obsidian Medium Helm"@en, "Open World Medium Helm"@en, "SotO Medium Helm"@en ;
-    priory:gw2Id 101007 ;
+item:101614 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Medium Mask"@en ;
+    skos:altLabel "Obsidian Mask"@en, "Obsidian Medium Helm"@en, "Open World Medium Helm"@en, "SotO Medium Helm"@en ;
+    priory:gw2Id 101614 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity rarity:Legendary ;
@@ -548,22 +581,26 @@ item:101007 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifa
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_mask .
+    priory:producedBy recipe:forge_obsidian_medium_mask .
 
-recipe:forge_obsidian_mask a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Mask"@en ;
+recipe:forge_obsidian_medium_mask a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Medium Mask"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101007 ;
+    priory:producesItem item:101614 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100107 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100889 ; priory:requiredQuantity 1 ] ,  # Astral Ward Medium Helm
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_mask .
 
-item:101008 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Shoulderguards"@en ;
-    skos:altLabel "Obsidian Medium Shoulders"@en, "Open World Medium Shoulders"@en, "SotO Medium Shoulders"@en ;
-    priory:gw2Id 101008 ;
+recipe:forge_obsidian_mask a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_medium_mask .
+
+item:101645 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Medium Shoulders"@en ;
+    skos:altLabel "Obsidian Shoulderguards"@en, "Open World Medium Shoulders"@en, "SotO Medium Shoulders"@en ;
+    priory:gw2Id 101645 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity rarity:Legendary ;
@@ -571,22 +608,26 @@ item:101008 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifa
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_shoulderguards .
+    priory:producedBy recipe:forge_obsidian_medium_shoulders .
 
-recipe:forge_obsidian_shoulderguards a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Shoulderguards"@en ;
+recipe:forge_obsidian_medium_shoulders a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Medium Shoulders"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101008 ;
+    priory:producesItem item:101645 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100108 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100699 ; priory:requiredQuantity 1 ] ,  # Astral Ward Medium Shoulders
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_shoulderguards .
 
-item:101009 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Jerkin"@en ;
-    skos:altLabel "Obsidian Medium Chest"@en, "Open World Medium Chest"@en, "SotO Medium Chest"@en ;
-    priory:gw2Id 101009 ;
+recipe:forge_obsidian_shoulderguards a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_medium_shoulders .
+
+item:101556 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Medium Jacket"@en ;
+    skos:altLabel "Obsidian Jerkin"@en, "Obsidian Medium Chest"@en, "Open World Medium Chest"@en, "SotO Medium Chest"@en ;
+    priory:gw2Id 101556 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity rarity:Legendary ;
@@ -594,22 +635,26 @@ item:101009 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifa
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_jerkin .
+    priory:producedBy recipe:forge_obsidian_medium_jacket .
 
-recipe:forge_obsidian_jerkin a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Jerkin"@en ;
+recipe:forge_obsidian_medium_jacket a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Medium Jacket"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101009 ;
+    priory:producesItem item:101556 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100109 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100492 ; priory:requiredQuantity 1 ] ,  # Astral Ward Medium Coat
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_jerkin .
 
-item:101010 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Vambraces"@en ;
-    skos:altLabel "Obsidian Medium Gloves"@en, "Open World Medium Gloves"@en, "SotO Medium Gloves"@en ;
-    priory:gw2Id 101010 ;
+recipe:forge_obsidian_jerkin a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_medium_jacket .
+
+item:101570 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Medium Gloves"@en ;
+    skos:altLabel "Obsidian Vambraces"@en, "Open World Medium Gloves"@en, "SotO Medium Gloves"@en ;
+    priory:gw2Id 101570 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity rarity:Legendary ;
@@ -617,22 +662,26 @@ item:101010 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifa
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_vambraces .
+    priory:producedBy recipe:forge_obsidian_medium_gloves .
 
-recipe:forge_obsidian_vambraces a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Vambraces"@en ;
+recipe:forge_obsidian_medium_gloves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Medium Gloves"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101010 ;
+    priory:producesItem item:101570 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100110 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100436 ; priory:requiredQuantity 1 ] ,  # Astral Ward Medium Gloves
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_vambraces .
 
-item:101011 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Leggings"@en ;
+recipe:forge_obsidian_vambraces a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_medium_gloves .
+
+item:101579 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Medium Leggings"@en ;
     skos:altLabel "Obsidian Medium Legs"@en, "Open World Medium Legs"@en, "SotO Medium Legs"@en ;
-    priory:gw2Id 101011 ;
+    priory:gw2Id 101579 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity rarity:Legendary ;
@@ -640,22 +689,26 @@ item:101011 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifa
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_leggings .
+    priory:producedBy recipe:forge_obsidian_medium_leggings .
 
-recipe:forge_obsidian_leggings a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Leggings"@en ;
+recipe:forge_obsidian_medium_leggings a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Medium Leggings"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101011 ;
+    priory:producesItem item:101579 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100111 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100538 ; priory:requiredQuantity 1 ] ,  # Astral Ward Medium Leggings
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_leggings .
 
-item:101012 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Boots"@en ;
-    skos:altLabel "Obsidian Medium Boots"@en, "Open World Medium Boots"@en, "SotO Medium Boots"@en ;
-    priory:gw2Id 101012 ;
+recipe:forge_obsidian_leggings a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_medium_leggings .
+
+item:101602 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Medium Boots"@en ;
+    skos:altLabel "Obsidian Boots"@en, "Open World Medium Boots"@en, "SotO Medium Boots"@en ;
+    priory:gw2Id 101602 ;
     priory:hasArmorWeight armor:MediumArmor ;
     priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity rarity:Legendary ;
@@ -663,26 +716,30 @@ item:101012 a priory:MediumArmor, priory:LegendaryArmor, priory:ManifestedArtifa
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_boots .
+    priory:producedBy recipe:forge_obsidian_medium_boots .
 
-recipe:forge_obsidian_boots a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Boots"@en ;
+recipe:forge_obsidian_medium_boots a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Medium Boots"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101012 ;
+    priory:producesItem item:101602 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100112 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:99993 ; priory:requiredQuantity 1 ] ,   # Astral Ward Medium Boots
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_boots .
+
+recipe:forge_obsidian_boots a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_medium_boots .
 
 # ------------------------------------------------------------------------------
 # 6. Light Obsidian Legendary Armor
 # ------------------------------------------------------------------------------
 
-item:101013 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Hood"@en ;
-    skos:altLabel "Obsidian Light Helm"@en, "Open World Light Helm"@en, "SotO Light Helm"@en ;
-    priory:gw2Id 101013 ;
+item:101516 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Light Crown"@en ;
+    skos:altLabel "Obsidian Hood"@en, "Obsidian Light Helm"@en, "Open World Light Helm"@en, "SotO Light Helm"@en ;
+    priory:gw2Id 101516 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity rarity:Legendary ;
@@ -690,22 +747,26 @@ item:101013 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_hood .
+    priory:producedBy recipe:forge_obsidian_light_crown .
 
-recipe:forge_obsidian_hood a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Hood"@en ;
+recipe:forge_obsidian_light_crown a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Light Crown"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101013 ;
+    priory:producesItem item:101516 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100113 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100485 ; priory:requiredQuantity 1 ] ,  # Astral Ward Light Helm
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_hood .
 
-item:101014 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Mantle"@en ;
-    skos:altLabel "Obsidian Light Shoulders"@en, "Open World Light Shoulders"@en, "SotO Light Shoulders"@en ;
-    priory:gw2Id 101014 ;
+recipe:forge_obsidian_hood a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_light_crown .
+
+item:101462 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Light Mantle"@en ;
+    skos:altLabel "Obsidian Mantle"@en, "Obsidian Light Shoulders"@en, "Open World Light Shoulders"@en, "SotO Light Shoulders"@en ;
+    priory:gw2Id 101462 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity rarity:Legendary ;
@@ -713,22 +774,26 @@ item:101014 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_mantle .
+    priory:producedBy recipe:forge_obsidian_light_mantle .
 
-recipe:forge_obsidian_mantle a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Mantle"@en ;
+recipe:forge_obsidian_light_mantle a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Light Mantle"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101014 ;
+    priory:producesItem item:101462 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100114 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100704 ; priory:requiredQuantity 1 ] ,  # Astral Ward Light Shoulders
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_mantle .
 
-item:101015 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Vestments"@en ;
-    skos:altLabel "Obsidian Light Chest"@en, "Open World Light Chest"@en, "SotO Light Chest"@en ;
-    priory:gw2Id 101015 ;
+recipe:forge_obsidian_mantle a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_light_mantle .
+
+item:101499 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Light Regalia"@en ;
+    skos:altLabel "Obsidian Vestments"@en, "Obsidian Light Chest"@en, "Open World Light Chest"@en, "SotO Light Chest"@en ;
+    priory:gw2Id 101499 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity rarity:Legendary ;
@@ -736,22 +801,26 @@ item:101015 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_vestments .
+    priory:producedBy recipe:forge_obsidian_light_regalia .
 
-recipe:forge_obsidian_vestments a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Vestments"@en ;
+recipe:forge_obsidian_light_regalia a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Light Regalia"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101015 ;
+    priory:producesItem item:101499 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100115 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100504 ; priory:requiredQuantity 1 ] ,  # Astral Ward Light Coat
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_vestments .
 
-item:101016 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Gloves"@en ;
-    skos:altLabel "Obsidian Light Gloves"@en, "Open World Light Gloves"@en, "SotO Light Gloves"@en ;
-    priory:gw2Id 101016 ;
+recipe:forge_obsidian_vestments a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_light_regalia .
+
+item:101536 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Light Gloves"@en ;
+    skos:altLabel "Obsidian Gloves"@en, "Open World Light Gloves"@en, "SotO Light Gloves"@en ;
+    priory:gw2Id 101536 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity rarity:Legendary ;
@@ -759,22 +828,26 @@ item:101016 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_gloves .
+    priory:producedBy recipe:forge_obsidian_light_gloves .
 
-recipe:forge_obsidian_gloves a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Gloves"@en ;
+recipe:forge_obsidian_light_gloves a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Light Gloves"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101016 ;
+    priory:producesItem item:101536 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100116 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100665 ; priory:requiredQuantity 1 ] ,  # Astral Ward Light Gloves
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_gloves .
 
-item:101017 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Pants"@en ;
-    skos:altLabel "Obsidian Light Legs"@en, "Open World Light Legs"@en, "SotO Light Legs"@en ;
-    priory:gw2Id 101017 ;
+recipe:forge_obsidian_gloves a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_light_gloves .
+
+item:101501 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Light Pants"@en ;
+    skos:altLabel "Obsidian Pants"@en, "Obsidian Light Legs"@en, "Open World Light Legs"@en, "SotO Light Legs"@en ;
+    priory:gw2Id 101501 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity rarity:Legendary ;
@@ -782,22 +855,26 @@ item:101017 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_pants .
+    priory:producedBy recipe:forge_obsidian_light_pants .
 
-recipe:forge_obsidian_pants a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Pants"@en ;
+recipe:forge_obsidian_light_pants a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Light Pants"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101017 ;
+    priory:producesItem item:101501 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100117 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100207 ; priory:requiredQuantity 1 ] ,  # Astral Ward Light Leggings
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_pants .
 
-item:101018 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
-    rdfs:label "Obsidian Shoes"@en ;
-    skos:altLabel "Obsidian Light Boots"@en, "Open World Light Boots"@en, "SotO Light Boots"@en ;
-    priory:gw2Id 101018 ;
+recipe:forge_obsidian_pants a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_light_pants .
+
+item:101535 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifact, priory:ContainerizedToken, owl:NamedIndividual ;
+    rdfs:label "Obsidian Light Shoes"@en ;
+    skos:altLabel "Obsidian Shoes"@en, "Obsidian Light Boots"@en, "Open World Light Boots"@en, "SotO Light Boots"@en ;
+    priory:gw2Id 101535 ;
     priory:hasArmorWeight armor:LightArmor ;
     priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity rarity:Legendary ;
@@ -805,14 +882,18 @@ item:101018 a priory:LightArmor, priory:LegendaryArmor, priory:ManifestedArtifac
     priory:isContainerized true ;
     priory:isEquipable true ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_obsidian_shoes .
+    priory:producedBy recipe:forge_obsidian_light_shoes .
 
-recipe:forge_obsidian_shoes a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Forge Obsidian Shoes"@en ;
+recipe:forge_obsidian_light_shoes a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Obsidian Light Shoes"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:101018 ;
+    priory:producesItem item:101535 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100118 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100589 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:100707 ; priory:requiredQuantity 1 ] ,
-        [ a priory:IngredientRequirement ; priory:requiresItem item:101269 ; priory:requiredQuantity 5 ] .
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100936 ; priory:requiredQuantity 1 ] ,  # Astral Ward Light Boots
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100466 ; priory:requiredQuantity 1 ] ,  # Gift of the Astral Ward
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100798 ; priory:requiredQuantity 1 ] ,  # Gift of Amnytas
+        [ a priory:IngredientRequirement ; priory:requiresItem item:100569 ; priory:requiredQuantity 5 ] ; # Purified Rift Essence
+    owl:sameAs recipe:forge_obsidian_shoes .
+
+recipe:forge_obsidian_shoes a owl:NamedIndividual ;
+    owl:sameAs recipe:forge_obsidian_light_shoes .

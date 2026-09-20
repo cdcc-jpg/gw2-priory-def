@@ -79,7 +79,7 @@ item:97783 a owl:NamedIndividual,
     priory:producedBy recipe:forge_aurenes_voice .
 
 item:96347 a priory:CraftingMaterial ;
-    rdfs:label "Pure Jade Chunk"@en ;
+    rdfs:label "Chunk of Ancient Ambergris"@en ;
     priory:gw2Id 96347 .
 
 item:97165 a owl:NamedIndividual,
@@ -110,9 +110,10 @@ item:97377 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_aurenes_persuasion .
 
-item:96556 a priory:CraftingMaterial ;
+item:96722 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Jade Runestone"@en ;
-    priory:gw2Id 96556 .
+    priory:gw2Id 96722 ;
+    priory:hasRarity rarity:Exotic .
 
 item:96028 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -156,21 +157,22 @@ item:95675 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_aurenes_fang .
 
-item:96803 a priory:GiftItem ;
+item:97096 a priory:GiftItem, owl:NamedIndividual ;
     rdfs:label "Gift of Cantha"@en ;
-    priory:gw2Id 96803 .
+    priory:gw2Id 97096 ;
+    priory:hasRarity rarity:Legendary .
 
 item:96804 a priory:GiftItem ;
     rdfs:label "Gift of the Siege Turtle"@en ;
     priory:gw2Id 96804 .
 
-item:96805 a priory:GiftItem ;
+item:95621 a priory:GiftItem ;
     rdfs:label "Gift of the Jade Fleet"@en ;
-    priory:gw2Id 96805 .
+    priory:gw2Id 95621 .
 
-item:96806 a priory:GiftItem ;
+item:96993 a priory:GiftItem ;
     rdfs:label "Gift of Seitung Province"@en ;
-    priory:gw2Id 96806 .
+    priory:gw2Id 96993 .
 
 item:95808 a owl:NamedIndividual,
         priory:LegendaryWeapon ;
@@ -503,28 +505,28 @@ recipe:forge_aurenes_wisdom a priory:MysticForgeRecipe ;
 recipe:forge_dragon_empire a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of the Dragon Empire"@en ;
     priory:hasIngredientRequirement recipe:req_de_96347,
-        recipe:req_de_96556,
+        recipe:req_de_96722,
         recipe:req_de_96978 ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:97330 .
+    priory:producesItem item:97433 .
 
 recipe:forge_gift_of_aurene a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of Aurene"@en ;
     priory:hasIngredientRequirement recipe:req_ga_19675,
         recipe:req_ga_19721,
-        recipe:req_ga_79659,
-        recipe:req_ga_96074 ;
+        recipe:req_ga_76530,
+        recipe:req_ga_96088 ;
     priory:outputQuantity 1 ;
     priory:producesItem item:95797 .
 
 recipe:forge_gift_of_jade_mastery a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of Jade Mastery"@en ;
-    priory:hasIngredientRequirement recipe:req_jm_96803,
+    priory:hasIngredientRequirement recipe:req_jm_97096,
         recipe:req_jm_96804,
         recipe:req_jm_96805,
         recipe:req_jm_96806 ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:97034 .
+    priory:producesItem item:96033 .
 
 recipe:req_aurenes_argument_aurene a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -536,11 +538,11 @@ recipe:req_aurenes_argument_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_argument_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_argument_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_argument_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -556,11 +558,11 @@ recipe:req_aurenes_bite_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_bite_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_bite_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_bite_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -576,11 +578,11 @@ recipe:req_aurenes_breath_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_breath_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_breath_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_breath_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -596,11 +598,11 @@ recipe:req_aurenes_claw_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_claw_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_claw_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_claw_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -616,11 +618,11 @@ recipe:req_aurenes_fang_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_fang_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_fang_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_fang_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -636,11 +638,11 @@ recipe:req_aurenes_flight_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_flight_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_flight_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_flight_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -656,11 +658,11 @@ recipe:req_aurenes_gaze_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_gaze_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_gaze_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_gaze_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -676,11 +678,11 @@ recipe:req_aurenes_insight_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_insight_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_insight_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_insight_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -696,11 +698,11 @@ recipe:req_aurenes_persuasion_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_persuasion_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_persuasion_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_persuasion_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -716,11 +718,11 @@ recipe:req_aurenes_rending_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_rending_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_rending_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_rending_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -736,11 +738,11 @@ recipe:req_aurenes_scale_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_scale_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_scale_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_scale_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -756,11 +758,11 @@ recipe:req_aurenes_tail_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_tail_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_tail_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_tail_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -776,11 +778,11 @@ recipe:req_aurenes_voice_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_voice_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_voice_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_voice_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -796,11 +798,11 @@ recipe:req_aurenes_weight_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_weight_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_weight_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_weight_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -816,11 +818,11 @@ recipe:req_aurenes_wing_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_wing_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_wing_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_wing_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -836,11 +838,11 @@ recipe:req_aurenes_wisdom_empire a priory:IngredientRequirement ;
 
 recipe:req_aurenes_wisdom_jademast a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:97034 .
+    priory:requiresItem item:96033 .
 
 recipe:req_aurenes_wisdom_p_mem a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
 recipe:req_aurenes_wisdom_prec a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -850,9 +852,9 @@ recipe:req_de_96347 a priory:IngredientRequirement ;
     priory:requiredQuantity 200 ;
     priory:requiresItem item:96347 .
 
-recipe:req_de_96556 a priory:IngredientRequirement ;
+recipe:req_de_96722 a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
-    priory:requiresItem item:96556 .
+    priory:requiresItem item:96722 .
 
 recipe:req_de_96978 a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -866,17 +868,17 @@ recipe:req_ga_19721 a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
     priory:requiresItem item:19721 .
 
-recipe:req_ga_79659 a priory:IngredientRequirement ;
+recipe:req_ga_76530 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:79659 .
+    priory:requiresItem item:76530 .
 
-recipe:req_ga_96074 a priory:IngredientRequirement ;
+recipe:req_ga_96088 a priory:IngredientRequirement ;
     priory:requiredQuantity 250 ;
-    priory:requiresItem item:96074 .
+    priory:requiresItem item:96088 .
 
-recipe:req_jm_96803 a priory:IngredientRequirement ;
+recipe:req_jm_97096 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:96803 .
+    priory:requiresItem item:97096 .
 
 recipe:req_jm_96804 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -884,11 +886,11 @@ recipe:req_jm_96804 a priory:IngredientRequirement ;
 
 recipe:req_jm_96805 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:96805 .
+    priory:requiresItem item:95621 .
 
 recipe:req_jm_96806 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:96806 .
+    priory:requiresItem item:96993 .
 
 item:95802 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
@@ -926,37 +928,37 @@ item:96221 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_aurenes_bite_precursor .
 
-item:96365 a owl:NamedIndividual,
+item:96330 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
     rdfs:label "Dragon's Wing"@en ;
-    priory:gw2Id 96365 ;
+    priory:gw2Id 96330 ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:ShortBow ;
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_aurenes_wing_precursor .
 
-item:96519 a owl:NamedIndividual,
+item:96193 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
     rdfs:label "Dragon's Wisdom"@en ;
-    priory:gw2Id 96519 ;
+    priory:gw2Id 96193 ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Scepter ;
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_aurenes_wisdom_precursor .
 
-item:96656 a owl:NamedIndividual,
+item:97691 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
     rdfs:label "Dragon's Scale"@en ;
-    priory:gw2Id 96656 ;
+    priory:gw2Id 97691 ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Shield ;
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_aurenes_scale_precursor .
 
-item:96722 a owl:NamedIndividual,
+item:95834 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
     rdfs:label "Dragon's Flight"@en ;
-    priory:gw2Id 96722 ;
+    priory:gw2Id 95834 ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Longbow ;
     priory:isAccountBound true ;
@@ -980,10 +982,10 @@ item:97067 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_aurenes_voice_precursor .
 
-item:97086 a owl:NamedIndividual,
+item:96915 a owl:NamedIndividual,
         priory:PrecursorWeapon ;
     rdfs:label "Dragon's Argument"@en ;
-    priory:gw2Id 97086 ;
+    priory:gw2Id 96915 ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Pistol ;
     priory:isAccountBound true ;
@@ -1039,25 +1041,25 @@ item:95797 a priory:GiftItem ;
     priory:gw2Id 95797 ;
     priory:producedBy recipe:forge_gift_of_aurene .
 
-item:96074 a priory:CraftingMaterial ;
+item:96088 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Memory of Aurene"@en ;
-    priory:gw2Id 96074 .
+    priory:gw2Id 96088 ;
+    priory:hasRarity rarity:Exotic .
 
-item:97034 a priory:GiftItem ;
+item:96033 a priory:GiftItem ;
     rdfs:label "Gift of Jade Mastery"@en ;
-    priory:gw2Id 97034 ;
+    priory:gw2Id 96033 ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_gift_of_jade_mastery .
 
-item:97330 a priory:GiftItem ;
+item:97433 a priory:GiftItem ;
     rdfs:label "Gift of the Dragon Empire"@en ;
-    priory:gw2Id 97330 ;
+    priory:gw2Id 97433 ;
     priory:producedBy recipe:forge_dragon_empire .
 
 # Gen 3 Precursors and Specific Weapon Gifts
 item:95777 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Flight"@en ; priory:gw2Id 95777 .
 item:95814 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Insight"@en ; priory:gw2Id 95814 .
-item:95834 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Flight"@en ; priory:gw2Id 95834 .
 item:95846 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Tail"@en ; priory:gw2Id 95846 .
 item:95920 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Weight"@en ; priory:gw2Id 95920 .
 item:95922 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Breath"@en ; priory:gw2Id 95922 .

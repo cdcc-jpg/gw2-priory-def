@@ -9,15 +9,40 @@
 @prefix weight: <https://priory.gw2/ref/armor-weight/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-item:100862 a owl:NamedIndividual,
+item:100267 a owl:NamedIndividual,
         priory:CraftingMaterial ;
-    rdfs:label "Static Charge"@en ;
-    priory:gw2Id 100862 .
+    rdfs:label "Case of Captured Lightning"@en ;
+    priory:gw2Id 100267 .
 
-item:100912 a owl:NamedIndividual,
+item:99964 a owl:NamedIndividual,
         priory:CraftingMaterial ;
-    rdfs:label "Clotted Scream"@en ;
-    priory:gw2Id 100912 .
+    rdfs:label "Pouch of Stardust"@en ;
+    priory:gw2Id 99964 .
+
+item:100098 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Clot of Congealed Screams"@en ;
+    priory:gw2Id 100098 .
+
+item:100569 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Purified Rift Essence"@en ;
+    priory:gw2Id 100569 .
+
+item:100930 a owl:NamedIndividual,
+        priory:CraftingMaterial ;
+    rdfs:label "Amalgamated Rift Essence"@en ;
+    priory:gw2Id 100930 .
+
+item:100466 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of the Astral Ward"@en ;
+    priory:gw2Id 100466 .
+
+item:100798 a owl:NamedIndividual,
+        priory:GiftItem ;
+    rdfs:label "Gift of Amnytas"@en ;
+    priory:gw2Id 100798 .
 
 item:104331 a owl:NamedIndividual,
         priory:CraftingMaterial ;
@@ -43,31 +68,6 @@ item:90783 a owl:NamedIndividual,
 
 
 
-item:103112 a owl:NamedIndividual,
-        priory:CraftingMaterial ;
-    rdfs:label "Titan Ore"@en ;
-    priory:gw2Id 103112 .
-
-item:103125 a owl:NamedIndividual,
-        priory:CraftingMaterial ;
-    rdfs:label "Lowland Pine Timber"@en ;
-    priory:gw2Id 103125 .
-
-item:103427 a owl:NamedIndividual,
-        priory:CraftingMaterial ;
-    rdfs:label "Mursaat Obsidian Chunk"@en ;
-    priory:gw2Id 103427 .
-
-item:103460 a owl:NamedIndividual,
-        priory:LegendaryWeapon ;
-    rdfs:label "Klobjarne Harvester"@en ;
-    skos:altLabel "Janthir Spear"@en,
-        "Klobjarne"@en,
-        "Legendary Land Spear"@en ;
-    priory:gw2Id 103460 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true ;
-    priory:producedBy recipe:forge_klobjarne_harvester .
 
 item:74155 a owl:NamedIndividual,
         priory:LegendaryBackpack ;
@@ -87,7 +87,7 @@ item:77474 a owl:NamedIndividual,
 
 item:79280 a owl:NamedIndividual,
         priory:CraftingMaterial ;
-    rdfs:label "Petrified Wood"@en ;
+    rdfs:label "Blood Ruby"@en ;
     priory:gw2Id 79280 .
 
 item:79401 a owl:NamedIndividual,
@@ -126,18 +126,18 @@ item:80190 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_perfected_envoy_shoulderguards .
 
-item:80196 a owl:NamedIndividual,
+item:80277 a owl:NamedIndividual,
         priory:LegendaryArmor ;
-    rdfs:label "Perfected Envoy Pants"@en ;
-    skos:altLabel "Envoy Light Legs"@en,
-        "Legendary Light Legs"@en,
-        "Raid Light Legs"@en ;
-    priory:gw2Id 80196 ;
-    priory:hasArmorWeight weight:Light ;
+    rdfs:label "Perfected Envoy Tassets"@en ;
+    skos:altLabel "Envoy Heavy Legs"@en,
+        "Legendary Heavy Legs"@en,
+        "Raid Heavy Legs"@en ;
+    priory:gw2Id 80277 ;
+    priory:hasArmorWeight weight:Heavy ;
     priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_perfected_envoy_pants .
+    priory:producedBy recipe:forge_perfected_envoy_tassets .
 
 item:80200 a owl:NamedIndividual,
         priory:LegendaryArmor ;
@@ -191,13 +191,13 @@ item:80258 a owl:NamedIndividual,
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_perfected_envoy_breastplate .
 
-item:80277 a owl:NamedIndividual,
+item:80578 a owl:NamedIndividual,
         priory:LegendaryArmor ;
     rdfs:label "Perfected Envoy Jerkin"@en ;
     skos:altLabel "Envoy Medium Chest"@en,
         "Legendary Medium Chest"@en,
         "Raid Medium Chest"@en ;
-    priory:gw2Id 80277 ;
+    priory:gw2Id 80578 ;
     priory:hasArmorWeight weight:Medium ;
     priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity rarity:Legendary ;
@@ -317,17 +317,6 @@ item:88955 a owl:NamedIndividual,
 
 
 
-recipe:forge_klobjarne_harvester a priory:MysticForgeRecipe ;
-    rdfs:label "Forge Klobjarne Harvester"@en ;
-    priory:hasIngredientRequirement recipe:req_klobjarne_103112,
-        recipe:req_klobjarne_103125,
-        recipe:req_klobjarne_103427,
-        recipe:req_klobjarne_19675 ;
-    priory:outputQuantity 1 ;
-    priory:producesItem item:103460 .
-
-
-
 recipe:forge_perfected_envoy_boots a priory:MysticForgeRecipe ;
     rdfs:label "Forge Perfected Envoy Boots"@en ;
     priory:hasIngredientRequirement recipe:req_perfected_envoy_boots_19675,
@@ -398,7 +387,7 @@ recipe:forge_perfected_envoy_jerkin a priory:MysticForgeRecipe ;
         recipe:req_perfected_envoy_jerkin_43775,
         recipe:req_perfected_envoy_jerkin_77700 ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:80277 .
+    priory:producesItem item:80578 .
 
 recipe:forge_perfected_envoy_leggings a priory:MysticForgeRecipe ;
     rdfs:label "Forge Perfected Envoy Leggings"@en ;
@@ -434,7 +423,8 @@ recipe:forge_perfected_envoy_pants a priory:MysticForgeRecipe ;
         recipe:req_perfected_envoy_pants_43775,
         recipe:req_perfected_envoy_pants_77700 ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:80196 .
+    priory:producesItem item:80277 ;
+    owl:sameAs recipe:forge_perfected_envoy_tassets .
 
 recipe:forge_perfected_envoy_pauldrons a priory:MysticForgeRecipe ;
     rdfs:label "Forge Perfected Envoy Pauldrons"@en ;
@@ -470,7 +460,7 @@ recipe:forge_perfected_envoy_tassets a priory:MysticForgeRecipe ;
         recipe:req_perfected_envoy_tassets_43775,
         recipe:req_perfected_envoy_tassets_77700 ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:80161 .
+    priory:producesItem item:80277 .
 
 recipe:forge_perfected_envoy_vambraces a priory:MysticForgeRecipe ;
     rdfs:label "Forge Perfected Envoy Vambraces"@en ;
@@ -489,24 +479,6 @@ recipe:forge_perfected_envoy_vestments a priory:MysticForgeRecipe ;
         recipe:req_perfected_envoy_vestments_77700 ;
     priory:outputQuantity 1 ;
     priory:producesItem item:80131 .
-
-
-
-recipe:req_klobjarne_103112 a priory:IngredientRequirement ;
-    priory:requiredQuantity 500 ;
-    priory:requiresItem item:103112 .
-
-recipe:req_klobjarne_103125 a priory:IngredientRequirement ;
-    priory:requiredQuantity 500 ;
-    priory:requiresItem item:103125 .
-
-recipe:req_klobjarne_103427 a priory:IngredientRequirement ;
-    priory:requiredQuantity 250 ;
-    priory:requiresItem item:103427 .
-
-recipe:req_klobjarne_19675 a priory:IngredientRequirement ;
-    priory:requiredQuantity 77 ;
-    priory:requiresItem item:19675 .
 
 
 
@@ -821,23 +793,16 @@ item:80145 a owl:NamedIndividual,
 
 item:80161 a owl:NamedIndividual,
         priory:LegendaryArmor ;
-    rdfs:label "Perfected Envoy Shoes"@en,
-        "Perfected Envoy Tassets"@en ;
-    skos:altLabel "Envoy Heavy Legs"@en,
-        "Envoy Light Boots"@en,
-        "Legendary Heavy Legs"@en,
+    rdfs:label "Perfected Envoy Shoes"@en ;
+    skos:altLabel "Envoy Light Boots"@en,
         "Legendary Light Boots"@en,
-        "Raid Heavy Legs"@en,
         "Raid Light Boots"@en ;
     priory:gw2Id 80161 ;
-    priory:hasArmorWeight weight:Heavy,
-        weight:Light ;
-    priory:hasEquipmentSlot slot:Boots,
-        slot:Legs ;
+    priory:hasArmorWeight weight:Light ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
-    priory:producedBy recipe:forge_perfected_envoy_shoes,
-        recipe:forge_perfected_envoy_tassets .
+    priory:producedBy recipe:forge_perfected_envoy_shoes .
 
 
 
@@ -850,4 +815,31 @@ item:77700 a owl:NamedIndividual,
         priory:CraftingMaterial ;
     rdfs:label "Legendary Insight"@en ;
     priory:gw2Id 77700 .
+
+# --- Janthir Wilds Legendary Spear (Klobjarne Geirr) ---
+recipe:forge_klobjarne_geirr a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Klobjarne Geirr"@en ;
+    priory:producesItem item:103815 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        recipe:req_klobjarne_102514 ,
+        recipe:req_klobjarne_102376 ,
+        recipe:req_klobjarne_102901 ,
+        recipe:req_klobjarne_103973 .
+
+recipe:req_klobjarne_102514 a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:102514 ;  # Gift of Janthir Wilds
+    priory:requiredQuantity 1 .
+
+recipe:req_klobjarne_102376 a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:102376 ;  # Gift of the Homesteader
+    priory:requiredQuantity 1 .
+
+recipe:req_klobjarne_102901 a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:102901 ;  # Gift of Klobjarne Geirr
+    priory:requiredQuantity 1 .
+
+recipe:req_klobjarne_103973 a priory:IngredientRequirement, owl:NamedIndividual ;
+    priory:requiresItem item:103973 ;  # Nyr Hrammr
+    priory:requiredQuantity 1 .
 

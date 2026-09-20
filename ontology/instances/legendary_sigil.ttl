@@ -39,15 +39,15 @@ recipe:forge_legendary_sigil a priory:MysticForgeRecipe ;
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89276 ; # Gift of Craftsmanship (50 Provisioner Tokens)
+        priory:requiresItem item:77451 ; # Gift of Craftsmanship (50 Provisioner Tokens)
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:91490 ; # Gift of Condensed Might
+        priory:requiresItem item:70867 ; # Gift of Condensed Might
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:91471 ; # Gift of Condensed Magic
+        priory:requiresItem item:76530 ; # Gift of Condensed Magic
         priory:requiredQuantity 1
     ] .
 
@@ -66,7 +66,7 @@ recipe:forge_gift_of_sigils a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89175 ; # Mystic Mote
+        priory:requiresItem item:89133 ; # Mystic Mote
         priory:requiredQuantity 75
     ] , [
         a priory:IngredientRequirement ;
@@ -83,9 +83,9 @@ recipe:forge_gift_of_sigils a priory:MysticForgeRecipe ;
     ] .
 
 # --- Sub-component: Mystic Mote (Crafted via Weaponsmith / Artificer / Huntsman 75) ---
-item:89175 a priory:CraftingMaterial ;
+item:89133 a priory:CraftingMaterial ;
     rdfs:label "Mystic Mote"@en ;
-    priory:gw2Id 89175 ;
+    priory:gw2Id 89133 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound true ;
     priory:producedBy recipe:craft_mystic_mote ;
@@ -93,32 +93,32 @@ item:89175 a priory:CraftingMaterial ;
 
 recipe:craft_mystic_mote a priory:DisciplineRecipe ;
     rdfs:label "Craft Mystic Mote"@en ;
-    priory:producesItem item:89175 ;
+    priory:producesItem item:89133 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Weaponsmith ;
     priory:requiresRating 75 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89103 ; # Lucent Crystal (10 per mote = 750 total)
+        priory:requiresItem item:89271 ; # Pile of Lucent Crystal (10 per mote = 750 total)
         priory:requiredQuantity 10
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89258 ; # Symbol of Control
+        priory:requiresItem item:89098 ; # Symbol of Control
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89182 ; # Symbol of Enhancement
+        priory:requiresItem item:89141 ; # Symbol of Enhancement
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:89140 ; # Symbol of Pain
+        priory:requiresItem item:89182 ; # Symbol of Pain
         priory:requiredQuantity 1
     ] .
 
 # --- Component 2: Gift of Craftsmanship (Faction Provisioners) ---
-item:89276 a priory:GiftItem ;
+item:77451 a priory:GiftItem ;
     rdfs:label "Gift of Craftsmanship"@en ;
-    priory:gw2Id 89276 ;
+    priory:gw2Id 77451 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:acquiredVia [
@@ -134,9 +134,9 @@ item:89276 a priory:GiftItem ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gift_of_Craftsmanship> .
 
 # --- Component 3: Gift of Condensed Might ---
-item:91490 a priory:GiftItem ;
+item:70867 a priory:GiftItem ;
     rdfs:label "Gift of Condensed Might"@en ;
-    priory:gw2Id 91490 ;
+    priory:gw2Id 70867 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_gift_of_condensed_might ;
@@ -144,30 +144,30 @@ item:91490 a priory:GiftItem ;
 
 recipe:forge_gift_of_condensed_might a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of Condensed Might"@en ;
-    priory:producesItem item:91490 ;
+    priory:producesItem item:70867 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19725 ; # Vicious Claw (100 T6)
+        priory:requiresItem item:24351 ; # Vicious Claw (100 T6)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19734 ; # Armored Scale (100 T6)
+        priory:requiresItem item:24289 ; # Armored Scale (100 T6)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19723 ; # Ancient Bone (100 T6)
+        priory:requiresItem item:24358 ; # Ancient Bone (100 T6)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19728 ; # Vicious Fang (100 T6)
+        priory:requiresItem item:24357 ; # Vicious Fang (100 T6)
         priory:requiredQuantity 100
     ] .
 
 # --- Component 4: Gift of Condensed Magic ---
-item:91471 a priory:GiftItem ;
+item:76530 a priory:GiftItem ;
     rdfs:label "Gift of Condensed Magic"@en ;
-    priory:gw2Id 91471 ;
+    priory:gw2Id 76530 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:producedBy recipe:forge_gift_of_condensed_magic ;
@@ -175,60 +175,60 @@ item:91471 a priory:GiftItem ;
 
 recipe:forge_gift_of_condensed_magic a priory:MysticForgeRecipe ;
     rdfs:label "Forge Gift of Condensed Magic"@en ;
-    priory:producesItem item:91471 ;
+    priory:producesItem item:76530 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19748 ; # Powerful Blood (100 T6)
+        priory:requiresItem item:24295 ; # Powerful Blood (100 T6)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19745 ; # Potent Venom Sac (100 T6)
+        priory:requiresItem item:24283 ; # Powerful Venom Sac (100 T6)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19746 ; # Elaborate Totem (100 T6)
+        priory:requiresItem item:24300 ; # Elaborate Totem (100 T6)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19732 ; # Crystalline Dust (100 T6)
+        priory:requiresItem item:24277 ; # Crystalline Dust (100 T6)
         priory:requiredQuantity 100
     ] .
 
 # --- Leaf Materials & Symbols ---
-item:89103 a priory:CraftingMaterial ;
-    rdfs:label "Lucent Crystal"@en ;
-    priory:gw2Id 89103 ;
-    priory:hasRarity rarity:Rare ;
+item:89271 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Lucent Crystal"@en ;
+    priory:gw2Id 89271 ;
+    priory:hasRarity rarity:Fine ;
     priory:isAccountBound false .
 
-item:89258 a priory:CraftingMaterial ;
+item:89098 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Symbol of Control"@en ;
-    priory:gw2Id 89258 ;
-    priory:hasRarity rarity:Fine ;
+    priory:gw2Id 89098 ;
+    priory:hasRarity rarity:Masterwork ;
     priory:isAccountBound false .
 
-item:89182 a priory:CraftingMaterial ;
+item:89141 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Symbol of Enhancement"@en ;
-    priory:gw2Id 89182 ;
-    priory:hasRarity rarity:Fine ;
+    priory:gw2Id 89141 ;
+    priory:hasRarity rarity:Masterwork ;
     priory:isAccountBound false .
 
-item:89140 a priory:CraftingMaterial ;
+item:89182 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Symbol of Pain"@en ;
-    priory:gw2Id 89140 ;
-    priory:hasRarity rarity:Fine ;
+    priory:gw2Id 89182 ;
+    priory:hasRarity rarity:Masterwork ;
     priory:isAccountBound false .
 
 # --- T6 Materials ---
-item:19725 a priory:CraftingMaterial ; rdfs:label "Vicious Claw"@en ; priory:gw2Id 19725 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19734 a priory:CraftingMaterial ; rdfs:label "Armored Scale"@en ; priory:gw2Id 19734 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19723 a priory:CraftingMaterial ; rdfs:label "Ancient Bone"@en ; priory:gw2Id 19723 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19728 a priory:CraftingMaterial ; rdfs:label "Vicious Fang"@en ; priory:gw2Id 19728 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19748 a priory:CraftingMaterial ; rdfs:label "Powerful Blood"@en ; priory:gw2Id 19748 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19745 a priory:CraftingMaterial ; rdfs:label "Potent Venom Sac"@en ; priory:gw2Id 19745 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19746 a priory:CraftingMaterial ; rdfs:label "Elaborate Totem"@en ; priory:gw2Id 19746 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19732 a priory:CraftingMaterial ; rdfs:label "Crystalline Dust"@en ; priory:gw2Id 19732 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24351 a priory:CraftingMaterial ; rdfs:label "Vicious Claw"@en ; priory:gw2Id 24351 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24289 a priory:CraftingMaterial ; rdfs:label "Armored Scale"@en ; priory:gw2Id 24289 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24358 a priory:CraftingMaterial ; rdfs:label "Ancient Bone"@en ; priory:gw2Id 24358 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24357 a priory:CraftingMaterial ; rdfs:label "Vicious Fang"@en ; priory:gw2Id 24357 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24295 a priory:CraftingMaterial ; rdfs:label "Vial of Powerful Blood"@en ; priory:gw2Id 24295 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24283 a priory:CraftingMaterial ; rdfs:label "Powerful Venom Sac"@en ; priory:gw2Id 24283 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24300 a priory:CraftingMaterial ; rdfs:label "Elaborate Totem"@en ; priory:gw2Id 24300 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24277 a priory:CraftingMaterial ; rdfs:label "Pile of Crystalline Dust"@en ; priory:gw2Id 24277 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 
 # ------------------------------------------------------------------------------
 # Currencies (Account Wallet Scalars)

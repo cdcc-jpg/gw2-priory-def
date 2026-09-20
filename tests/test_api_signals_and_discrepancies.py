@@ -119,11 +119,11 @@ class TestApiSignalsAndDiscrepancies(unittest.TestCase):
         self.assertTrue(account.commander)
 
     def test_ontology_recipe_with_corrected_dungeon_currency(self):
-        """Verifies that Gift of Ascalon (item 19640) correctly resolves with Currency 69."""
+        """Verifies that Gift of Ascalon (item 19664) correctly resolves with Currency 69."""
         account = AccountState(
             wallet={69: 500}  # Exactly 500 Tales of Dungeon Delving
         )
-        report = self.diff_engine.compute_diff(goal_item_id=19640, account=account)
+        report = self.diff_engine.compute_diff(goal_item_id=19664, account=account)
         self.assertTrue(report.root_node.is_satisfied)
         self.assertEqual(report.root_node.missing_quantity, 0)
 

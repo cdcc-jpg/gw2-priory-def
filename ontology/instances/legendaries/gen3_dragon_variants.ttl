@@ -69,7 +69,7 @@ item:96001 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Greatsword> ;
     priory:hasDragonFacet priory:ZhaitanFacet ;
-    priory:baseLegendaryItem item:96221 ;  # Aurene's Bite
+    priory:baseLegendaryItem item:96356 ;  # Aurene's Bite
     priory:producedBy priory:Recipe_AureneBite_Zhaitan ;
     skos:altLabel "Zhaitan's Bite", "Zhaitan Greatsword", "Gen 3 Zhaitan Variant" ;
     skos:definition "Legendary Greatsword skin variant channeling the power of the Elder Dragon Zhaitan." .
@@ -91,18 +91,18 @@ item:96003 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Axe> ;
     priory:hasDragonFacet priory:MordremothFacet ;
-    priory:baseLegendaryItem item:95684 ;
+    priory:baseLegendaryItem item:96937 ;
     priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Mordremoth's Rending", "Mordremoth Axe" .
 
 # Kralkatorrik Variants
-item:96004 a priory:LegendaryWeapon, owl:NamedIndividual ;
+item:98707 a priory:LegendaryWeapon, owl:NamedIndividual ;
     rdfs:label "Aurene's Insight (Kralkatorrik Variant)" ;
-    priory:gw2Id 96004 ;
+    priory:gw2Id 98707 ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Staff> ;
     priory:hasDragonFacet priory:KralkatorrikFacet ;
-    priory:baseLegendaryItem item:96028 ;
+    priory:baseLegendaryItem item:96221 ;
     priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Kralkatorrik's Insight", "Kralkatorrik Staff" .
 
@@ -113,7 +113,7 @@ item:96005 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Hammer> ;
     priory:hasDragonFacet priory:PrimordusFacet ;
-    priory:baseLegendaryItem item:95808 ;
+    priory:baseLegendaryItem item:95684 ;
     priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Primordus's Weight", "Primordus Hammer" .
 
@@ -124,7 +124,7 @@ item:96006 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
     priory:hasDragonFacet priory:JormagFacet ;
-    priory:baseLegendaryItem item:96652 ;
+    priory:baseLegendaryItem item:96221 ;
     priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Jormag's Wisdom", "Jormag Scepter" .
 
@@ -135,7 +135,7 @@ item:96007 a priory:LegendaryWeapon, owl:NamedIndividual ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasWeaponType <https://priory.gw2/ref/weapon/ShortBow> ;
     priory:hasDragonFacet priory:SooWonFacet ;
-    priory:baseLegendaryItem item:97783 ;
+    priory:baseLegendaryItem item:97590 ;
     priory:acquiredVia priory:Path_LeivasArborstoneExchange ;
     skos:altLabel "Soo-Won's Flight", "Soo-Won Short Bow" .
 

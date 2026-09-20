@@ -109,25 +109,15 @@ item:94917 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
 # 3. Forge Catalysts & Crafting Materials
 # ------------------------------------------------------------------------------
 
-item:19732 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
-    rdfs:label "Crystalline Dust"@en ;
+item:24277 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Pile of Crystalline Dust"@en ;
     skos:altLabel "Pile of Crystalline Dust"@en ;
-    priory:gw2Id 19732 ;
+    priory:gw2Id 24277 ;
     priory:chatCode "[&AgFsEwAA]" ;
     priory:chatLink "[&AgFsEwAA]" ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false ;
     rdfs:comment "Tier 6 fine crafting material used as catalyst in Mystic Forge recipes."@en .
-
-item:19970 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
-    rdfs:label "Mystic Coin"@en ;
-    skos:altLabel "Mystic Coins"@en ;
-    priory:gw2Id 19970 ;
-    priory:chatCode "[&AgEITgAA]" ;
-    priory:chatLink "[&AgEITgAA]" ;
-    priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false ;
-    rdfs:comment "Mystic Forge catalyst currency used in high-tier exotic and legendary transmutations."@en .
 
 item:19976 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
     rdfs:label "Mystic Coin"@en ;
@@ -136,7 +126,8 @@ item:19976 a priory:CraftingMaterial, priory:Item, owl:NamedIndividual ;
     priory:chatCode "[&AgEITgAA]" ;
     priory:chatLink "[&AgEITgAA]" ;
     priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false .
+    priory:isAccountBound false ;
+    rdfs:comment "Mystic Forge catalyst currency used in high-tier exotic and legendary transmutations."@en .
 
 
 # ------------------------------------------------------------------------------
@@ -164,11 +155,11 @@ recipe:req_eternity_unbound_sunrise a priory:IngredientRequirement, owl:NamedInd
     priory:requiredQuantity 1 .
 
 recipe:req_eternity_unbound_dust a priory:IngredientRequirement, owl:NamedIndividual ;
-    priory:requiresItem item:19732 ;  # Crystalline Dust
+    priory:requiresItem item:24277 ;  # Crystalline Dust
     priory:requiredQuantity 5 .
 
 recipe:req_eternity_unbound_coins a priory:IngredientRequirement, owl:NamedIndividual ;
-    priory:requiresItem item:19970 ;  # Mystic Coins
+    priory:requiresItem item:19976 ;  # Mystic Coins
     priory:requiredQuantity 10 .
 
 
@@ -193,11 +184,11 @@ recipe:req_eternity_bound_sunrise a priory:IngredientRequirement, owl:NamedIndiv
     priory:requiredQuantity 1 .
 
 recipe:req_eternity_bound_dust a priory:IngredientRequirement, owl:NamedIndividual ;
-    priory:requiresItem item:19732 ;  # Crystalline Dust
+    priory:requiresItem item:24277 ;  # Crystalline Dust
     priory:requiredQuantity 5 .
 
 recipe:req_eternity_bound_coins a priory:IngredientRequirement, owl:NamedIndividual ;
-    priory:requiresItem item:19970 ;  # Mystic Coins
+    priory:requiresItem item:19976 ;  # Mystic Coins
     priory:requiredQuantity 10 .
 
 
@@ -205,17 +196,18 @@ recipe:req_eternity_bound_coins a priory:IngredientRequirement, owl:NamedIndivid
 # 5. Invisible Bags & Safe Boxes (priory:SafeStagingBag Architecture)
 # ------------------------------------------------------------------------------
 
-item:67390 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
-    rdfs:label "20-Slot Invisible Bag"@en ;
+item:9574 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "20 Slot Invisible Bag"@en ;
     skos:altLabel "Invisible Bag"@en,
-        "20 Slot Invisible Bag"@en ;
-    priory:gw2Id 67390 ;
-    priory:chatCode "[&AgG5VAAA]" ;
-    priory:chatLink "[&AgG5VAAA]" ;
+        "20-Slot Invisible Bag"@en,
+        "Invisible Bag (Tailor)"@en ;
+    priory:gw2Id 9574 ;
+    priory:chatCode "[&AgFmJQAA]" ;
+    priory:chatLink "[&AgFmJQAA]" ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false ;
     priory:bagSlots 20 ;
-    rdfs:comment "A 20-slot inventory bag whose items are hidden from vendors, immune to deposit all materials, and never affected by inventory compacting. Essential for safe staging of high-value unbound legendaries and precursors during the Eternity loop."@en ;
+    rdfs:comment "A 20-slot inventory bag crafted by Tailors whose items are hidden from vendors, immune to deposit all materials, and never affected by inventory compacting. Essential for safe staging of high-value unbound legendaries and precursors during the Eternity loop."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Invisible_Bag> .
 
 item:9594 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
@@ -243,15 +235,3 @@ item:9584 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:Nam
     priory:bagSlots 20 ;
     rdfs:comment "A 20-slot invisible pack crafted by Leatherworkers whose contents are protected from accidental sale, sorting, and deposit actions."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Invisible_Pack> .
-
-item:8948 a priory:SafeStagingBag, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
-    rdfs:label "20 Slot Invisible Bag"@en ;
-    skos:altLabel "Invisible Bag (Tailor)"@en ;
-    priory:gw2Id 8948 ;
-    priory:chatCode "[&AgH0IgAA]" ;
-    priory:chatLink "[&AgH0IgAA]" ;
-    priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false ;
-    priory:bagSlots 20 ;
-    rdfs:comment "A 20-slot invisible bag crafted by Tailors whose contents remain locked in position and hidden from vendors."@en ;
-    rdfs:seeAlso <https://wiki.guildwars2.com/wiki/20_Slot_Invisible_Bag> .

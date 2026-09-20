@@ -14,18 +14,18 @@
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. Deldrimor Steel Ingot (46738) & Lump of Mithrilium (46736)
+# 1. Deldrimor Steel Ingot (46738) & Lump of Mithrillium (46742)
 # ------------------------------------------------------------------------------
-item:46736 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Lump of Mithrilium"@en ;
-    priory:gw2Id 46736 ;
+item:46742 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lump of Mithrillium"@en ;
+    priory:gw2Id 46742 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
     skos:definition "Daily time-gated metal refinement component (1 per account per day)."@en .
 
 recipe:craft_lump_of_mithrilium a priory:CraftingRecipe, owl:NamedIndividual ;
-    rdfs:label "Lump of Mithrilium Crafting"@en ;
-    priory:producesItem item:46736 ;
+    rdfs:label "Lump of Mithrillium Crafting"@en ;
+    priory:producesItem item:46742 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Weaponsmith , discipline:Armorsmith ;
     priory:requiredRating 450 ;
@@ -58,7 +58,7 @@ recipe:craft_deldrimor_steel_ingot a priory:CraftingRecipe, owl:NamedIndividual 
     priory:requiredRating 450 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:46736 ; # 1 Lump of Mithrilium
+        priory:requiresItem item:46742 ; # 1 Lump of Mithrillium
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
@@ -75,18 +75,18 @@ recipe:craft_deldrimor_steel_ingot a priory:CraftingRecipe, owl:NamedIndividual 
     ] .
 
 # ------------------------------------------------------------------------------
-# 2. Spiritwood Plank (46739) & Glob of Elder Spirit Residue (46737)
+# 2. Spiritwood Plank (46736) & Glob of Elder Spirit Residue (46744)
 # ------------------------------------------------------------------------------
-item:46737 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:46744 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Glob of Elder Spirit Residue"@en ;
-    priory:gw2Id 46737 ;
+    priory:gw2Id 46744 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
     skos:definition "Daily time-gated wood refinement component (1 per account per day)."@en .
 
 recipe:craft_elder_spirit_residue a priory:CraftingRecipe, owl:NamedIndividual ;
     rdfs:label "Glob of Elder Spirit Residue Crafting"@en ;
-    priory:producesItem item:46737 ;
+    priory:producesItem item:46744 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
     priory:requiredRating 450 ;
@@ -104,22 +104,22 @@ recipe:craft_elder_spirit_residue a priory:CraftingRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 10
     ] .
 
-item:46739 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:46736 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Spiritwood Plank"@en ;
-    priory:gw2Id 46739 ;
+    priory:gw2Id 46736 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound false ;
     skos:definition "Ascended wood plank used in Gen 2 legendary precursors and staves/bows."@en .
 
 recipe:craft_spiritwood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
     rdfs:label "Spiritwood Plank Crafting"@en ;
-    priory:producesItem item:46739 ;
+    priory:producesItem item:46736 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Huntsman , discipline:Weaponsmith , discipline:Artificer ;
     priory:requiredRating 450 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:46737 ; # 1 Glob of Elder Spirit Residue
+        priory:requiresItem item:46744 ; # 1 Glob of Elder Spirit Residue
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
@@ -136,18 +136,18 @@ recipe:craft_spiritwood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
     ] .
 
 # ------------------------------------------------------------------------------
-# 3. Elonian Leather Square (46740) & Spool of Thick Elonian Cord (46742)
+# 3. Elonian Leather Square (46739) & Spool of Thick Elonian Cord (46745)
 # ------------------------------------------------------------------------------
-item:46742 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:46745 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Spool of Thick Elonian Cord"@en ;
-    priory:gw2Id 46742 ;
+    priory:gw2Id 46745 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
     skos:definition "Daily time-gated leather refinement component (1 per account per day)."@en .
 
 recipe:craft_thick_elonian_cord a priory:CraftingRecipe, owl:NamedIndividual ;
     rdfs:label "Spool of Thick Elonian Cord Crafting"@en ;
-    priory:producesItem item:46742 ;
+    priory:producesItem item:46745 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Leatherworker ;
     priory:requiredRating 450 ;
@@ -165,22 +165,22 @@ recipe:craft_thick_elonian_cord a priory:CraftingRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 10
     ] .
 
-item:46740 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:46739 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Elonian Leather Square"@en ;
-    priory:gw2Id 46740 ;
+    priory:gw2Id 46739 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound false ;
     skos:definition "Ascended leather square used in Medium legendary armor and weapon components."@en .
 
 recipe:craft_elonian_leather_square a priory:CraftingRecipe, owl:NamedIndividual ;
     rdfs:label "Elonian Leather Square Crafting"@en ;
-    priory:producesItem item:46740 ;
+    priory:producesItem item:46739 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Leatherworker ;
     priory:requiredRating 450 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:46742 ; # 1 Spool of Thick Elonian Cord
+        priory:requiresItem item:46745 ; # 1 Spool of Thick Elonian Cord
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
@@ -197,18 +197,18 @@ recipe:craft_elonian_leather_square a priory:CraftingRecipe, owl:NamedIndividual
     ] .
 
 # ------------------------------------------------------------------------------
-# 4. Bolt of Damask (46741) & Spool of Silk Weaving Thread (46744)
+# 4. Bolt of Damask (46741) & Spool of Silk Weaving Thread (46740)
 # ------------------------------------------------------------------------------
-item:46744 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:46740 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Spool of Silk Weaving Thread"@en ;
-    priory:gw2Id 46744 ;
+    priory:gw2Id 46740 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
     skos:definition "Daily time-gated cloth refinement component (1 per account per day)."@en .
 
 recipe:craft_silk_weaving_thread a priory:CraftingRecipe, owl:NamedIndividual ;
     rdfs:label "Spool of Silk Weaving Thread Crafting"@en ;
-    priory:producesItem item:46744 ;
+    priory:producesItem item:46740 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Tailor ;
     priory:requiredRating 450 ;
@@ -241,11 +241,11 @@ recipe:craft_bolt_of_damask a priory:CraftingRecipe, owl:NamedIndividual ;
     priory:requiredRating 450 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:46744 ; # 1 Spool of Silk Weaving Thread
+        priory:requiresItem item:46740 ; # 1 Spool of Silk Weaving Thread
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19741 ; # 20 Bolt of Wool
+        priory:requiresItem item:19740 ; # 20 Bolt of Wool
         priory:requiredQuantity 20
     ] , [
         a priory:IngredientRequirement ;
@@ -256,3 +256,11 @@ recipe:craft_bolt_of_damask a priory:CraftingRecipe, owl:NamedIndividual ;
         priory:requiresItem item:19744 ; # 20 Bolt of Linen
         priory:requiredQuantity 20
     ] .
+
+# --- Thermocatalytic Reagent (GW2 ID: 46747) ---
+item:46747 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Thermocatalytic Reagent"@en ;
+    priory:gw2Id 46747 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false ;
+    rdfs:comment "Vendor material purchased from Master Craftsmen used to refine ascended intermediate crafting materials."@en .

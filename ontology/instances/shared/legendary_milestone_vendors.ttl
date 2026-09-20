@@ -211,7 +211,7 @@ item:vendor_lyhr_amnytas a priory:VendorExchangePath, owl:NamedIndividual ;
     priory:zoneName "The Wizard's Tower"@en ;
     priory:waypointName "Tower Courtyard Waypoint"@en ;
     priory:nearestWaypoint "[&BB8OAAA=]" ;
-    priory:producesItem item:100140 ;
+    priory:producesItem item:100798 ;
     priory:outputQuantity 1 ;
     priory:requiresCurrency currency:PinchOfStardust ;
     priory:requiredQuantity 250 ;

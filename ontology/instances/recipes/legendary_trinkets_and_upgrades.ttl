@@ -208,7 +208,7 @@ recipe:forge_warbringer a priory:MysticForgeRecipe ;
 recipe:forge_aurora a priory:MysticForgeRecipe ;
     rdfs:label "Forge Aurora"@en ;
     priory:hasIngredientRequirement recipe:req_forge_aurora_82449,
-        recipe:req_forge_aurora_78340,
+        recipe:req_forge_aurora_71820,
         recipe:req_forge_aurora_82828,
         recipe:req_forge_aurora_82860 ;
     priory:outputQuantity 1 ;
@@ -217,7 +217,7 @@ recipe:forge_aurora a priory:MysticForgeRecipe ;
 recipe:forge_vision a priory:MysticForgeRecipe ;
     rdfs:label "Forge Vision"@en ;
     priory:hasIngredientRequirement recipe:req_forge_vision_91225,
-        recipe:req_forge_vision_78340,
+        recipe:req_forge_vision_71820,
         recipe:req_forge_vision_91228,
         recipe:req_forge_vision_91230 ;
     priory:outputQuantity 1 ;
@@ -226,7 +226,7 @@ recipe:forge_vision a priory:MysticForgeRecipe ;
 recipe:forge_coalescence a priory:MysticForgeRecipe ;
     rdfs:label "Forge Coalescence"@en ;
     priory:hasIngredientRequirement recipe:req_forge_coalescence_91223,
-        recipe:req_forge_coalescence_78340,
+        recipe:req_forge_coalescence_71820,
         recipe:req_forge_coalescence_91227,
         recipe:req_forge_coalescence_91229 ;
     priory:outputQuantity 1 ;
@@ -236,16 +236,16 @@ recipe:forge_conflux a priory:MysticForgeRecipe ;
     rdfs:label "Forge Conflux"@en ;
     priory:hasIngredientRequirement recipe:req_forge_conflux_81432,
         recipe:req_forge_conflux_93106,
-        recipe:req_forge_conflux_78340,
+        recipe:req_forge_conflux_71820,
         recipe:req_forge_conflux_81465 ;
     priory:outputQuantity 1 ;
     priory:producesItem item:93105 .
 
 recipe:forge_transcendence a priory:MysticForgeRecipe ;
     rdfs:label "Forge Transcendence"@en ;
-    priory:hasIngredientRequirement recipe:req_forge_transcendence_92992,
-        recipe:req_forge_transcendence_92993,
-        recipe:req_forge_transcendence_78340,
+    priory:hasIngredientRequirement recipe:req_forge_transcendence_93140,
+        recipe:req_forge_transcendence_93036,
+        recipe:req_forge_transcendence_71820,
         recipe:req_forge_transcendence_78432 ;
     priory:outputQuantity 1 ;
     priory:producesItem item:92991 .
@@ -253,18 +253,18 @@ recipe:forge_transcendence a priory:MysticForgeRecipe ;
 recipe:forge_legendary_relic a priory:MysticForgeRecipe ;
     rdfs:label "Forge Legendary Relic"@en ;
     priory:hasIngredientRequirement recipe:req_forge_legendary_relic_101583,
-        recipe:req_forge_legendary_relic_89276,
-        recipe:req_forge_legendary_relic_91471,
-        recipe:req_forge_legendary_relic_91490 ;
+        recipe:req_forge_legendary_relic_77451,
+        recipe:req_forge_legendary_relic_76530,
+        recipe:req_forge_legendary_relic_70867 ;
     priory:outputQuantity 1 ;
     priory:producesItem item:101582 .
 
 recipe:forge_legendary_rune a priory:MysticForgeRecipe ;
     rdfs:label "Forge Legendary Rune"@en ;
     priory:hasIngredientRequirement recipe:req_forge_legendary_rune_91537,
-        recipe:req_forge_legendary_rune_89276,
-        recipe:req_forge_legendary_rune_91490,
-        recipe:req_forge_legendary_rune_91471 ;
+        recipe:req_forge_legendary_rune_77451,
+        recipe:req_forge_legendary_rune_70867,
+        recipe:req_forge_legendary_rune_76530 ;
     priory:outputQuantity 1 ;
     priory:producesItem item:91536 .
 
@@ -286,7 +286,7 @@ recipe:req_forge_ad_infinitum_74156 a priory:IngredientRequirement ;
 
 recipe:req_forge_the_ascension_78430 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:78430 .
+    priory:requiresItem item:77509 .
 
 recipe:req_forge_the_ascension_78431 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -302,15 +302,15 @@ recipe:req_forge_the_ascension_19626 a priory:IngredientRequirement ;
 
 recipe:req_forge_warbringer_81464 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:81464 .
+    priory:requiresItem item:81467 .
 
 recipe:req_forge_warbringer_81463 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:81463 .
+    priory:requiresItem item:81478 .
 
 recipe:req_forge_warbringer_81465 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:81465 .
+    priory:requiresItem item:81371 .
 
 recipe:req_forge_warbringer_19626 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -318,11 +318,11 @@ recipe:req_forge_warbringer_19626 a priory:IngredientRequirement ;
 
 recipe:req_forge_aurora_82449 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:82449 .
+    priory:requiresItem item:81729 .
 
-recipe:req_forge_aurora_78340 a priory:IngredientRequirement ;
+recipe:req_forge_aurora_71820 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:78340 .
+    priory:requiresItem item:71820 .
 
 recipe:req_forge_aurora_82828 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -330,15 +330,15 @@ recipe:req_forge_aurora_82828 a priory:IngredientRequirement ;
 
 recipe:req_forge_aurora_82860 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:82860 .
+    priory:requiresItem item:81861 .
 
 recipe:req_forge_vision_91225 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:91225 .
 
-recipe:req_forge_vision_78340 a priory:IngredientRequirement ;
+recipe:req_forge_vision_71820 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:78340 .
+    priory:requiresItem item:71820 .
 
 recipe:req_forge_vision_91228 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -352,9 +352,9 @@ recipe:req_forge_coalescence_91223 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:91223 .
 
-recipe:req_forge_coalescence_78340 a priory:IngredientRequirement ;
+recipe:req_forge_coalescence_71820 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:78340 .
+    priory:requiresItem item:71820 .
 
 recipe:req_forge_coalescence_91227 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -372,25 +372,25 @@ recipe:req_forge_conflux_93106 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:93106 .
 
-recipe:req_forge_conflux_78340 a priory:IngredientRequirement ;
+recipe:req_forge_conflux_71820 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:78340 .
+    priory:requiresItem item:71820 .
 
 recipe:req_forge_conflux_81465 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:81465 .
+    priory:requiresItem item:81371 .
 
-recipe:req_forge_transcendence_92992 a priory:IngredientRequirement ;
+recipe:req_forge_transcendence_93140 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:92992 .
+    priory:requiresItem item:93140 .
 
-recipe:req_forge_transcendence_92993 a priory:IngredientRequirement ;
+recipe:req_forge_transcendence_93036 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:92993 .
+    priory:requiresItem item:93036 .
 
-recipe:req_forge_transcendence_78340 a priory:IngredientRequirement ;
+recipe:req_forge_transcendence_71820 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:78340 .
+    priory:requiresItem item:71820 .
 
 recipe:req_forge_transcendence_78432 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -400,48 +400,51 @@ recipe:req_forge_legendary_relic_101583 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:101583 .
 
-recipe:req_forge_legendary_relic_89276 a priory:IngredientRequirement ;
+recipe:req_forge_legendary_relic_77451 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:89276 .
+    priory:requiresItem item:77451 .
 
-recipe:req_forge_legendary_relic_91471 a priory:IngredientRequirement ;
+recipe:req_forge_legendary_relic_76530 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:91471 .
+    priory:requiresItem item:76530 .
 
-recipe:req_forge_legendary_relic_91490 a priory:IngredientRequirement ;
+recipe:req_forge_legendary_relic_70867 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:91490 .
+    priory:requiresItem item:70867 .
 
 recipe:req_forge_legendary_rune_91537 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
     priory:requiresItem item:91537 .
 
-recipe:req_forge_legendary_rune_89276 a priory:IngredientRequirement ;
+recipe:req_forge_legendary_rune_77451 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:89276 .
+    priory:requiresItem item:77451 .
 
-recipe:req_forge_legendary_rune_91490 a priory:IngredientRequirement ;
+recipe:req_forge_legendary_rune_70867 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:91490 .
+    priory:requiresItem item:70867 .
 
-recipe:req_forge_legendary_rune_91471 a priory:IngredientRequirement ;
+recipe:req_forge_legendary_rune_76530 a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:91471 .
+    priory:requiresItem item:76530 .
 
 # Intermediate Trinket, Backpack, and Upgrade Components
+item:70867 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Condensed Might"@en ; priory:gw2Id 70867 .
+item:76530 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Condensed Magic"@en ; priory:gw2Id 76530 .
 item:70842 a priory:CraftingMaterial, owl:NamedIndividual ; rdfs:label "Mordrem Lodestone"@en ; priory:gw2Id 70842 .
 item:74156 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of the Mists"@en ; priory:gw2Id 74156 .
 item:74157 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Infinity"@en ; priory:gw2Id 74157 .
 item:74978 a priory:Item, owl:NamedIndividual ; rdfs:label "Unbound"@en ; priory:gw2Id 74978 .
-item:78340 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Mystic Tribute"@en ; priory:gw2Id 78340 ; owl:sameAs item:79667 .
-item:78430 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of the Competitor"@en ; priory:gw2Id 78430 .
+item:71820 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Mystic Tribute"@en ; priory:gw2Id 71820 ; priory:hasRarity rarity:Legendary .
+item:77451 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Craftsmanship"@en ; priory:gw2Id 77451 .
+item:77509 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of the Competitor"@en ; priory:gw2Id 77509 .
 item:78431 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Ascension"@en ; priory:gw2Id 78431 .
 item:78432 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Skirmishing"@en ; priory:gw2Id 78432 .
 item:81432 a priory:Item, owl:NamedIndividual ; rdfs:label "Slumbering Conflux"@en ; priory:gw2Id 81432 .
-item:81463 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Warbringer"@en ; priory:gw2Id 81463 .
-item:81464 a priory:Item, owl:NamedIndividual ; rdfs:label "Commander's Compendium"@en ; priory:gw2Id 81464 .
-item:81465 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Conquering"@en ; priory:gw2Id 81465 .
-item:82449 a priory:Item, owl:NamedIndividual ; rdfs:label "Spark of Sentience"@en ; priory:gw2Id 82449 .
+item:81478 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Warfare"@en ; priory:gw2Id 81478 .
+item:81467 a priory:Item, owl:NamedIndividual ; rdfs:label "Warcry"@en ; priory:gw2Id 81467 .
+item:81371 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Conquering"@en ; priory:gw2Id 81371 .
+item:81729 a priory:Item, owl:NamedIndividual ; rdfs:label "Spark of Sentience"@en ; priory:gw2Id 81729 .
 item:82828 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Sentience"@en ; priory:gw2Id 82828 .
 item:91223 a priory:Item, owl:NamedIndividual ; rdfs:label "Coalescence I: Unbridled"@en ; priory:gw2Id 91223 .
 item:91225 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Visions of Istan"@en ; priory:gw2Id 91225 .
@@ -449,7 +452,7 @@ item:91227 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of the Murs
 item:91228 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Prescience"@en ; priory:gw2Id 91228 .
 item:91229 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of the Submerged"@en ; priory:gw2Id 91229 .
 item:91537 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Upgrades"@en ; priory:gw2Id 91537 .
-item:92992 a priory:Item, owl:NamedIndividual ; rdfs:label "Slumbering Transcendence"@en ; priory:gw2Id 92992 .
-item:92993 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Transcendence"@en ; priory:gw2Id 92993 .
+item:93140 a priory:Item, owl:NamedIndividual ; rdfs:label "Slumbering Transcendence"@en ; priory:gw2Id 93140 .
+item:93036 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of the Champion"@en ; priory:gw2Id 93036 .
 item:93106 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Conflux"@en ; priory:gw2Id 93106 .
 item:101583 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Relics"@en ; priory:gw2Id 101583 .

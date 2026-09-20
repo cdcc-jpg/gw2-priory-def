@@ -164,7 +164,7 @@ recipe:OnyxCorePromotion a priory:MysticForgeRecipe ;
         priory:requiredQuantity 2
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19732 ; # 1 Crystalline Dust
+        priory:requiresItem item:24277 ; # 1 Crystalline Dust
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;

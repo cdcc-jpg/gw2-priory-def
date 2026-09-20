@@ -1,0 +1,4051 @@
+{
+  "total_scanned_files": 742,
+  "total_unique_item_ids": 742,
+  "fatal_invalid_ids": [],
+  "label_mismatches": [
+    {
+      "item_id": 29181,
+      "ontology_label": "Rage",
+      "api_name": "Zap",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29180,
+      "ontology_label": "Howl",
+      "api_name": "The Legend",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29174,
+      "ontology_label": "The Legend",
+      "api_name": "Chaos Gun",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 19651,
+      "ontology_label": "Unpack Bolt Starter Kit from Set 1",
+      "api_name": "Gift of Quip",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 29173,
+      "ontology_label": "The Hunter",
+      "api_name": "The Energizer",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29175,
+      "ontology_label": "The Lover",
+      "api_name": "The Hunter",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 19661,
+      "ontology_label": "Unpack Bolt Starter Kit from Set 2",
+      "api_name": "Gift of The Predator",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 29166,
+      "ontology_label": "The Energizer",
+      "api_name": "Tooth of Frostfang",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29178,
+      "ontology_label": "The Bard",
+      "api_name": "The Lover",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29170,
+      "ontology_label": "Storm",
+      "api_name": "The Colossus",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29167,
+      "ontology_label": "Zap",
+      "api_name": "Spark",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 84176,
+      "ontology_label": "Forge Triumphant Hero's Warhelm",
+      "api_name": "Triumphant Hero's Warhelm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82963,
+      "ontology_label": "Forge Triumphant Hero's Pauldrons",
+      "api_name": "Triumphant Hero's Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83394,
+      "ontology_label": "Forge Triumphant Hero's Breastplate",
+      "api_name": "Triumphant Hero's Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82456,
+      "ontology_label": "Forge Triumphant Hero's Gauntlets",
+      "api_name": "Triumphant Hero's Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82196,
+      "ontology_label": "Forge Triumphant Hero's Legplates",
+      "api_name": "Triumphant Hero's Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82801,
+      "ontology_label": "Forge Triumphant Hero's Wargreaves",
+      "api_name": "Triumphant Hero's Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82437,
+      "ontology_label": "Forge Triumphant Hero's Faceguard",
+      "api_name": "Triumphant Hero's Faceguard",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82994,
+      "ontology_label": "Forge Triumphant Hero's Shoulderguards",
+      "api_name": "Triumphant Hero's Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84578,
+      "ontology_label": "Forge Triumphant Hero's Brigandine",
+      "api_name": "Triumphant Hero's Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84110,
+      "ontology_label": "Forge Triumphant Hero's Wristplates",
+      "api_name": "Triumphant Hero's Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82903,
+      "ontology_label": "Forge Triumphant Hero's Legguards",
+      "api_name": "Triumphant Hero's Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82093,
+      "ontology_label": "Forge Triumphant Hero's Shinplates",
+      "api_name": "Triumphant Hero's Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82902,
+      "ontology_label": "Forge Triumphant Hero's Masque",
+      "api_name": "Triumphant Hero's Masque",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82173,
+      "ontology_label": "Forge Triumphant Hero's Epaulets",
+      "api_name": "Triumphant Hero's Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83036,
+      "ontology_label": "Forge Triumphant Hero's Raiment",
+      "api_name": "Triumphant Hero's Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84629,
+      "ontology_label": "Forge Triumphant Hero's Armguards",
+      "api_name": "Triumphant Hero's Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83497,
+      "ontology_label": "Forge Triumphant Hero's Leggings",
+      "api_name": "Triumphant Hero's Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83289,
+      "ontology_label": "Forge Triumphant Hero's Footgear",
+      "api_name": "Triumphant Hero's Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84301,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Warhelm",
+      "api_name": "Mistforged Triumphant Hero's Warhelm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84181,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Pauldrons",
+      "api_name": "Mistforged Triumphant Hero's Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84481,
+      "ontology_label": "Forge Sublime Mistforged Triumphant Hero's Breastplate",
+      "api_name": "Sublime Mistforged Triumphant Hero's Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82348,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Gauntlets",
+      "api_name": "Mistforged Triumphant Hero's Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83702,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Legplates",
+      "api_name": "Mistforged Triumphant Hero's Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83094,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Wargreaves",
+      "api_name": "Mistforged Triumphant Hero's Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82180,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Faceguard",
+      "api_name": "Mistforged Triumphant Hero's Faceguard",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83087,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Shoulderguards",
+      "api_name": "Mistforged Triumphant Hero's Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82102,
+      "ontology_label": "Forge Sublime Mistforged Triumphant Hero's Brigandine",
+      "api_name": "Sublime Mistforged Triumphant Hero's Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82552,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Wristplates",
+      "api_name": "Mistforged Triumphant Hero's Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83862,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Legguards",
+      "api_name": "Mistforged Triumphant Hero's Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83699,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Shinplates",
+      "api_name": "Mistforged Triumphant Hero's Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82925,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Masque",
+      "api_name": "Mistforged Triumphant Hero's Masque",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83308,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Epaulets",
+      "api_name": "Mistforged Triumphant Hero's Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84508,
+      "ontology_label": "Forge Sublime Mistforged Triumphant Hero's Raiment",
+      "api_name": "Sublime Mistforged Triumphant Hero's Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82109,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Armguards",
+      "api_name": "Mistforged Triumphant Hero's Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82502,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Leggings",
+      "api_name": "Mistforged Triumphant Hero's Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83482,
+      "ontology_label": "Forge Mistforged Triumphant Hero's Footgear",
+      "api_name": "Mistforged Triumphant Hero's Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83921,
+      "ontology_label": "Forge Ardent Glorious Plate Helm",
+      "api_name": "Ardent Glorious Plate Helm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83127,
+      "ontology_label": "Forge Ardent Glorious Pauldrons",
+      "api_name": "Ardent Glorious Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83348,
+      "ontology_label": "Forge Ardent Glorious Breastplate",
+      "api_name": "Ardent Glorious Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82465,
+      "ontology_label": "Forge Ardent Glorious Gauntlets",
+      "api_name": "Ardent Glorious Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83323,
+      "ontology_label": "Forge Ardent Glorious Legplates",
+      "api_name": "Ardent Glorious Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84655,
+      "ontology_label": "Forge Ardent Glorious Wargreaves",
+      "api_name": "Ardent Glorious Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84643,
+      "ontology_label": "Forge Ardent Glorious Cap",
+      "api_name": "Ardent Glorious Cap",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83929,
+      "ontology_label": "Forge Ardent Glorious Shoulderguards",
+      "api_name": "Ardent Glorious Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82670,
+      "ontology_label": "Forge Ardent Glorious Brigandine",
+      "api_name": "Ardent Glorious Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82245,
+      "ontology_label": "Forge Ardent Glorious Wristplates",
+      "api_name": "Ardent Glorious Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82512,
+      "ontology_label": "Forge Ardent Glorious Legguards",
+      "api_name": "Ardent Glorious Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82214,
+      "ontology_label": "Forge Ardent Glorious Shinplates",
+      "api_name": "Ardent Glorious Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84633,
+      "ontology_label": "Forge Ardent Glorious Crown",
+      "api_name": "Ardent Glorious Crown",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83595,
+      "ontology_label": "Forge Ardent Glorious Epaulets",
+      "api_name": "Ardent Glorious Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83113,
+      "ontology_label": "Forge Ardent Glorious Raiment",
+      "api_name": "Ardent Glorious Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83162,
+      "ontology_label": "Forge Ardent Glorious Armguards",
+      "api_name": "Ardent Glorious Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 84546,
+      "ontology_label": "Forge Ardent Glorious Leggings",
+      "api_name": "Ardent Glorious Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 82519,
+      "ontology_label": "Forge Ardent Glorious Footgear",
+      "api_name": "Ardent Glorious Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89117,
+      "ontology_label": "Forge Mistforged Glorious Hero's Plate Helm",
+      "api_name": "Mistforged Glorious Hero's Plate Helm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89209,
+      "ontology_label": "Forge Mistforged Glorious Hero's Pauldrons",
+      "api_name": "Mistforged Glorious Hero's Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89152,
+      "ontology_label": "Forge Mistforged Glorious Hero's Breastplate",
+      "api_name": "Mistforged Glorious Hero's Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89093,
+      "ontology_label": "Forge Mistforged Glorious Hero's Gauntlets",
+      "api_name": "Mistforged Glorious Hero's Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89266,
+      "ontology_label": "Forge Mistforged Glorious Hero's Legplates",
+      "api_name": "Mistforged Glorious Hero's Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89252,
+      "ontology_label": "Forge Mistforged Glorious Hero's Wargreaves",
+      "api_name": "Mistforged Glorious Hero's Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89126,
+      "ontology_label": "Forge Mistforged Glorious Hero's Cap",
+      "api_name": "Mistforged Glorious Hero's Cap",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89234,
+      "ontology_label": "Forge Mistforged Glorious Hero's Shoulderguards",
+      "api_name": "Mistforged Glorious Hero's Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89183,
+      "ontology_label": "Forge Mistforged Glorious Hero's Brigandine",
+      "api_name": "Mistforged Glorious Hero's Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89134,
+      "ontology_label": "Forge Mistforged Glorious Hero's Wristplates",
+      "api_name": "Mistforged Glorious Hero's Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89094,
+      "ontology_label": "Forge Mistforged Glorious Hero's Legguards",
+      "api_name": "Mistforged Glorious Hero's Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89235,
+      "ontology_label": "Forge Mistforged Glorious Hero's Shinplates",
+      "api_name": "Mistforged Glorious Hero's Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89260,
+      "ontology_label": "Forge Mistforged Glorious Hero's Crown",
+      "api_name": "Mistforged Glorious Hero's Crown",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89158,
+      "ontology_label": "Forge Mistforged Glorious Hero's Epaulets",
+      "api_name": "Mistforged Glorious Hero's Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89174,
+      "ontology_label": "Forge Mistforged Glorious Hero's Raiment",
+      "api_name": "Mistforged Glorious Hero's Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89167,
+      "ontology_label": "Forge Mistforged Glorious Hero's Armguards",
+      "api_name": "Mistforged Glorious Hero's Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89101,
+      "ontology_label": "Forge Mistforged Glorious Hero's Leggings",
+      "api_name": "Mistforged Glorious Hero's Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89245,
+      "ontology_label": "Forge Mistforged Glorious Hero's Footgear",
+      "api_name": "Mistforged Glorious Hero's Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 95797,
+      "ontology_label": "Gift of Aurene",
+      "api_name": "Emperor Fish",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 95797,
+      "ontology_label": "Gift of Aurene",
+      "api_name": "Emperor Fish",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96001,
+      "ontology_label": "Aurene's Bite (Zhaitan Variant)",
+      "api_name": "Spotted Flounder",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96001,
+      "ontology_label": "Aurene's Bite (Zhaitan Variant)",
+      "api_name": "Spotted Flounder",
+      "file": "ontology/instances/legendaries/gen3_dragon_variants.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96001,
+      "ontology_label": "Aurene's Bite (Zhaitan Variant)",
+      "api_name": "Spotted Flounder",
+      "file": "ontology/instances/recipes/gen3_variant_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 98707,
+      "ontology_label": "Aurene's Insight (Kralkatorrik Variant)",
+      "api_name": "Kralkatorrik's Insight Skin",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 98707,
+      "ontology_label": "Aurene's Insight (Kralkatorrik Variant)",
+      "api_name": "Kralkatorrik's Insight Skin",
+      "file": "ontology/instances/legendaries/gen3_dragon_variants.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 96005,
+      "ontology_label": "Aurene's Weight (Primordus Variant)",
+      "api_name": "Togo's Masque",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 96005,
+      "ontology_label": "Aurene's Weight (Primordus Variant)",
+      "api_name": "Togo's Masque",
+      "file": "ontology/instances/legendaries/gen3_dragon_variants.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 96007,
+      "ontology_label": "Aurene's Flight (Soo-Won Variant)",
+      "api_name": "Starter Kit: Kudzu",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96007,
+      "ontology_label": "Aurene's Flight (Soo-Won Variant)",
+      "api_name": "Starter Kit: Kudzu",
+      "file": "ontology/instances/legendaries/gen3_dragon_variants.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96003,
+      "ontology_label": "Aurene's Rending (Mordremoth Variant)",
+      "api_name": "Watertight Bag",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96003,
+      "ontology_label": "Aurene's Rending (Mordremoth Variant)",
+      "api_name": "Watertight Bag",
+      "file": "ontology/instances/legendaries/gen3_dragon_variants.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96028,
+      "ontology_label": "Dragon's Rending",
+      "api_name": "Aurene's Scale",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 97783,
+      "ontology_label": "Dragon's Fang",
+      "api_name": "Aurene's Voice",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 96221,
+      "ontology_label": "Dragon's Bite",
+      "api_name": "Aurene's Wisdom",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 96221,
+      "ontology_label": "Aurene's Bite",
+      "api_name": "Aurene's Wisdom",
+      "file": "ontology/instances/recipes/gen3_variant_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 96002,
+      "ontology_label": "Aurene's Fang (Zhaitan Variant)",
+      "api_name": "Historical Weapon Diagram: Sword",
+      "file": "ontology/instances/legendaries/gen3_dragon_variants.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 19721,
+      "ontology_label": "Salvaging Rare Equipment",
+      "api_name": "Glob of Ectoplasm",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19721,
+      "ontology_label": "Trading Post Purchase of Ectoplasm",
+      "api_name": "Glob of Ectoplasm",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19721,
+      "ontology_label": "Silverwastes RIBA Meta Farm for Ectos",
+      "api_name": "Glob of Ectoplasm",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 91508,
+      "ontology_label": "Gift of Sigils",
+      "api_name": "Superior Rune of the Trapper",
+      "file": "ontology/instances/legendary_sigil.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 24283,
+      "ontology_label": "Potent Venom Sac",
+      "api_name": "Powerful Venom Sac",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 30689,
+      "ontology_label": "Forge Eternity",
+      "api_name": "Eternity",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 79895,
+      "ontology_label": "Ascended Shard of Glory",
+      "api_name": "Wegloop's Air Helmet",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 79895,
+      "ontology_label": "Aurora: Awakening",
+      "api_name": "Wegloop's Air Helmet",
+      "file": "ontology/instances/shared/mastery_requirements.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 78902,
+      "ontology_label": "PvP League Ticket",
+      "api_name": "Keep Construct Rubble",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 79900,
+      "ontology_label": "Star of Glory",
+      "api_name": "Trust",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 80894,
+      "ontology_label": "Legendary Spike (Certificate of Honor)",
+      "api_name": "Crimson Assassin Hammer Skin",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 81704,
+      "ontology_label": "Glob of Condensed Spirit Energy",
+      "api_name": "Jade Core",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 74286,
+      "ontology_label": "Jar of Distilled Glory",
+      "api_name": "Machined Dagger",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 79040,
+      "ontology_label": "Record of League Participation",
+      "api_name": "Attuned Healer's Besieger Ring",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Trinket"
+    },
+    {
+      "item_id": 75960,
+      "ontology_label": "Record of League Victories",
+      "api_name": "Distilled Essence of Jormag",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 20798,
+      "ontology_label": "Eldritch Scroll",
+      "api_name": "Siege Novice's Guide",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 79230,
+      "ontology_label": "Mist Core Fragment",
+      "api_name": "Integrated Fractal Matrix",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 80850,
+      "ontology_label": "Gift of War Prosperity",
+      "api_name": "Ardent Glorious Cap Skin",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 80851,
+      "ontology_label": "Gift of War Dedication",
+      "api_name": "Ardent Glorious Shinplate Skin",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 80852,
+      "ontology_label": "Gift of War Prowess",
+      "api_name": "Regrown Caladbolg",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 80860,
+      "ontology_label": "Gift of Competitive Prosperity",
+      "api_name": "Mini Krytan Floppy Fish",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "MiniPet"
+    },
+    {
+      "item_id": 80861,
+      "ontology_label": "Gift of Competitive Dedication",
+      "api_name": "Shield of the Goddess Skin",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 80862,
+      "ontology_label": "Gift of Competitive Prowess",
+      "api_name": "Box of Super Adventure Box Goods",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 81330,
+      "ontology_label": "Triumphant Hero's Warhelm (Precursor)",
+      "api_name": "Triumphant Hero's Warhelm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81333,
+      "ontology_label": "Triumphant Hero's Pauldrons (Precursor)",
+      "api_name": "Triumphant Hero's Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81304,
+      "ontology_label": "Triumphant Hero's Breastplate (Precursor)",
+      "api_name": "Triumphant Hero's Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81349,
+      "ontology_label": "Triumphant Hero's Gauntlets (Precursor)",
+      "api_name": "Triumphant Hero's Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81418,
+      "ontology_label": "Triumphant Hero's Legplates (Precursor)",
+      "api_name": "Triumphant Hero's Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81336,
+      "ontology_label": "Triumphant Hero's Wargreaves (Precursor)",
+      "api_name": "Triumphant Hero's Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81315,
+      "ontology_label": "Triumphant Hero's Faceguard (Precursor)",
+      "api_name": "Triumphant Hero's Faceguard",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81446,
+      "ontology_label": "Triumphant Hero's Shoulderguards (Precursor)",
+      "api_name": "Triumphant Hero's Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81434,
+      "ontology_label": "Triumphant Hero's Brigandine (Precursor)",
+      "api_name": "Triumphant Hero's Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81489,
+      "ontology_label": "Triumphant Hero's Wristplates (Precursor)",
+      "api_name": "Triumphant Hero's Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81386,
+      "ontology_label": "Triumphant Hero's Legguards (Precursor)",
+      "api_name": "Triumphant Hero's Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81420,
+      "ontology_label": "Triumphant Hero's Shinplates (Precursor)",
+      "api_name": "Triumphant Hero's Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81476,
+      "ontology_label": "Triumphant Hero's Masque (Precursor)",
+      "api_name": "Triumphant Hero's Masque",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81285,
+      "ontology_label": "Triumphant Hero's Epaulets (Precursor)",
+      "api_name": "Triumphant Hero's Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81338,
+      "ontology_label": "Triumphant Hero's Raiment (Precursor)",
+      "api_name": "Triumphant Hero's Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81428,
+      "ontology_label": "Triumphant Hero's Armguards (Precursor)",
+      "api_name": "Triumphant Hero's Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81279,
+      "ontology_label": "Triumphant Hero's Leggings (Precursor)",
+      "api_name": "Triumphant Hero's Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81500,
+      "ontology_label": "Triumphant Hero's Footgear (Precursor)",
+      "api_name": "Triumphant Hero's Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81498,
+      "ontology_label": "Mistforged Triumphant Hero's Warhelm (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Warhelm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81375,
+      "ontology_label": "Mistforged Triumphant Hero's Pauldrons (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81509,
+      "ontology_label": "Sublime Mistforged Triumphant Hero's Breastplate (Precursor)",
+      "api_name": "Sublime Mistforged Triumphant Hero's Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81458,
+      "ontology_label": "Mistforged Triumphant Hero's Gauntlets (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81340,
+      "ontology_label": "Mistforged Triumphant Hero's Legplates (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81437,
+      "ontology_label": "Mistforged Triumphant Hero's Wargreaves (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81325,
+      "ontology_label": "Mistforged Triumphant Hero's Faceguard (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Faceguard",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81471,
+      "ontology_label": "Mistforged Triumphant Hero's Shoulderguards (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81483,
+      "ontology_label": "Sublime Mistforged Triumphant Hero's Brigandine (Precursor)",
+      "api_name": "Sublime Mistforged Triumphant Hero's Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81286,
+      "ontology_label": "Mistforged Triumphant Hero's Wristplates (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81527,
+      "ontology_label": "Mistforged Triumphant Hero's Legguards (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81422,
+      "ontology_label": "Mistforged Triumphant Hero's Shinplates (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81487,
+      "ontology_label": "Mistforged Triumphant Hero's Masque (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Masque",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81482,
+      "ontology_label": "Mistforged Triumphant Hero's Epaulets (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81365,
+      "ontology_label": "Sublime Mistforged Triumphant Hero's Raiment (Precursor)",
+      "api_name": "Sublime Mistforged Triumphant Hero's Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81510,
+      "ontology_label": "Mistforged Triumphant Hero's Armguards (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81397,
+      "ontology_label": "Mistforged Triumphant Hero's Leggings (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81419,
+      "ontology_label": "Mistforged Triumphant Hero's Footgear (Precursor)",
+      "api_name": "Mistforged Triumphant Hero's Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67145,
+      "ontology_label": "Ardent Glorious Plate Helm (Precursor)",
+      "api_name": "Ardent Glorious Plate Helm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67147,
+      "ontology_label": "Ardent Glorious Pauldrons (Precursor)",
+      "api_name": "Ardent Glorious Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67143,
+      "ontology_label": "Ardent Glorious Breastplate (Precursor)",
+      "api_name": "Ardent Glorious Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67144,
+      "ontology_label": "Ardent Glorious Gauntlets (Precursor)",
+      "api_name": "Ardent Glorious Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67146,
+      "ontology_label": "Ardent Glorious Legplates (Precursor)",
+      "api_name": "Ardent Glorious Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67142,
+      "ontology_label": "Ardent Glorious Wargreaves (Precursor)",
+      "api_name": "Ardent Glorious Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67156,
+      "ontology_label": "Ardent Glorious Cap (Precursor)",
+      "api_name": "Ardent Glorious Cap",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67158,
+      "ontology_label": "Ardent Glorious Shoulderguards (Precursor)",
+      "api_name": "Ardent Glorious Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67115,
+      "ontology_label": "Ardent Glorious Brigandine (Precursor)",
+      "api_name": "Ardent Glorious Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67117,
+      "ontology_label": "Ardent Glorious Wristplates (Precursor)",
+      "api_name": "Ardent Glorious Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67157,
+      "ontology_label": "Ardent Glorious Legguards (Precursor)",
+      "api_name": "Ardent Glorious Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67128,
+      "ontology_label": "Ardent Glorious Shinplates (Precursor)",
+      "api_name": "Ardent Glorious Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67141,
+      "ontology_label": "Ardent Glorious Crown (Precursor)",
+      "api_name": "Ardent Glorious Crown",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67152,
+      "ontology_label": "Ardent Glorious Epaulets (Precursor)",
+      "api_name": "Ardent Glorious Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67118,
+      "ontology_label": "Ardent Glorious Raiment (Precursor)",
+      "api_name": "Ardent Glorious Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67131,
+      "ontology_label": "Ardent Glorious Armguards (Precursor)",
+      "api_name": "Ardent Glorious Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67151,
+      "ontology_label": "Ardent Glorious Leggings (Precursor)",
+      "api_name": "Ardent Glorious Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 67148,
+      "ontology_label": "Ardent Glorious Footgear (Precursor)",
+      "api_name": "Ardent Glorious Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89217,
+      "ontology_label": "Mistforged Glorious Hero's Plate Helm (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Plate Helm",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89089,
+      "ontology_label": "Mistforged Glorious Hero's Pauldrons (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Pauldrons",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89151,
+      "ontology_label": "Mistforged Glorious Hero's Breastplate (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Breastplate",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89177,
+      "ontology_label": "Mistforged Glorious Hero's Gauntlets (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Gauntlets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89121,
+      "ontology_label": "Mistforged Glorious Hero's Legplates (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Legplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89244,
+      "ontology_label": "Mistforged Glorious Hero's Wargreaves (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Wargreaves",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89110,
+      "ontology_label": "Mistforged Glorious Hero's Cap (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Cap",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89208,
+      "ontology_label": "Mistforged Glorious Hero's Shoulderguards (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Shoulderguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89168,
+      "ontology_label": "Mistforged Glorious Hero's Brigandine (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Brigandine",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89171,
+      "ontology_label": "Mistforged Glorious Hero's Wristplates (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Wristplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89242,
+      "ontology_label": "Mistforged Glorious Hero's Legguards (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Legguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89161,
+      "ontology_label": "Mistforged Glorious Hero's Shinplates (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Shinplates",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89190,
+      "ontology_label": "Mistforged Glorious Hero's Crown (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Crown",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89138,
+      "ontology_label": "Mistforged Glorious Hero's Epaulets (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Epaulets",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89204,
+      "ontology_label": "Mistforged Glorious Hero's Raiment (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Raiment",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89099,
+      "ontology_label": "Mistforged Glorious Hero's Armguards (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Armguards",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89160,
+      "ontology_label": "Mistforged Glorious Hero's Leggings (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Leggings",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89230,
+      "ontology_label": "Mistforged Glorious Hero's Footgear (Precursor)",
+      "api_name": "Mistforged Glorious Hero's Footgear",
+      "file": "ontology/instances/recipes/competitive_armor_and_eternity_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 19629,
+      "ontology_label": "Gift of Might",
+      "api_name": "Gift of History",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19628,
+      "ontology_label": "Gift of Magic",
+      "api_name": "Unicorn Statue",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19678,
+      "ontology_label": "Gift of Battle Reward Track",
+      "api_name": "Gift of Battle",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19714,
+      "ontology_label": "Ancient Wood Plank",
+      "api_name": "Seasoned Wood Plank",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 24310,
+      "ontology_label": "Trading Post Purchase of Onyx Lodestone",
+      "api_name": "Onyx Lodestone",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 24310,
+      "ontology_label": "Twilight Arbor (Aetherpath) Farm",
+      "api_name": "Onyx Lodestone",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 24310,
+      "ontology_label": "Crucible of Eternity Farm",
+      "api_name": "Onyx Lodestone",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 24310,
+      "ontology_label": "Orr Risen Farm",
+      "api_name": "Onyx Lodestone",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 29165,
+      "ontology_label": "Spark",
+      "api_name": "Berserker's Warhorn",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29168,
+      "ontology_label": "Chaos Gun",
+      "api_name": "The Bard",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29169,
+      "ontology_label": "Tooth of Frostfang",
+      "api_name": "Dawn",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29171,
+      "ontology_label": "Leaf of Kudzu",
+      "api_name": "Carcharias",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29172,
+      "ontology_label": "The Colossus",
+      "api_name": "Leaf of Kudzu",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29179,
+      "ontology_label": "Rodgort's Flame",
+      "api_name": "Rage",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29182,
+      "ontology_label": "Venom",
+      "api_name": "Rodgort's Flame",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29183,
+      "ontology_label": "Carcharias",
+      "api_name": "Venom",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29184,
+      "ontology_label": "Dawn",
+      "api_name": "Howl",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 19647,
+      "ontology_label": "Gift of Darkness",
+      "api_name": "Gift of Sunrise",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19662,
+      "ontology_label": "Bottle of Elonian Wine",
+      "api_name": "Gift of Howler",
+      "file": "ontology/instances/shared/common_items.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19662,
+      "ontology_label": "Bottle of Elonian Wine",
+      "api_name": "Gift of Howler",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19627,
+      "ontology_label": "Gift of Fortune",
+      "api_name": "Gift of Nature",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19626,
+      "ontology_label": "Gift of Mastery",
+      "api_name": "Gift of Fortune",
+      "file": "ontology/instances/shared/legendary_base_components.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19626,
+      "ontology_label": "Gift of Mastery",
+      "api_name": "Gift of Fortune",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 73580,
+      "ontology_label": "Shard of Glory",
+      "api_name": "Yassith's Impaler",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 19663,
+      "ontology_label": "Bloodstone Shard",
+      "api_name": "Bottle of Elonian Wine",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 70797,
+      "ontology_label": "Gift of the HMS Divinity",
+      "api_name": "Gift of the Fleet",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 71385,
+      "ontology_label": "Nevermore Research",
+      "api_name": "Aerator",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 74677,
+      "ontology_label": "Gift of the Chak",
+      "api_name": "Flame Ram Blueprint",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 74677,
+      "ontology_label": "Gift of the Chak",
+      "api_name": "Flame Ram Blueprint",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 75209,
+      "ontology_label": "HOPE Research",
+      "api_name": "Howler Vol. 2",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 76160,
+      "ontology_label": "Astralaria Research",
+      "api_name": "Recipe: Laranthir's Warhammer",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 78054,
+      "ontology_label": "Tiger Training",
+      "api_name": "Moto's Unstable Bauble Infusion: Blue",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 81208,
+      "ontology_label": "Shard of the Crown",
+      "api_name": "Keepsake Shield Skin",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 81051,
+      "ontology_label": "Shard of the Ambition",
+      "api_name": "Shard of Liturgy",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 82069,
+      "ontology_label": "Shard of the Call",
+      "api_name": "Shard of Arah",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 83410,
+      "ontology_label": "Funerary Incense",
+      "api_name": "Supreme Rune of Holding",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 83410,
+      "ontology_label": "Funerary Incense",
+      "api_name": "Supreme Rune of Holding",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 84024,
+      "ontology_label": "Gift of the Rider",
+      "api_name": "Shadi's Shopping List",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 87689,
+      "ontology_label": "Shard of the Khan-Ur",
+      "api_name": "Roller Beetle Treat",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 88738,
+      "ontology_label": "Shard of the Feathered Serpent",
+      "api_name": "Shard of Tlehco",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 81961,
+      "ontology_label": "Shard of the Brightest Light",
+      "api_name": "Shard of the Crown",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 90553,
+      "ontology_label": "Shard of the Resolution",
+      "api_name": "Skyscale Egg #10",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 91878,
+      "ontology_label": "Shard of the Voice",
+      "api_name": "Cilantro and Cured Meat Flatbread",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 71382,
+      "ontology_label": "Gift of Nevermore",
+      "api_name": "Reclaimed Greatsword",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 71384,
+      "ontology_label": "The Raven Staff",
+      "api_name": "Wad of Mud",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 75206,
+      "ontology_label": "Gift of HOPE",
+      "api_name": "Scrap Rifle Field Test: Silver",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 75208,
+      "ontology_label": "Prototype",
+      "api_name": "Mystic Keystone Crystal",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 75919,
+      "ontology_label": "Gift of Insights",
+      "api_name": "Fractal Encryption",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 75919,
+      "ontology_label": "Gift of Maguuma",
+      "api_name": "Fractal Encryption",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 76157,
+      "ontology_label": "Gift of Astralaria",
+      "api_name": "Essence of Diving",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 76159,
+      "ontology_label": "The Mechanism",
+      "api_name": "Recipe: Minstrel's Exalted Coat",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 78051,
+      "ontology_label": "Gift of Chuka and Champawat",
+      "api_name": "Kaiser Snake Hammer",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 78053,
+      "ontology_label": "Tigris",
+      "api_name": "Kaiser Snake Greatsword Skin",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 79563,
+      "ontology_label": "Friendship",
+      "api_name": "Carnival Short Bow",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 79801,
+      "ontology_label": "Gift of Eureka",
+      "api_name": "Koda's Reach",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 81205,
+      "ontology_label": "Gift of the Shining Blade",
+      "api_name": "Ancient Asuran Power Source",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 81207,
+      "ontology_label": "Save the Queen",
+      "api_name": "Sigil of Revocation",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 81744,
+      "ontology_label": "Gift of Flames of War",
+      "api_name": "Albino Orchid Blossom",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 81780,
+      "ontology_label": "Liturgy",
+      "api_name": "Gleam of Sentience",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 81684,
+      "ontology_label": "Gift of Sharur",
+      "api_name": "Gift of Arah",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 81634,
+      "ontology_label": "The Call",
+      "api_name": "Might of Arah",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 89036,
+      "ontology_label": "The Ambition",
+      "api_name": "The Cure",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 86674,
+      "ontology_label": "Gift of the Binding of Ipos",
+      "api_name": "Enchanted Colorful Snowball (Red)",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 86676,
+      "ontology_label": "Ars Goetia",
+      "api_name": "Recipe: Tixx's Bastion",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 87686,
+      "ontology_label": "Gift of the Claw of the Khan-Ur",
+      "api_name": "Recipe: Nerashi's Footwear",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 87688,
+      "ontology_label": "Touch of the Khan-Ur",
+      "api_name": "Plaguedoctor's Exalted Boots",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 88954,
+      "ontology_label": "Gift of Xiuquatl",
+      "api_name": "Bag of Lodestones",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 88956,
+      "ontology_label": "Tlehco",
+      "api_name": "Input Mist-Entangled Item",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 89853,
+      "ontology_label": "Gift of Pharus",
+      "api_name": "Diviner's Draconic Boots",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 89855,
+      "ontology_label": "Spero",
+      "api_name": "Recipe: Steelstar's Impaler",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 90883,
+      "ontology_label": "Epitaph",
+      "api_name": "Exitare",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 91875,
+      "ontology_label": "Gift of Verdarach",
+      "api_name": "Varietal Herb Seeds",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 87764,
+      "ontology_label": "Call to Arms",
+      "api_name": "Call of the Void",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 81743,
+      "ontology_label": "Gift of Desert Mastery",
+      "api_name": "Unstable Cosmic Essence",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 75498,
+      "ontology_label": "Gift of Maguuma Mastery",
+      "api_name": "Pile of Beryl Dust",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 96804,
+      "ontology_label": "Gift of the Siege Turtle",
+      "api_name": "Bonefish",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 95621,
+      "ontology_label": "Gift of the Jade Fleet",
+      "api_name": "Gift of New Kaineng City",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 95802,
+      "ontology_label": "Dragon's Tail",
+      "api_name": "Mount Energy Booster 2",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "JadeTechModule"
+    },
+    {
+      "item_id": 96191,
+      "ontology_label": "Dragon's Breath",
+      "api_name": "Payara",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 96900,
+      "ontology_label": "Dragon's Insight",
+      "api_name": "Saltspray Longbow",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 97067,
+      "ontology_label": "Dragon's Voice",
+      "api_name": "Recipe: Ancient Kraken Tassets",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 97269,
+      "ontology_label": "Dragon's Weight",
+      "api_name": "Mai Trin's Magnificent Coffer",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 97365,
+      "ontology_label": "Dragon's Claw",
+      "api_name": "Threat Assessment Manual",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 97415,
+      "ontology_label": "Dragon's Gaze",
+      "api_name": "Recipe: Togo's Wand",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 97486,
+      "ontology_label": "Dragon's Persuasion",
+      "api_name": "Jade Tech Dagger",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 96000,
+      "ontology_label": "Memory of Aurene",
+      "api_name": "Recipe: Tier 9 Core",
+      "file": "ontology/instances/recipes/gen3_variant_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 88770,
+      "ontology_label": "Legendary Divination",
+      "api_name": "Crystal Infusion of Boon Duration",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 77474,
+      "ontology_label": "The Ascension IV: League Professional",
+      "api_name": "The Ascension",
+      "file": "ontology/instances/shared/mastery_requirements.ttl",
+      "type": "Back"
+    },
+    {
+      "item_id": 79401,
+      "ontology_label": "Bloodstone Ruby",
+      "api_name": "Destroyer Weapon Crate",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 80131,
+      "ontology_label": "Perfected Envoy Vestments",
+      "api_name": "Perfected Envoy Mantle",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80190,
+      "ontology_label": "Perfected Envoy Shoulderguards",
+      "api_name": "Perfected Envoy Vestments",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80200,
+      "ontology_label": "Perfected Envoy Hood",
+      "api_name": "Samarog's Stash",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 80248,
+      "ontology_label": "Perfected Envoy Greaves",
+      "api_name": "Perfected Envoy Cowl",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80252,
+      "ontology_label": "Perfected Envoy Vambraces",
+      "api_name": "Perfected Envoy Leggings",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80258,
+      "ontology_label": "Perfected Envoy Breastplate",
+      "api_name": "Thackeray's Seraph Insignia",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 80281,
+      "ontology_label": "Perfected Envoy Leggings",
+      "api_name": "Perfected Envoy Boots",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80356,
+      "ontology_label": "Perfected Envoy Mantle",
+      "api_name": "Perfected Envoy Pants",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80384,
+      "ontology_label": "Perfected Envoy Helm",
+      "api_name": "Perfected Envoy Helmet",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80557,
+      "ontology_label": "Perfected Envoy Boots",
+      "api_name": "Perfected Envoy Greaves",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 81908,
+      "ontology_label": "Vision: Awakening",
+      "api_name": "Aurora",
+      "file": "ontology/instances/shared/mastery_requirements.ttl",
+      "type": "Trinket"
+    },
+    {
+      "item_id": 80145,
+      "ontology_label": "Perfected Envoy Gauntlets",
+      "api_name": "Perfected Envoy Shoulderpads",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 80161,
+      "ontology_label": "Perfected Envoy Shoes",
+      "api_name": "Perfected Envoy Vambraces",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 43775,
+      "ontology_label": "Provisioner Token",
+      "api_name": "Celestial Orichalcum Imbued Inscription",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 43775,
+      "ontology_label": "Provisioner Token",
+      "api_name": "Celestial Orichalcum Imbued Inscription",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 77700,
+      "ontology_label": "Legendary Insight",
+      "api_name": "Monkey Statue",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 77700,
+      "ontology_label": "Legendary Insight",
+      "api_name": "Monkey Statue",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 95380,
+      "ontology_label": "Ad Infinitum IV: Upper Bounds",
+      "api_name": "Prismatic Champion's Regalia",
+      "file": "ontology/instances/shared/mastery_requirements.ttl",
+      "type": "Trinket"
+    },
+    {
+      "item_id": 74156,
+      "ontology_label": "Gift of the Mists",
+      "api_name": "Guild PvP Reward Track",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 74157,
+      "ontology_label": "Gift of Infinity",
+      "api_name": "Recipe: Bowl of Curry Mussel Soup",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 74978,
+      "ontology_label": "Unbound",
+      "api_name": "Superior Rune of the Dragonhunter",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 78431,
+      "ontology_label": "Gift of Ascension",
+      "api_name": "Soldier's Green Wood Harpoon Gun of Force",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 78432,
+      "ontology_label": "Gift of Skirmishing",
+      "api_name": "Recipe: Crude Leather Book",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 81432,
+      "ontology_label": "Slumbering Conflux",
+      "api_name": "Charr Car Tactic",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 82828,
+      "ontology_label": "Gift of Sentience",
+      "api_name": "Mordant Revolver",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 91223,
+      "ontology_label": "Coalescence I: Unbridled",
+      "api_name": "Adina's Nexus of the Assaulter",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 91225,
+      "ontology_label": "Visions of Istan",
+      "api_name": "Gift of Compassion",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 91227,
+      "ontology_label": "Gift of the Mursaat",
+      "api_name": "Shimmerwing Skyscale Skin",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 91228,
+      "ontology_label": "Gift of Prescience",
+      "api_name": "Cardinal Sabir's Top-Tier Supplies",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 91229,
+      "ontology_label": "Gift of the Submerged",
+      "api_name": "Adina's Rifle of the Assaulter",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 91537,
+      "ontology_label": "Gift of Upgrades",
+      "api_name": "Superior Sigil of Elemental Slaying",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 93106,
+      "ontology_label": "Gift of Conflux",
+      "api_name": "Chest of the Visionary Echoes",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 101583,
+      "ontology_label": "Gift of Relics",
+      "api_name": "Banner of the Bastion of the Celestial",
+      "file": "ontology/instances/recipes/legendary_trinkets_and_upgrades.ttl",
+      "type": "Back"
+    },
+    {
+      "item_id": 91230,
+      "ontology_label": "Gift of Arid Mastery",
+      "api_name": "Peerless Assaulter Greatbow",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 2059,
+      "ontology_label": "Experience Booster",
+      "api_name": "Shaman's Reinforced Scale Legs of Divinity",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 42970,
+      "ontology_label": "Heroic Booster",
+      "api_name": "Additional Crafting License",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 78954,
+      "ontology_label": "Black Lion Booster",
+      "api_name": "Shining Blade Bounty Notice: Varre the Underhanded",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 67037,
+      "ontology_label": "Candy Corn Gobbler",
+      "api_name": "Raiment of the Lich Outfit",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 79523,
+      "ontology_label": "Snowflake Gobbler",
+      "api_name": "Mursaat Wings Backpack",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 19640,
+      "ontology_label": "Gift of Ascalon",
+      "api_name": "Wolf Statue",
+      "file": "ontology/instances/shared/common_items.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19640,
+      "ontology_label": "Gift of Ascalon",
+      "api_name": "Wolf Statue",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19665,
+      "ontology_label": "Philosopher's Stone",
+      "api_name": "Gift of the Nobleman",
+      "file": "ontology/instances/shared/common_items.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19665,
+      "ontology_label": "Philosopher's Stone",
+      "api_name": "Gift of the Nobleman",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19665,
+      "ontology_label": "Philosopher's Stone",
+      "api_name": "Gift of the Nobleman",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19674,
+      "ontology_label": "Bloodstone Shard",
+      "api_name": "Gift of Mastery",
+      "file": "ontology/instances/shared/common_items.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19674,
+      "ontology_label": "Bloodstone Shard",
+      "api_name": "Gift of Mastery",
+      "file": "ontology/instances/shared/legendary_base_components.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19674,
+      "ontology_label": "Bloodstone Shard",
+      "api_name": "Gift of Mastery",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19674,
+      "ontology_label": "Purchase Bloodstone Shard from Miyani",
+      "api_name": "Gift of Mastery",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19746,
+      "ontology_label": "Elaborate Totem",
+      "api_name": "Bolt of Gossamer",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 78895,
+      "ontology_label": "WvW Skirmish Claim Ticket",
+      "api_name": "Malicious White Mantle Staff",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 79418,
+      "ontology_label": "Integrated Fractal Matrix",
+      "api_name": "Mystic Runestone",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 76839,
+      "ontology_label": "Ball of Dark Energy",
+      "api_name": "Milling Basin",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl",
+      "type": "CraftingMaterial"
+    },
+    {
+      "item_id": 90011,
+      "ontology_label": "Armistice Bastion Pass",
+      "api_name": "Visage of the Great Boar Firework",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 82081,
+      "ontology_label": "Invitation to \\",
+      "api_name": "Invitation to \"Lily of the Elon\"",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 75479,
+      "ontology_label": "Noble's Folly Pass",
+      "api_name": "Itzel Hunting Tactics",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 82791,
+      "ontology_label": "Champion's Rest Pass",
+      "api_name": "Superior Rune of the Deadeye",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 82791,
+      "ontology_label": "Gift of Bloodstone Magic",
+      "api_name": "Superior Rune of the Deadeye",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "UpgradeComponent"
+    },
+    {
+      "item_id": 100788,
+      "ontology_label": "Wizard's Tower Teleportation Scroll",
+      "api_name": "Large Pinch of Stardust",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 92055,
+      "ontology_label": "Invitation to the Eye of the North",
+      "api_name": "Mini Murakai, Doomlore's Bane",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "MiniPet"
+    },
+    {
+      "item_id": 87400,
+      "ontology_label": "Runecrafter's Salvage-o-Matic",
+      "api_name": "Mini Yellow Griffon Hatchling",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "MiniPet"
+    },
+    {
+      "item_id": 35976,
+      "ontology_label": "Permanent Bank Access Contract",
+      "api_name": "Personal Trader Express",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 35977,
+      "ontology_label": "Permanent Black Lion Merchant Contract",
+      "api_name": "Personal Merchant Express",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 35978,
+      "ontology_label": "Permanent Trading Post Express Contract",
+      "api_name": "Permanent Bank Access Express",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 35984,
+      "ontology_label": "Permanent Hair Stylist Contract",
+      "api_name": "Permanent Bank Access Contract",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 84950,
+      "ontology_label": "Permanent Tool Delivery Box",
+      "api_name": "Red Choya Kite",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 91876,
+      "ontology_label": "Endless Repair Canister",
+      "api_name": "Salsa-Topped Veggie Flatbread",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 90002,
+      "ontology_label": "Hlish Hiss",
+      "api_name": "Boar Statue",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 81752,
+      "ontology_label": "Living World Season 3 Portal Tome",
+      "api_name": "Season 3 Portal Tome",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Gizmo"
+    },
+    {
+      "item_id": 92850,
+      "ontology_label": "Icebrood Saga Portal Tome",
+      "api_name": "Mighty Supplejack",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 70010,
+      "ontology_label": "Permanent Mystic Forge Conduit",
+      "api_name": "Mystic Forge Conduit",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 19677,
+      "ontology_label": "100% Core Tyria Map Completion",
+      "api_name": "Gift of Exploration",
+      "file": "ontology/instances/shared/core_exploration.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 19677,
+      "ontology_label": "100% Core Tyria Map Completion",
+      "api_name": "Gift of Exploration",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 8941,
+      "ontology_label": "Heavy Crafting Bag",
+      "api_name": "Leather Bag",
+      "file": "ontology/instances/shared/currency_exchange_networks.ttl",
+      "type": "Bag"
+    },
+    {
+      "item_id": 100878,
+      "ontology_label": "Bag of Coins",
+      "api_name": "Bag of Coins (1 Gold)",
+      "file": "ontology/instances/shared/currency_exchange_networks.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 29185,
+      "ontology_label": "Trading Post Purchase of Dusk",
+      "api_name": "Dusk",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29185,
+      "ontology_label": "Wizard's Vault Exchange for Dusk",
+      "api_name": "Dusk",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 29185,
+      "ontology_label": "The Experimental Nightsword (Dusk Collection)",
+      "api_name": "Dusk",
+      "file": "ontology/instances/twilight_journey_web.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 94875,
+      "ontology_label": "Memory of Twilight",
+      "api_name": "Etherbound Scepter Skin",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 94917,
+      "ontology_label": "Memory of Sunrise",
+      "api_name": "Crimson Vanquisher Mace",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 83694,
+      "ontology_label": "Gift of the Oasis",
+      "api_name": "Book of Vlast Page 07",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 83008,
+      "ontology_label": "Gift of the Highlands",
+      "api_name": "Piece of Rare Unidentified Gear",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 83471,
+      "ontology_label": "Gift of the Riverlands",
+      "api_name": "Harrier's Bounty Hunter's Cowl",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Armor"
+    },
+    {
+      "item_id": 83416,
+      "ontology_label": "Gift of the Desolation",
+      "api_name": "Recipe: Sunspear Firelight",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 100424,
+      "ontology_label": "Gift of the Cosmos",
+      "api_name": "Rabid Skyscale Pistol",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Weapon"
+    },
+    {
+      "item_id": 100063,
+      "ontology_label": "Gift of Celestial Knowledge",
+      "api_name": "Relic of Surging",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Relic"
+    },
+    {
+      "item_id": 92203,
+      "ontology_label": "Eitrite Ingot",
+      "api_name": "Equipment Template Expansion",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 82701,
+      "ontology_label": "Gift of Dragon Magic",
+      "api_name": "Shadows Intel: Gold",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Container"
+    },
+    {
+      "item_id": 86036,
+      "ontology_label": "Gift of the Desert Mastery",
+      "api_name": "Gift of Desert Mastery",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 79548,
+      "ontology_label": "Gift of Glory",
+      "api_name": "Encrusted Ring",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 79547,
+      "ontology_label": "Gift of War",
+      "api_name": "Large Crystal Block of the Solid Ocean",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "Consumable"
+    },
+    {
+      "item_id": 79585,
+      "ontology_label": "Cube of Annihilation",
+      "api_name": "Mini Holographic Taimi",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl",
+      "type": "MiniPet"
+    },
+    {
+      "item_id": 19623,
+      "ontology_label": "Gift of Metal",
+      "api_name": "Gift of Energy",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 20797,
+      "ontology_label": "Icy Runestone",
+      "api_name": "Bloodstone Shard",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "Trophy"
+    },
+    {
+      "item_id": 24562,
+      "ontology_label": "Superior Sigil of Force",
+      "api_name": "Superior Sigil of Strength",
+      "file": "ontology/instances/twilight_gen1.ttl",
+      "type": "UpgradeComponent"
+    }
+  ],
+  "rarity_mismatches": [
+    {
+      "item_id": 96978,
+      "label": "Antique Summoning Stone",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 97102,
+      "label": "Chunk of Pure Jade",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96088,
+      "label": "Memory of Aurene",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96088,
+      "label": "Memory of Aurene",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96722,
+      "label": "Jade Runestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96722,
+      "label": "Jade Runestone",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 95797,
+      "label": "Gift of Aurene",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Fine",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96001,
+      "label": "Aurene's Bite (Zhaitan Variant)",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96005,
+      "label": "Aurene's Weight (Primordus Variant)",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96007,
+      "label": "Aurene's Flight (Soo-Won Variant)",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96006,
+      "label": "Aurene's Wisdom (Jormag Variant)",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Junk",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96003,
+      "label": "Aurene's Rending (Mordremoth Variant)",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl"
+    },
+    {
+      "item_id": 96028,
+      "label": "Dragon's Rending",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 97783,
+      "label": "Dragon's Fang",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96221,
+      "label": "Dragon's Bite",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96915,
+      "label": "Dragon's Argument",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96193,
+      "label": "Dragon's Wisdom",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 97691,
+      "label": "Dragon's Scale",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 95834,
+      "label": "Dragon's Flight",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96330,
+      "label": "Dragon's Wing",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 46731,
+      "label": "Pile of Bloodstone Dust",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 46733,
+      "label": "Dragonite Ore",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 46735,
+      "label": "Empyreal Fragment",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 100798,
+      "label": "Gift of Amnytas",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 19721,
+      "label": "Glob of Ectoplasm",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19721,
+      "label": "Glob of Ectoplasm",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 19675,
+      "label": "Mystic Clover",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 70867,
+      "label": "Gift of Condensed Might",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/legendary_sigil.ttl"
+    },
+    {
+      "item_id": 70867,
+      "label": "Gift of Condensed Might",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 76530,
+      "label": "Gift of Condensed Magic",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/legendary_sigil.ttl"
+    },
+    {
+      "item_id": 76530,
+      "label": "Gift of Condensed Magic",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 19925,
+      "label": "Obsidian Shard",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/shared/legendary_base_components.ttl"
+    },
+    {
+      "item_id": 19925,
+      "label": "Obsidian Shard",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 73248,
+      "label": "Stabilizing Matrix",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl"
+    },
+    {
+      "item_id": 71581,
+      "label": "Memory of Battle",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl"
+    },
+    {
+      "item_id": 19712,
+      "label": "Ancient Wood Plank",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19732,
+      "label": "Hardened Leather Section",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19745,
+      "label": "Gossamer Scrap",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 24310,
+      "label": "Onyx Lodestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl"
+    },
+    {
+      "item_id": 24310,
+      "label": "Onyx Lodestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 24315,
+      "label": "Molten Lodestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl"
+    },
+    {
+      "item_id": 29165,
+      "label": "Spark",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/recipes/gen1_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 19662,
+      "label": "Bottle of Elonian Wine",
+      "ontology_rarity": "Basic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 19685,
+      "label": "Orichalcum Ingot",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 73580,
+      "label": "Shard of Glory",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 19663,
+      "label": "Bottle of Elonian Wine",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl"
+    },
+    {
+      "item_id": 19663,
+      "label": "Bottle of Elonian Wine",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 46682,
+      "label": "Crystalline Ore",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 46682,
+      "label": "Crystalline Ore",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 71385,
+      "label": "Nevermore Research",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 74677,
+      "label": "Gift of the Chak",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 74677,
+      "label": "Gift of the Chak",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 75209,
+      "label": "HOPE Research",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 76160,
+      "label": "Astralaria Research",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 78054,
+      "label": "Tiger Training",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 79784,
+      "label": "Shard of Friendship",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 79445,
+      "label": "Shard of Endeavor",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81051,
+      "label": "Shard of Liturgy",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81051,
+      "label": "Shard of the Ambition",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 82069,
+      "label": "Shard of the Call",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 83410,
+      "label": "Funerary Incense",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 83410,
+      "label": "Funerary Incense",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 84024,
+      "label": "Gift of the Rider",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 86120,
+      "label": "Shard of the Dark Arts",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 88738,
+      "label": "Shard of the Feathered Serpent",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81961,
+      "label": "Shard of the Brightest Light",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 90553,
+      "label": "Shard of the Resolution",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 91878,
+      "label": "Shard of the Voice",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 71382,
+      "label": "Gift of Nevermore",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 71384,
+      "label": "The Raven Staff",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Junk",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 75206,
+      "label": "Gift of HOPE",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 75208,
+      "label": "Prototype",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 75919,
+      "label": "Gift of Insights",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 75919,
+      "label": "Gift of Maguuma",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 76157,
+      "label": "Gift of Astralaria",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 76159,
+      "label": "The Mechanism",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 78051,
+      "label": "Gift of Chuka and Champawat",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 78053,
+      "label": "Tigris",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 79563,
+      "label": "Friendship",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 79801,
+      "label": "Gift of Eureka",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81205,
+      "label": "Gift of the Shining Blade",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Fine",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81207,
+      "label": "Save the Queen",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81744,
+      "label": "Gift of Flames of War",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 89036,
+      "label": "The Ambition",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 86674,
+      "label": "Gift of the Binding of Ipos",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 87686,
+      "label": "Gift of the Claw of the Khan-Ur",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 87688,
+      "label": "Touch of the Khan-Ur",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 88954,
+      "label": "Gift of Xiuquatl",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 88956,
+      "label": "Tlehco",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 89853,
+      "label": "Gift of Pharus",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 91875,
+      "label": "Gift of Verdarach",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 81743,
+      "label": "Gift of Desert Mastery",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 75498,
+      "label": "Gift of Maguuma Mastery",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen2_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 68063,
+      "label": "Amalgamated Gemstone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl"
+    },
+    {
+      "item_id": 95802,
+      "label": "Dragon's Tail",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96191,
+      "label": "Dragon's Breath",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 96900,
+      "label": "Dragon's Insight",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 97067,
+      "label": "Dragon's Voice",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 97269,
+      "label": "Dragon's Weight",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 97365,
+      "label": "Dragon's Claw",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 97486,
+      "label": "Dragon's Persuasion",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/recipes/gen3_legendary_recipes.ttl"
+    },
+    {
+      "item_id": 89537,
+      "label": "Branded Mass",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 90783,
+      "label": "Mistborn Mote",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 79280,
+      "label": "Blood Ruby",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 79899,
+      "label": "Fresh Winterberry",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 80200,
+      "label": "Perfected Envoy Hood",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl"
+    },
+    {
+      "item_id": 80258,
+      "label": "Perfected Envoy Breastplate",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/recipes/legendary_armor_recipes.ttl"
+    },
+    {
+      "item_id": 80332,
+      "label": "Jade Shard",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 86069,
+      "label": "Kralkatite Ore",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 86977,
+      "label": "Difluorite Crystal",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 87645,
+      "label": "Inscribed Shard",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 88955,
+      "label": "Lump of Mistonium",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 103973,
+      "label": "Nyr Hrammr",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 70842,
+      "label": "Mordrem Lodestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 46747,
+      "label": "Thermocatalytic Reagent",
+      "ontology_rarity": "Basic",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/ascended_and_daily_materials.ttl"
+    },
+    {
+      "item_id": 2059,
+      "label": "Experience Booster",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl"
+    },
+    {
+      "item_id": 42970,
+      "label": "Heroic Booster",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl"
+    },
+    {
+      "item_id": 79523,
+      "label": "Snowflake Gobbler",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl"
+    },
+    {
+      "item_id": 43766,
+      "label": "Tome of Knowledge",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/boosters_and_buffs.ttl"
+    },
+    {
+      "item_id": 19665,
+      "label": "Philosopher's Stone",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl"
+    },
+    {
+      "item_id": 19665,
+      "label": "Philosopher's Stone",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 19674,
+      "label": "Bloodstone Shard",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/shared/legendary_base_components.ttl"
+    },
+    {
+      "item_id": 19674,
+      "label": "Bloodstone Shard",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 19701,
+      "label": "Orichalcum Ore",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19725,
+      "label": "Ancient Wood Log",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19737,
+      "label": "Cured Hardened Leather Square",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19746,
+      "label": "Bolt of Gossamer",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/common_material_refinements.ttl"
+    },
+    {
+      "item_id": 19746,
+      "label": "Elaborate Totem",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    },
+    {
+      "item_id": 78895,
+      "label": "WvW Skirmish Claim Ticket",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl"
+    },
+    {
+      "item_id": 70820,
+      "label": "Shard of Glory",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl"
+    },
+    {
+      "item_id": 79418,
+      "label": "Integrated Fractal Matrix",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl"
+    },
+    {
+      "item_id": 76839,
+      "label": "Ball of Dark Energy",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/competitive_and_raid_currencies.ttl"
+    },
+    {
+      "item_id": 81664,
+      "label": "Mistlock Sanctuary Passkey",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 98048,
+      "label": "Thousand Seas Pavilion Pass",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Junk",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 49149,
+      "label": "Royal Terrace Pass",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 75479,
+      "label": "Noble's Folly Pass",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 79500,
+      "label": "Lava Lounge Pass",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 97009,
+      "label": "Arborstone Portal Scroll",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 100788,
+      "label": "Wizard's Tower Teleportation Scroll",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 92055,
+      "label": "Invitation to the Eye of the North",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 44602,
+      "label": "Copper-Fed Salvage-o-Matic",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 84950,
+      "label": "Permanent Tool Delivery Box",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 91876,
+      "label": "Endless Repair Canister",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 73718,
+      "label": "Ley-Energy Matter Converter",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 67270,
+      "label": "Karmic Converter",
+      "ontology_rarity": "Exotic",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 90002,
+      "label": "Hlish Hiss",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 92850,
+      "label": "Icebrood Saga Portal Tome",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Fine",
+      "file": "ontology/instances/shared/convenience_and_lounges.ttl"
+    },
+    {
+      "item_id": 8941,
+      "label": "Heavy Crafting Bag",
+      "ontology_rarity": "Fine",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/currency_exchange_networks.ttl"
+    },
+    {
+      "item_id": 85725,
+      "label": "Trophy Shipment",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/currency_exchange_networks.ttl"
+    },
+    {
+      "item_id": 94875,
+      "label": "Memory of Twilight",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl"
+    },
+    {
+      "item_id": 94917,
+      "label": "Memory of Sunrise",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl"
+    },
+    {
+      "item_id": 9574,
+      "label": "20 Slot Invisible Bag",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Fine",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl"
+    },
+    {
+      "item_id": 9594,
+      "label": "20 Slot Safe Box",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Fine",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl"
+    },
+    {
+      "item_id": 9584,
+      "label": "20 Slot Invisible Pack",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Fine",
+      "file": "ontology/instances/shared/eternity_and_post_craft.ttl"
+    },
+    {
+      "item_id": 83318,
+      "label": "Funerary Incense",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 83471,
+      "label": "Gift of the Riverlands",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 83416,
+      "label": "Gift of the Desolation",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 100424,
+      "label": "Gift of the Cosmos",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Ascended",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 100063,
+      "label": "Gift of Celestial Knowledge",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 24305,
+      "label": "Charged Lodestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/mystic_forge_transmutations.ttl"
+    },
+    {
+      "item_id": 79469,
+      "label": "Petrified Wood",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 81127,
+      "label": "Fire Orchid Blossom",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 81706,
+      "label": "Orrian Pearl",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 92272,
+      "label": "Eternal Ice Shard",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 92203,
+      "label": "Eitrite Ingot",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Masterwork",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 76427,
+      "label": "Gift of the Mists",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Exotic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 79548,
+      "label": "Gift of Glory",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 79547,
+      "label": "Gift of War",
+      "ontology_rarity": "Legendary",
+      "api_rarity": "Basic",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 79585,
+      "label": "Cube of Annihilation",
+      "ontology_rarity": "Ascended",
+      "api_rarity": "Rare",
+      "file": "ontology/instances/shared/regional_expansion_materials.ttl"
+    },
+    {
+      "item_id": 20797,
+      "label": "Icy Runestone",
+      "ontology_rarity": "Rare",
+      "api_rarity": "Legendary",
+      "file": "ontology/instances/twilight_gen1.ttl"
+    }
+  ],
+  "container_relationships": [
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 1",
+      "container_id": 96054,
+      "rel_type": "unpacksInto",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 24,
+      "targets": [
+        "Zap (ID: 29181)",
+        "Gift of Bolt (ID: 19655)",
+        "The Legend (ID: 29180)",
+        "Gift of The Bifrost (ID: 19654)",
+        "Storm (ID: 29176)",
+        "Gift of Meteorlogicus (ID: 19652)",
+        "Chaos Gun (ID: 29174)",
+        "Gift of Quip (ID: 19651)"
+      ],
+      "raw": "priory:unpacksInto item:29181, item:19655, item:29180, item:19654, item:29176, item:19652, item:29174, item:19651 ;"
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 2",
+      "container_id": 101123,
+      "rel_type": "unpacksInto",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 36,
+      "targets": [
+        "Zap (ID: 29181)",
+        "Gift of Bolt (ID: 19655)",
+        "The Energizer (ID: 29173)",
+        "Gift of The Moot (ID: 19650)",
+        "Chaos Gun (ID: 29174)",
+        "Gift of Quip (ID: 19651)",
+        "The Hunter (ID: 29175)",
+        "Gift of The Predator (ID: 19661)"
+      ],
+      "raw": "priory:unpacksInto item:29181, item:19655, item:29173, item:19650, item:29174, item:19651, item:29175, item:19661 ;"
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 3",
+      "container_id": 101623,
+      "rel_type": "unpacksInto",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 48,
+      "targets": [
+        "Tooth of Frostfang (ID: 29166)",
+        "Gift of Frostfang (ID: 19625)",
+        "The Lover (ID: 29178)",
+        "Gift of The Dreamer (ID: 19660)",
+        "The Energizer (ID: 29173)",
+        "Gift of The Moot (ID: 19650)",
+        "The Hunter (ID: 29175)",
+        "Gift of The Predator (ID: 19661)"
+      ],
+      "raw": "priory:unpacksInto item:29166, item:19625, item:29178, item:19660, item:29173, item:19650, item:29175, item:19661 ;"
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 4",
+      "container_id": 101938,
+      "rel_type": "unpacksInto",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 60,
+      "targets": [
+        "The Lover (ID: 29178)",
+        "Gift of The Dreamer (ID: 19660)",
+        "Tooth of Frostfang (ID: 29166)",
+        "Gift of Frostfang (ID: 19625)",
+        "The Colossus (ID: 29170)",
+        "Gift of The Juggernaut (ID: 19649)",
+        "Spark (ID: 29167)",
+        "Gift of Incinerator (ID: 19645)"
+      ],
+      "raw": "priory:unpacksInto item:29178, item:19660, item:29166, item:19625, item:29170, item:19649, item:29167, item:19645 ;"
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 1",
+      "container_id": 96054,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 84,
+      "targets": [
+        "Zap (ID: 29181)",
+        "Gift of Bolt (ID: 19655)"
+      ],
+      "raw": "priory:grantsItem item:29181, item:19655 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 1",
+      "container_id": 96054,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 89,
+      "targets": [
+        "The Legend (ID: 29180)",
+        "Gift of The Bifrost (ID: 19654)"
+      ],
+      "raw": "priory:grantsItem item:29180, item:19654 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 1",
+      "container_id": 96054,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 94,
+      "targets": [
+        "Storm (ID: 29176)",
+        "Gift of Meteorlogicus (ID: 19652)"
+      ],
+      "raw": "priory:grantsItem item:29176, item:19652 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 1",
+      "container_id": 96054,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 99,
+      "targets": [
+        "Chaos Gun (ID: 29174)",
+        "Gift of Quip (ID: 19651)"
+      ],
+      "raw": "priory:grantsItem item:29174, item:19651 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 1",
+      "container_id": 96054,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 111,
+      "targets": [
+        "Zap (ID: 29181)",
+        "Gift of Bolt (ID: 19655)"
+      ],
+      "raw": "priory:grantsItem item:29181, item:19655 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 2",
+      "container_id": 101123,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 116,
+      "targets": [
+        "The Energizer (ID: 29173)",
+        "Gift of The Moot (ID: 19650)"
+      ],
+      "raw": "priory:grantsItem item:29173, item:19650 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 2",
+      "container_id": 101123,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 121,
+      "targets": [
+        "Chaos Gun (ID: 29174)",
+        "Gift of Quip (ID: 19651)"
+      ],
+      "raw": "priory:grantsItem item:29174, item:19651 ."
+    },
+    {
+      "container": "Legendary Weapon Starter Kit\u2014Set 2",
+      "container_id": 101123,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/containers/legendary_starter_kits.ttl",
+      "line": 126,
+      "targets": [
+        "The Hunter (ID: 29175)",
+        "Gift of The Predator (ID: 19661)"
+      ],
+      "raw": "priory:grantsItem item:29175, item:19661 ."
+    },
+    {
+      "container": "Unknown/Invalid (ID: None)",
+      "container_id": null,
+      "rel_type": "grantsItem",
+      "file": "ontology/instances/legendaries/gen3_aurene_weapons.ttl",
+      "line": 43,
+      "targets": [
+        "Antique Summoning Stone (ID: 96978)"
+      ],
+      "raw": "item:vendor_leivas_ass priory:grantsItem item:96978 ."
+    },
+    {
+      "container": "Unknown/Invalid (ID: None)",
+      "container_id": null,
+      "rel_type": "unpacksInto",
+      "file": "ontology/priory_core.ttl",
+      "line": 356,
+      "targets": [],
+      "raw": "priory:unpacksInto a owl:ObjectProperty ;"
+    },
+    {
+      "container": "Unknown/Invalid (ID: None)",
+      "container_id": null,
+      "rel_type": "grantsItem",
+      "file": "ontology/priory_core.ttl",
+      "line": 373,
+      "targets": [],
+      "raw": "priory:grantsItem a owl:ObjectProperty ;"
+    }
+  ]
+}

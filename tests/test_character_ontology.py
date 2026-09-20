@@ -48,7 +48,7 @@ TEST_CHARACTERS = [
                         "infusions": [37131]
                     },
                     {
-                        "id": 803841,
+                        "id": 83394,
                         "slot": "Coat",
                         "stats": {"id": "berserker"},
                         "upgrades": [24765] # Scholar Rune
@@ -58,7 +58,7 @@ TEST_CHARACTERS = [
         ],
         "equipment": [
             {"id": 30689, "slot": "WeaponSlotMainHand1", "stats": {"id": "berserker"}, "upgrades": [24562]},
-            {"id": 803841, "slot": "Coat", "stats": {"id": "berserker"}, "upgrades": [24765]}
+            {"id": 83394, "slot": "Coat", "stats": {"id": "berserker"}, "upgrades": [24765]}
         ],
         "build_tabs": [
             {
@@ -297,8 +297,8 @@ class TestCharacterOntologyAndHydration(unittest.TestCase):
     def test_taxonomic_equipability_checks(self):
         """Verifies character equipability checks using SKOS taxonomies without procedural hardcoding."""
         # Valen Starfall (Guardian):
-        # Heavy Armor (Warplate 803841) -> can equip
-        heavy_check = self.service.check_item_character_equipability("Valen Starfall", 803841)
+        # Heavy Armor (Breastplate 83394) -> can equip
+        heavy_check = self.service.check_item_character_equipability("Valen Starfall", 83394)
         self.assertTrue(heavy_check["can_equip"])
         self.assertIn("HeavyArmor", heavy_check["reason"])
 
@@ -307,8 +307,8 @@ class TestCharacterOntologyAndHydration(unittest.TestCase):
         self.assertTrue(gs_check["can_equip"])
 
         # Lyra Shadowmend (Necromancer):
-        # Heavy Armor (Warplate 803841) -> cannot equip
-        lyra_armor = self.service.check_item_character_equipability("Lyra Shadowmend", 803841)
+        # Heavy Armor (Breastplate 83394) -> cannot equip
+        lyra_armor = self.service.check_item_character_equipability("Lyra Shadowmend", 83394)
         self.assertFalse(lyra_armor["can_equip"])
         self.assertIn("cannot wear", lyra_armor["reason"])
 

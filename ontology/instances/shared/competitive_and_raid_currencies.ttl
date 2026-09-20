@@ -32,33 +32,26 @@ item:71581 a priory:CraftingMaterial, owl:NamedIndividual ;
 # ------------------------------------------------------------------------------
 # 2. Structured PvP
 # ------------------------------------------------------------------------------
-item:70543 a priory:CraftingMaterial, owl:NamedIndividual ;
+currency:30 a priory:Currency, skos:Concept, owl:NamedIndividual ;
     rdfs:label "PvP League Ticket"@en ;
     priory:gw2Id 70543 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound true ;
     skos:definition "Seasonal PvP league currency used for The Ascension, Transcendence, and Ardent Glorious Armor."@en .
 
-item:81722 a priory:CraftingMaterial, owl:NamedIndividual ;
+currency:33 a priory:Currency, skos:Concept, owl:NamedIndividual ;
     rdfs:label "Ascended Shard of Glory"@en ;
     priory:gw2Id 81722 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
     skos:definition "Ranked PvP currency used for Legendary PvP armor and Transcendence."@en .
 
-item:73580 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:70820 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Shard of Glory"@en ;
-    priory:gw2Id 73580 ;
+    priory:gw2Id 70820 ;
     priory:hasRarity rarity:Fine ;
     priory:isAccountBound false ;
     skos:definition "Tradeable PvP material used in PvP legendary gifts."@en .
-
-item:79803 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Star of Destiny"@en ;
-    priory:gw2Id 79803 ;
-    priory:hasRarity rarity:Legendary ;
-    priory:isAccountBound true ;
-    skos:definition "Final collection reward component required for Transcendence."@en .
 
 # ------------------------------------------------------------------------------
 # 3. Raids

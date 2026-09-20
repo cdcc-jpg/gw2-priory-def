@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- **Exhaustive Ground-Truth Forensic Audit & Elimination of Hallucinated Item IDs (`tools/audit_ontology_against_api.py`, 50 `.ttl` files, `engine/`, `tests/`):**
+  - **Zero Fatal / 404 Non-Existent IDs Across All 50 Ontologies:** Built an automated, multi-threaded REST API v2 auditor (`tools/audit_ontology_against_api.py`) handling HTTP 206 Partial Content chunking against official ArenaNet endpoints. Checked every item individual and container relationship across the entire definition space, reducing fatal non-existent IDs from 115 to exactly 0.
+  - **Legendary Starter Kits Ground-Truth Reconstruction (`ontology/instances/containers/legendary_starter_kits.ttl`):**
+    - Corrected corrupted container links where Starter Kit—Set 1 falsely unpacked into *Gift of Baelfire* (`19643` / `19668`) and *Gift of Ascalon* (`19641` / `19664`).
+    - Grounded Sets 1–4 to exact canonical Gen 1 weapons and specific gifts: Set 1 (Bolt, Bifrost, Meteorlogicus, Quip), Set 2 (Bolt, Moot, Quip, Predator), Set 3 (Frostfang, Dreamer, Moot, Predator), and Set 4 (Dreamer, Frostfang, Juggernaut, Incinerator).
+  - **Competitive Armor Grounding (`competitive_legendary_armors.ttl`, `competitive_armor_and_eternity_recipes.ttl`, `precursor_taxonomy.ttl`):**
+    - Excised all 36 fabricated `80XXXX1` IDs and bound all 72 WvW and PvP legendary armors (Mistforged & Ardent Glorious / Sublime) and 72 ascended precursor armor pieces to their canonical GW2 item IDs.
+  - **Secrets of the Obscure Obsidian Armor Grounding (`obsidian_armor.ttl`, `legendary_armor_recipes.ttl`):**
+    - Bound all 18 Obsidian Armor pieces (`101516`–`101645`) and 18 Astral Ward precursors (`100026`–`100936`).
+    - Disambiguated raw rift essences to wallet currency IDs (`currency:78`, `currency:80`, `currency:79`) and bound refined Purified (`100569`) and Amalgamated (`100930`) Rift Essences.
+  - **Janthir Wilds Legendary Spear Canonicalization (`all_legendary_items.ttl`, `legendary_armor_recipes.ttl`, `regional_expansion_materials.ttl`):**
+    - Canonicalized the Janthir Wilds legendary spear to *Klobjarne Geirr* (`103815`) with its official precursor *Nyr Hrammr* (`103973`), *Gift of Janthir Wilds* (`102514`), *Gift of the Homesteader* (`102376`), and *Gift of Klobjarne Geirr* (`102901`). Maintained `skos:altLabel` aliases for backwards-compatibility.
+  - **Dungeon Gifts & Tokens Forensic Separation (`dungeon_tokens.ttl`):**
+    - Replaced corrupted statue and trophy IDs (`19640`–`19643`) with canonical Dungeon Gifts (`19664`–`19671`: Ascalon, Nobleman, Forgeman, Thorns, Baelfire, Zhaitan, Sanctuary, Knowledge) and Tales of Dungeon Delving (`currency:69`).
+  - **Safe Staging Bags & Mystic Forge Conduits (`eternity_and_post_craft.ttl`, `convenience_and_lounges.ttl`):**
+    - Canonicalized craftable 20-slot safe bags to *20 Slot Invisible Bag* (`9574`), *20 Slot Safe Box* (`9594`), and *20 Slot Invisible Pack* (`9584`).
+    - Grounded Mystic Forge gizmos to *Permanent Mystic Forge Conduit* (`70010`), account-bound *Mystic Forge Conduit* (`70013`), and *Mystic Forge Node* (`35729`).
+  - **Test Suite & SHACL Validation:** Centralized automated test suite passing 100% (165/165 tests) including W3C SHACL conformance.
 - **Domain Ontology Schema Extensions for Item & Combat Metrics (`ontology/priory_core.ttl`, `ontology/priory_shacl.ttl`):**
   - **OWL 2 DL Item Datatype Properties (`ontology/priory_core.ttl`):** Added domain properties with explicit English labels and comments adhering strictly to the Semantic Truth in Semantic Artifacts rule:
     - `priory:requiredLevel`: Character level required to equip or use an item (`0-80`, domain `priory:Item`, range `xsd:integer`).

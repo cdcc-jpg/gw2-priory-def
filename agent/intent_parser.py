@@ -233,7 +233,7 @@ class IntentParser:
             "bolt", "incinerator", "nevermore", "astralaria", "hope", "chuka and champawat",
             "conflux", "coalescence", "transcendence", "vision", "aurora", "ad infinitum",
             "the ascension", "warbringer", "prismatic champion's regalia",
-            "klobjarne harvester", "kamohoali'i kotaki",
+            "klobjarne geirr", "klobjarne harvester", "kamohoali'i kotaki",
             "dusk", "mystic clover", "mystic coin", "sigil", "sigils", "rune", "runes"
         ]
         has_named_specific_item = any(re.search(r"\b" + re.escape(name) + r"\b", p_lower) for name in known_specific_names)

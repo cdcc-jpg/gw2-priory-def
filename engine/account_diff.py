@@ -603,7 +603,7 @@ CONVENIENCE_ITEMS: Dict[str, Dict[str, Any]] = {
     # 5. Portable Forge
     "mystic_forge_conduit": {
         "id": 70010,
-        "all_ids": [70010, 35727, 36014, 36013, 36012, 36011],
+        "all_ids": [70010, 70013, 35728],
         "name": "Mystic Forge Conduit",
         "chat_link": "[&AgE6EQEA]",
         "type": "MysticForge",

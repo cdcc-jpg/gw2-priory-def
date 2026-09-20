@@ -25,7 +25,7 @@ item:19686 a owl:NamedIndividual,
 
 item:19712 a owl:NamedIndividual,
         priory:CraftingMaterial ;
-    rdfs:label "Elder Wood Plank"@en ;
+    rdfs:label "Ancient Wood Plank"@en ;
     priory:gw2Id 19712 .
 
 item:19714 a owl:NamedIndividual,
@@ -55,7 +55,7 @@ item:24310 a owl:NamedIndividual,
 
 item:24315 a owl:NamedIndividual,
         priory:CraftingMaterial ;
-    rdfs:label "Charged Lodestone"@en ;
+    rdfs:label "Molten Lodestone"@en ;
     priory:gw2Id 24315 .
 
 item:24320 a owl:NamedIndividual,

@@ -116,11 +116,11 @@ recipe:forge_gift_of_magic a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19748 ; # 250 Powerful Blood (T6)
+        priory:requiresItem item:24295 ; # 250 Powerful Blood (T6)
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19745 ; # 250 Potent Venom Sac (T6)
+        priory:requiresItem item:24283 ; # 250 Potent Venom Sac (T6)
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
@@ -128,7 +128,7 @@ recipe:forge_gift_of_magic a priory:MysticForgeRecipe ;
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19732 ; # 250 Crystalline Dust (T6)
+        priory:requiresItem item:24277 ; # 250 Crystalline Dust (T6)
         priory:requiredQuantity 250
     ] .
 
@@ -147,19 +147,19 @@ recipe:forge_gift_of_might a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19725 ; # 250 Vicious Claw (T6)
+        priory:requiresItem item:24351 ; # 250 Vicious Claw (T6)
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19734 ; # 250 Armored Scale (T6)
+        priory:requiresItem item:24289 ; # 250 Armored Scale (T6)
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19723 ; # 250 Ancient Bone (T6)
+        priory:requiresItem item:24358 ; # 250 Ancient Bone (T6)
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19728 ; # 250 Vicious Fang (T6)
+        priory:requiresItem item:24357 ; # 250 Vicious Fang (T6)
         priory:requiredQuantity 250
     ] .
 
@@ -221,7 +221,7 @@ recipe:forge_gift_of_twilight a priory:MysticForgeRecipe ;
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19676 ; # 100 Icy Runestones (100 gold)
+        priory:requiresItem item:20797 ; # 100 Icy Runestones (100 gold)
         priory:requiredQuantity 100
     ] , [
         a priory:IngredientRequirement ;
@@ -287,7 +287,7 @@ recipe:craft_gift_of_darkness a priory:DisciplineRecipe ;
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19732 ; # 250 Cured Hardened Leather Squares
+        priory:requiresItem item:24277 ; # 250 Cured Hardened Leather Squares
         priory:requiredQuantity 250
     ] , [
         a priory:IngredientRequirement ;
@@ -346,9 +346,9 @@ item:19674 a priory:CraftingMaterial ;
         priory:nearestWaypoint "[&BBAEAAA=]"
     ] .
 
-item:19676 a priory:CraftingMaterial ;
+item:20797 a priory:CraftingMaterial ;
     rdfs:label "Icy Runestone"@en ;
-    priory:gw2Id 19676 ;
+    priory:gw2Id 20797 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound true ;
     priory:acquiredVia [
@@ -415,14 +415,14 @@ item:19665 a priory:CraftingMaterial ; rdfs:label "Philosopher's Stone"@en ; pri
 item:24310 a priory:CraftingMaterial ; rdfs:label "Onyx Lodestone"@en ; priory:gw2Id 24310 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 
 # T6 Fine Crafting Materials
-item:19748 a priory:CraftingMaterial ; rdfs:label "Powerful Blood"@en ; priory:gw2Id 19748 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19745 a priory:CraftingMaterial ; rdfs:label "Potent Venom Sac"@en ; priory:gw2Id 19745 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24295 a priory:CraftingMaterial ; rdfs:label "Vial of Powerful Blood"@en ; priory:gw2Id 24295 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24283 a priory:CraftingMaterial ; rdfs:label "Potent Venom Sac"@en ; priory:gw2Id 24283 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 item:19746 a priory:CraftingMaterial ; rdfs:label "Elaborate Totem"@en ; priory:gw2Id 19746 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19732 a priory:CraftingMaterial ; rdfs:label "Crystalline Dust"@en ; priory:gw2Id 19732 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19725 a priory:CraftingMaterial ; rdfs:label "Vicious Claw"@en ; priory:gw2Id 19725 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19734 a priory:CraftingMaterial ; rdfs:label "Armored Scale"@en ; priory:gw2Id 19734 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19723 a priory:CraftingMaterial ; rdfs:label "Ancient Bone"@en ; priory:gw2Id 19723 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
-item:19728 a priory:CraftingMaterial ; rdfs:label "Vicious Fang"@en ; priory:gw2Id 19728 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24277 a priory:CraftingMaterial ; rdfs:label "Pile of Crystalline Dust"@en ; priory:gw2Id 24277 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24351 a priory:CraftingMaterial ; rdfs:label "Vicious Claw"@en ; priory:gw2Id 24351 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24289 a priory:CraftingMaterial ; rdfs:label "Armored Scale"@en ; priory:gw2Id 24289 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24358 a priory:CraftingMaterial ; rdfs:label "Ancient Bone"@en ; priory:gw2Id 24358 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:24357 a priory:CraftingMaterial ; rdfs:label "Vicious Fang"@en ; priory:gw2Id 24357 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 
 # ------------------------------------------------------------------------------
 # Currencies (Account Wallet Scalars)

@@ -6,12 +6,16 @@
 <https://priory.gw2/id/item/103815> a ns1:LegendaryWeapon ;
     rdfs:label "Klobjarne Geirr"@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Klobjarne_Geirr> ;
+    skos:altLabel "Klobjarne Harvester"@en,
+        "Janthir Spear"@en,
+        "Klobjarne"@en,
+        "Legendary Spear"@en ;
     ns1:gw2Id 103815 ;
     ns1:hasItemType <https://priory.gw2/ref/itemtype/Spear> ;
     ns1:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     ns1:hasWeaponType <https://priory.gw2/ref/weapon/Spear> ;
     ns1:isAccountBound true ;
-    ns1:producedBy <https://priory.gw2/id/recipe/forge_klobjarne_harvester> .
+    ns1:producedBy <https://priory.gw2/id/recipe/forge_klobjarne_geirr> .
 
 <https://priory.gw2/id/item/105653> a ns1:LegendaryWeapon ;
     rdfs:label "Ancora Pax"@en ;

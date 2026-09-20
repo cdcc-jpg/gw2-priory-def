@@ -7,348 +7,824 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix item: <https://priory.gw2/id/item/> .
 @prefix armor: <https://priory.gw2/ref/armor/> .
+@prefix slot: <https://priory.gw2/ref/slot/> .
 
 # ==============================================================================
 # COMPETITIVE LEGENDARY ARMORS (WvW & PvP)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. WvW Legendary Armor: Triumphant Hero's & Mistforged Triumphant Hero's
+# 1. WvW Legendary Armor: Triumphant Hero's (Tier 1) & Mistforged (Tier 2)
 # ------------------------------------------------------------------------------
 
+# --- Triumphant Hero's (Tier 1) ---
 # Heavy Armor
-item:803841 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Warplate" ;
-    priory:gw2Id 803841 ;
+item:84176 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Warhelm" ;
+    priory:gw2Id 84176 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Warplate", "WvW Legendary Chest", "Heavy WvW Armor", "Triumphant Warplate" ;
-    skos:definition "WvW Legendary Heavy Chest Armor forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+    skos:altLabel "Triumphant Hero's Warhelm", "WvW Legendary Helm", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Helm Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:801451 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:82963 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Pauldrons" ;
-    priory:gw2Id 801451 ;
+    priory:gw2Id 82963 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Pauldrons", "WvW Legendary Shoulders", "Heavy WvW Armor" .
+    skos:altLabel "Triumphant Hero's Pauldrons", "WvW Legendary Shoulders", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Shoulders Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:805571 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Faceguard" ;
-    priory:gw2Id 805571 ;
+item:83394 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Breastplate" ;
+    priory:gw2Id 83394 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Faceguard", "WvW Legendary Helm", "Heavy WvW Armor" .
+    skos:altLabel "Triumphant Hero's Breastplate", "Triumphant Hero's Warplate", "WvW Legendary Chest", "Heavy WvW Armor", "Triumphant Warplate" ;
+    skos:definition "WvW Legendary Heavy Chest Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:801951 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:82456 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Gauntlets" ;
-    priory:gw2Id 801951 ;
+    priory:gw2Id 82456 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Gauntlets", "WvW Legendary Gloves", "Heavy WvW Armor" .
+    skos:altLabel "Triumphant Hero's Gauntlets", "WvW Legendary Gloves", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Gloves Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:802771 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:82196 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Legplates" ;
-    priory:gw2Id 802771 ;
+    priory:gw2Id 82196 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Legplates", "WvW Legendary Pants", "Heavy WvW Armor" .
+    skos:altLabel "Triumphant Hero's Legplates", "WvW Legendary Legs", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Legs Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:805781 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:82801 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Wargreaves" ;
-    priory:gw2Id 805781 ;
+    priory:gw2Id 82801 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Wargreaves", "WvW Legendary Boots", "Heavy WvW Armor" .
+    skos:altLabel "Triumphant Hero's Wargreaves", "WvW Legendary Boots", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Boots Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
 # Medium Armor
-item:802481 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Jerkin" ;
-    priory:gw2Id 802481 ;
+item:82437 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Faceguard" ;
+    priory:gw2Id 82437 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Jerkin", "WvW Legendary Medium Chest", "Medium WvW Armor" .
+    skos:altLabel "Triumphant Hero's Faceguard", "Triumphant Hero's Mask", "WvW Legendary Helm", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Helm Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:801311 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:82994 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Triumphant Hero's Shoulderguards" ;
-    priory:gw2Id 801311 ;
+    priory:gw2Id 82994 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Shoulderguards", "WvW Legendary Medium Shoulders", "Medium WvW Armor" .
+    skos:altLabel "Triumphant Hero's Shoulderguards", "WvW Legendary Shoulders", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Shoulders Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:801611 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Mask" ;
-    priory:gw2Id 801611 ;
+item:84578 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Brigandine" ;
+    priory:gw2Id 84578 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Mask", "WvW Legendary Medium Helm", "Medium WvW Armor" .
+    skos:altLabel "Triumphant Hero's Brigandine", "Triumphant Hero's Jerkin", "WvW Legendary Medium Chest", "Medium WvW Armor", "WvW Legendary Chest" ;
+    skos:definition "WvW Legendary Medium Chest Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:802521 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Vambraces" ;
-    priory:gw2Id 802521 ;
+item:84110 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Wristplates" ;
+    priory:gw2Id 84110 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Vambraces", "WvW Legendary Medium Gloves", "Medium WvW Armor" .
+    skos:altLabel "Triumphant Hero's Wristplates", "Triumphant Hero's Vambraces", "WvW Legendary Gloves", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Gloves Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:802811 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Leggings" ;
-    priory:gw2Id 802811 ;
+item:82903 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Legguards" ;
+    priory:gw2Id 82903 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Leggings", "WvW Legendary Medium Pants", "Medium WvW Armor" .
+    skos:altLabel "Triumphant Hero's Legguards", "Triumphant Hero's Leggings", "WvW Legendary Legs", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Legs Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:805901 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Boots" ;
-    priory:gw2Id 805901 ;
+item:82093 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Shinplates" ;
+    priory:gw2Id 82093 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Boots", "WvW Legendary Medium Boots", "Medium WvW Armor" .
+    skos:altLabel "Triumphant Hero's Shinplates", "Triumphant Hero's Boots", "WvW Legendary Boots", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Boots Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
 # Light Armor
-item:803561 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Vestments" ;
-    priory:gw2Id 803561 ;
+item:82902 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Masque" ;
+    priory:gw2Id 82902 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Vestments", "WvW Legendary Light Chest", "Light WvW Armor" .
+    skos:altLabel "Triumphant Hero's Masque", "Triumphant Hero's Hood", "WvW Legendary Helm", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Helm Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:802441 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Mantle" ;
-    priory:gw2Id 802441 ;
+item:82173 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Epaulets" ;
+    priory:gw2Id 82173 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Mantle", "WvW Legendary Light Shoulders", "Light WvW Armor" .
+    skos:altLabel "Triumphant Hero's Epaulets", "Triumphant Hero's Mantle", "WvW Legendary Shoulders", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Shoulders Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:804121 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Hood" ;
-    priory:gw2Id 804121 ;
+item:83036 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Raiment" ;
+    priory:gw2Id 83036 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Hood", "WvW Legendary Light Helm", "Light WvW Armor" .
+    skos:altLabel "Triumphant Hero's Raiment", "Triumphant Hero's Vestments", "WvW Legendary Light Chest", "Light WvW Armor", "WvW Legendary Chest" ;
+    skos:definition "WvW Legendary Light Chest Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:801881 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Wristguards" ;
-    priory:gw2Id 801881 ;
+item:84629 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Armguards" ;
+    priory:gw2Id 84629 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Wristguards", "WvW Legendary Light Gloves", "Light WvW Armor" .
+    skos:altLabel "Triumphant Hero's Armguards", "Triumphant Hero's Wristguards", "WvW Legendary Gloves", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Gloves Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:804551 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Pants" ;
-    priory:gw2Id 804551 ;
+item:83497 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Leggings" ;
+    priory:gw2Id 83497 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Pants", "WvW Legendary Light Pants", "Light WvW Armor" .
+    skos:altLabel "Triumphant Hero's Leggings", "Triumphant Hero's Pants", "WvW Legendary Legs", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Legs Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-item:803241 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Triumphant Hero's Shoes" ;
-    priory:gw2Id 803241 ;
+item:83289 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Triumphant Hero's Footgear" ;
+    priory:gw2Id 83289 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Triumphant Hero's Shoes", "WvW Legendary Light Boots", "Light WvW Armor" .
+    skos:altLabel "Triumphant Hero's Footgear", "Triumphant Hero's Shoes", "WvW Legendary Boots", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Boots Armor (Tier 1) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
 
-
-# ------------------------------------------------------------------------------
-# 2. PvP Legendary Armor: Ardent Glorious & Mistforged Glorious Hero's
-# ------------------------------------------------------------------------------
-
+# --- Mistforged Triumphant Hero's (Tier 2) ---
 # Heavy Armor
-item:806121 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Breastplate" ;
-    priory:gw2Id 806121 ;
+item:84301 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Warhelm" ;
+    priory:gw2Id 84301 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Warhelm", "WvW Legendary Helm", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Helm Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:84181 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Pauldrons" ;
+    priory:gw2Id 84181 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Pauldrons", "WvW Legendary Shoulders", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Shoulders Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:84481 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Sublime Mistforged Triumphant Hero's Breastplate" ;
+    priory:gw2Id 84481 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Sublime Mistforged Triumphant Hero's Breastplate", "Mistforged Triumphant Hero's Breastplate", "Sublime WvW Legendary Chest", "WvW Legendary Chest", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Chest Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:82348 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Gauntlets" ;
+    priory:gw2Id 82348 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Gauntlets", "WvW Legendary Gloves", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Gloves Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83702 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Legplates" ;
+    priory:gw2Id 83702 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Legplates", "WvW Legendary Legs", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Legs Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83094 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Wargreaves" ;
+    priory:gw2Id 83094 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Wargreaves", "WvW Legendary Boots", "Heavy WvW Armor" ;
+    skos:definition "WvW Legendary Heavy Boots Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+# Medium Armor
+item:82180 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Faceguard" ;
+    priory:gw2Id 82180 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Faceguard", "WvW Legendary Helm", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Helm Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83087 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Shoulderguards" ;
+    priory:gw2Id 83087 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Shoulderguards", "WvW Legendary Shoulders", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Shoulders Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:82102 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Sublime Mistforged Triumphant Hero's Brigandine" ;
+    priory:gw2Id 82102 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Sublime Mistforged Triumphant Hero's Brigandine", "Mistforged Triumphant Hero's Brigandine", "Sublime WvW Legendary Medium Chest", "WvW Legendary Chest", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Chest Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:82552 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Wristplates" ;
+    priory:gw2Id 82552 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Wristplates", "WvW Legendary Gloves", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Gloves Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83862 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Legguards" ;
+    priory:gw2Id 83862 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Legguards", "WvW Legendary Legs", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Legs Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83699 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Shinplates" ;
+    priory:gw2Id 83699 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Shinplates", "WvW Legendary Boots", "Medium WvW Armor" ;
+    skos:definition "WvW Legendary Medium Boots Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+# Light Armor
+item:82925 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Masque" ;
+    priory:gw2Id 82925 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Masque", "WvW Legendary Helm", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Helm Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83308 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Epaulets" ;
+    priory:gw2Id 83308 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Epaulets", "WvW Legendary Shoulders", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Shoulders Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:84508 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Sublime Mistforged Triumphant Hero's Raiment" ;
+    priory:gw2Id 84508 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Sublime Mistforged Triumphant Hero's Raiment", "Mistforged Triumphant Hero's Raiment", "Sublime WvW Legendary Light Chest", "WvW Legendary Chest", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Chest Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:82109 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Armguards" ;
+    priory:gw2Id 82109 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Armguards", "WvW Legendary Gloves", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Gloves Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:82502 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Leggings" ;
+    priory:gw2Id 82502 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Leggings", "WvW Legendary Legs", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Legs Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+item:83482 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Triumphant Hero's Footgear" ;
+    priory:gw2Id 83482 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Triumphant Hero's Footgear", "WvW Legendary Boots", "Light WvW Armor" ;
+    skos:definition "WvW Legendary Light Boots Armor (Tier 2) forged with WvW Skirmish Claim Tickets and Memories of Battle." .
+
+# ------------------------------------------------------------------------------
+# 2. PvP Legendary Armor: Ardent Glorious (Tier 1) & Mistforged (Tier 2)
+# ------------------------------------------------------------------------------
+
+# --- Ardent Glorious (Tier 1) ---
+# Heavy Armor
+item:83921 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Plate Helm" ;
+    priory:gw2Id 83921 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Ardent Glorious Plate Helm", "Ardent Glorious Helm", "PvP Legendary Helm", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Helm Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:83127 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Pauldrons" ;
+    priory:gw2Id 83127 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Ardent Glorious Pauldrons", "PvP Legendary Shoulders", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Shoulders Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:83348 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Breastplate" ;
+    priory:gw2Id 83348 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
     skos:altLabel "Ardent Glorious Breastplate", "PvP Legendary Chest", "Heavy PvP Armor" ;
-    skos:definition "PvP Legendary Heavy Chest Armor forged with PvP League Tickets and Ascended Shards of Glory." .
+    skos:definition "PvP Legendary Heavy Chest Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:803451 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Pauldrons" ;
-    priory:gw2Id 803451 ;
-    priory:hasArmorWeight armor:HeavyArmor ;
-    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
-    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
-    priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Pauldrons", "PvP Legendary Shoulders", "Heavy PvP Armor" .
-
-item:805121 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Helm" ;
-    priory:gw2Id 805121 ;
-    priory:hasArmorWeight armor:HeavyArmor ;
-    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
-    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
-    priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Helm", "PvP Legendary Helm", "Heavy PvP Armor" .
-
-item:804351 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:82465 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Gauntlets" ;
-    priory:gw2Id 804351 ;
+    priory:gw2Id 82465 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Gauntlets", "PvP Legendary Gloves", "Heavy PvP Armor" .
+    skos:altLabel "Ardent Glorious Gauntlets", "PvP Legendary Gloves", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Gloves Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:802611 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Legguards" ;
-    priory:gw2Id 802611 ;
+item:83323 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Legplates" ;
+    priory:gw2Id 83323 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Legguards", "PvP Legendary Pants", "Heavy PvP Armor" .
+    skos:altLabel "Ardent Glorious Legplates", "Ardent Glorious Legguards", "PvP Legendary Legs", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Legs Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:805091 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Greaves" ;
-    priory:gw2Id 805091 ;
+item:84655 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Wargreaves" ;
+    priory:gw2Id 84655 ;
     priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Greaves", "PvP Legendary Boots", "Heavy PvP Armor" .
+    skos:altLabel "Ardent Glorious Wargreaves", "Ardent Glorious Greaves", "PvP Legendary Boots", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Boots Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
 # Medium Armor
-item:806341 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Jerkin" ;
-    priory:gw2Id 806341 ;
+item:84643 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Cap" ;
+    priory:gw2Id 84643 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Jerkin", "PvP Legendary Medium Chest", "Medium PvP Armor" .
+    skos:altLabel "Ardent Glorious Cap", "Ardent Glorious Mask", "PvP Legendary Helm", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Helm Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:803211 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+item:83929 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
     rdfs:label "Ardent Glorious Shoulderguards" ;
-    priory:gw2Id 803211 ;
+    priory:gw2Id 83929 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Shoulderguards", "PvP Legendary Medium Shoulders", "Medium PvP Armor" .
+    skos:altLabel "Ardent Glorious Shoulderguards", "PvP Legendary Shoulders", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Shoulders Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:804891 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Mask" ;
-    priory:gw2Id 804891 ;
+item:82670 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Brigandine" ;
+    priory:gw2Id 82670 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Mask", "PvP Legendary Medium Helm", "Medium PvP Armor" .
+    skos:altLabel "Ardent Glorious Brigandine", "Ardent Glorious Jerkin", "PvP Legendary Medium Chest", "Medium PvP Armor", "PvP Legendary Chest" ;
+    skos:definition "PvP Legendary Medium Chest Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:803881 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Vambraces" ;
-    priory:gw2Id 803881 ;
+item:82245 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Wristplates" ;
+    priory:gw2Id 82245 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Vambraces", "PvP Legendary Medium Gloves", "Medium PvP Armor" .
+    skos:altLabel "Ardent Glorious Wristplates", "Ardent Glorious Vambraces", "PvP Legendary Gloves", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Gloves Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:802731 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Leggings" ;
-    priory:gw2Id 802731 ;
+item:82512 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Legguards" ;
+    priory:gw2Id 82512 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Leggings", "PvP Legendary Medium Pants", "Medium PvP Armor" .
+    skos:altLabel "Ardent Glorious Legguards", "Ardent Glorious Leggings", "PvP Legendary Legs", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Legs Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:805621 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Boots" ;
-    priory:gw2Id 805621 ;
+item:82214 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Shinplates" ;
+    priory:gw2Id 82214 ;
     priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Boots", "PvP Legendary Medium Boots", "Medium PvP Armor" .
+    skos:altLabel "Ardent Glorious Shinplates", "Ardent Glorious Boots", "PvP Legendary Boots", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Boots Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
 # Light Armor
-item:806551 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Vestments" ;
-    priory:gw2Id 806551 ;
+item:84633 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Crown" ;
+    priory:gw2Id 84633 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Vestments", "PvP Legendary Light Chest", "Light PvP Armor" .
+    skos:altLabel "Ardent Glorious Crown", "Ardent Glorious Hood", "PvP Legendary Helm", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Helm Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:803321 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Mantle" ;
-    priory:gw2Id 803321 ;
+item:83595 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Epaulets" ;
+    priory:gw2Id 83595 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Mantle", "PvP Legendary Light Shoulders", "Light PvP Armor" .
+    skos:altLabel "Ardent Glorious Epaulets", "Ardent Glorious Mantle", "PvP Legendary Shoulders", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Shoulders Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:804981 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Hood" ;
-    priory:gw2Id 804981 ;
+item:83113 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Raiment" ;
+    priory:gw2Id 83113 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Hood", "PvP Legendary Light Helm", "Light PvP Armor" .
+    skos:altLabel "Ardent Glorious Raiment", "Ardent Glorious Vestments", "PvP Legendary Light Chest", "Light PvP Armor", "PvP Legendary Chest" ;
+    skos:definition "PvP Legendary Light Chest Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:803991 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Gloves" ;
-    priory:gw2Id 803991 ;
+item:83162 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Armguards" ;
+    priory:gw2Id 83162 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Gloves", "PvP Legendary Light Gloves", "Light PvP Armor" .
+    skos:altLabel "Ardent Glorious Armguards", "Ardent Glorious Gloves", "PvP Legendary Gloves", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Gloves Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:802891 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Pants" ;
-    priory:gw2Id 802891 ;
+item:84546 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Leggings" ;
+    priory:gw2Id 84546 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Pants", "PvP Legendary Light Pants", "Light PvP Armor" .
+    skos:altLabel "Ardent Glorious Leggings", "Ardent Glorious Pants", "PvP Legendary Legs", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Legs Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
 
-item:805741 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
-    rdfs:label "Ardent Glorious Shoes" ;
-    priory:gw2Id 805741 ;
+item:82519 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Ardent Glorious Footgear" ;
+    priory:gw2Id 82519 ;
     priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
     priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
     priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
     priory:isAccountBound true ;
-    skos:altLabel "Ardent Glorious Shoes", "PvP Legendary Light Boots", "Light PvP Armor" .
+    skos:altLabel "Ardent Glorious Footgear", "Ardent Glorious Shoes", "PvP Legendary Boots", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Boots Armor (Tier 1) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+# --- Mistforged Glorious Hero's (Tier 2) ---
+# Heavy Armor
+item:89117 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Plate Helm" ;
+    priory:gw2Id 89117 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Plate Helm", "PvP Legendary Helm", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Helm Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89209 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Pauldrons" ;
+    priory:gw2Id 89209 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Pauldrons", "PvP Legendary Shoulders", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Shoulders Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89152 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Breastplate" ;
+    priory:gw2Id 89152 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Breastplate", "PvP Legendary Chest", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Chest Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89093 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Gauntlets" ;
+    priory:gw2Id 89093 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Gauntlets", "PvP Legendary Gloves", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Gloves Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89266 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Legplates" ;
+    priory:gw2Id 89266 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Legplates", "PvP Legendary Legs", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Legs Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89252 a priory:HeavyArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Wargreaves" ;
+    priory:gw2Id 89252 ;
+    priory:hasArmorWeight armor:HeavyArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Wargreaves", "PvP Legendary Boots", "Heavy PvP Armor" ;
+    skos:definition "PvP Legendary Heavy Boots Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+# Medium Armor
+item:89126 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Cap" ;
+    priory:gw2Id 89126 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Cap", "PvP Legendary Helm", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Helm Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89234 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Shoulderguards" ;
+    priory:gw2Id 89234 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Shoulderguards", "PvP Legendary Shoulders", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Shoulders Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89183 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Brigandine" ;
+    priory:gw2Id 89183 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Brigandine", "PvP Legendary Chest", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Chest Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89134 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Wristplates" ;
+    priory:gw2Id 89134 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Wristplates", "PvP Legendary Gloves", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Gloves Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89094 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Legguards" ;
+    priory:gw2Id 89094 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Legguards", "PvP Legendary Legs", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Legs Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89235 a priory:MediumArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Shinplates" ;
+    priory:gw2Id 89235 ;
+    priory:hasArmorWeight armor:MediumArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Shinplates", "PvP Legendary Boots", "Medium PvP Armor" ;
+    skos:definition "PvP Legendary Medium Boots Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+# Light Armor
+item:89260 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Crown" ;
+    priory:gw2Id 89260 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Helm ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Crown", "PvP Legendary Helm", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Helm Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89158 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Epaulets" ;
+    priory:gw2Id 89158 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Shoulders ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Epaulets", "PvP Legendary Shoulders", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Shoulders Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89174 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Raiment" ;
+    priory:gw2Id 89174 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Chest ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Raiment", "PvP Legendary Chest", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Chest Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89167 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Armguards" ;
+    priory:gw2Id 89167 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Gloves ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Armguards", "PvP Legendary Gloves", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Gloves Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89101 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Leggings" ;
+    priory:gw2Id 89101 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Legs ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Leggings", "PvP Legendary Legs", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Legs Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .
+
+item:89245 a priory:LightArmor, priory:LegendaryArmor, owl:NamedIndividual ;
+    rdfs:label "Mistforged Glorious Hero's Footgear" ;
+    priory:gw2Id 89245 ;
+    priory:hasArmorWeight armor:LightArmor ;
+    priory:hasEquipmentSlot slot:Boots ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:hasItemType <https://priory.gw2/ref/itemtype/Armor> ;
+    priory:isAccountBound true ;
+    skos:altLabel "Mistforged Glorious Hero's Footgear", "PvP Legendary Boots", "Light PvP Armor" ;
+    skos:definition "PvP Legendary Light Boots Armor (Tier 2) forged with PvP League Tickets and Ascended Shards of Glory." .

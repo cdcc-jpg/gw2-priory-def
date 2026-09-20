@@ -21,7 +21,7 @@ class TestAccountRanker(unittest.TestCase):
 
     def test_bank_starter_kit_prioritization(self):
         """Verifies that an account with Legendary Starter Kit Set 2 ranks Set 2 weapons at the top."""
-        # Account has Starter Kit Set 2 in bank (grants choice of Moot, Predator, Quip, Meteorlogicus)
+        # Account has Starter Kit Set 2 in bank (grants choice of Moot, Predator, Quip, Bolt)
         account = AccountState(
             bank={101123: 1}, # Starter Kit Set 2
             materials={19721: 50, 19675: 20}
@@ -33,7 +33,7 @@ class TestAccountRanker(unittest.TestCase):
         # Top 4 items must all be starter kit eligible
         for item in rankings[:4]:
             self.assertTrue(item.starter_kit_eligible)
-            self.assertIn(item.name, ["The Moot", "The Predator", "Quip", "Meteorlogicus"])
+            self.assertIn(item.name, ["The Moot", "The Predator", "Quip", "Bolt"])
             self.assertGreaterEqual(item.readiness_pct, 50.0)
 
     def test_orchestrator_closest_legendary_query(self):
@@ -70,9 +70,9 @@ class TestAccountRanker(unittest.TestCase):
         """Verifies SotO Obsidian Armor ranking accounts for essences and stardust."""
         account = AccountState(
             materials={
-                100849: 500, # Essence of Despair
-                100429: 250, # Essence of Greed
-                100852: 250, # Pinch of Stardust
+                100569: 5,   # Purified Rift Essence
+                99964: 250,  # Pouch of Stardust
+                100267: 250, # Case of Captured Lightning
             }
         )
         rankings = self.ranker.rank_all_legendaries(account, top_n=5, filter_query="SotO")
@@ -81,16 +81,16 @@ class TestAccountRanker(unittest.TestCase):
         self.assertGreater(rankings[0].readiness_pct, 20.0)
 
     def test_janthir_wilds_spear_ranking(self):
-        """Verifies Janthir Wilds ranking accounts for Mursaat Obsidian Chunks."""
+        """Verifies Janthir Wilds ranking accounts for precursor and gifts."""
         account = AccountState(
             materials={
-                103427: 250, # Mursaat Obsidian Chunk (100% of requirement!)
-                103112: 250, # Titan Ore
+                102514: 1, # Gift of Janthir Wilds (25% of weapon!)
+                102376: 1, # Gift of the Homesteader (25% of weapon!)
             }
         )
         rankings = self.ranker.rank_all_legendaries(account, top_n=3, filter_query="Janthir")
         self.assertGreater(len(rankings), 0)
-        self.assertEqual(rankings[0].name, "Klobjarne Harvester")
+        self.assertEqual(rankings[0].name, "Klobjarne Geirr")
         self.assertGreater(rankings[0].readiness_pct, 30.0)
 
 

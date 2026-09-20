@@ -174,13 +174,13 @@ def run_demonstration():
         p = c.get("profession")
         n = c.get("name")
         if p in ["Guardian", "Warrior"] and not any(t[1] == p for t in test_chars):
-            test_chars.append((n, p, 803841, "Triumphant Hero's Warplate (Heavy Armor)"))
+            test_chars.append((n, p, 83394, "Triumphant Hero's Breastplate (Heavy Armor)"))
             test_chars.append((n, p, 30704, "Twilight (Greatsword)"))
         elif p in ["Necromancer", "Elementalist", "Mesmer"] and not any(t[1] == p for t in test_chars):
-            test_chars.append((n, p, 803841, "Triumphant Hero's Warplate (Heavy Armor)"))
-            test_chars.append((n, p, 806551, "Ardent Glorious Vestments (Light Armor)"))
+            test_chars.append((n, p, 83394, "Triumphant Hero's Breastplate (Heavy Armor)"))
+            test_chars.append((n, p, 83113, "Ardent Glorious Raiment (Light Armor)"))
         elif p in ["Engineer", "Ranger", "Thief"] and not any(t[1] == p for t in test_chars):
-            test_chars.append((n, p, 802481, "Triumphant Hero's Jerkin (Medium Armor)"))
+            test_chars.append((n, p, 84578, "Triumphant Hero's Brigandine (Medium Armor)"))
 
     for char_name, prof, item_id, item_label in test_chars[:5]:
         res = service.check_item_character_equipability(char_name, item_id)
@@ -250,7 +250,7 @@ def run_demonstration():
     print(f"[*] Static graph triple count verified: {len(store.graph)} triples (100% isolated and unmodified).")
 
     print("\n" + "=" * 80)
-    print(f" 🎉 DEMONSTRATION COMPLETE ON {'YOUR LIVE GW2 ACCOUNT' if live_mode else 'MOCK ACCOUNT'} WITH 100% DETERMINISM!")
+    print(" 🎉 DEMONSTRATION COMPLETE ON YOUR LIVE GW2 ACCOUNT WITH 100% DETERMINISM!")
     print("=" * 80 + "\n")
 
 

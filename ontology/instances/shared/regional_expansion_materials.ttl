@@ -9,6 +9,7 @@
 @prefix rarity: <https://priory.gw2/ref/rarity/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
 @prefix role: <https://priory.gw2/ref/role/> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
 
 # ==============================================================================
 # Regional Expansion Materials & Living World Currencies
@@ -93,7 +94,7 @@ item:87645 a priory:CraftingMaterial, owl:NamedIndividual ;
     skos:definition "LWS4 map currency used in Vision."@en .
 
 item:88955 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Mistborn Mote"@en ;
+    rdfs:label "Lump of Mistonium"@en ;
     priory:gw2Id 88955 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
@@ -109,7 +110,7 @@ item:89537 a priory:CraftingMaterial, owl:NamedIndividual ;
     skos:definition "LWS4 map currency used in Vision and Dragonsblood weapons."@en .
 
 item:90783 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Mistonium"@en ;
+    rdfs:label "Mistborn Mote"@en ;
     priory:gw2Id 90783 ;
     priory:hasRarity rarity:Ascended ;
     priory:isAccountBound true ;
@@ -119,9 +120,9 @@ item:90783 a priory:CraftingMaterial, owl:NamedIndividual ;
 # ------------------------------------------------------------------------------
 # 3. Icebrood Saga (IBS Conversion Hub)
 # ------------------------------------------------------------------------------
-item:92072 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:92272 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Eternal Ice Shard"@en ;
-    priory:gw2Id 92072 ;
+    priory:gw2Id 92272 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound true ;
     priory:zoneName "Bjora Marches" ;
@@ -200,9 +201,9 @@ recipe:forge_gift_of_dragon_magic a priory:MysticForgeRecipe ;
     priory:outputQuantity 1 ;
     priory:producesItem item:82701 .
 
-item:82860 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:81861 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Gift of Draconic Mastery"@en ;
-    priory:gw2Id 82860 ;
+    priory:gw2Id 81861 ;
     priory:producedBy recipe:forge_gift_of_draconic_mastery .
 
 recipe:forge_gift_of_draconic_mastery a priory:MysticForgeRecipe ;
@@ -212,7 +213,7 @@ recipe:forge_gift_of_draconic_mastery a priory:MysticForgeRecipe ;
         [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:82791 ],
         [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:82701 ] ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:82860 .
+    priory:producesItem item:81861 .
 
 item:70842 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Mordrem Lodestone"@en ;
@@ -319,9 +320,9 @@ item:75919 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
 # 7. Path of Fire Regional Expansion Leaf Gifts & Desert Mastery
 # ------------------------------------------------------------------------------
 
-item:82414 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+item:86036 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Gift of the Desert Mastery"@en ;
-    priory:gw2Id 82414 ;
+    priory:gw2Id 86036 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:isContainerized true ;
@@ -331,7 +332,7 @@ item:82414 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
 
 recipe:forge_gift_of_desert_mastery a priory:MysticForgeRecipe, owl:NamedIndividual ;
     rdfs:label "Forge Gift of the Desert Mastery"@en ;
-    priory:producesItem item:82414 ;
+    priory:producesItem item:86036 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
         [ a priory:IngredientRequirement ; priory:requiresItem item:83694 ; priory:requiredQuantity 1 ] ,
@@ -384,9 +385,9 @@ item:83416 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
 # 8. Secrets of the Obscure Regional Leaf Gifts
 # ------------------------------------------------------------------------------
 
-item:100140 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+item:100798 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Gift of Amnytas"@en ;
-    priory:gw2Id 100140 ;
+    priory:gw2Id 100798 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:isContainerized true ;
@@ -419,9 +420,9 @@ item:100063 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
 # 9. Competitive / WvW / PvP Leaf Gifts & Gift of the Mists
 # ------------------------------------------------------------------------------
 
-item:79549 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+item:76427 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Gift of the Mists"@en ;
-    priory:gw2Id 79549 ;
+    priory:gw2Id 76427 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     priory:isContainerized true ;
@@ -431,7 +432,7 @@ item:79549 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
 
 recipe:forge_gift_of_the_mists a priory:MysticForgeRecipe, owl:NamedIndividual ;
     rdfs:label "Forge Gift of the Mists"@en ;
-    priory:producesItem item:79549 ;
+    priory:producesItem item:76427 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement
         [ a priory:IngredientRequirement ; priory:requiresItem item:79548 ; priory:requiredQuantity 1 ] ,
@@ -479,3 +480,44 @@ item:cube_of_annihilation a priory:CraftingMaterial, priory:ContainerizedToken, 
 
 item:73137 a owl:NamedIndividual ;
     owl:sameAs item:cube_of_annihilation .
+
+# ------------------------------------------------------------------------------
+# 10. Janthir Wilds Regional Expansion Materials & Gifts
+# ------------------------------------------------------------------------------
+
+item:102514 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Janthir Wilds"@en ;
+    priory:gw2Id 102514 ;
+    priory:chatCode "[&AgFykAEA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
+item:102376 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of the Homesteader"@en ;
+    priory:gw2Id 102376 ;
+    priory:chatCode "[&AgHojwEA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
+item:102901 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Klobjarne Geirr"@en ;
+    priory:gw2Id 102901 ;
+    priory:chatCode "[&AgH1kQEA]" ;
+    priory:hasRarity rarity:Legendary ;
+    priory:isAccountBound true .
+
+item:103973 a priory:PrecursorWeapon, owl:NamedIndividual ;
+    rdfs:label "Nyr Hrammr"@en ;
+    skos:altLabel "Klobjarne Geirr Precursor"@en ;
+    priory:gw2Id 103973 ;
+    priory:chatCode "[&AgEllgEA]" ;
+    priory:hasRarity rarity:Ascended ;
+    priory:hasWeaponType weapon:Spear ;
+    priory:isAccountBound true .
+
+item:103427 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mursaat Obsidian Chunk"@en ;
+    priory:gw2Id 103427 ;
+    priory:chatCode "[&AgEDlAEA]" ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound false .

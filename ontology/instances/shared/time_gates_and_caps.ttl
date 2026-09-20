@@ -15,28 +15,28 @@
 # 1. Daily Ascended Refinement Cooldowns (Max 1 Per Day Per Account)
 # ------------------------------------------------------------------------------
 
-# --- Lump of Mithrilium (Deldrimor Steel Ingot) ---
-item:46736 priory:dailyCraftingLimit 1 ;
-    rdfs:label "Lump of Mithrilium"@en ;
+# --- Lump of Mithrillium (Deldrimor Steel Ingot) ---
+item:46742 priory:dailyCraftingLimit 1 ;
+    rdfs:label "Lump of Mithrillium"@en ;
     priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Deldrimor Steel Ingot)."@en .
 
 # --- Glob of Elder Spirit Residue (Spiritwood Plank) ---
-item:46737 priory:dailyCraftingLimit 1 ;
+item:46744 priory:dailyCraftingLimit 1 ;
     rdfs:label "Glob of Elder Spirit Residue"@en ;
     priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Spiritwood Plank)."@en .
 
 # --- Spool of Thick Elonian Cord (Elonian Leather Square) ---
-item:46742 priory:dailyCraftingLimit 1 ;
+item:46745 priory:dailyCraftingLimit 1 ;
     rdfs:label "Spool of Thick Elonian Cord"@en ;
     priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Elonian Leather Square)."@en .
 
 # --- Spool of Silk Weaving Thread (Bolt of Damask) ---
-item:46744 priory:dailyCraftingLimit 1 ;
+item:46740 priory:dailyCraftingLimit 1 ;
     rdfs:label "Spool of Silk Weaving Thread"@en ;
     priory:cooldownNote "Account daily crafting limit: 1 per calendar day (Used to craft Bolt of Damask)."@en .
 
 # --- Charged Quartz Crystal (Place of Power Infusion) ---
-item:43773 priory:dailyCraftingLimit 1 ;
+item:43772 priory:dailyCraftingLimit 1 ;
     rdfs:label "Charged Quartz Crystal"@en ;
     priory:cooldownNote "Account daily limit: 1 Quartz Crystal charged at a Place of Power per calendar day."@en .
 

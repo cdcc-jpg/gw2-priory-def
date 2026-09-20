@@ -93,13 +93,13 @@ item:98048 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:Nam
     rdfs:comment "Permanent pass to Thousand Seas Pavilion aquatic lounge in Cantha featuring fishing holes, Jade Bot workbench, Strike Mission portals, crafting stations, bank, TP, and instant return."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Thousand_Seas_Pavilion_Pass> .
 
-# --- Passkey to the Lily of the Elon (GW2 ID: 83457) ---
-item:83457 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
-    rdfs:label "Passkey to the Lily of the Elon"@en ;
-    skos:altLabel "Lily of the Elon"@en ;
-    priory:gw2Id 83457 ;
-    priory:chatCode "[&AgEBRgEA]" ;
-    priory:chatLink "[&AgEBRgEA]" ;
+# --- Invitation to "Lily of the Elon" (GW2 ID: 82081) ---
+item:82081 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Invitation to \"Lily of the Elon\""@en ;
+    skos:altLabel "Passkey to the Lily of the Elon"@en, "Lily of the Elon"@en ;
+    priory:gw2Id 82081 ;
+    priory:chatCode "[&AgGhQAEA]" ;
+    priory:chatLink "[&AgGhQAEA]" ;
     priory:hasRarity rarity:Exotic ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
@@ -140,13 +140,13 @@ item:49149 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:Nam
     rdfs:comment "Permanent pass granting unlimited access to the Royal Terrace lounge in Divinity's Reach with full crafting, bank, trading post, and merchant services."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Royal_Terrace_Pass> .
 
-# --- Captain's Airship Pass (GW2 ID: 49449) ---
-item:49449 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+# --- Captain's Airship Pass (GW2 ID: 50104) ---
+item:50104 a priory:VIPLoungePass, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Captain's Airship Pass"@en ;
-    priory:gw2Id 49449 ;
-    priory:chatCode "[&AgEpwQAA]" ;
-    priory:chatLink "[&AgEpwQAA]" ;
-    priory:hasRarity rarity:Exotic ;
+    priory:gw2Id 50104 ;
+    priory:chatCode "[&AgG4wwAA]" ;
+    priory:chatLink "[&AgG4wwAA]" ;
+    priory:hasRarity rarity:Rare ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
     priory:hasCraftingStations true ;
@@ -355,12 +355,12 @@ item:87400 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, o
     rdfs:comment "Infinite-use salvage tool costing 30 copper per use. Features a 100% chance of recovering upgrades as Charms, Symbols, and Lucent Motes. Optimal for salvaging masterwork (green) gear containing sigils or runes."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Runecrafter%27s_Salvage-o-Matic> .
 
-# --- Endless Upgrade Extractor (GW2 ID: 93121) ---
-item:93121 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+# --- Endless Upgrade Extractor (GW2 ID: 86549) ---
+item:86549 a priory:InfiniteSalvageItem, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Endless Upgrade Extractor"@en ;
-    priory:gw2Id 93121 ;
-    priory:chatCode "[&AgHxmwEA]" ;
-    priory:chatLink "[&AgHxmwEA]" ;
+    priory:gw2Id 86549 ;
+    priory:chatCode "[&AgEVUgEA]" ;
+    priory:chatLink "[&AgEVUgEA]" ;
     priory:hasRarity rarity:Exotic ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
@@ -472,12 +472,12 @@ item:67393 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl
     rdfs:comment "Halloween festival gobbler that consumes Candy Corn to grant random transformation and booster effects (XP, karma, magic find, speed)."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Candy_Corn_Gobbler> .
 
-# --- Zhaitaffy Gobbler (GW2 ID: 67836) ---
-item:67836 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+# --- Zhaitaffy Gobbler (GW2 ID: 93704) ---
+item:93704 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Zhaitaffy Gobbler"@en ;
-    priory:gw2Id 67836 ;
-    priory:chatCode "[&AgFsCQEA]" ;
-    priory:chatLink "[&AgFsCQEA]" ;
+    priory:gw2Id 93704 ;
+    priory:chatCode "[&AgEIbgEA]" ;
+    priory:chatLink "[&AgEIbgEA]" ;
     priory:hasRarity rarity:Rare ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
@@ -497,9 +497,9 @@ item:92585 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Snowflake_Gobbler> .
 
 # --- Ley-Energy Matter Converter (GW2 ID: 67280) ---
-item:67280 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+item:73718 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Ley-Energy Matter Converter"@en ;
-    priory:gw2Id 67280 ;
+    priory:gw2Id 73718 ;
     priory:chatCode "[&AgGgCgEA]" ;
     priory:chatLink "[&AgGgCgEA]" ;
     priory:hasRarity rarity:Exotic ;
@@ -509,9 +509,9 @@ item:67280 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Ley-Energy_Matter_Converter> .
 
 # --- Karmic Converter (GW2 ID: 66624) ---
-item:66624 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+item:67270 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Karmic Converter"@en ;
-    priory:gw2Id 66624 ;
+    priory:gw2Id 67270 ;
     priory:chatCode "[&AgHgAQEA]" ;
     priory:chatLink "[&AgHgAQEA]" ;
     priory:hasRarity rarity:Exotic ;
@@ -521,9 +521,9 @@ item:66624 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Karmic_Converter> .
 
 # --- Gleam of Sentience (GW2 ID: 92209) ---
-item:92209 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+item:81780 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Gleam of Sentience"@en ;
-    priory:gw2Id 92209 ;
+    priory:gw2Id 81780 ;
     priory:chatCode "[&AgExaQEA]" ;
     priory:chatLink "[&AgExaQEA]" ;
     priory:hasRarity rarity:Ascended ;
@@ -533,9 +533,9 @@ item:92209 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Gleam_of_Sentience> .
 
 # --- Sentient Anomaly (GW2 ID: 80087) ---
-item:80087 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+item:79197 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Sentient Anomaly"@en ;
-    priory:gw2Id 80087 ;
+    priory:gw2Id 79197 ;
     priory:chatCode "[&AgFnOAEA]" ;
     priory:chatLink "[&AgFnOAEA]" ;
     priory:hasRarity rarity:Ascended ;
@@ -597,9 +597,9 @@ item:90002 a priory:CurrencyConverter, priory:ConvenienceGizmo, priory:Item, owl
 # ------------------------------------------------------------------------------
 
 # --- Living World Season 3 Portal Tome (GW2 ID: 80332) ---
-item:80332 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+item:81752 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Living World Season 3 Portal Tome"@en ;
-    priory:gw2Id 80332 ;
+    priory:gw2Id 81752 ;
     priory:chatCode "[&AgHMTgEA]" ;
     priory:chatLink "[&AgHMTgEA]" ;
     priory:hasRarity rarity:Ascended ;
@@ -608,12 +608,13 @@ item:80332 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedI
     rdfs:comment "Portal tome holding portal scrolls for all Living World Season 3 zones (Bloodstone Fen, Ember Bay, Bitterfrost Frontier, Lake Doric, Draconis Mons, Siren's Landing)."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Living_World_Season_3_Portal_Tome> .
 
-# --- Living World Season 4 Portal Tome (GW2 ID: 87508) ---
-item:87508 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
-    rdfs:label "Living World Season 4 Portal Tome"@en ;
-    priory:gw2Id 87508 ;
-    priory:chatCode "[&AgFUVQEA]" ;
-    priory:chatLink "[&AgFUVQEA]" ;
+# --- Living World Season 4 Portal Tome (GW2 ID: 85656) ---
+item:85656 a priory:PortalTome, priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Season 4 Portal Tome"@en ;
+    skos:altLabel "Living World Season 4 Portal Tome"@en ;
+    priory:gw2Id 85656 ;
+    priory:chatCode "[&AgGYTgEA]" ;
+    priory:chatLink "[&AgGYTgEA]" ;
     priory:hasRarity rarity:Ascended ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
@@ -687,12 +688,12 @@ item:70010 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:comment "Reusable gizmo granting instantaneous, portable access to the Mystic Forge anywhere in the world without requiring a hub visit."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mystic_Forge_Conduit_(container)> .
 
-# --- Mystic Forge Conduit (GW2 ID: 35727) ---
-item:35727 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+# --- Mystic Forge Conduit (GW2 ID: 70013) ---
+item:70013 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Mystic Forge Conduit"@en ;
-    priory:gw2Id 35727 ;
-    priory:chatCode "[&AgG/IgAA]" ;
-    priory:chatLink "[&AgG/IgAA]" ;
+    priory:gw2Id 70013 ;
+    priory:chatCode "[&AgF9EQEA]" ;
+    priory:chatLink "[&AgF9EQEA]" ;
     priory:hasRarity rarity:Exotic ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
@@ -701,13 +702,13 @@ item:35727 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:comment "Crafted portable Mystic Forge conduit made by combining Mystic Forge Conduit components."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Mystic_Forge_Conduit> .
 
-# --- Mystic Forge Node (GW2 ID: 68093) ---
-item:68093 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
+# --- Mystic Forge Node (GW2 ID: 35729) ---
+item:35729 a priory:ConvenienceGizmo, priory:Item, owl:NamedIndividual ;
     rdfs:label "Mystic Forge Node"@en ;
-    priory:gw2Id 68093 ;
-    priory:chatCode "[&AgFdCgEA]" ;
-    priory:chatLink "[&AgFdCgEA]" ;
-    priory:hasRarity rarity:Exotic ;
+    priory:gw2Id 35729 ;
+    priory:chatCode "[&AgGRiwAA]" ;
+    priory:chatLink "[&AgGRiwAA]" ;
+    priory:hasRarity rarity:Rare ;
     priory:hasItemType itemtype:Gizmo ;
     priory:isAccountBound true ;
     priory:hasMysticForge true ;

@@ -83,9 +83,9 @@ class TestOntologyAndSHACL(unittest.TestCase):
             81664: ("Mistlock Sanctuary Passkey", "[&AgEAPwEA]"),
             90011: ("Armistice Bastion Pass", "[&AgGbXwEA]"),
             98048: ("Thousand Seas Pavilion Pass", "[&AgEAfwEA]"),
-            83457: ("Passkey to the Lily of the Elon", "[&AgEBRgEA]"),
+            82081: ('Invitation to "Lily of the Elon"', "[&AgGhQAEA]"),
             49149: ("Royal Terrace Pass", "[&AgH9vwAA]"),
-            49449: ("Captain's Airship Pass", "[&AgEpwQAA]"),
+            50104: ("Captain's Airship Pass", "[&AgG4wwAA]"),
             75479: ("Noble's Folly Pass", "[&AgHnJgEA]"),
             79500: ("Lava Lounge Pass", "[&AgGMNgEA]"),
             82791: ("Champion's Rest Pass", "[&AgFnQwEA]"),
@@ -112,7 +112,7 @@ class TestOntologyAndSHACL(unittest.TestCase):
             44602: ("Copper-Fed Salvage-o-Matic", "[&AgE6rgAA]", 3),
             67027: ("Silver-Fed Salvage-o-Matic", "[&AgHTBQEA]", 60),
             87400: ("Runecrafter's Salvage-o-Matic", "[&AgFoVQEA]", 30),
-            93121: ("Endless Upgrade Extractor", "[&AgHxmwEA]", 0),
+            86549: ("Endless Upgrade Extractor", "[&AgEVUgEA]", 0),
         }
 
         for gw2_id, (expected_label, expected_chat_link, cost) in salvage_tools.items():
@@ -143,12 +143,12 @@ class TestOntologyAndSHACL(unittest.TestCase):
         # 4. Category 4: Converters & Gobblers (11 items)
         converters = {
             67393: ("Candy Corn Gobbler", "[&AgFBBwEA]"),
-            67836: ("Zhaitaffy Gobbler", "[&AgFsCQEA]"),
+            93704: ("Zhaitaffy Gobbler", "[&AgEIbgEA]"),
             92585: ("Snowflake Gobbler", "[&AgGpaQEA]"),
-            67280: ("Ley-Energy Matter Converter", "[&AgGgCgEA]"),
-            66624: ("Karmic Converter", "[&AgHgAQEA]"),
-            92209: ("Gleam of Sentience", "[&AgExaQEA]"),
-            80087: ("Sentient Anomaly", "[&AgFnOAEA]"),
+            73718: ("Ley-Energy Matter Converter", "[&AgGgCgEA]"),
+            67270: ("Karmic Converter", "[&AgHgAQEA]"),
+            81780: ("Gleam of Sentience", "[&AgExaQEA]"),
+            79197: ("Sentient Anomaly", "[&AgFnOAEA]"),
             79558: ("Sentient Aberration", "[&AgEmOwEA]"),
             81781: ("Sentient Seed", "[&AgFlPQEA]"),
             81120: ("Sentient Singularity", "[&AgHgPwEA]"),
@@ -164,8 +164,8 @@ class TestOntologyAndSHACL(unittest.TestCase):
 
         # 5. Category 5: Portal Tomes & Teleporters (6 items)
         portal_tomes = {
-            80332: ("Living World Season 3 Portal Tome", "[&AgHMTgEA]"),
-            87508: ("Living World Season 4 Portal Tome", "[&AgFUVQEA]"),
+            81752: ("Living World Season 3 Portal Tome", "[&AgHMTgEA]"),
+            85656: ("Season 4 Portal Tome", "[&AgGYTgEA]"),
             92850: ("Icebrood Saga Portal Tome", "[&AgGiaQEA]"),
             90335: ("Recharging Teleport to Friend", "[&AgHfYAEA]"),
             79744: ("Exalted Portal Stone", "[&AgEwTgEA]"),
@@ -182,8 +182,8 @@ class TestOntologyAndSHACL(unittest.TestCase):
         # 6. Category 6: Portable Mystic Forge (3 items)
         mystic_forge_items = {
             70010: ("Permanent Mystic Forge Conduit", "[&AgF6EQEA]"),
-            35727: ("Mystic Forge Conduit", "[&AgG/IgAA]"),
-            68093: ("Mystic Forge Node", "[&AgFdCgEA]"),
+            70013: ("Mystic Forge Conduit", "[&AgF9EQEA]"),
+            35729: ("Mystic Forge Node", "[&AgGRiwAA]"),
         }
 
         for gw2_id, (expected_label, expected_chat_link) in mystic_forge_items.items():
@@ -271,12 +271,11 @@ class TestOntologyAndSHACL(unittest.TestCase):
         self.assertIn((rec_bound, PRIORY.producesItem, eternity), g)
         self.assertIn((rec_bound, PRIORY.outputQuantity, rdflib.Literal(1)), g)
 
-        # 6. Safe Staging Bags & Safe Boxes (item:67390, 9594, 9584, 8948)
+        # 6. Safe Staging Bags & Safe Boxes (item:9574, 9594, 9584)
         safe_bags = {
-            67390: ("20-Slot Invisible Bag", "[&AgG5VAAA]"),
+            9574: ("20 Slot Invisible Bag", "[&AgFmJQAA]"),
             9594: ("20 Slot Safe Box", "[&AgF6JQAA]"),
             9584: ("20 Slot Invisible Pack", "[&AgFwJQAA]"),
-            8948: ("20 Slot Invisible Bag", "[&AgH0IgAA]"),
         }
         for gw2_id, (expected_label, expected_chat_link) in safe_bags.items():
             bag_uri = ITEM[str(gw2_id)]
@@ -332,7 +331,7 @@ class TestOntologyAndSHACL(unittest.TestCase):
         self.assertIn((maguuma_path, rdflib.RDF.type, PRIORY.AchievementCollectionPath), g)
 
         # 2. Path of Fire Grounding
-        desert_mastery = ITEM["82414"]
+        desert_mastery = ITEM["86036"]
         forge_desert = RECIPE["forge_gift_of_desert_mastery"]
         self.assertIn((desert_mastery, PRIORY.producedBy, forge_desert), g)
         self.assertIn((forge_desert, rdflib.RDF.type, PRIORY.MysticForgeRecipe), g)
@@ -356,7 +355,7 @@ class TestOntologyAndSHACL(unittest.TestCase):
         self.assertIn((vendor_vabbi, PRIORY.requiresCurrency, CURRENCY.ElegyMosaic), g)
 
         # 3. Secrets of the Obscure Grounding
-        amnytas_gift = ITEM["100140"]
+        amnytas_gift = ITEM["100798"]
         lyhr_amnytas = ITEM["vendor_lyhr_amnytas"]
         self.assertIn((amnytas_gift, PRIORY.acquiredVia, ITEM["vendor_lyhr"]), g)
         self.assertIn((amnytas_gift, PRIORY.acquiredVia, lyhr_amnytas), g)
@@ -381,7 +380,7 @@ class TestOntologyAndSHACL(unittest.TestCase):
         self.assertIn((lyhr_celestial, PRIORY.requiredQuantity, rdflib.Literal(250)), g)
 
         # 4. Competitive Grounding
-        mists_gift = ITEM["79549"]
+        mists_gift = ITEM["76427"]
         forge_mists = RECIPE["forge_gift_of_the_mists"]
         self.assertIn((mists_gift, PRIORY.producedBy, forge_mists), g)
         self.assertIn((forge_mists, rdflib.RDF.type, PRIORY.MysticForgeRecipe), g)

@@ -43,9 +43,9 @@ item:96978 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndivi
 item:vendor_leivas_ass priory:grantsItem item:96978 .
 
 # Chunk of Pure Jade
-item:96979 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+item:97102 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Chunk of Pure Jade"@en ;
-    priory:gw2Id 96979 ;
+    priory:gw2Id 97102 ;
     priory:hasRarity rarity:Rare ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
@@ -67,10 +67,10 @@ item:96347 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndivi
     skos:definition "High-value tradeable fishing commodity and crafting component required for Gen 3 weapons, Gift of Cantha, and Dragon Empire gifts."@en .
 
 # Memories of Aurene
-item:96074 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+item:96088 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Memory of Aurene"@en ;
     skos:altLabel "Memories of Aurene"@en ;
-    priory:gw2Id 96074 ;
+    priory:gw2Id 96088 ;
     priory:hasRarity rarity:Exotic ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
@@ -79,9 +79,9 @@ item:96074 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndivi
     skos:definition "Crystallized memories of the Prismatic Elder Dragon, Aurene. Acquired through End of Dragons events, strikes, and dragon metas; used for Gen 3 weapons and Elder Dragon variant skins."@en .
 
 # Jade Runestone
-item:96590 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
+item:96722 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Jade Runestone"@en ;
-    priory:gw2Id 96590 ;
+    priory:gw2Id 96722 ;
     priory:hasRarity rarity:Rare ;
     priory:playsRole role:CraftingIngredient, role:MarketCommodity ;
     priory:isContainerized true ;
@@ -94,9 +94,9 @@ item:96590 a priory:ContainerizedToken, priory:CraftingMaterial, owl:NamedIndivi
 # ------------------------------------------------------------------------------
 
 # Gift of Cantha
-item:97099 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+item:97096 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Gift of Cantha"@en ;
-    priory:gw2Id 97099 ;
+    priory:gw2Id 97096 ;
     priory:hasRarity rarity:Legendary ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
@@ -109,17 +109,17 @@ recipe:forge_gift_of_cantha a priory:Recipe, owl:NamedIndividual ;
     priory:vendorNPC "Leivas"@en ;
     priory:zoneName "Arborstone"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:97099 ;
+    priory:producesItem item:97096 ;
     priory:hasCostRequirement
         [ a priory:CostRequirement ; priory:requiresCurrency currency:ImperialFavor ; priory:requiredQuantity 2500 ] , # Imperial Favor
         [ a priory:CostRequirement ; priory:requiresItem item:96978 ; priory:requiredQuantity 100 ] ,      # Antique Summoning Stones
-        [ a priory:CostRequirement ; priory:requiresItem item:96590 ; priory:requiredQuantity 100 ] ,      # Jade Runestones
+        [ a priory:CostRequirement ; priory:requiresItem item:96722 ; priory:requiredQuantity 100 ] ,      # Jade Runestones
         [ a priory:CostRequirement ; priory:requiresItem item:96347 ; priory:requiredQuantity 100 ] .     # Chunk of Ancient Ambergris
 
 # Gift of the Dragon Empire
-item:96894 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
+item:97433 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Gift of the Dragon Empire"@en ;
-    priory:gw2Id 96894 ;
+    priory:gw2Id 97433 ;
     priory:hasRarity rarity:Legendary ;
     priory:playsRole role:CraftingIngredient ;
     priory:isContainerized true ;
@@ -132,12 +132,12 @@ recipe:forge_gift_of_the_dragon_empire a priory:Recipe, owl:NamedIndividual ;
     priory:vendorNPC "Leivas"@en ;
     priory:zoneName "Arborstone"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:96894 ;
+    priory:producesItem item:97433 ;
     priory:hasCostRequirement
-        [ a priory:CostRequirement ; priory:requiresItem item:97099 ; priory:requiredQuantity 1 ] ,   # Gift of Cantha
-        [ a priory:CostRequirement ; priory:requiresItem item:96979 ; priory:requiredQuantity 100 ] , # Chunk of Pure Jade
-        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 250 ] , # Memories of Aurene
-        [ a priory:CostRequirement ; priory:requiresItem item:96590 ; priory:requiredQuantity 100 ] . # Jade Runestone
+        [ a priory:CostRequirement ; priory:requiresItem item:97096 ; priory:requiredQuantity 1 ] ,   # Gift of Cantha
+        [ a priory:CostRequirement ; priory:requiresItem item:97102 ; priory:requiredQuantity 100 ] , # Chunk of Pure Jade
+        [ a priory:CostRequirement ; priory:requiresItem item:96088 ; priory:requiredQuantity 250 ] , # Memories of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96722 ; priory:requiredQuantity 100 ] . # Jade Runestone
 
 # Gift of Aurene
 item:95797 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
@@ -171,10 +171,10 @@ item:96001 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:Manifeste
     skos:definition "Legendary Greatsword skin variant channeling the death magic of the Elder Dragon Zhaitan."@en .
 
 # Kralkatorrik Variant Scale (96004)
-item:96004 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
+item:98707 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
     rdfs:label "Aurene's Insight (Kralkatorrik Variant)"@en ;
     skos:altLabel "Kralkatorrik Variant Scale"@en, "Kralkatorrik's Insight"@en, "Kralkatorrik Staff"@en, "Gen 3 Kralkatorrik Variant"@en ;
-    priory:gw2Id 96004 ;
+    priory:gw2Id 98707 ;
     priory:hasRarity rarity:Legendary ;
     priory:hasWeaponType weapon:Staff ;
     priory:hasEquipmentSlot slot:TwoHand ;
@@ -192,10 +192,10 @@ recipe:forge_aurenes_insight_kralkatorrik a priory:Recipe, owl:NamedIndividual ;
     priory:vendorNPC "Leivas"@en ;
     priory:zoneName "Arborstone"@en ;
     priory:outputQuantity 1 ;
-    priory:producesItem item:96004 ;
+    priory:producesItem item:98707 ;
     priory:hasCostRequirement
         [ a priory:CostRequirement ; priory:requiresItem item:96652 ; priory:requiredQuantity 1 ] ,   # Aurene's Insight
-        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96088 ; priory:requiredQuantity 100 ] , # Memory of Aurene
         [ a priory:CostRequirement ; priory:requiresItem item:46731 ; priory:requiredQuantity 10 ] .  # Pile of Bloodstone Dust / Branded Mass
 
 # Primordus Variant Scale (96005)
@@ -223,7 +223,7 @@ recipe:forge_aurenes_weight_primordus a priory:Recipe, owl:NamedIndividual ;
     priory:producesItem item:96005 ;
     priory:hasCostRequirement
         [ a priory:CostRequirement ; priory:requiresItem item:95684 ; priory:requiredQuantity 1 ] ,   # Aurene's Weight
-        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96088 ; priory:requiredQuantity 100 ] , # Memory of Aurene
         [ a priory:CostRequirement ; priory:requiresItem item:46733 ; priory:requiredQuantity 10 ] .  # Dragonite Ingot
 
 # Soo-Won Variant Scale (96007)
@@ -251,8 +251,8 @@ recipe:forge_aurenes_flight_soowon a priory:Recipe, owl:NamedIndividual ;
     priory:producesItem item:96007 ;
     priory:hasCostRequirement
         [ a priory:CostRequirement ; priory:requiresItem item:97590 ; priory:requiredQuantity 1 ] ,   # Aurene's Wing
-        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
-        [ a priory:CostRequirement ; priory:requiresItem item:96979 ; priory:requiredQuantity 20 ] .  # Chunk of Pure Jade
+        [ a priory:CostRequirement ; priory:requiresItem item:96088 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:97102 ; priory:requiredQuantity 20 ] .  # Chunk of Pure Jade
 
 # Jormag Variant Scale (96006)
 item:96006 a priory:LegendaryWeapon, priory:ContainerizedToken, priory:ManifestedArtifact, owl:NamedIndividual ;
@@ -279,7 +279,7 @@ recipe:forge_aurenes_wisdom_jormag a priory:Recipe, owl:NamedIndividual ;
     priory:producesItem item:96006 ;
     priory:hasCostRequirement
         [ a priory:CostRequirement ; priory:requiresItem item:96221 ; priory:requiredQuantity 1 ] ,   # Aurene's Wisdom
-        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96088 ; priory:requiredQuantity 100 ] , # Memory of Aurene
         [ a priory:CostRequirement ; priory:requiresItem item:46735 ; priory:requiredQuantity 10 ] .  # Empyreal Star
 
 # Mordremoth Variant Scale (96003)
@@ -307,7 +307,7 @@ recipe:forge_aurenes_rending_mordremoth a priory:Recipe, owl:NamedIndividual ;
     priory:producesItem item:96003 ;
     priory:hasCostRequirement
         [ a priory:CostRequirement ; priory:requiresItem item:96937 ; priory:requiredQuantity 1 ] ,   # Aurene's Rending
-        [ a priory:CostRequirement ; priory:requiresItem item:96074 ; priory:requiredQuantity 100 ] , # Memory of Aurene
+        [ a priory:CostRequirement ; priory:requiresItem item:96088 ; priory:requiredQuantity 100 ] , # Memory of Aurene
         [ a priory:CostRequirement ; priory:requiresItem item:46733 ; priory:requiredQuantity 10 ] .  # Dragonite Ingot
 
 # ------------------------------------------------------------------------------
