@@ -1,0 +1,12 @@
+# Project Priory — Baseline Known Failures Allowlist
+# Format: CheckType | Subject / Target | Reason
+# Every entry MUST contain a specific reason. Do NOT add entries without rationale.
+
+REASONER_CONSISTENCY | ontology/instances/shared/clover_sources.ttl (item:19675, item:19976) | Individual asserted as both priory:Item and priory:ContainerizedToken (subclass of priory:LedgerToken), conflicting with priory:LedgerToken owl:disjointWith priory:Item in priory_core.ttl:166.
+REASONER_CONSISTENCY | ontology/instances/shared/common_material_refinements.ttl (item:19721) | Individual asserted as both priory:Item and priory:ContainerizedToken (subclass of priory:LedgerToken), conflicting with priory:LedgerToken owl:disjointWith priory:Item in priory_core.ttl:166.
+REASONER_CONSISTENCY | ontology/instances/shared/core_exploration.ttl (zone:ShiverpeaksExploration, etc.) | priory:zoneLevel has range xsd:integer in priory_core.ttl:275, but instances supply string range literals "1-80" and "70-80".
+REASONER_CONSISTENCY | ontology/instances/shared/dungeon_tokens.ttl | priory:zoneName has range xsd:string in priory_core.ttl:273, but instances supply language-tagged literals ("Lion's Arch"@en) which are rdf:langString, disjoint from xsd:string in OWL 2 DL.
+REASONER_CONSISTENCY | ontology/instances/shared/time_gates_and_caps.ttl | priory:vendorNPC has range xsd:string in priory_core.ttl:270, but instances supply language-tagged literals ("Leivas"@en) which are rdf:langString, disjoint from xsd:string in OWL 2 DL.
+SHACL_OWLRL | Shape nc80a8318ec194e51832ab7e2fe866dd4b15 (RecipeOutputShape) | Under OWL-RL deductive closure, 13 recipes violate output cardinality due to transitive subclass entailments on producesItem.
+SHACL_OWLRL | Shape nc80a8318ec194e51832ab7e2fe866dd4b18 (RequiresItemShape) | Under OWL-RL deductive closure, 50 requiresItem targets trigger type mismatch constraints.
+SHACL_OWLRL | Shape nc80a8318ec194e51832ab7e2fe866dd4b24 (VendorExchangeCurrencyShape) | Under OWL-RL deductive closure, 51 VendorExchangePath nodes trigger missing currency constraints.
