@@ -1,0 +1,11 @@
+# Project Priory — Development & Verification Dependencies
+# Required for running `make check`, test suites, SHACL validation, and reasoner checks.
+
+pytest>=8.0.0
+rdflib>=7.0.0
+pyshacl>=0.25.0
+owlready2>=0.45
+owlrl>=7.0.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+httpx>=0.25.0
