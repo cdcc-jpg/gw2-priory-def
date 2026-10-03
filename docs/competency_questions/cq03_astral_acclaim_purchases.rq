@@ -1,0 +1,17 @@
+# Title: Items purchasable with Astral Acclaim
+# Question: Which items can be acquired via vendor exchange using Astral Acclaim currency?
+# Layer: SPARQL
+# Status: baseline
+# Source Files: ontology/instances/shared/clover_sources.ttl, ontology/instances/twilight_gen1.ttl
+
+PREFIX priory: <https://priory.gw2/def/>
+PREFIX currency: <https://priory.gw2/ref/currency/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?path ?item ?itemLabel ?quantity WHERE {
+  ?path a priory:VendorExchangePath ;
+        priory:requiresCurrency currency:AstralAcclaim ;
+        priory:targetItem ?item ;
+        priory:requiredQuantity ?quantity .
+  ?item rdfs:label ?itemLabel .
+} ORDER BY ?itemLabel

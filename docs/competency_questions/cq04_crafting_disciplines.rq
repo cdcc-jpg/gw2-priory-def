@@ -1,0 +1,16 @@
+# Title: Reference crafting disciplines
+# Question: What are all nine crafting disciplines in the reference vocabulary, along with their English labels and notations?
+# Layer: SPARQL
+# Status: baseline
+# Source Files: vocab/disciplines.ttl
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX priory-ref: <https://priory.gw2/ref/>
+
+SELECT ?discipline ?label ?notation WHERE {
+  ?discipline a skos:Concept ;
+              skos:inScheme priory-ref:DisciplineScheme ;
+              skos:prefLabel ?label ;
+              skos:notation ?notation .
+  FILTER (lang(?label) = 'en')
+} ORDER BY ?notation

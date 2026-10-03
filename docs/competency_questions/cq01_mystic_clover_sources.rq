@@ -1,0 +1,16 @@
+# Title: Acquisition and substitute pathways for Mystic Clover
+# Question: What acquisition pathways and substitute sources exist for obtaining Mystic Clover (item 19675)?
+# Layer: SPARQL
+# Status: baseline
+# Source Files: ontology/instances/shared/clover_sources.ttl, ontology/instances/twilight_gen1.ttl
+
+PREFIX priory: <https://priory.gw2/def/>
+PREFIX item: <https://priory.gw2/id/item/>
+
+SELECT DISTINCT ?sourceType ?currency ?qty WHERE {
+  item:19675 (priory:acquiredVia|priory:hasSubstituteSource) ?source .
+  ?source a ?sourceType .
+  FILTER (?sourceType != <http://www.w3.org/2002/07/owl#NamedIndividual>)
+  OPTIONAL { ?source priory:requiresCurrency ?currency }
+  OPTIONAL { ?source priory:requiredQuantity ?qty }
+} ORDER BY ?sourceType ?currency ?qty

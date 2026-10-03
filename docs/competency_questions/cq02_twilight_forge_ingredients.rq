@@ -1,0 +1,16 @@
+# Title: Direct ingredients to forge Twilight
+# Question: What items and quantities are directly required to forge the legendary greatsword Twilight in the Mystic Forge?
+# Layer: SPARQL
+# Status: baseline
+# Source Files: ontology/instances/recipes/gen1_legendary_recipes.ttl
+
+PREFIX priory: <https://priory.gw2/def/>
+PREFIX recipe: <https://priory.gw2/id/recipe/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?item ?label ?quantity WHERE {
+  recipe:forge_twilight priory:hasIngredientRequirement ?req .
+  ?req priory:requiresItem ?item ;
+       priory:requiredQuantity ?quantity .
+  ?item rdfs:label ?label .
+} ORDER BY ?label

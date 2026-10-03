@@ -1,0 +1,47 @@
+[
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Armorsmith",
+    "label": "Armorsmith",
+    "notation": "Armorsmith"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Artificer",
+    "label": "Artificer",
+    "notation": "Artificer"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Chef",
+    "label": "Chef",
+    "notation": "Chef"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Huntsman",
+    "label": "Huntsman",
+    "notation": "Huntsman"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Jeweler",
+    "label": "Jeweler",
+    "notation": "Jeweler"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Leatherworker",
+    "label": "Leatherworker",
+    "notation": "Leatherworker"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Scribe",
+    "label": "Scribe",
+    "notation": "Scribe"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Tailor",
+    "label": "Tailor",
+    "notation": "Tailor"
+  },
+  {
+    "discipline": "https://priory.gw2/ref/discipline/Weaponsmith",
+    "label": "Weaponsmith",
+    "notation": "Weaponsmith"
+  }
+]

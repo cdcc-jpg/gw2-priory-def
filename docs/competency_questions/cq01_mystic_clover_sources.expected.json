@@ -1,0 +1,22 @@
+[
+  {
+    "sourceType": "https://priory.gw2/def/MysticForgeRecipe",
+    "currency": null,
+    "qty": null
+  },
+  {
+    "sourceType": "https://priory.gw2/def/RewardTrackPath",
+    "currency": null,
+    "qty": null
+  },
+  {
+    "sourceType": "https://priory.gw2/def/VendorExchangePath",
+    "currency": "https://priory.gw2/ref/currency/AstralAcclaim",
+    "qty": "60"
+  },
+  {
+    "sourceType": "https://priory.gw2/def/VendorExchangePath",
+    "currency": "https://priory.gw2/ref/currency/FractalRelic",
+    "qty": "150"
+  }
+]

@@ -1,0 +1,13 @@
+# Title: Items with Legendary Armory saturation caps
+# Question: Which legendary items specify a maximum Legendary Armory account saturation limit?
+# Layer: SPARQL
+# Status: baseline
+# Source Files: ontology/instances/legendaries/all_legendary_items.ttl, ontology/instances/legendary_sigil.ttl
+
+PREFIX priory: <https://priory.gw2/def/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?item ?label ?cap WHERE {
+  ?item priory:armoryMaxCap ?cap ;
+        rdfs:label ?label .
+} ORDER BY ?label
