@@ -212,12 +212,26 @@ gw2-priory-def/
 │   ├── app.py                   # Flask server & REST API
 │   ├── templates/index.html     # Semantic GUI template
 │   └── static/                  # Vanilla CSS & JS controller
-├── tests/                       # Automated Unit Test Suites (150+ tests)
-│   ├── test_bfo_roles_and_substrates.py # BFO roles, substrates & opportunity costs
-│   ├── test_character_ontology.py # SHACL validation, hydration SLA & MCP tests
-│   └── ...
-├── run_web.py                   # Web GUI runner script
-├── priory_cli.py                # Interactive CLI runner
-├── CHANGELOG.md                 # Project version changelog
-└── README.md                    # Project overview
+
+---
+
+## 🛠️ Verification & One-Command Check (`make check`)
+
+Project Priory includes a unified verification gate to validate ontology syntax, structural shapes, OWL DL reasoner consistency, and unit/competency test suites in a single command without network or credentials:
+
+```bash
+# Run full offline verification suite
+make check
 ```
+
+The check verifies:
+1. **TTL Syntax Parse**: Parses all 62 `.ttl` files across `gw2-priory-def` and `gw2-priory-ref` via RDFLib.
+2. **SHACL Conformance**: Validates all shapes in `ontology/priory_shacl.ttl` and `ontology/shapes/` via PySHACL.
+3. **OWL Reasoner Consistency**: Executes HermiT (via Owlready2) on core schemas (`priory_core.ttl` + `bfo_subset.ttl`) verifying consistency and 0 unsatisfiable classes.
+4. **Pytest Suite**: Executes all 170 unit, integration, and competency question tests.
+
+Additional convenience targets:
+* `make test`: Run pytest with warning suppression.
+* `make test-cq`: Run Competency Questions test suite (`tests/test_competency_questions.py`).
+* `make clean`: Clean bytecode, test cache, and temporary artifacts.
+

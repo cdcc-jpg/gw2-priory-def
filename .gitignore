@@ -43,3 +43,13 @@ bin/
 scratch/
 data/cache/http_etags.json
 data/cache/market_prices.json
+
+# Scratch scripts and temporary runner notes
+run_command.txt
+scratch_check_bank.py
+
+# Test, tool and fitness check artifacts
+tools/fitness/__pycache__/
+docs/baseline/fitness/*.owl
+.pytest_cache/
+

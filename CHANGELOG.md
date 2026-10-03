@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- **Groundwork, Verification Harness & Safety Net (`Makefile`, `tools/check_baseline.py`, `docs/competency_questions/`, `docs/baseline/`):**
+  - **One-Command Verification Gate (`make check`):** Implemented automated, offline verification runner (`tools/check_baseline.py` and `Makefile`) testing 62 `.ttl` files syntax parsing, SHACL shape validation via `pyshacl`, core TBox consistency via `HermiT`, and full 170-test pytest suite.
+  - **Competency Question Harness (`docs/competency_questions/`):** Introduced formalized evaluation framework with standalone and pytest runner (`tests/test_competency_questions.py`) and 5 baseline seed queries (`cq01` to `cq05`) with verified expected JSON outputs.
+  - **Baseline Health & Inventory Reports (`docs/baseline/`):**
+    - `BASELINE.md`: Documented test suite metrics (170 passed), 21,300 parsed triples, SHACL conformance, and reasoner consistency.
+    - `AXIOM_AUDIT.md`: Complete OWL construct inventory across `priory_core.ttl` and shapes, identifying unparented classes and missing definitions.
+    - `BFO_ALIGNMENT_NOTES.md`: Ontological realism analysis of `Recipe`, `ManifestedArtifact`, `AcquisitionPath`, and `LedgerToken`.
+    - `LOGIC_LOCATION_MAP.md`: Cataloged 10 domain rules in Python solvers eligible for declarative migration.
+    - `HYGIENE.md`: Tracked candidate cleanups, sensitive data detection in legacy research files, and non-destructive `.gitignore` rules.
+    - `HANDOFF.md`: Comprehensive status, task sizing menu, and architectural risk assessment for hand-modelling.
+    - `known_failures.txt`: Reason-annotated allowlist for baseline reasoner disjointness conflicts.
+  - **Authoring Tool Fitness Check (`docs/baseline/AUTHORING_TOOL_FITNESS.md`):** Benchmarked `leurn-app-ontology-tool` across 10 modeller workflows, identifying severe round-trip serialization regressions (loss of `rdfs:comment`, `skos:altLabel`, and language tags) and advising safe usage boundaries.
+
+
 - **Exhaustive Ground-Truth Forensic Audit & Elimination of Hallucinated Item IDs (`tools/audit_ontology_against_api.py`, 50 `.ttl` files, `engine/`, `tests/`):**
   - **Zero Fatal / 404 Non-Existent IDs Across All 50 Ontologies:** Built an automated, multi-threaded REST API v2 auditor (`tools/audit_ontology_against_api.py`) handling HTTP 206 Partial Content chunking against official ArenaNet endpoints. Checked every item individual and container relationship across the entire definition space, reducing fatal non-existent IDs from 115 to exactly 0.
   - **Legendary Starter Kits Ground-Truth Reconstruction (`ontology/instances/containers/legendary_starter_kits.ttl`):**
