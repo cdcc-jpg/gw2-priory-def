@@ -1,0 +1,36 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+ex:Person a owl:Class .
+ex:Animal a owl:Class .
+
+ex:hasPet a owl:ObjectProperty .
+
+# equivalentClass with Restriction (someValuesFrom)
+ex:PetOwner a owl:Class ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPet ;
+        owl:someValuesFrom ex:Animal
+    ] .
+
+# disjointWith
+ex:Cat a owl:Class ; rdfs:subClassOf ex:Animal ; owl:disjointWith ex:Dog .
+ex:Dog a owl:Class ; rdfs:subClassOf ex:Animal .
+
+# unsatisfiable class
+ex:CatDog a owl:Class ;
+    rdfs:subClassOf ex:Cat, ex:Dog .
+
+# inverse property
+ex:isPetOf a owl:ObjectProperty ;
+    owl:inverseOf ex:hasPet .
+
+# transitive property
+ex:ancestorOf a owl:ObjectProperty, owl:TransitiveProperty .
+
+# functional property
+ex:hasBiologicalMother a owl:ObjectProperty, owl:FunctionalProperty .
+
