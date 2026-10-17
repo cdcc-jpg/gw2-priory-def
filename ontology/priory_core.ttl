@@ -642,6 +642,11 @@ priory:HobbsCollectionStage a owl:Class ;
     rdfs:label "Master Craftsman Hobbs Precursor Collection Stage"@en ;
     skos:definition "A sequential collection achievement stage (Tier 1-3 for Generation 1 or Tier 1-4 for Generation 2) in Master Craftsman Hobbs's precursor crafting journey."@en .
 
+priory:CollectionBitObjective a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "collection bit objective"@en ;
+    skos:definition "An entity representing a single indexed sub-objective (bit 0..N-1) within a multi-part Guild Wars 2 collection achievement."@en .
+
 
 # ==============================================================================
 # Object Properties (Verbs / Verb Phrases)
@@ -989,6 +994,12 @@ priory:promotedFromT5 a owl:ObjectProperty ;
     rdfs:range priory:Item ;
     rdfs:label "promoted from Tier 5 material"@en ;
     skos:definition "An object relation that links a Tier 6 Fine Crafting Material to the corresponding Tier 5 Fine Crafting Material from which it can be promoted in the Mystic Forge."@en .
+
+priory:hasCollectionBit a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:CollectionBitObjective ;
+    rdfs:label "has collection bit"@en ;
+    skos:definition "Links a collection achievement stage to one of its indexed bit objectives."@en .
 
 # ==============================================================================
 # Datatype Properties (Noun Phrases / Booleans)
@@ -1644,6 +1655,36 @@ priory:catalogItemId a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
     rdfs:label "catalog GW2 item ID"@en ;
     skos:definition "An integer datatype property that records the GW2 item ID on a domain catalog entry without colliding with canonical item:gw2Id triples."@en .
+
+priory:forAchievementId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "for GW2 achievement ID"@en ;
+    skos:definition "An integer datatype property that associates a collection bit objective with its parent GW2 achievement ID."@en .
+
+priory:bitIndex a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "collection bit index"@en ;
+    skos:definition "An integer datatype property that specifies the 0-indexed position of a bit objective within a GW2 collection achievement."@en .
+
+priory:bitItemId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "collection bit item ID"@en ;
+    skos:definition "An integer datatype property that records the GW2 API item ID associated with a collection bit objective."@en .
+
+priory:bitSubtype a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "collection bit subtype"@en ;
+    skos:definition "A string datatype property that records the collectible subtype classification (e.g., Trophy, Gizmo, Service, Weapon) of a collection bit objective."@en .
+
+priory:acquisitionHint a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "collection bit acquisition hint"@en ;
+    skos:definition "A string datatype property that provides the acquisition instructions, event hint, or vendor note for unlocking a collection bit objective."@en .
 
 
 

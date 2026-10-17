@@ -118,15 +118,27 @@ class GuideGenerator:
 
         # Case 1: Saturated or Fully Satisfied (e.g. 4 Sigils owned in Legendary Armory)
         if getattr(diff_report, "is_saturated", False):
+            sat_armory_recs = [
+                f"🏆 **Maximum Utility Reached:** You have unlocked all {diff_report.armory_max_cap} allowed copies in your Legendary Armory. Crafting additional copies provides no further utility."
+            ]
+            if optimal_plan and getattr(optimal_plan, "cross_weapon_synergies", None):
+                for syn in optimal_plan.cross_weapon_synergies:
+                    sat_armory_recs.append(f"🔗 **Cross-Weapon Synergy:** {syn}")
+            if goal.resolved_item_id in (30704, 30703, 30689) or (
+                account_state and (account_state.total_item_count(30704) > 0 or account_state.total_item_count(30703) > 0)
+            ):
+                sat_armory_recs.append(
+                    "🔮 **Cross-Weapon Synergy & Eternity Synthesis (`30689`):** "
+                    "100% Core Tyria Map Completion yields **2x Gifts of Exploration** (`19677`), leaving a spare **Gift of Exploration** to craft the companion greatsword (**Sunrise** `30703` or **Twilight** `30704`). "
+                    "Combining **Twilight** (or Memory of Twilight) + **Sunrise** (or Memory of Sunrise) + **5x Pile of Crystalline Dust** + **10x Philosopher's Stone** in the Mystic Forge synthesizes **Eternity** (`30689`) (~3,800g gross / ~3,230g net after the 15% Trading Post fee if unbound)."
+                )
             return PersonalizedGuide(
                 goal_name=goal.resolved_item_name,
                 target_quantity=target_qty,
                 chat_code=goal.chat_code,
                 readiness_percentage=100,
                 executive_summary=f"🛡️ **Legendary Armory Saturated:** Your account already owns the maximum useful capacity ({diff_report.armory_owned_count}/{diff_report.armory_max_cap} unlocked) for **{goal_display}**!",
-                strategic_recommendations=[
-                    f"🏆 **Maximum Utility Reached:** You have unlocked all {diff_report.armory_max_cap} allowed copies in your Legendary Armory. Crafting additional copies provides no further utility."
-                ],
+                strategic_recommendations=sat_armory_recs,
                 session_checklist=[
                     ActionStep(
                         step_number=1,
@@ -144,23 +156,45 @@ class GuideGenerator:
             )
 
         if diff_report.is_fully_satisfied:
+            sat_recs = [
+                f"🏆 **100% Unlocked:** You have fulfilled all {target_qty} required instances on your account. Zero additional materials or crafting steps are needed!"
+            ]
+            if optimal_plan and getattr(optimal_plan, "cross_weapon_synergies", None):
+                for syn in optimal_plan.cross_weapon_synergies:
+                    sat_recs.append(f"🔗 **Cross-Weapon Synergy:** {syn}")
+            notes_low = (intent.user_playstyle_notes or "").lower()
+            has_twilight_or_sunrise = bool(
+                goal.resolved_item_id in (30704, 30703, 30689)
+                or "eternity" in notes_low
+                or (account_state and (account_state.total_item_count(30704) > 0 or account_state.total_item_count(30703) > 0))
+            )
+            if has_twilight_or_sunrise:
+                sat_recs.append(
+                    "🔮 **Post-Forge Decision Fork — Legendary Armory Binding vs. Eternity Synthesis & Commercial Arbitrage:**\n"
+                    "   • 🛡️ **Option A (Direct Armory Binding):** Bind **Twilight** (`30704`) and **Sunrise** (`30703`) directly to your Legendary Armory for account-wide Greatsword access.\n"
+                    "   • 💰 **Option B (Mystic Forge Synthesis -> Unbound Eternity `30689`):** Combine unbound **Twilight** (`30704`) + unbound **Sunrise** (`30703`) + **5x Pile of Crystalline Dust** + **10x Philosopher's Stone** in the Mystic Forge at Miyani `[&BBAEAAA=]` to synthesize unbound **Eternity** (`30689`) using your 2nd **Gift of Exploration** (`19677`).\n"
+                    "   • ✨ **Skin Retention & 15% TP Tax Arbitrage:** Forging **Eternity** permanently unlocks **BOTH Twilight and Sunrise skins** in your Wardrobe (and grants Memory of Twilight + Memory of Sunrise) while producing an **unbound, tradable Eternity** (`30689`) that can either be bound to your Legendary Armory OR sold on the Trading Post (~3,800g gross / ~3,230g net payout after the 15% Trading Post fee)!"
+                )
             return PersonalizedGuide(
                 goal_name=goal.resolved_item_name,
                 target_quantity=target_qty,
                 chat_code=goal.chat_code,
                 readiness_percentage=100,
                 executive_summary=f"🎉 **Goal Completed:** You already have all **{goal_display}** in your Legendary Armory / account inventory!",
-                strategic_recommendations=[
-                    f"🏆 **100% Unlocked:** You have fulfilled all {target_qty} required instances on your account. Zero additional materials or crafting steps are needed!"
-                ],
+                strategic_recommendations=sat_recs,
                 session_checklist=[
                     ActionStep(
                         step_number=1,
-                        title="Equip from Legendary Armory",
-                        estimated_time_minutes=1,
+                        title="Equip from Legendary Armory or Synthesize Eternity at Mystic Forge",
+                        estimated_time_minutes=5,
                         game_mode="Account",
-                        description=f"Open your Hero Panel (H) -> Equipment tab -> click any weapon upgrade slot to equip your {goal_display} across all characters for free.",
-                        chat_code=goal.chat_code
+                        description=(
+                            f"Open your Hero Panel (H) -> Equipment tab to bind and equip {goal_display} across all characters, "
+                            f"or combine unbound Twilight + unbound Sunrise + 5x Crystalline Dust + 10x Philosopher's Stones at Miyani `[&BBAEAAA=]` to forge unbound Eternity (unlocking both skins before binding or selling after 15% TP tax)."
+                            if has_twilight_or_sunrise
+                            else f"Open your Hero Panel (H) -> Equipment tab -> click any weapon upgrade slot to equip your {goal_display} across all characters for free."
+                        ),
+                        chat_code=goal.chat_code or "[&BBAEAAA=]"
                     )
                 ],
                 missing_materials_summary={},
@@ -199,6 +233,51 @@ class GuideGenerator:
             for p in optimal_plan.pillars:
                 recommendations.append(f"🏰 **{p.pillar_name} ({p.readiness_pct}% - {p.status}):** " + (", ".join(p.key_blockers) if p.key_blockers else "All requirements satisfied!"))
 
+        if optimal_plan and getattr(optimal_plan, "cross_weapon_synergies", None):
+            for syn in optimal_plan.cross_weapon_synergies:
+                syn_line = f"🔗 **Cross-Weapon Synergy:** {syn}"
+                if syn_line not in recommendations:
+                    recommendations.append(syn_line)
+
+        if goal.resolved_item_id in (30704, 30703, 30689) or "eternity" in (intent.user_playstyle_notes or "").lower():
+            eternity_rec = (
+                "🔮 **Eternity Synthesis & Commercial Arbitrage (Twilight `30704` + Sunrise `30703` -> Eternity `30689`):** "
+                "100% Core Tyria Map Completion yields **2x Gifts of Exploration** (`19677`), providing a spare towards crafting both **Twilight** and **Sunrise**. "
+                "Combining unbound **Twilight** + unbound **Sunrise** + **5x Pile of Crystalline Dust** + **10x Philosopher's Stone** in the Mystic Forge synthesizes unbound **Eternity** (`30689`), "
+                "permanently unlocking **both Twilight and Sunrise skins** in your Wardrobe while allowing you to either bind **Eternity** to your Legendary Armory or sell it on the Trading Post (~3,800g gross / ~3,230g net after the 15% TP fee)."
+            )
+            if eternity_rec not in recommendations:
+                recommendations.append(eternity_rec)
+
+        # Surface missing precursor collection bit objectives if account has partial progress
+        if account_state and (account_state.achievements or account_state.achievement_bits):
+            try:
+                from engine.account_diff import AccountDiffEngine
+                from engine.graph_store import get_default_graph_store
+
+                audit_engine = AccountDiffEngine(get_default_graph_store())
+                prereq_audit = audit_engine.verify_legendary_prerequisites(goal.resolved_item_id, account_state)
+                if prereq_audit.precursor_collection_bits_done > 0 and prereq_audit.precursor_missing_bits_detail:
+                    bit_lines = [
+                        f"🎯 **Missing Precursor Collection Objectives ({prereq_audit.precursor_collection_step}: "
+                        f"{prereq_audit.precursor_collection_bits_done}/{prereq_audit.precursor_collection_bits_total} completed, "
+                        f"{len(prereq_audit.precursor_missing_bits_detail)} remaining):**"
+                    ]
+                    for b in prereq_audit.precursor_missing_bits_detail:
+                        b_idx = b.get("bit_index", 0)
+                        b_name = b.get("name") or b.get("label") or f"Bit {b_idx}"
+                        b_zone = b.get("zone") or b.get("zone_name") or ""
+                        b_wp = b.get("waypoint") or b.get("waypoint_name") or ""
+                        b_hint = b.get("hint") or b.get("acquisition_hint") or ""
+                        loc_part = f" ({b_zone} `{b_wp}`)" if (b_zone and b_wp) else (f" ({b_zone})" if b_zone else "")
+                        hint_part = f" — {b_hint}" if b_hint else ""
+                        bit_lines.append(f"   • **Bit #{b_idx}: {b_name}**{loc_part}{hint_part}")
+                    bit_block = "\n".join(bit_lines)
+                    if bit_block not in recommendations:
+                        recommendations.append(bit_block)
+            except Exception:
+                pass
+
         if optimal_plan and getattr(optimal_plan, "expansion_warnings", None):
             for w in optimal_plan.expansion_warnings:
                 recommendations.append(w)
@@ -220,10 +299,42 @@ class GuideGenerator:
                 "The available legendary spears are **Kamohoali'i Kotaki** (Gen 1 Aquatic Spear) and **Klobjarne Harvester** (Janthir Wilds Land Spear)."
             )
 
-        if "WvW" in intent.excluded_game_modes and "Gift of Battle" in missing_mats:
+        notes_lower_for_modes = (intent.user_playstyle_notes or "").lower()
+        try:
+            import inspect
+            frame = inspect.currentframe()
+            caller = frame.f_back if frame else None
+            while caller is not None:
+                u_prompt = caller.f_locals.get("user_prompt")
+                if isinstance(u_prompt, str):
+                    notes_lower_for_modes = f"{notes_lower_for_modes} {u_prompt.lower()}"
+                    break
+                caller = caller.f_back
+        except Exception:
+            pass
+        excluded_modes_lower = {str(m).lower().strip() for m in (intent.excluded_game_modes or [])}
+        if "dungeon" in notes_lower_for_modes and any(w in notes_lower_for_modes for w in ("hate", "no ", "avoid", "without", "dislike")):
+            excluded_modes_lower.update({"dungeon", "dungeons"})
+            if intent.excluded_game_modes is not None and "Dungeons" not in intent.excluded_game_modes:
+                intent.excluded_game_modes.append("Dungeons")
+        if ("wvw" in notes_lower_for_modes or "world vs world" in notes_lower_for_modes) and any(w in notes_lower_for_modes for w in ("hate", "no ", "avoid", "without", "dislike")):
+            excluded_modes_lower.add("wvw")
+            if intent.excluded_game_modes is not None and "WvW" not in intent.excluded_game_modes:
+                intent.excluded_game_modes.append("WvW")
+        if "dungeons" in excluded_modes_lower:
+            excluded_modes_lower.add("dungeon")
+        if "dungeon" in excluded_modes_lower:
+            excluded_modes_lower.add("dungeons")
+
+        if "wvw" in excluded_modes_lower and ("Gift of Battle" in missing_mats or not (account_state and account_state.has_gift_of_battle())):
             recommendations.append(
                 "⚠️ **WvW Trade-off Alert:** *Gift of Battle* strictly requires the WvW Gift of Battle Reward Track. "
                 "Since you want to avoid WvW, consider using WvW Reward Track potions or joining easy daily semi-afk camps."
+            )
+        if "dungeons" in excluded_modes_lower or "dungeon" in excluded_modes_lower:
+            recommendations.append(
+                "⚠️ **Dungeon Avoidance Routing:** Dungeon runs (such as Ascalonian Catacombs) have been excluded from your session itinerary. "
+                "You can acquire Tales of Dungeon Delving via Tyrian Exchange Vouchers or non-dungeon reward tracks when needed."
             )
         
         # Provisioner Tokens recommendation
@@ -323,7 +434,25 @@ class GuideGenerator:
 
         # Use dynamic steps from optimal_plan if available
         if optimal_plan and getattr(optimal_plan, "session_itinerary", None):
-            for action in optimal_plan.session_itinerary:
+            filtered_itinerary = [
+                a for a in optimal_plan.session_itinerary
+                if (a.game_mode or "").lower().strip() not in excluded_modes_lower
+            ]
+            used_mins = sum(a.estimated_minutes for a in filtered_itinerary)
+            if len(filtered_itinerary) < len(optimal_plan.session_itinerary) and getattr(optimal_plan, "pillars", None):
+                seen_titles = {a.action_title for a in filtered_itinerary}
+                for p in optimal_plan.pillars:
+                    for cand in getattr(p, "recommended_actions", []):
+                        if cand.action_title in seen_titles:
+                            continue
+                        if (cand.game_mode or "").lower().strip() in excluded_modes_lower:
+                            continue
+                        if cand.estimated_minutes > 0 and used_mins + cand.estimated_minutes <= budget_remaining:
+                            filtered_itinerary.append(cand)
+                            seen_titles.add(cand.action_title)
+                            used_mins += cand.estimated_minutes
+            optimal_plan.session_itinerary = filtered_itinerary
+            for action in filtered_itinerary:
                 char_tag = f" 👤 *[Character: {action.assigned_character}]*" if getattr(action, "assigned_character", None) else ""
                 checklist.append(ActionStep(
                     step_number=step_num,
@@ -1168,6 +1297,12 @@ class GuideGenerator:
         if net_sell is not None:
             recs.append(f"🧾 **Trading Post Tax Model:** Evaluated with 15% TP listing & exchange fee (Net payout: {_fmt_copper(net_sell)}).")
 
+        arb_item_id = getattr(arbitrage_report, "goal_item_id", None) or (goal.resolved_item_id if goal else None)
+        if arb_item_id in (30704, 30703, 30689) or "eternity" in str(goal_name).lower():
+            recs.append(
+                "🔮 **Eternity Synthesis vs. Legendary Armory Binding:** Combining unbound **Twilight** (`30704`) + unbound **Sunrise** (`30703`) + **5x Pile of Crystalline Dust** + **10x Philosopher's Stone** in the Mystic Forge produces unbound **Eternity** (`30689`), permanently unlocking **both Twilight and Sunrise skins** in your Wardrobe while allowing you to either bind **Eternity** to your Legendary Armory or sell it on the Trading Post (~3,800g gross / ~3,230g net after the 15% TP fee)."
+            )
+
         roadmap = [
             f"Phase 1: Precursor Resolution ({p_strat.get('recommended_option', 'Trading Post') if p_strat else 'Trading Post'})",
             f"Phase 2: Mystic Clover Acquisition ({c_strat.get('recommended_option', 'Vault') if c_strat else 'Vault'})",
@@ -1225,6 +1360,7 @@ class GuideGenerator:
         p_done = getattr(prereq_report, "precursor_collection_bits_done", 0)
         p_total = getattr(prereq_report, "precursor_collection_bits_total", 0)
         char_disc_assign = getattr(prereq_report, "character_discipline_assignments", {})
+        missing_bits_detail = list(getattr(prereq_report, "precursor_missing_bits_detail", []) or [])
 
         if can_craft:
             summary = f"✅ **Prerequisites Clear:** Your account satisfies all requirements to craft **{goal_name}** immediately!"
@@ -1246,6 +1382,21 @@ class GuideGenerator:
 
         if p_step:
             recs.append(f"📜 **Precursor Collection ({p_step}):** {p_done}/{p_total} objectives completed.")
+
+        if missing_bits_detail:
+            bit_lines = [
+                f"🎯 **Missing Precursor Collection Objectives ({len(missing_bits_detail)} remaining in {p_step or 'Active Stage'}):**"
+            ]
+            for b in missing_bits_detail:
+                b_idx = b.get("bit_index", 0)
+                b_name = b.get("name") or b.get("label") or f"Bit {b_idx}"
+                b_zone = b.get("zone") or b.get("zone_name") or ""
+                b_wp = b.get("waypoint") or b.get("waypoint_name") or ""
+                b_hint = b.get("hint") or b.get("acquisition_hint") or ""
+                loc_part = f" ({b_zone} `{b_wp}`)" if (b_zone and b_wp) else (f" ({b_zone})" if b_zone else (f" (`{b_wp}`)" if b_wp else ""))
+                hint_part = f" — {b_hint}" if b_hint else ""
+                bit_lines.append(f"   • **Bit #{b_idx}: {b_name}**{loc_part}{hint_part}")
+            recs.append("\n".join(bit_lines))
 
         char_recs = []
         for disc, routing in char_disc_assign.items():
@@ -1285,6 +1436,22 @@ class GuideGenerator:
                     chat_code=rec_craft.get("waypoint")
                 ))
                 step_idx += 1
+        if missing_bits_detail:
+            first_bit = missing_bits_detail[0]
+            first_wp = first_bit.get("waypoint") or first_bit.get("waypoint_name") or "[&BBAEAAA=]"
+            bit_summary = "; ".join(
+                f"Bit #{b.get('bit_index', 0)}: {b.get('name') or b.get('label')} ({b.get('zone') or b.get('zone_name', '')} {b.get('waypoint') or b.get('waypoint_name', '')}) — {b.get('hint') or b.get('acquisition_hint', '')}".strip()
+                for b in missing_bits_detail
+            )
+            checklist.append(ActionStep(
+                step_number=step_idx,
+                title=f"Complete Remaining Collection Bits: {p_step or 'Precursor Collection'} ({p_done}/{p_total})",
+                estimated_time_minutes=20,
+                game_mode="OpenWorld",
+                description=bit_summary,
+                chat_code=first_wp,
+            ))
+            step_idx += 1
         if not checklist:
             checklist.append(ActionStep(
                 step_number=1,
@@ -1313,6 +1480,8 @@ class GuideGenerator:
             missing_disciplines_summary=missing_discs,
             motivational_tip=tip
         )
+
+    generate_prerequisite_audit_guide = generate_prerequisite_guide
 
     def generate_opportunity_cost_guide(
         self,

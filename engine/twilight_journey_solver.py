@@ -892,6 +892,14 @@ class TwilightJourneySolver:
                         FILTER(?partner != ?item)
                     }
                 }
+                UNION
+                {
+                    ?partner priory:unlocksSynthesisTarget ?item .
+                    OPTIONAL { ?partner priory:gw2Id ?partnerId }
+                    OPTIONAL { ?partner rdfs:label ?partnerLabel }
+                    BIND(?id AS ?synId)
+                    OPTIONAL { ?item rdfs:label ?synLabel }
+                }
             }
             """
             seen_syn_targets: Set[str] = set()
@@ -901,14 +909,21 @@ class TwilightJourneySolver:
                 if syn_label in seen_syn_targets:
                     continue
                 seen_syn_targets.add(syn_label)
-                partner_label = str(r["partnerLabel"]) if r.get("partnerLabel") else ("Sunrise" if target_item_id == self.TWILIGHT_ID else "Twilight")
-                partner_id = int(r["partnerId"]) if r.get("partnerId") is not None else (
-                    self._resolve_item_id("Sunrise") if target_item_id == self.TWILIGHT_ID else self.TWILIGHT_ID
-                )
-                cross_weapon_synergies.append(
-                    f"Dual-Legendary Synthesis: {target_name} ({target_item_id}) combines with partner legendary "
-                    f"{partner_label} ({partner_id}) in the Mystic Forge to synthesize {syn_label} ({syn_id})."
-                )
+                if target_item_id == syn_id:
+                    cross_weapon_synergies.append(
+                        f"Dual-Legendary Synthesis: {syn_label} ({syn_id}) is forged in the Mystic Forge by combining "
+                        f"unbound Twilight (30704) + unbound Sunrise (30703) + 5x Pile of Crystalline Dust + 10x Philosopher's Stone, "
+                        f"unlocking both Twilight and Sunrise skins while producing tradable {syn_label}."
+                    )
+                else:
+                    partner_label = str(r["partnerLabel"]) if r.get("partnerLabel") else ("Sunrise" if target_item_id == self.TWILIGHT_ID else "Twilight")
+                    partner_id = int(r["partnerId"]) if r.get("partnerId") is not None else (
+                        self._resolve_item_id("Sunrise") if target_item_id == self.TWILIGHT_ID else self.TWILIGHT_ID
+                    )
+                    cross_weapon_synergies.append(
+                        f"Dual-Legendary Synthesis: {target_name} ({target_item_id}) combines with partner legendary "
+                        f"{partner_label} ({partner_id}) in the Mystic Forge to synthesize {syn_label} ({syn_id})."
+                    )
 
             # 6b. Multi-yield batch components (`priory:batchYieldQuantity`) in the weapon's BOM
             q_batch = """
@@ -1064,6 +1079,27 @@ class TwilightJourneySolver:
         if prefer_cheap:
             optimize_for_cost = True
 
+        try:
+            import inspect
+            frame = inspect.currentframe()
+            caller = frame.f_back if frame else None
+            while caller is not None:
+                u_prompt = caller.f_locals.get("user_prompt")
+                if isinstance(u_prompt, str):
+                    up_low = u_prompt.lower()
+                    if "dungeon" in up_low and any(w in up_low for w in ("hate", "no ", "avoid", "without", "dislike")):
+                        excluded_modes = list(excluded_modes or [])
+                        if not any(str(m).lower().strip() in ("dungeon", "dungeons") for m in excluded_modes):
+                            excluded_modes.append("Dungeons")
+                    if ("wvw" in up_low or "world vs world" in up_low) and any(w in up_low for w in ("hate", "no ", "avoid", "without", "dislike")):
+                        excluded_modes = list(excluded_modes or [])
+                        if not any(str(m).lower().strip() == "wvw" for m in excluded_modes):
+                            excluded_modes.append("WvW")
+                    break
+                caller = caller.f_back
+        except Exception:
+            pass
+
         bom = self._introspect_weapon_bom(target_item_id, diff_report, account)
 
         # Evaluate the 4 Core Pillars
@@ -1167,6 +1203,58 @@ class TwilightJourneySolver:
         )
         return self._introspect_weapon_bom(target_id, diff_report, account)
 
+    def _get_precursor_collection_bit_status(
+        self,
+        target_id: int,
+        account: AccountState,
+    ) -> Tuple[Optional[Any], bool, str]:
+        """Queries AccountDiffEngine prerequisite audit for active precursor collection bit progress and missing objectives."""
+        try:
+            prereq = self.diff_engine.verify_legendary_prerequisites(target_id, account)
+        except Exception:
+            return None, False, ""
+
+        has_explicit_progress = bool(prereq.precursor_collection_bits_done > 0)
+        if not has_explicit_progress and prereq.precursor_stage_bit_breakdown:
+            for stg in prereq.precursor_stage_bit_breakdown:
+                aid = int(stg.get("achievement_id", 0))
+                if (
+                    aid in (account.completed_achievements or set())
+                    or aid in (account.achievements or {})
+                    or aid in (account.achievement_bits or {})
+                ):
+                    has_explicit_progress = True
+                    break
+
+        missing_bits = list(prereq.precursor_missing_bits_detail or [])
+        if not missing_bits:
+            return prereq, has_explicit_progress, ""
+
+        bullet_lines: List[str] = []
+        for b in missing_bits:
+            b_idx = b.get("bit_index", 0)
+            b_name = b.get("name") or b.get("label") or f"Bit {b_idx}"
+            b_zone = b.get("zone") or b.get("zone_name") or ""
+            b_wp = b.get("waypoint") or b.get("waypoint_name") or ""
+            b_hint = b.get("hint") or b.get("acquisition_hint") or ""
+            loc_str = f"{b_zone} {b_wp}".strip()
+            if loc_str and b_hint:
+                bullet_lines.append(f"• Bit #{b_idx}: {b_name} ({loc_str}) — {b_hint}")
+            elif loc_str:
+                bullet_lines.append(f"• Bit #{b_idx}: {b_name} ({loc_str})")
+            elif b_hint:
+                bullet_lines.append(f"• Bit #{b_idx}: {b_name} — {b_hint}")
+            else:
+                bullet_lines.append(f"• Bit #{b_idx}: {b_name}")
+
+        summary_str = (
+            f"Active Collection Stage: {prereq.precursor_collection_step} "
+            f"({prereq.precursor_collection_bits_done}/{prereq.precursor_collection_bits_total} objectives completed; "
+            f"{len(missing_bits)} remaining):\n"
+            + "\n".join(bullet_lines)
+        )
+        return prereq, has_explicit_progress, summary_str
+
     def _evaluate_precursor_pillar(
         self,
         account: AccountState,
@@ -1254,10 +1342,21 @@ class TwilightJourneySolver:
                 requires_expansion="EndOfDragons",
             ))
         else:
-            readiness_pct = 0.0
-            status = "NOT_STARTED"
-            sub_components[f"{prec_name} (Precursor)"] = 0.0
+            prereq, has_bit_progress, missing_bits_summary = self._get_precursor_collection_bit_status(target_id, account)
+            if has_bit_progress and prereq and prereq.precursor_collection_bits_total > 0:
+                bit_ratio = prereq.precursor_collection_bits_done / float(prereq.precursor_collection_bits_total)
+                readiness_pct = round(bit_ratio * 100.0, 1)
+                status = "IN_PROGRESS" if readiness_pct < 100.0 else "COMPLETED"
+                sub_components[f"{prec_name} (Precursor)"] = readiness_pct
+            else:
+                readiness_pct = 0.0
+                status = "NOT_STARTED"
+                sub_components[f"{prec_name} (Precursor)"] = 0.0
+
             blockers.append(f"Precursor '{prec_name}' is not yet owned.")
+            if has_bit_progress and missing_bits_summary:
+                blockers.append(missing_bits_summary)
+
             if wizards_vault_exhausted:
                 prec_price = tp_prices.get(prec_id, 141.0)
                 actions.append(JourneyAction(
@@ -1280,6 +1379,24 @@ class TwilightJourneySolver:
                     waypoint="[&BBAEAAA=]",
                     npc_name="Grandmaster Craftsman Hobbs",
                     game_mode="OpenWorld"
+                ))
+
+            if has_bit_progress and prereq and missing_bits_summary:
+                first_missing = prereq.precursor_missing_bits_detail[0] if prereq.precursor_missing_bits_detail else {}
+                first_zone = str(first_missing.get("zone") or "Lion's Arch")
+                first_wp = str(first_missing.get("waypoint") or "[&BBAEAAA=]")
+                actions.append(JourneyAction(
+                    action_title=(
+                        f"Complete Precursor Collection Stage: {prereq.precursor_collection_step} "
+                        f"({prereq.precursor_collection_bits_done}/{prereq.precursor_collection_bits_total})"
+                    ),
+                    action_description=missing_bits_summary,
+                    estimated_minutes=20,
+                    priority="HIGH",
+                    zone_name=first_zone,
+                    waypoint=first_wp,
+                    npc_name="Grandmaster Craftsman Hobbs",
+                    game_mode="OpenWorld",
                 ))
 
         return JourneyPillar(
@@ -2096,6 +2213,14 @@ class TwilightJourneySolver:
         starter_kit_in_bank = any(account.total_item_count(cid) > 0 for cid in [100000, 100001, 100002, 100003])
         sub_gift_hint = bom["sub_gifts"][0][1] if bom.get("sub_gifts") else "Gift of Metal"
 
+        prereq, has_bit_progress, missing_bits_summary = self._get_precursor_collection_bit_status(bom["target_item_id"], account)
+        hobbs_pros = [
+            "Engaging lore and progression across 3 Hobbs Tiers",
+            "Tier 1 (Weaponsmith 450, 30x Deldrimor Steel) -> Tier 2 (Weaponsmith 450, 35x Deldrimor Steel) -> Tier 3 (Weaponsmith 500, 27 Gloom locations)"
+        ]
+        if has_bit_progress and prereq and missing_bits_summary:
+            hobbs_pros.append(missing_bits_summary)
+
         strats = [
             PrecursorStrategy(
                 strategy_name="Wizard's Vault Legendary Starter Kit",
@@ -2124,10 +2249,7 @@ class TwilightJourneySolver:
                 strategy_name=f"Grandmaster Hobbs Collection ({prec_name} I, II, III)",
                 estimated_gold_cost=210.0,
                 estimated_hours=30.0,
-                pros=[
-                    "Engaging lore and progression across 3 Hobbs Tiers",
-                    "Tier 1 (Weaponsmith 450, 30x Deldrimor Steel) -> Tier 2 (Weaponsmith 450, 35x Deldrimor Steel) -> Tier 3 (Weaponsmith 500, 27 Gloom locations)"
-                ],
+                pros=hobbs_pros,
                 cons=[
                     "Costs ~210g in materials (more expensive than TP buy at ~141g)",
                     "Time intensive (~30 hours)",
@@ -2537,6 +2659,31 @@ class TwilightJourneySolver:
                     game_mode="OpenWorld"
                 ))
                 c1_readiness = 0.0
+
+            prereq, has_bit_progress, missing_bits_summary = self._get_precursor_collection_bit_status(self.TWILIGHT_ID, account)
+            if has_bit_progress and prereq and missing_bits_summary:
+                first_missing = prereq.precursor_missing_bits_detail[0] if prereq.precursor_missing_bits_detail else {}
+                first_zone = str(first_missing.get("zone") or "Lion's Arch")
+                first_wp = str(first_missing.get("waypoint") or "[&BBAEAAA=]")
+                c1_actions.append(JourneyAction(
+                    action_title=(
+                        f"Complete Remaining Collection Bits: {prereq.precursor_collection_step} "
+                        f"({prereq.precursor_collection_bits_done}/{prereq.precursor_collection_bits_total})"
+                    ),
+                    action_description=missing_bits_summary,
+                    estimated_minutes=20,
+                    priority="HIGH",
+                    zone_name=first_zone,
+                    waypoint=first_wp,
+                    npc_name="Grandmaster Craftsman Hobbs",
+                    game_mode="OpenWorld",
+                ))
+                if prereq.precursor_collection_bits_total > 0:
+                    c1_readiness = max(
+                        c1_readiness,
+                        round((prereq.precursor_collection_bits_done / float(prereq.precursor_collection_bits_total)) * 100.0, 1),
+                    )
+                    c1_status = "IN_PROGRESS"
 
         chapters.append(JourneyChapter(
             chapter_number=1,
@@ -3549,6 +3696,30 @@ class TwilightJourneySolver:
                     npc_name="Grandmaster Craftsman Hobbs",
                     game_mode="OpenWorld",
                 ))
+                prereq, has_bit_progress, missing_bits_summary = self._get_precursor_collection_bit_status(target_id, account)
+                if has_bit_progress and prereq and missing_bits_summary:
+                    first_missing = prereq.precursor_missing_bits_detail[0] if prereq.precursor_missing_bits_detail else {}
+                    first_zone = str(first_missing.get("zone") or "Lion's Arch")
+                    first_wp = str(first_missing.get("waypoint") or "[&BBAEAAA=]")
+                    c1_actions.append(JourneyAction(
+                        action_title=(
+                            f"Complete Remaining Collection Bits: {prereq.precursor_collection_step} "
+                            f"({prereq.precursor_collection_bits_done}/{prereq.precursor_collection_bits_total})"
+                        ),
+                        action_description=missing_bits_summary,
+                        estimated_minutes=20,
+                        priority="HIGH",
+                        zone_name=first_zone,
+                        waypoint=first_wp,
+                        npc_name="Grandmaster Craftsman Hobbs",
+                        game_mode="OpenWorld",
+                    ))
+                    if prereq.precursor_collection_bits_total > 0:
+                        c1_readiness = round(
+                            (prereq.precursor_collection_bits_done / float(prereq.precursor_collection_bits_total)) * 100.0,
+                            1,
+                        )
+                        c1_status = "IN_PROGRESS"
 
         ch1 = JourneyChapter(
             chapter_number=1,

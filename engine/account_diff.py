@@ -303,13 +303,58 @@ class AccountState:
         """Returns True if account owns Gift of Exploration (item 19677)."""
         return self.total_item_count(19677) > 0
 
+    def _get_achievement_progress(self, ach_id: int, total_bits: int = 0) -> Tuple[int, Set[int], bool]:
+        """Extracts (count_done, completed_bit_indices, is_done) for an achievement ID across GW2 API formats."""
+        completed_bits: Set[int] = set()
+        is_done: bool = ach_id in (self.completed_achievements or set())
+        count_done: int = 0
+
+        if self.achievement_bits and ach_id in self.achievement_bits:
+            val = self.achievement_bits[ach_id]
+            if isinstance(val, (list, tuple, set)):
+                completed_bits.update(int(b) for b in val)
+                count_done = max(count_done, len(completed_bits))
+
+        if self.achievements and ach_id in self.achievements:
+            raw = self.achievements[ach_id]
+            if isinstance(raw, dict):
+                if raw.get("done") is True:
+                    is_done = True
+                if "bits" in raw and isinstance(raw["bits"], (list, tuple, set)):
+                    completed_bits.update(int(b) for b in raw["bits"])
+                    count_done = max(count_done, len(completed_bits))
+                if "current" in raw and isinstance(raw["current"], (int, float)):
+                    cur_int = int(raw["current"])
+                    count_done = max(count_done, cur_int)
+                    if not completed_bits and cur_int > 0:
+                        completed_bits.update(range(cur_int))
+            elif isinstance(raw, (list, tuple, set)):
+                completed_bits.update(int(b) for b in raw)
+                count_done = max(count_done, len(completed_bits))
+            elif isinstance(raw, (int, float)):
+                cur_int = int(raw)
+                count_done = max(count_done, cur_int)
+                if not completed_bits and cur_int > 0:
+                    completed_bits.update(range(cur_int))
+
+        if total_bits > 0:
+            if is_done or count_done >= total_bits or len(completed_bits) >= total_bits:
+                is_done = True
+                count_done = total_bits
+                completed_bits.update(range(total_bits))
+            else:
+                count_done = min(max(count_done, len(completed_bits)), total_bits)
+
+        return count_done, completed_bits, is_done
+
     def world_completion_status(self) -> Tuple[bool, Optional[str]]:
         """Determines world exploration status and source ("INVENTORY_GIFT", "TITLE_12", "ACHIEVEMENT_137")."""
         if self.total_item_count(19677) > 0:
             return True, "INVENTORY_GIFT"
         if 12 in self.titles:
             return True, "TITLE_12"
-        if 137 in self.completed_achievements or self.achievements.get(137, 0) >= 100:
+        ach137_count, _, ach137_done = self._get_achievement_progress(137, total_bits=100)
+        if ach137_done or ach137_count >= 100:
             return True, "ACHIEVEMENT_137"
         return False, None
 
@@ -829,6 +874,11 @@ class PrerequisiteReport:
     can_craft_immediately: bool
     blockers: List[str]
     character_discipline_assignments: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    precursor_missing_bits_detail: List[Dict[str, Any]] = field(default_factory=list)
+    precursor_stage_bit_breakdown: List[Dict[str, Any]] = field(default_factory=list)
+
+
+AccountPrerequisiteAudit = PrerequisiteReport
 
 
 class AccountDiffEngine:
@@ -853,6 +903,7 @@ class AccountDiffEngine:
         self._achievement_reqs_cache: Dict[int, List[Dict[str, Any]]] = {}
         self._mastery_reqs_cache: Dict[int, List[Dict[str, Any]]] = {}
         self._discipline_recipes_cache: Optional[List[Dict[str, Any]]] = None
+        self._collection_bits_cache: Dict[int, List[Dict[str, Any]]] = {}
 
     def clear_sub_tree_cache(self) -> None:
         """Clears the memoized sub-tree cache across multi-item evaluations."""
@@ -871,6 +922,69 @@ class AccountDiffEngine:
         self._achievement_reqs_cache.clear()
         self._mastery_reqs_cache.clear()
         self._discipline_recipes_cache = None
+        self._collection_bits_cache.clear()
+
+    def get_collection_bits_for_achievement(self, ach_id: int) -> List[Dict[str, Any]]:
+        """Queries ontology-grounded CollectionBitObjective records for a precursor collection achievement ID."""
+        if self.store is None:
+            return []
+        ach_int = int(ach_id)
+        if ach_int in self._collection_bits_cache:
+            return [dict(b) for b in self._collection_bits_cache[ach_int]]
+
+        raw_bits: List[Dict[str, Any]] = []
+        if hasattr(self.store, "get_collection_bits"):
+            try:
+                res = self.store.get_collection_bits(ach_int)
+                if isinstance(res, list):
+                    raw_bits = res
+            except Exception:
+                raw_bits = []
+
+        if not raw_bits:
+            bit_sparql = """
+            SELECT DISTINCT ?bit ?idx ?itemId ?label ?zone ?wp ?hint WHERE {
+                ?bit a priory:CollectionBitObjective ;
+                     priory:forAchievementId ?achId ;
+                     priory:bitIndex ?idx ;
+                     rdfs:label ?label .
+                OPTIONAL { ?bit priory:bitItemId ?itemId }
+                OPTIONAL { ?bit priory:zoneName ?zone }
+                OPTIONAL { ?bit priory:waypointName ?wp }
+                OPTIONAL { ?bit priory:acquisitionHint ?hint }
+            }
+            """
+            raw_bits = self.store.query(bit_sparql, init_bindings={"achId": Literal(ach_int)})
+
+        by_index: Dict[int, Dict[str, Any]] = {}
+        for r in raw_bits:
+            idx_raw = r.get("bit_index") if r.get("bit_index") is not None else r.get("idx", 0)
+            idx_val = int(idx_raw)
+            item_raw = r.get("item_id") if r.get("item_id") is not None else r.get("itemId")
+            item_val = int(item_raw) if item_raw is not None else None
+            name_val = str(r.get("name") or r.get("label") or f"Bit {idx_val}")
+            zone_val = str(r.get("zone") or r.get("zone_name") or "")
+            wp_val = str(r.get("waypoint") or r.get("waypoint_name") or r.get("wp") or "")
+            hint_val = str(r.get("hint") or r.get("acquisition_hint") or "")
+            by_index[idx_val] = {
+                "achievement_id": ach_int,
+                "bit_index": idx_val,
+                "index": idx_val,
+                "item_id": item_val,
+                "name": name_val,
+                "label": name_val,
+                "zone": zone_val,
+                "zone_name": zone_val,
+                "waypoint": wp_val,
+                "waypoint_name": wp_val,
+                "hint": hint_val,
+                "acquisition_hint": hint_val,
+            }
+
+        sorted_bits = [by_index[k] for k in sorted(by_index.keys())]
+        if sorted_bits:
+            self._collection_bits_cache[ach_int] = sorted_bits
+        return [dict(b) for b in sorted_bits]
 
     def get_available_purchasing_power(self, entity_iri_or_id: Any, account_state: AccountState) -> int:
         """Substrate-agnostic balance resolver querying AccountWalletScalar vs ContainerizedToken in RDF graph.
@@ -1485,8 +1599,21 @@ class AccountDiffEngine:
                     })
         return missing
 
-    def verify_legendary_prerequisites(self, goal_item_id: int, account_state: AccountState) -> PrerequisiteReport:
+    def verify_legendary_prerequisites(
+        self,
+        goal_item_id: Any,
+        account_state: Optional[AccountState] = None,
+        account: Optional[AccountState] = None,
+    ) -> PrerequisiteReport:
         """Verifies account prerequisites (mastery tiers, active crafting, world completion, precursor collections) for crafting a legendary goal."""
+        if isinstance(goal_item_id, AccountState) and isinstance(account_state, int):
+            goal_item_id, account_state = account_state, goal_item_id
+        if account_state is None and account is not None:
+            account_state = account
+        if account_state is None:
+            account_state = AccountState()
+        goal_item_id = int(goal_item_id)
+
         _ensure_account_catalogs_hydrated(self.store)
         item_meta = self.store.get_item_by_id(goal_item_id) if self.store else None
         goal_name = item_meta["label"] if item_meta else f"Item {goal_item_id}"
@@ -1678,15 +1805,27 @@ class AccountDiffEngine:
 
         # 6. Precursor Collection Bitmask Analysis
         collection_key = goal_item_id
+        matched_stage_for_ach_id: Optional[Dict[str, Any]] = None
         if collection_key not in HOBBS_COLLECTIONS:
             if goal_item_id in GEN1_WEAPONS:
                 collection_key = GEN1_WEAPONS[goal_item_id]["precursor_id"]
             elif goal_item_id in GEN2_WEAPONS:
                 collection_key = GEN2_WEAPONS[goal_item_id]["precursor_id"]
+            else:
+                for _pid, _stages in HOBBS_COLLECTIONS.items():
+                    for _stg in _stages:
+                        if goal_item_id in _stg.get("ach_ids", []):
+                            collection_key = _pid
+                            matched_stage_for_ach_id = _stg
+                            break
+                    if matched_stage_for_ach_id is not None:
+                        break
 
         precursor_collection_step: Optional[str] = None
         precursor_collection_bits_done: int = 0
         precursor_collection_bits_total: int = 0
+        precursor_missing_bits_detail: List[Dict[str, Any]] = []
+        precursor_stage_bit_breakdown: List[Dict[str, Any]] = []
 
         if collection_key in HOBBS_COLLECTIONS:
             tiers = HOBBS_COLLECTIONS[collection_key]
@@ -1708,42 +1847,106 @@ class AccountDiffEngine:
                 or account_state.has_legendary_unlocked(goal_item_id)
             )
 
-            if has_precursor:
+            # Determine highest tier with explicit achievement progress in account_state
+            highest_active_tier_num = 0
+            for t in tiers:
+                for aid in t["ach_ids"]:
+                    if (
+                        aid in (account_state.completed_achievements or set())
+                        or aid in (account_state.achievements or {})
+                        or aid in (account_state.achievement_bits or {})
+                    ):
+                        highest_active_tier_num = max(highest_active_tier_num, int(t["tier"]))
+
+            current_tier: Optional[Dict[str, Any]] = None
+            current_stage_entry: Optional[Dict[str, Any]] = None
+
+            for t in tiers:
+                t_total = int(t["bits_total"])
+                t_tier_num = int(t["tier"])
+                explicitly_tracked = any(
+                    aid in (account_state.achievements or {})
+                    or aid in (account_state.achievement_bits or {})
+                    for aid in t["ach_ids"]
+                )
+
+                t_done = False
+                best_count = 0
+                best_bits: Set[int] = set()
+                primary_aid = int(t["ach_ids"][0]) if t.get("ach_ids") else 0
+
+                for aid in t["ach_ids"]:
+                    c_done, c_bits, is_ach_done = account_state._get_achievement_progress(aid, total_bits=t_total)
+                    if is_ach_done:
+                        t_done = True
+                        best_count = t_total
+                        best_bits = set(range(t_total))
+                        primary_aid = int(aid)
+                        break
+                    if c_done > best_count or len(c_bits) > len(best_bits):
+                        best_count = c_done
+                        best_bits = set(c_bits)
+                        primary_aid = int(aid)
+
+                if has_precursor:
+                    t_done = True
+                    best_count = t_total
+                    best_bits = set(range(t_total))
+                elif not t_done and not explicitly_tracked and t_tier_num < highest_active_tier_num:
+                    # Earlier tiers are prerequisite to an actively tracked higher tier
+                    t_done = True
+                    best_count = t_total
+                    best_bits = set(range(t_total))
+
+                ontology_bits = self.get_collection_bits_for_achievement(primary_aid)
+                if not ontology_bits and len(t.get("ach_ids", [])) > 1:
+                    for alt_aid in t["ach_ids"]:
+                        ontology_bits = self.get_collection_bits_for_achievement(int(alt_aid))
+                        if ontology_bits:
+                            primary_aid = int(alt_aid)
+                            break
+
+                stage_missing_bits: List[Dict[str, Any]] = []
+                if not t_done and ontology_bits:
+                    for b in ontology_bits:
+                        if b["bit_index"] not in best_bits:
+                            b_copy = dict(b)
+                            b_copy["tier"] = t_tier_num
+                            b_copy["stage_name"] = str(t["name"])
+                            stage_missing_bits.append(b_copy)
+
+                stage_entry: Dict[str, Any] = {
+                    "tier": t_tier_num,
+                    "achievement_id": primary_aid,
+                    "name": str(t["name"]),
+                    "bits_done": best_count,
+                    "bits_total": t_total,
+                    "completed": bool(t_done),
+                    "status": "COMPLETED" if t_done else ("IN_PROGRESS" if best_count > 0 else "LOCKED"),
+                    "completed_bit_indices": sorted(best_bits),
+                    "missing_bit_indices": [i for i in range(t_total) if i not in best_bits],
+                    "missing_bits": stage_missing_bits,
+                    "total_ontology_bits": len(ontology_bits),
+                }
+                precursor_stage_bit_breakdown.append(stage_entry)
+
+                if not t_done and current_tier is None:
+                    if matched_stage_for_ach_id is None or t_tier_num == int(matched_stage_for_ach_id["tier"]):
+                        current_tier = t
+                        current_stage_entry = stage_entry
+
+            if has_precursor or current_tier is None or current_stage_entry is None:
                 precursor_collection_step = "COMPLETED"
                 precursor_collection_bits_done = last_tier["bits_total"]
                 precursor_collection_bits_total = last_tier["bits_total"]
             else:
-                current_tier = None
-                for t in tiers:
-                    t_done = False
-                    for aid in t["ach_ids"]:
-                        if aid in account_state.completed_achievements:
-                            t_done = True
-                            break
-                        if account_state.achievements.get(aid, 0) >= t["bits_total"]:
-                            t_done = True
-                            break
-                    if not t_done:
-                        current_tier = t
-                        break
-
-                if current_tier is None:
-                    precursor_collection_step = "COMPLETED"
-                    precursor_collection_bits_done = last_tier["bits_total"]
-                    precursor_collection_bits_total = last_tier["bits_total"]
-                else:
-                    precursor_collection_step = current_tier["name"]
-                    precursor_collection_bits_total = current_tier["bits_total"]
-                    bits_done = 0
-                    for aid in current_tier["ach_ids"]:
-                        if aid in account_state.achievement_bits:
-                            bits_done = max(bits_done, len(account_state.achievement_bits[aid]))
-                        if aid in account_state.achievements:
-                            bits_done = max(bits_done, account_state.achievements[aid])
-                    precursor_collection_bits_done = min(bits_done, precursor_collection_bits_total)
-                    blockers.append(
-                        f"Precursor collection incomplete: {precursor_collection_step} ({precursor_collection_bits_done}/{precursor_collection_bits_total} objectives completed)."
-                    )
+                precursor_collection_step = current_tier["name"]
+                precursor_collection_bits_total = current_tier["bits_total"]
+                precursor_collection_bits_done = current_stage_entry["bits_done"]
+                precursor_missing_bits_detail = list(current_stage_entry["missing_bits"])
+                blockers.append(
+                    f"Precursor collection incomplete: {precursor_collection_step} ({precursor_collection_bits_done}/{precursor_collection_bits_total} objectives completed)."
+                )
         else:
             precursor_collection_step = None
             precursor_collection_bits_done = 0
@@ -1781,7 +1984,22 @@ class AccountDiffEngine:
             precursor_collection_bits_total=precursor_collection_bits_total,
             can_craft_immediately=can_craft_immediately,
             blockers=blockers,
-            character_discipline_assignments=character_discipline_assignments
+            character_discipline_assignments=character_discipline_assignments,
+            precursor_missing_bits_detail=precursor_missing_bits_detail,
+            precursor_stage_bit_breakdown=precursor_stage_bit_breakdown,
+        )
+
+    def audit_prerequisites(
+        self,
+        goal_item_id: Any,
+        account_state: Optional[AccountState] = None,
+        account: Optional[AccountState] = None,
+    ) -> PrerequisiteReport:
+        """Alias for verify_legendary_prerequisites returning AccountPrerequisiteAudit / PrerequisiteReport."""
+        return self.verify_legendary_prerequisites(
+            goal_item_id=goal_item_id,
+            account_state=account_state,
+            account=account,
         )
 
 
@@ -1889,13 +2107,25 @@ def _hydrate_catalogs_from_graph(store: Optional[PrioryGraphStore] = None) -> No
 
 
 def verify_legendary_prerequisites(
-    goal_item_id: int,
-    account_state: AccountState,
-    graph_store: Optional[PrioryGraphStore] = None
+    goal_item_id: Any,
+    account_state: Optional[AccountState] = None,
+    graph_store: Optional[PrioryGraphStore] = None,
+    account: Optional[AccountState] = None,
 ) -> PrerequisiteReport:
     """Convenience standalone wrapper for AccountDiffEngine.verify_legendary_prerequisites."""
     engine = AccountDiffEngine(graph_store=graph_store)
-    return engine.verify_legendary_prerequisites(goal_item_id, account_state)
+    return engine.verify_legendary_prerequisites(goal_item_id, account_state=account_state, account=account)
+
+
+def audit_prerequisites(
+    goal_item_id: Any,
+    account_state: Optional[AccountState] = None,
+    graph_store: Optional[PrioryGraphStore] = None,
+    account: Optional[AccountState] = None,
+) -> PrerequisiteReport:
+    """Convenience standalone wrapper for AccountDiffEngine.audit_prerequisites."""
+    engine = AccountDiffEngine(graph_store=graph_store)
+    return engine.audit_prerequisites(goal_item_id, account_state=account_state, account=account)
 
 
 try:

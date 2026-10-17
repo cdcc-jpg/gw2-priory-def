@@ -354,6 +354,193 @@ class TestOntologyDrivenInference(unittest.TestCase):
         self.assertGreater(len(ad_module.HOBBS_COLLECTIONS), 0)
         self.assertGreater(len(ad_module.LOUNGE_PASSES), 0)
 
+    def test_bit_level_precursor_collection_ontology_ingestion_and_partial_resolution(self):
+        """Verifies priory:CollectionBitObjective ingestion and partial bit resolution across AccountDiffEngine, TwilightJourneySolver, and GuideGenerator."""
+        from agent.guide_generator import GuideGenerator
+        from agent.llm_client import RuleBasedMockLLMClient
+
+        # 1. Verify ontology ingestion for Twilight I-III (2420, 2184, 2183 = 61 bits), Sunrise I-III (2253, 2278, 2630), Bolt I-III (2355, 2356, 2480)
+        bits_2420 = self.diff_engine.get_collection_bits_for_achievement(2420)
+        bits_2184 = self.diff_engine.get_collection_bits_for_achievement(2184)
+        bits_2183 = self.diff_engine.get_collection_bits_for_achievement(2183)
+        self.assertEqual(len(bits_2420), 15)
+        self.assertEqual(len(bits_2184), 16)
+        self.assertEqual(len(bits_2183), 30)
+        self.assertEqual(len(bits_2420) + len(bits_2184) + len(bits_2183), 61)
+
+        for ach_id in (2253, 2278, 2630, 2355, 2356, 2480):
+            ach_bits = self.diff_engine.get_collection_bits_for_achievement(ach_id)
+            self.assertGreater(len(ach_bits), 0, f"Expected CollectionBitObjective triples for achievement {ach_id}")
+
+        # 2. Test partial completion on Twilight I (2420): 12/15 bits completed (missing bits 12, 13, 14)
+        account_twilight_1 = AccountState(
+            achievements={2420: {"bits": list(range(12)), "current": 12, "max": 15, "done": False}},
+            achievement_bits={2420: list(range(12))},
+            masteries={6: 3},
+            titles={12},
+            disciplines={"weaponsmith": 500, "armorsmith": 500},
+            character_disciplines={
+                "Kerling": {
+                    "weaponsmith": {"rating": 500, "active": True},
+                    "armorsmith": {"rating": 500, "active": True},
+                }
+            },
+        )
+        audit_t1 = self.diff_engine.audit_prerequisites(30704, account_twilight_1)
+        self.assertEqual(audit_t1.precursor_collection_step, "Dusk I: The Experimental Nightsword")
+        self.assertEqual(audit_t1.precursor_collection_bits_done, 12)
+        self.assertEqual(audit_t1.precursor_collection_bits_total, 15)
+        self.assertEqual([b["bit_index"] for b in audit_t1.precursor_missing_bits_detail], [12, 13, 14])
+
+        missing_names_t1 = [b["name"] for b in audit_t1.precursor_missing_bits_detail]
+        missing_hints_t1 = " ".join(b["hint"] for b in audit_t1.precursor_missing_bits_detail)
+        self.assertEqual(
+            missing_names_t1,
+            ["Ocean Supremacy", "Overlord's Defeat", "Modniir's Ruin"],
+        )
+        for expected_zone_in_hint in ("Bloodtide Coast", "Kessex Hills", "Harathi Hinterlands"):
+            self.assertIn(expected_zone_in_hint, missing_hints_t1)
+        self.assertTrue(all(b.get("hint") for b in audit_t1.precursor_missing_bits_detail))
+
+        # Verify TwilightJourneySolver surfaces exact 3 missing bit objectives
+        diff_t1 = self.diff_engine.compute_diff(30704, account_twilight_1)
+        plan_t1 = self.solver.build_journey_plan(diff_report=diff_t1, account=account_twilight_1)
+        prec_pillar_t1 = plan_t1.pillars[0]
+        pillar_text_t1 = " ".join(prec_pillar_t1.key_blockers) + " " + " ".join(a.action_description for a in prec_pillar_t1.recommended_actions)
+        for expected_tok in ("Ocean Supremacy", "Overlord's Defeat", "Modniir's Ruin", "Bloodtide Coast", "Kessex Hills", "Harathi Hinterlands"):
+            self.assertIn(expected_tok, pillar_text_t1)
+
+        ch1_text_t1 = " ".join(a.action_description for a in plan_t1.chapters[0].actions)
+        for expected_tok in ("Ocean Supremacy", "Overlord's Defeat", "Modniir's Ruin"):
+            self.assertIn(expected_tok, ch1_text_t1)
+
+        # Verify GuideGenerator surfaces exact 3 missing bit objectives
+        guide_gen = GuideGenerator(RuleBasedMockLLMClient())
+        prereq_guide_t1 = guide_gen.generate_prerequisite_audit_guide(audit_t1)
+        guide_text_t1 = " ".join(prereq_guide_t1.strategic_recommendations) + " " + " ".join(s.description for s in prereq_guide_t1.session_checklist)
+        for expected_tok in ("Bit #12", "Ocean Supremacy", "Bit #13", "Overlord's Defeat", "Bit #14", "Modniir's Ruin", "Bloodtide Coast", "Kessex Hills", "Harathi Hinterlands"):
+            self.assertIn(expected_tok, guide_text_t1)
+
+        # 3. Test partial completion on Dusk III: Dusk (2183): missing bits 0 (Gloominator), 1 (Aquatic Murk), 17 (Rhendak's Murk)
+        completed_2183 = [idx for idx in range(30) if idx not in (0, 1, 17)]
+        account_twilight_3 = AccountState(
+            completed_achievements={2420, 2184},
+            achievements={2183: {"bits": completed_2183, "current": 27, "max": 30, "done": False}},
+            achievement_bits={2183: completed_2183},
+            masteries={6: 3},
+            titles={12},
+        )
+        audit_t3 = self.diff_engine.verify_legendary_prerequisites(30704, account_twilight_3)
+        self.assertEqual(audit_t3.precursor_collection_step, "Dusk III: Dusk")
+        self.assertEqual(audit_t3.precursor_collection_bits_done, 27)
+        self.assertEqual(audit_t3.precursor_collection_bits_total, 30)
+        self.assertEqual([b["bit_index"] for b in audit_t3.precursor_missing_bits_detail], [0, 1, 17])
+
+        missing_names_t3 = [b["name"] for b in audit_t3.precursor_missing_bits_detail]
+        missing_zones_t3 = [b["zone"] for b in audit_t3.precursor_missing_bits_detail]
+        self.assertEqual(
+            missing_names_t3,
+            ["Gloominator", "Aquatic Murk", "Rhendak's Murk"],
+        )
+        self.assertEqual(
+            missing_zones_t3,
+            ["Lion's Arch", "Fractals of the Mists", "Diessa Plateau"],
+        )
+        self.assertTrue(all(b.get("waypoint") for b in audit_t3.precursor_missing_bits_detail))
+        self.assertTrue(all(b.get("hint") for b in audit_t3.precursor_missing_bits_detail))
+
+        diff_t3 = self.diff_engine.compute_diff(30704, account_twilight_3)
+        plan_t3 = self.solver.build_journey_plan(diff_report=diff_t3, account=account_twilight_3)
+        pillar_text_t3 = " ".join(plan_t3.pillars[0].key_blockers) + " " + " ".join(a.action_description for a in plan_t3.pillars[0].recommended_actions)
+        for expected_tok in ("Gloominator", "Aquatic Murk", "Rhendak's Murk", "Lion's Arch", "Fractals of the Mists", "Diessa Plateau"):
+            self.assertIn(expected_tok, pillar_text_t3)
+
+        prereq_guide_t3 = guide_gen.generate_prerequisite_guide(audit_t3)
+        guide_text_t3 = " ".join(prereq_guide_t3.strategic_recommendations)
+        for expected_tok in ("Bit #0", "Gloominator", "Bit #1", "Aquatic Murk", "Bit #17", "Rhendak's Murk", "Lion's Arch", "Fractals of the Mists", "Diessa Plateau"):
+            self.assertIn(expected_tok, guide_text_t3)
+
+    def test_edge_case_natural_language_prompts_orchestrator(self):
+        """Tests realistic edge-case natural language prompts end-to-end against PrioryAgentOrchestrator."""
+        from agent.orchestrator import PrioryAgentOrchestrator
+        from agent.llm_client import RuleBasedMockLLMClient
+
+        orchestrator = PrioryAgentOrchestrator(graph_store=self.store, llm_client=RuleBasedMockLLMClient())
+        base_account = AccountState(
+            mount_types=["skyscale", "raptor", "springer"],
+            expansion_access=["GuildWars2", "HeartOfThorns", "PathOfFire", "EndOfDragons", "SecretsOfTheObscure"],
+            disciplines={"weaponsmith": 500, "armorsmith": 500},
+            characters=[{"name": "Kerling", "profession": "Guardian", "crafting": [{"discipline": "Weaponsmith", "rating": 500, "active": True}, {"discipline": "Armorsmith", "rating": 500, "active": True}]}],
+        )
+
+        # 1. Indirect / Thematic Query
+        guide_thematic = orchestrator.run_pipeline(
+            "I want the greatsword that shoots shadowy bats and leaves a dark sky trail, what's my fastest path?",
+            account_state=base_account,
+        )
+        self.assertEqual(guide_thematic.goal_name, "Twilight")
+        self.assertIsNotNone(guide_thematic.twilight_journey_plan)
+        self.assertEqual(guide_thematic.twilight_journey_plan.target_item_id, 30704)
+        self.assertEqual(guide_thematic.twilight_journey_plan.precursor_id, 29185)
+        self.assertEqual(guide_thematic.twilight_journey_plan.precursor_name, "Dusk")
+
+        # 2. Stat-Prefixed / Disambiguated Query
+        guide_stat_prefixed = orchestrator.run_pipeline(
+            "How do I craft Sage's Twilight?",
+            account_state=base_account,
+        )
+        self.assertEqual(guide_stat_prefixed.goal_name, "Twilight")
+        self.assertIsNotNone(guide_stat_prefixed.twilight_journey_plan)
+        self.assertEqual(guide_stat_prefixed.twilight_journey_plan.target_item_id, 30704)
+
+        # 3. Constraint-Heavy / Conflict Query
+        guide_constraints = orchestrator.run_pipeline(
+            "I hate WvW and dungeons, I only have 45 minutes tonight, and I already bought all Wizard's Vault clovers—how can I still make progress on Twilight?",
+            account_state=base_account,
+        )
+        self.assertEqual(guide_constraints.goal_name, "Twilight")
+        total_session_mins = sum(step.estimated_time_minutes for step in guide_constraints.session_checklist)
+        self.assertLessEqual(total_session_mins, 45)
+        for step in guide_constraints.session_checklist:
+            self.assertNotIn(step.game_mode.lower(), {"wvw", "dungeon", "dungeons"})
+
+        recs_text = " ".join(guide_constraints.strategic_recommendations) + " " + " ".join(s.title + " " + s.description for s in guide_constraints.session_checklist)
+        self.assertIn("Gift of Battle", recs_text)
+        self.assertIn("BUY-2046", recs_text)
+        self.assertTrue("Wizard's Vault" in recs_text or "Exhausted" in recs_text)
+
+        # 4. Multi-Weapon Synergy & Arbitrage Edge Case
+        account_dual_greatswords = AccountState(
+            bank={30704: 1, 30703: 1},
+            mount_types=["skyscale", "raptor"],
+            expansion_access=["GuildWars2", "HeartOfThorns", "PathOfFire", "EndOfDragons", "SecretsOfTheObscure"],
+        )
+        guide_synergy = orchestrator.run_pipeline(
+            "I already have an unbound Twilight and an unbound Sunrise in my bank—should I bind them to my Legendary Armory or craft Eternity?",
+            account_state=account_dual_greatswords,
+        )
+        synergy_text = " ".join(guide_synergy.strategic_recommendations) + " " + " ".join(s.description for s in guide_synergy.session_checklist)
+        self.assertIn("Eternity", synergy_text)
+        self.assertIn("30689", synergy_text)
+        self.assertIn("15%", synergy_text)
+        self.assertIn("Sunrise", synergy_text)
+        self.assertIn("Twilight", synergy_text)
+
+        # Also verify asking about crafting Sunrise when already owning Twilight surfaces spare Gift of Exploration & Eternity synthesis
+        account_owns_twilight = AccountState(
+            legendary_armory={30704: 1},
+            bank={19677: 1},  # Spare Gift of Exploration from first map completion
+            mount_types=["skyscale", "raptor"],
+            expansion_access=["GuildWars2", "HeartOfThorns", "PathOfFire", "EndOfDragons", "SecretsOfTheObscure"],
+        )
+        guide_sunrise = orchestrator.run_pipeline(
+            "How do I craft Sunrise now that I already own Twilight?",
+            account_state=account_owns_twilight,
+        )
+        sunrise_text = " ".join(guide_sunrise.strategic_recommendations)
+        self.assertIn("Eternity", sunrise_text)
+        self.assertIn("Gift of Exploration", sunrise_text)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -108,6 +108,7 @@ class PrioryGraphStore:
         self._lounge_passes_cache: Optional[Dict[int, Dict[str, Any]]] = None
         self._convenience_catalog_cache: Optional[Tuple[List[str], Dict[str, Dict[str, Any]]]] = None
         self._legendary_precursor_catalog_cache: Optional[Dict[str, Any]] = None
+        self._collection_bits_cache: Dict[int, List[Dict[str, Any]]] = {}
         self._query_lock = threading.Lock()
 
         self._bind_namespaces()
@@ -1294,5 +1295,164 @@ class PrioryGraphStore:
         self._legendary_precursor_catalog_cache = catalog
         self._legendary_precursor_catalog_sig = graph_len
         return catalog
+
+    def get_collection_bits(self, achievement_id: int) -> List[Dict[str, Any]]:
+        """Queries ontology-grounded priory:CollectionBitObjective individuals for a given achievement ID."""
+        ach_id = int(achievement_id)
+        graph_len = len(self.graph)
+        if (
+            ach_id in self._collection_bits_cache
+            and getattr(self, "_collection_bits_sig", -1) == graph_len
+        ):
+            return [dict(b) for b in self._collection_bits_cache[ach_id]]
+
+        if getattr(self, "_collection_bits_sig", -1) != graph_len:
+            self._collection_bits_cache.clear()
+            self._collection_bits_sig = graph_len
+
+        sparql = """
+        SELECT DISTINCT ?bit ?idx ?label ?itemId ?subtype ?zone ?waypoint ?hint WHERE {
+            ?bit a priory:CollectionBitObjective ;
+                 priory:forAchievementId ?achId ;
+                 priory:bitIndex ?idx ;
+                 rdfs:label ?label .
+            OPTIONAL { ?bit priory:bitItemId ?itemId }
+            OPTIONAL { ?bit priory:bitSubtype ?subtype }
+            OPTIONAL { ?bit priory:zoneName ?zone }
+            OPTIONAL { ?bit priory:waypointName ?waypoint }
+            OPTIONAL { ?bit priory:acquisitionHint ?hint }
+        }
+        """
+        rows = self.query(sparql, init_bindings={"achId": Literal(ach_id)})
+        sorted_rows = sorted(
+            rows,
+            key=lambda r: (
+                int(r["idx"]) if r.get("idx") is not None else 999,
+                str(r.get("label", "")),
+            ),
+        )
+        bits: List[Dict[str, Any]] = []
+        seen_indices: set[int] = set()
+        for r in sorted_rows:
+            b_idx = int(r["idx"])
+            if b_idx in seen_indices:
+                continue
+            seen_indices.add(b_idx)
+            bits.append({
+                "bit_index": b_idx,
+                "item_id": int(r["itemId"]) if r.get("itemId") is not None else None,
+                "name": str(r["label"]),
+                "subtype": str(r["subtype"]) if r.get("subtype") is not None else None,
+                "zone": str(r["zone"]) if r.get("zone") is not None else None,
+                "waypoint": str(r["waypoint"]) if r.get("waypoint") is not None else None,
+                "hint": str(r.get("hint") or ""),
+            })
+        self._collection_bits_cache[ach_id] = bits
+        return [dict(b) for b in bits]
+
+    def get_precursor_collection_bit_breakdown(
+        self,
+        item_id: int,
+        account_achievements: Optional[Dict[int, Dict[str, Any]]] = None,
+    ) -> List[Dict[str, Any]]:
+        """Resolves Hobbs collection stages for a weapon or precursor ID and breaks down completed vs missing bits."""
+        target_id = int(item_id)
+        catalog = self.get_legendary_and_precursor_catalog()
+        hobbs_collections: Dict[int, List[Dict[str, Any]]] = catalog.get("hobbs_collections", {})
+
+        stages = hobbs_collections.get(target_id)
+        if not stages:
+            gen1_weaps = catalog.get("gen1_weapons", {})
+            gen2_weaps = catalog.get("gen2_weapons", {})
+            prec_to_weap = catalog.get("precursor_to_weapon", {})
+            if target_id in gen1_weaps:
+                prec_id = int(gen1_weaps[target_id].get("precursor_id") or 0)
+                stages = hobbs_collections.get(prec_id)
+            elif target_id in gen2_weaps:
+                prec_id = int(gen2_weaps[target_id].get("precursor_id") or 0)
+                stages = hobbs_collections.get(prec_id)
+            elif target_id in prec_to_weap:
+                weap_id = int(prec_to_weap[target_id])
+                stages = hobbs_collections.get(weap_id)
+
+        if not stages:
+            return []
+
+        acct_achs = account_achievements or {}
+        breakdown: List[Dict[str, Any]] = []
+
+        for stage in sorted(stages, key=lambda s: int(s["tier"])):
+            tier_num = int(stage["tier"])
+            ach_id = int(stage["id"])
+            stage_name = str(stage["name"])
+            bits_total = int(stage["bits_total"])
+            mastery_name = str(stage.get("mastery_name") or "")
+            candidate_ach_ids: List[int] = list(stage.get("ach_ids") or ([ach_id] if ach_id else []))
+
+            all_bits = self.get_collection_bits(ach_id)
+            if not all_bits:
+                for alt_aid in candidate_ach_ids:
+                    if alt_aid != ach_id:
+                        all_bits = self.get_collection_bits(int(alt_aid))
+                        if all_bits:
+                            ach_id = int(alt_aid)
+                            break
+
+            ach_prog: Dict[str, Any] = {}
+            for cand_id in [ach_id] + [int(x) for x in candidate_ach_ids if int(x) != ach_id]:
+                prog = acct_achs.get(cand_id)
+                if prog is None:
+                    prog = acct_achs.get(str(cand_id))  # type: ignore[arg-type]
+                if isinstance(prog, dict) and prog:
+                    ach_prog = prog
+                    break
+
+            is_done_flag = bool(ach_prog.get("done", False))
+            raw_bits = ach_prog.get("bits")
+            current_val = ach_prog.get("current")
+
+            if is_done_flag or (raw_bits is None and current_val is not None and int(current_val) >= bits_total > 0):
+                is_complete = True
+                completed_bits = [dict(b) for b in all_bits]
+                missing_bits: List[Dict[str, Any]] = []
+                bits_done = bits_total
+            elif raw_bits is not None:
+                done_indices = {int(b) for b in raw_bits}
+                if all_bits:
+                    completed_bits = [dict(b) for b in all_bits if int(b["bit_index"]) in done_indices]
+                    missing_bits = [dict(b) for b in all_bits if int(b["bit_index"]) not in done_indices]
+                    bits_done = len(completed_bits)
+                else:
+                    completed_bits = []
+                    missing_bits = []
+                    bits_done = min(len(done_indices), bits_total)
+                if current_val is not None and not all_bits:
+                    bits_done = max(bits_done, min(int(current_val), bits_total))
+                is_complete = bits_done >= bits_total and bits_total > 0
+                if is_complete:
+                    missing_bits = []
+            else:
+                completed_bits = []
+                missing_bits = [dict(b) for b in all_bits]
+                bits_done = min(int(current_val), bits_total) if current_val is not None else 0
+                is_complete = bits_done >= bits_total and bits_total > 0
+                if is_complete:
+                    completed_bits = [dict(b) for b in all_bits]
+                    missing_bits = []
+
+            breakdown.append({
+                "tier": tier_num,
+                "achievement_id": ach_id,
+                "name": stage_name,
+                "mastery_name": mastery_name,
+                "bits_total": bits_total,
+                "bits_done": bits_done,
+                "is_complete": is_complete,
+                "completed_bits": completed_bits,
+                "missing_bits": missing_bits,
+            })
+
+        return breakdown
+
 
 
