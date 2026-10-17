@@ -41,7 +41,7 @@ priory:Req_Eternity_Dust a priory:IngredientRequirement, owl:NamedIndividual ;
     priory:requiredQuantity 5 .
 
 priory:Req_Eternity_Stone a priory:IngredientRequirement, owl:NamedIndividual ;
-    priory:requiresItem item:20799 ;  # Philosopher's Stone
+    priory:requiresItem item:20796 ;  # Philosopher's Stone
     priory:requiredQuantity 10 .
 
 
@@ -180,7 +180,7 @@ item:80852 a priory:GiftItem, owl:NamedIndividual ;
     priory:isAccountBound true ;
     priory:producedBy priory:Recipe_GiftOfWarProwess .
 
-priory:Recipe_GiftOfWarProwess a priory:VendorExchangePath, priory:Recipe, owl:NamedIndividual ;
+priory:Recipe_GiftOfWarProwess a priory:Recipe, owl:NamedIndividual ;
     rdfs:label "Purchase Gift of War Prowess" ;
     priory:producesItem item:80852 ;
     priory:outputQuantity 1 ;

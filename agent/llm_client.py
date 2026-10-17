@@ -100,6 +100,8 @@ class RuleBasedMockLLMClient(BaseLLMClient):
             excluded.append("PvP")
         if "no wvw" in p_lower or "hate wvw" in p_lower or "avoid wvw" in p_lower:
             excluded.append("WvW")
+        if "no dungeon" in p_lower or "hate dungeon" in p_lower or "avoid dungeon" in p_lower or "without dungeon" in p_lower:
+            excluded.append("Dungeons")
 
         # Extract exhausted/completed sources (e.g. "already bought all clovers from wizard's vault")
         exhausted = []
@@ -156,11 +158,25 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         ]
         goal_item = None
         has_specific_item = False
-        for pattern, canon_name in specific_item_matches:
-            if re.search(r"\b" + re.escape(pattern) + r"\b", p_lower):
-                goal_item = canon_name
-                has_specific_item = True
-                break
+
+        # Relational / descriptive disambiguation (e.g. "legendary greatsword made from Dusk", "dark shadowy Gen 1 legendary greatsword")
+        if re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dusk\b", p_lower) or (
+            "greatsword" in p_lower and ("dark" in p_lower or "shadow" in p_lower or ("legendary" in p_lower and "dusk" in p_lower))
+        ):
+            goal_item = "Twilight"
+            has_specific_item = True
+        elif re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dawn\b", p_lower) or (
+            "greatsword" in p_lower and "legendary" in p_lower and "dawn" in p_lower
+        ):
+            goal_item = "Sunrise"
+            has_specific_item = True
+
+        if not goal_item:
+            for pattern, canon_name in specific_item_matches:
+                if re.search(r"\b" + re.escape(pattern) + r"\b", p_lower):
+                    goal_item = canon_name
+                    has_specific_item = True
+                    break
 
         if not goal_item:
             if re.search(r"\bsigils?\b", p_lower):

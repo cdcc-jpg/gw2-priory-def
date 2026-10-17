@@ -7,7 +7,7 @@
 
 path:19665_TempleOfBalthazarPath a priory:VendorExchangePath ;
     rdfs:label "Temple of Balthazar Karma Vendor" ;
-    priory:targetItem item:19665 ;
+    priory:targetItem item:19925 ;
     priory:vendorNPC "Tactician Deathspark" ;
     priory:zoneName "Straits of Devastation" ;
     priory:nearestWaypoint "[&BO4CAAA=]" ;
@@ -18,7 +18,7 @@ path:19665_TempleOfBalthazarPath a priory:VendorExchangePath ;
 
 path:19665_SilverwastesPath a priory:OpenWorldFarmPath ;
     rdfs:label "Silverwastes Chest Farm (RIBA)" ;
-    priory:targetItem item:19665 ;
+    priory:targetItem item:19925 ;
     priory:zoneName "The Silverwastes" ;
     priory:nearestWaypoint "[&BF8HAAA=]" ;
     priory:farmingEfficiency "8-15 Obsidian Shards per hour depending on chest density" ;
@@ -26,7 +26,7 @@ path:19665_SilverwastesPath a priory:OpenWorldFarmPath ;
 
 path:19665_UnboundMagicPath a priory:VendorExchangePath ;
     rdfs:label "Unbound Magic Vendor" ;
-    priory:targetItem item:19665 ;
+    priory:targetItem item:19925 ;
     priory:requiresCurrency currency:UnboundMagic ;
     priory:requiredQuantity 100 ;
     priory:requiresExpansion "LivingWorldSeason3" ;
@@ -34,7 +34,7 @@ path:19665_UnboundMagicPath a priory:VendorExchangePath ;
 
 path:19665_LeyEnergyPath a priory:VendorExchangePath ;
     rdfs:label "Ley-Energy Matter Converter" ;
-    priory:targetItem item:19665 ;
+    priory:targetItem item:19925 ;
     priory:requiresCurrency currency:LeyLineCrystal ;
     priory:requiredQuantity 25 ;
     priory:hasTimeGate "1 per day" ;
@@ -42,7 +42,7 @@ path:19665_LeyEnergyPath a priory:VendorExchangePath ;
 
 path:19665_FractalRelicPath a priory:VendorExchangePath ;
     rdfs:label "Fractal Relic Vendor" ;
-    priory:targetItem item:19665 ;
+    priory:targetItem item:19925 ;
     priory:zoneName "Mistlock Observatory" ;
     priory:nearestWaypoint "[&DYEFAAA=]" ;
     priory:requiresCurrency currency:FractalRelic ;

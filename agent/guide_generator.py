@@ -377,19 +377,27 @@ class GuideGenerator:
         )
 
         char_recs = []
+        char_names = [
+            (c.get("name") if isinstance(c, dict) else str(c))
+            for c in (account_state.characters if account_state and account_state.characters else [])
+            if (isinstance(c, dict) and c.get("name")) or isinstance(c, str)
+        ]
+        is_default_roster = "Kerling" in char_names
+
         if optimal_plan and getattr(optimal_plan, "recommended_character", None):
             char_name = optimal_plan.recommended_character if isinstance(optimal_plan.recommended_character, str) else getattr(optimal_plan.recommended_character, "name", str(optimal_plan.recommended_character))
             if "Kerling" in str(char_name):
                 char_recs.append(f"👤 **Primary Crafter & Forge Master:** {char_name} | ✅ 100% Core Map Completed")
             else:
                 char_recs.append(f"👤 **Primary Crafter:** {char_name}")
-                if account_state and (account_state.is_character_map_completed("Kerling") or any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters)):
+                if is_default_roster and account_state and (account_state.is_character_map_completed("Kerling") or "Kerling" in char_names):
                     char_recs.append("👤 **Master Crafter:** Kerling (Weaponsmith 500 & Armorsmith 500) | ✅ 100% Core Map Completed")
-        elif account_state and account_state.characters:
-            has_kerling = any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters) or (hasattr(account_state, "is_character_map_completed") and account_state.is_character_map_completed("Kerling"))
-            if has_kerling:
+        elif account_state and char_names:
+            if "Kerling" in char_names or (hasattr(account_state, "is_character_map_completed") and account_state.is_character_map_completed("Kerling")):
                 char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
-        else:
+            else:
+                char_recs.append(f"👤 **Primary Crafter:** {char_names[0]}")
+        elif is_default_roster:
             char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
 
         # Exploration alt routing for Gift of Exploration / Map completion
@@ -412,13 +420,26 @@ class GuideGenerator:
                 if el:
                     mobility_char = el[0]
             if not mobility_char:
-                mobility_char = "Skuta Rantakallio"
+                mobility_char = "Skuta Rantakallio" if is_default_roster else (char_names[0] if char_names else "Any Level 80 Character")
 
-            mount_str = "Skyscale" if (account_state and account_state.has_mount("skyscale")) or not (account_state and account_state.mount_types) else "Skyscale"
-            char_recs.append(
-                f"🗺️ **Core Map Exploration (Alt Runner):** **{mobility_char}** (with {mount_str}) — Assigned to new 100% Core Tyria exploration runs for 2x Gift of Exploration "
-                f"(Kerling is ✅ 100% Core Map Completed; alternate alts: Sara Loy / Legacy Of Harathi)."
-            )
+            if account_state and account_state.has_mount("skyscale"):
+                mount_part = " (with Skyscale)"
+            elif account_state and account_state.has_mount("raptor"):
+                mount_part = " (with Raptor)"
+            elif is_default_roster and not (account_state and account_state.mount_types is not None and len(account_state.mount_types) == 0 and not is_default_roster):
+                mount_part = " (with Skyscale)" if (not account_state or account_state.has_mount("skyscale")) else ""
+            else:
+                mount_part = ""
+
+            if is_default_roster:
+                char_recs.append(
+                    f"🗺️ **Core Map Exploration (Alt Runner):** **{mobility_char}** (with Skyscale) — Assigned to new 100% Core Tyria exploration runs for 2x Gift of Exploration "
+                    f"(Kerling is ✅ 100% Core Map Completed; alternate alts: Sara Loy / Legacy Of Harathi)."
+                )
+            else:
+                char_recs.append(
+                    f"🗺️ **Core Map Exploration (Alt Runner):** **{mobility_char}**{mount_part} — Assigned to 100% Core Tyria exploration runs for 2x Gift of Exploration."
+                )
 
         if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
             for phase in optimal_plan.master_roadmap:
@@ -782,32 +803,45 @@ class GuideGenerator:
             tip = f"💡 **Priory Tip:** Remember to convert your daily Astral Acclaim into Mystic Clovers from the Wizard's Vault to save over ~100g in crafting costs!"
 
         char_recs = []
+        char_names = [
+            (c.get("name") if isinstance(c, dict) else str(c))
+            for c in (account_state.characters if account_state and account_state.characters else [])
+            if (isinstance(c, dict) and c.get("name")) or isinstance(c, str)
+        ]
+        is_default_roster = "Kerling" in char_names
+
         if optimal_plan and getattr(optimal_plan, "recommended_character", None):
             char_name = optimal_plan.recommended_character if isinstance(optimal_plan.recommended_character, str) else getattr(optimal_plan.recommended_character, "name", str(optimal_plan.recommended_character))
             if "Kerling" in str(char_name):
                 char_recs.append(f"👤 **Primary Crafter & Forge Master:** {char_name} | ✅ 100% Core Map Completed")
             else:
                 char_recs.append(f"👤 **Primary Crafter:** {char_name}")
-                if account_state and (account_state.is_character_map_completed("Kerling") or any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters)):
+                if is_default_roster and account_state and (account_state.is_character_map_completed("Kerling") or "Kerling" in char_names):
                     char_recs.append("👤 **Master Crafter:** Kerling (Weaponsmith 500 & Armorsmith 500) | ✅ 100% Core Map Completed")
-        elif account_state and account_state.characters:
-            has_kerling = any(isinstance(c, dict) and c.get("name") == "Kerling" for c in account_state.characters) or (hasattr(account_state, "is_character_map_completed") and account_state.is_character_map_completed("Kerling"))
-            if has_kerling:
+        elif account_state and char_names:
+            if "Kerling" in char_names or (hasattr(account_state, "is_character_map_completed") and account_state.is_character_map_completed("Kerling")):
                 char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
-        else:
+            else:
+                char_recs.append(f"👤 **Primary Crafter:** {char_names[0]}")
+        elif is_default_roster:
             char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
 
         # Exploration alt routing
-        alt_char = "Skuta Rantakallio"
+        alt_char = "Skuta Rantakallio" if is_default_roster else (char_names[0] if char_names else "Any Level 80 Character")
         if account_state and hasattr(account_state, "eligible_exploration_characters"):
             el = account_state.eligible_exploration_characters()
             if el:
                 alt_char = el[0]
-        mount_str = "Skyscale" if (account_state and account_state.has_mount("skyscale")) or not (account_state and account_state.mount_types) else "Skyscale"
-        char_recs.append(
-            f"🗺️ **Core Map Exploration (Alt Runner):** **{alt_char}** (with {mount_str}) — Assigned to new 100% Core Tyria exploration runs for 2x Gift of Exploration "
-            f"(Kerling is ✅ 100% Core Map Completed; alternate alts: Sara Loy / Legacy Of Harathi)."
-        )
+        if is_default_roster:
+            char_recs.append(
+                f"🗺️ **Core Map Exploration (Alt Runner):** **{alt_char}** (with Skyscale) — Assigned to new 100% Core Tyria exploration runs for 2x Gift of Exploration "
+                f"(Kerling is ✅ 100% Core Map Completed; alternate alts: Sara Loy / Legacy Of Harathi)."
+            )
+        else:
+            mount_part = " (with Skyscale)" if (account_state and account_state.has_mount("skyscale")) else (" (with Raptor)" if (account_state and account_state.has_mount("raptor")) else "")
+            char_recs.append(
+                f"🗺️ **Core Map Exploration (Alt Runner):** **{alt_char}**{mount_part} — Assigned to 100% Core Tyria exploration runs for 2x Gift of Exploration."
+            )
 
         if optimal_plan and getattr(optimal_plan, "master_roadmap", None):
             for phase in optimal_plan.master_roadmap:
@@ -885,10 +919,11 @@ class GuideGenerator:
         if bag_staging_rec not in recs:
             recs.append(bag_staging_rec)
 
-        if top_choice.name == "The Moot":
-            char_recs.append("Best Character: **Kerling** (Level 80 Guardian) — Holds **Weaponsmith 500** active & can wield Maces directly!")
-        elif top_choice.name == "The Predator":
-            char_recs.append("Best Character: **Legacy Of Harathi** (Level 80 Warrior) — Holds **Huntsman 500** active & can wield Rifles directly!")
+        if is_default_roster:
+            if top_choice.name == "The Moot":
+                char_recs.append("Best Character: **Kerling** (Level 80 Guardian) — Holds **Weaponsmith 500** active & can wield Maces directly!")
+            elif top_choice.name == "The Predator":
+                char_recs.append("Best Character: **Legacy Of Harathi** (Level 80 Warrior) — Holds **Huntsman 500** active & can wield Rifles directly!")
 
         if cat_norm and cat_norm in cat_display_map:
             sing_name, plur_name = cat_display_map[cat_norm]

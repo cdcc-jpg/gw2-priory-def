@@ -3,8 +3,8 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
-@prefix iao: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix iao: <http://purl.obolibrary.org/obo/> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix priory-ref: <https://priory.gw2/ref/> .
 @prefix role: <https://priory.gw2/ref/role/> .
@@ -19,8 +19,9 @@
 
 <https://priory.gw2/def/> a owl:Ontology ;
     rdfs:label "Project Priory Core Ontology"@en ;
+    skos:definition "A domain ontology that formally specifies Guild Wars 2 items, recipes, equipment, ledger tokens, acquisition pathways, and spatial navigation structures under BFO 2020 and OWL 2 DL."@en ;
     rdfs:comment "Formal OWL 2 DL ontology defining Guild Wars 2 items, recipes, equipment, acquisition pathways, and spatial waypoints."@en ;
-    owl:versionInfo "0.2.0" .
+    owl:versionInfo "0.3.0" .
 
 # ==============================================================================
 # Class Hierarchy (TBox)
@@ -31,26 +32,31 @@
 priory:Entity a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000001 ;
     rdfs:label "Game Entity"@en ;
+    skos:definition "An entity that exists within the systemic domain of Guild Wars 2."@en ;
     rdfs:comment "Root abstract class for all entities in Guild Wars 2."@en .
 
 priory:ManifestedArtifact a owl:Class ;
     rdfs:subClassOf priory:Entity, bfo:BFO_0000004 ;
     rdfs:label "Manifested Combat Artifact"@en ;
+    skos:definition "An independent continuant in Guild Wars 2 that possesses a three-dimensional world representation, equipment slot compatibility, and combat capability specifications."@en ;
     rdfs:comment "Entities with in-game physical/3D representation, equip slots, and combat capability specifications."@en .
 
 priory:Item a owl:Class ;
-    rdfs:subClassOf priory:Entity ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000002 ;
     rdfs:label "Game Item"@en ;
+    skos:definition "A continuant game entity that is indexed by an ArenaNet item identifier and can be stored in an inventory, bank, material storage, or legendary armory."@en ;
     rdfs:comment "An item or resource that can exist in an account inventory, bank, or legendary armory."@en .
 
 priory:EquipableItem a owl:Class ;
     rdfs:subClassOf priory:Item, priory:ManifestedArtifact ;
     rdfs:label "Equipable Item"@en ;
+    skos:definition "A game item and manifested combat artifact that can be equipped into an active slot on a character equipment template."@en ;
     rdfs:comment "An item that can be equipped onto a character equipment tab."@en .
 
 priory:LegendaryItem a owl:Class ;
     rdfs:subClassOf priory:Item ;
     rdfs:label "Legendary Item"@en ;
+    skos:definition "A game item of Legendary rarity that unlocks permanently in the account-wide Legendary Armory and supports free attribute and upgrade customization."@en ;
     rdfs:comment "An account-wide prestige item bound to the Legendary Armory."@en .
 
 # --- Weapons ---
@@ -58,16 +64,75 @@ priory:LegendaryItem a owl:Class ;
 priory:Weapon a owl:Class ;
     rdfs:subClassOf priory:EquipableItem ;
     rdfs:label "Weapon"@en ;
+    skos:definition "An equipable item that occupies a main-hand, off-hand, two-handed, or aquatic weapon slot and determines character weapon skills and strike damage."@en ;
     rdfs:comment "A combat weapon equipable in main-hand, off-hand, two-hand, or aquatic slots."@en .
 
 priory:LegendaryWeapon a owl:Class ;
     rdfs:subClassOf priory:Weapon, priory:LegendaryItem ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:Weapon
+            [
+                a owl:Restriction ;
+                owl:onProperty priory:hasRarity ;
+                owl:hasValue rarity:Legendary
+            ]
+        )
+    ] ;
     rdfs:label "Legendary Weapon"@en ;
+    skos:definition "A weapon that possesses Legendary rarity, binds to the account-wide Legendary Armory, and provides freely selectable attribute combinations."@en ;
     rdfs:comment "Generation 1, 2, or 3 Legendary Weapons."@en .
+
+priory:AscendedWeapon a owl:Class ;
+    rdfs:subClassOf priory:Weapon ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:Weapon
+            [
+                a owl:Restriction ;
+                owl:onProperty priory:hasRarity ;
+                owl:hasValue rarity:Ascended
+            ]
+        )
+    ] ;
+    rdfs:label "Ascended Weapon"@en ;
+    skos:definition "A weapon that possesses Ascended rarity, maximum combat attribute scaling, and infusion slots."@en ;
+    rdfs:comment "High-tier account-bound weapon with infusion slots and maximum base weapon strength."@en .
+
+priory:ExoticWeapon a owl:Class ;
+    rdfs:subClassOf priory:Weapon ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:Weapon
+            [
+                a owl:Restriction ;
+                owl:onProperty priory:hasRarity ;
+                owl:hasValue rarity:Exotic
+            ]
+        )
+    ] ;
+    rdfs:label "Exotic Weapon"@en ;
+    skos:definition "A weapon that possesses Exotic rarity and serves as endgame baseline gear or a Gen 1/Gen 3 legendary precursor."@en ;
+    rdfs:comment "Level 80 Exotic rarity weapon, including Generation 1 and Generation 3 precursors."@en .
 
 priory:PrecursorWeapon a owl:Class ;
     rdfs:subClassOf priory:Weapon ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:Weapon
+            [
+                a owl:Restriction ;
+                owl:onProperty priory:playsRole ;
+                owl:hasValue role:Precursor
+            ]
+        )
+    ] ;
     rdfs:label "Precursor Weapon"@en ;
+    skos:definition "A weapon that bears the precursor role as the specific base weapon input required to forge a corresponding Legendary Weapon in the Mystic Forge."@en ;
     rdfs:comment "The base Exotic or Ascended weapon required to forge a Legendary Weapon."@en .
 
 # --- Armor & Equipment ---
@@ -75,31 +140,37 @@ priory:PrecursorWeapon a owl:Class ;
 priory:Armor a owl:Class ;
     rdfs:subClassOf priory:EquipableItem ;
     rdfs:label "Armor Piece"@en ;
+    skos:definition "An equipable item that occupies one of the seven defense armor slots and is classified by weight class."@en ;
     rdfs:comment "Wearable armor piece classified by weight (Heavy, Medium, Light) and slot (Helm, Chest, etc.)."@en .
 
 priory:LightArmor a owl:Class ;
     rdfs:subClassOf priory:Armor ;
     rdfs:label "Light Armor"@en ;
+    skos:definition "An armor piece of the light weight class that is wearable by scholar professions (Elementalist, Mesmer, Necromancer) and crafted by a Tailor."@en ;
     rdfs:comment "Armor wearable by light armor professions (Elementalist, Mesmer, Necromancer) crafted via Tailor."@en .
 
 priory:MediumArmor a owl:Class ;
     rdfs:subClassOf priory:Armor ;
     rdfs:label "Medium Armor"@en ;
+    skos:definition "An armor piece of the medium weight class that is wearable by adventurer professions (Engineer, Ranger, Thief) and crafted by a Leatherworker."@en ;
     rdfs:comment "Armor wearable by medium armor professions (Engineer, Ranger, Thief) crafted via Leatherworker."@en .
 
 priory:HeavyArmor a owl:Class ;
     rdfs:subClassOf priory:Armor ;
     rdfs:label "Heavy Armor"@en ;
+    skos:definition "An armor piece of the heavy weight class that is wearable by soldier professions (Guardian, Revenant, Warrior) and crafted by an Armorsmith."@en ;
     rdfs:comment "Armor wearable by heavy armor professions (Guardian, Revenant, Warrior) crafted via Armorsmith."@en .
 
 priory:LegendaryArmor a owl:Class ;
     rdfs:subClassOf priory:Armor, priory:LegendaryItem ;
     rdfs:label "Legendary Armor"@en ;
+    skos:definition "An armor piece of Legendary rarity that binds to the Legendary Armory and allows free out-of-combat rune, infusion, and stat customization."@en ;
     rdfs:comment "Prestige Legendary Armor sets (Envoy Raid Armor, Obsidian Open World Armor, Mistforged WvW/PvP Armor)."@en .
 
 priory:PrecursorArmor a owl:Class ;
     rdfs:subClassOf priory:Armor ;
     rdfs:label "Precursor Armor"@en ;
+    skos:definition "An armor piece that serves as the required base piece for forging a Legendary Armor piece."@en ;
     rdfs:comment "Refined Envoy Armor or precursor armor pieces required to forge Legendary Armor."@en .
 
 # --- Trinkets & Back Items ---
@@ -107,21 +178,31 @@ priory:PrecursorArmor a owl:Class ;
 priory:Trinket a owl:Class ;
     rdfs:subClassOf priory:EquipableItem ;
     rdfs:label "Trinket / Jewelry"@en ;
+    skos:definition "An equipable item that occupies an amulet, ring, or accessory jewelry slot to provide combat attribute bonuses."@en ;
     rdfs:comment "Amulets, Rings, and Accessories equipable in jewelry slots."@en .
 
 priory:LegendaryTrinket a owl:Class ;
     rdfs:subClassOf priory:Trinket, priory:LegendaryItem ;
     rdfs:label "Legendary Trinket"@en ;
+    skos:definition "A trinket of Legendary rarity that unlocks across all level 80 characters in the Legendary Armory."@en ;
     rdfs:comment "Legendary jewelry items (Aurora, Vision, Coalescence, Conflux, Transcendence, Prismatic Champion's Regalia)."@en .
+
+priory:LegendaryTrinketSet a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000031 ;
+    rdfs:label "Legendary Trinket Set"@en ;
+    skos:definition "A generically dependent continuant collection that groups complementary Legendary Trinkets sharing a synchronized visual aura progression."@en ;
+    rdfs:comment "A thematic set of Legendary Trinkets with combined visual effects."@en .
 
 priory:BackpackItem a owl:Class ;
     rdfs:subClassOf priory:EquipableItem ;
     rdfs:label "Back Item / Backpack"@en ;
+    skos:definition "An equipable item that occupies the character back slot and provides combat attributes and visual backpiece cosmetics."@en ;
     rdfs:comment "Equipment slotted into the back slot."@en .
 
 priory:LegendaryBackpack a owl:Class ;
     rdfs:subClassOf priory:BackpackItem, priory:LegendaryItem ;
     rdfs:label "Legendary Back Item"@en ;
+    skos:definition "A back item of Legendary rarity that binds to the Legendary Armory and includes a matching glider skin."@en ;
     rdfs:comment "Legendary back pieces (Ad Infinitum, The Ascension, Warbringer)."@en .
 
 # --- Upgrade Components ---
@@ -129,165 +210,237 @@ priory:LegendaryBackpack a owl:Class ;
 priory:UpgradeComponent a owl:Class ;
     rdfs:subClassOf priory:Item ;
     rdfs:label "Upgrade Component"@en ;
+    skos:definition "A game item that can be inserted into an upgrade or infusion slot of an equipable item or relic slot to confer passive or active combat effects."@en ;
     rdfs:comment "An upgrade item slotted into weapons, armor, or trinkets."@en .
+
+priory:LegendaryUpgrade a owl:Class ;
+    rdfs:subClassOf priory:UpgradeComponent, priory:LegendaryItem ;
+    rdfs:label "Legendary Upgrade Component"@en ;
+    skos:definition "An upgrade component of Legendary rarity that unlocks in the Legendary Armory and can be freely configured to any unlocked rune, sigil, or relic effect."@en ;
+    rdfs:comment "Account-wide legendary upgrade component (Legendary Rune, Legendary Sigil, or Legendary Relic)."@en .
 
 priory:Sigil a owl:Class ;
     rdfs:subClassOf priory:UpgradeComponent ;
-    rdfs:label "Sigil"@en .
+    rdfs:label "Sigil"@en ;
+    skos:definition "An upgrade component designed to be slotted into a weapon to confer combat trigger or stat bonuses."@en .
 
 priory:LegendarySigil a owl:Class ;
-    rdfs:subClassOf priory:Sigil, priory:LegendaryItem ;
+    rdfs:subClassOf priory:Sigil, priory:LegendaryUpgrade ;
     rdfs:label "Legendary Sigil"@en ;
+    skos:definition "A sigil of Legendary rarity that unlocks in the Legendary Armory and can adopt the effect of any weapon sigil on demand."@en ;
     rdfs:comment "A legendary upgrade component usable across all weapons in the Legendary Armory."@en .
 
 priory:Rune a owl:Class ;
     rdfs:subClassOf priory:UpgradeComponent ;
-    rdfs:label "Rune"@en .
+    rdfs:label "Rune"@en ;
+    skos:definition "An upgrade component designed to be slotted into armor pieces to grant cumulative six-piece attribute bonuses."@en .
 
 priory:LegendaryRune a owl:Class ;
-    rdfs:subClassOf priory:Rune, priory:LegendaryItem ;
-    rdfs:label "Legendary Rune"@en .
+    rdfs:subClassOf priory:Rune, priory:LegendaryUpgrade ;
+    rdfs:label "Legendary Rune"@en ;
+    skos:definition "A rune of Legendary rarity that unlocks in the Legendary Armory and can adopt the attribute bonuses of any armor rune on demand."@en .
 
 priory:Relic a owl:Class ;
     rdfs:subClassOf priory:UpgradeComponent ;
     rdfs:label "Relic"@en ;
+    skos:definition "An upgrade component equipped in the dedicated character Relic slot to provide a build-defining special combat effect."@en ;
     rdfs:comment "Build-defining combat upgrade slotted into the Relic slot."@en .
 
 priory:LegendaryRelic a owl:Class ;
-    rdfs:subClassOf priory:Relic, priory:LegendaryItem ;
-    rdfs:label "Legendary Relic"@en .
+    rdfs:subClassOf priory:Relic, priory:LegendaryUpgrade ;
+    rdfs:label "Legendary Relic"@en ;
+    skos:definition "A relic of Legendary rarity that unlocks in the Legendary Armory and allows free switching between all unlocked relic combat effects."@en .
 
 # --- Materials, Gifts, Currencies & Ledger Tokens ---
 
 priory:LedgerToken a owl:Class ;
-    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000002 ;
     rdfs:label "Ledger Token / Accounting Entity"@en ;
+    skos:definition "A continuant entity in Guild Wars 2 that records a quantitative balance or discrete accounting unit for barter, crafting, or wallet exchange."@en ;
     rdfs:comment "Informational bookkeeping tokens, currencies, and intermediate crafting components."@en .
-priory:LedgerToken owl:disjointWith priory:Item .
 
 priory:CraftingMaterial a owl:Class ;
     rdfs:subClassOf priory:Item ;
-    rdfs:label "Crafting Material"@en .
+    rdfs:label "Crafting Material"@en ;
+    skos:definition "A game item that can be deposited into account material storage and consumed as an input in crafting or Mystic Forge recipes."@en .
 
 priory:GiftItem a owl:Class ;
     rdfs:subClassOf priory:Item ;
     rdfs:label "Gift Component"@en ;
+    skos:definition "A game item that serves as a high-tier composite trophy or gift component in Legendary Mystic Forge and crafting recipes."@en ;
     rdfs:comment "Intermediate gift components used in high-level Mystic Forge and legendary recipes."@en .
 
 priory:AccountWalletScalar a owl:Class ;
-    rdfs:subClassOf priory:LedgerToken ;
+    rdfs:subClassOf priory:LedgerToken, iao:IAO_0000030 ;
     rdfs:label "Account Wallet Scalar"@en ;
+    skos:definition "A ledger token and information content entity that is stored as a non-containerized integer balance in the account-wide wallet rather than occupying inventory slots."@en ;
     rdfs:comment "Unlocated, non-containerized account-wide ledger balance."@en .
 
 priory:ContainerizedToken a owl:Class ;
     rdfs:subClassOf priory:LedgerToken ;
     rdfs:label "Containerized Inventory Token"@en ;
+    skos:definition "A ledger token that is concretized as a stackable item occupying discrete slots in character inventory bags, bank tabs, or material storage."@en ;
     rdfs:comment "Token occupying discrete container slots in bags, bank, or material storage."@en .
 
-priory:AccountWalletScalar owl:disjointWith priory:ContainerizedToken .
+priory:AccountWalletScalar owl:disjointWith priory:Item, priory:ContainerizedToken .
 
 priory:Currency a owl:Class ;
     rdfs:subClassOf priory:LedgerToken ;
     rdfs:label "Game Currency"@en ;
+    skos:definition "A ledger token recognized by the Guild Wars 2 economy as a medium of exchange for vendor purchases, reward tracks, or Mystic Forge transactions."@en ;
     rdfs:comment "Account-wide wallet currency, map currency, or barter token."@en .
 
 # --- Recipe & Acquisition Classes ---
 
 priory:Recipe a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000104 ;
     rdfs:label "Recipe"@en ;
-    rdfs:comment "A transformation process taking ingredient inputs to produce an item output."@en .
+    skos:definition "A plan specification that prescribes the required ingredient inputs, quantities, and crafting context needed to produce a target output item."@en ;
+    rdfs:comment "A transformation specification taking ingredient inputs to produce an item output."@en .
 
 priory:DisciplineRecipe a owl:Class ;
     rdfs:subClassOf priory:Recipe ;
     rdfs:label "Discipline Crafting Recipe"@en ;
+    skos:definition "A recipe that requires a specific crafting discipline and minimum discipline rating to execute deterministically at a crafting station."@en ;
     rdfs:comment "A deterministic recipe executed at a crafting station requiring a specific discipline."@en .
+
+priory:CraftingRecipe a owl:Class ;
+    rdfs:subClassOf priory:DisciplineRecipe ;
+    rdfs:label "Crafting Station Recipe"@en ;
+    skos:definition "A discipline crafting recipe that is unlocked and executed through one of the eight standard Guild Wars 2 crafting disciplines."@en ;
+    rdfs:comment "Alias class for recipes executed via a crafting discipline."@en .
 
 priory:MysticForgeRecipe a owl:Class ;
     rdfs:subClassOf priory:Recipe ;
     rdfs:label "Mystic Forge Recipe"@en ;
+    skos:definition "A recipe that specifies the combination of up to four distinct ingredient stacks in Zommoros's Mystic Forge to produce a deterministic or probabilistic output."@en ;
     rdfs:comment "A recipe executed in the Mystic Forge using up to 4 ingredients."@en .
 
 priory:IngredientRequirement a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Ingredient Requirement"@en ;
+    skos:definition "An information content entity that reifies a quantitative input requirement by pairing a specific required item or currency with a positive integer quantity."@en ;
     rdfs:comment "Reified N-ary relation specifying a required item or currency and its exact quantity."@en .
 
 priory:CurrencyRequirement a owl:Class ;
     rdfs:subClassOf priory:IngredientRequirement ;
     rdfs:label "Currency Requirement"@en ;
+    skos:definition "An ingredient requirement that specifies a required wallet currency and its exact integer cost for a vendor or crafting transaction."@en ;
     rdfs:comment "Reified requirement specifying a required currency and its exact quantity."@en .
 
+priory:CostRequirement a owl:Class ;
+    rdfs:subClassOf priory:IngredientRequirement ;
+    rdfs:label "Vendor Cost Requirement"@en ;
+    skos:definition "An ingredient requirement that specifies an item or currency cost required by a merchant exchange path."@en ;
+    rdfs:comment "Reified cost specification for a vendor purchase."@en .
+
 priory:AcquisitionPath a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000015 ;
     rdfs:label "Acquisition Pathway"@en ;
-    skos:definition "A method by which a player can obtain an item or currency in Guild Wars 2."@en ;
+    skos:definition "A gameplay process through which a player obtains a target item, material, or currency in Guild Wars 2."@en ;
     rdfs:comment "A method by which a player can obtain an item or currency."@en .
 
 priory:CraftingPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Crafting Acquisition"@en ;
     skos:altLabel "craft"@en, "forge"@en, "make"@en, "build"@en ;
-    skos:definition "Acquiring an item through crafting disciplines or Mystic Forge recipe transformations."@en .
+    skos:definition "An acquisition pathway that produces a target item by executing a discipline crafting recipe or Mystic Forge combination."@en .
 
 priory:VendorExchangePath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Vendor Exchange"@en ;
     skos:altLabel "buy"@en, "purchase"@en, "vendor"@en, "merchant"@en, "barter"@en ;
-    skos:definition "Acquiring an item from an NPC merchant using wallet currencies or map tokens."@en .
+    skos:definition "An acquisition pathway in which a player exchanges wallet currencies or barter tokens with an NPC merchant to obtain a target item."@en .
 
 priory:TradingPostPurchasePath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Trading Post Purchase"@en ;
     skos:altLabel "tp"@en, "trading post"@en, "buy on tp"@en, "instant buy"@en ;
-    skos:definition "Acquiring a tradeable item via Black Lion Trading Post commerce."@en .
+    skos:definition "An acquisition pathway in which a player purchases an unbound item from other players via the Black Lion Trading Company."@en .
 
 priory:AchievementCollectionPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Achievement Collection Journey"@en ;
     skos:altLabel "achievement"@en, "quest"@en, "collection"@en, "unlock"@en, "journey"@en ;
-    skos:definition "Unlocking an item by completing achievement milestones, masteries, and story tasks."@en .
+    skos:definition "An acquisition pathway in which a player unlocks a target item by completing a structured sequence of achievement collection objectives."@en .
 
 priory:RewardTrackPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "WvW/PvP Reward Track"@en ;
     skos:altLabel "reward track"@en, "wvw track"@en, "pvp track"@en, "wvw"@en, "pvp"@en ;
-    skos:definition "Earning an item by progressing competitive WvW or PvP reward tracks."@en .
+    skos:definition "An acquisition pathway in which a player earns a target item by accumulating reward track progress in World vs. World or Structured PvP."@en .
 
 priory:RaidMilestonePath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Raid / Strike Milestone"@en ;
     skos:altLabel "raid"@en, "strike"@en, "boss kill"@en, "insights"@en ;
-    skos:definition "Earning prestige items by defeating raid wings or strike mission bosses."@en .
+    skos:definition "An acquisition pathway in which a player earns prestige items or tokens by defeating instanced ten-player Raid encounters or Strike Missions."@en .
+
+priory:SalvagePath a owl:Class ;
+    rdfs:subClassOf priory:AcquisitionPath ;
+    rdfs:label "Equipment Salvage Acquisition"@en ;
+    skos:altLabel "salvage"@en, "research kit"@en, "break down"@en ;
+    skos:definition "An acquisition pathway in which a player obtains crafting materials, ectoplasm, or research notes by dismantling items with a salvage kit."@en .
 
 priory:ContainerUnpackPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Container Unpack Acquisition"@en ;
     skos:altLabel "unpack"@en, "open chest"@en, "starter kit"@en, "choice chest"@en, "open box"@en ;
-    skos:definition "Acquiring an item or precursor by unpacking or selecting it from a container chest or starter kit in inventory or bank."@en .
+    skos:definition "An acquisition pathway in which a player obtains a target item by opening a container or selecting an option from a choice chest."@en .
 
 priory:ContainerItem a owl:Class ;
     rdfs:subClassOf priory:Item ;
     rdfs:label "Container / Chest"@en ;
+    skos:definition "A game item that encloses one or more reward items and can be opened or unpacked from inventory."@en ;
     rdfs:comment "An inventory container, chest, or kit that can be opened or unpacked to yield items."@en .
 
 priory:ChoiceChest a owl:Class ;
     rdfs:subClassOf priory:ContainerItem ;
     rdfs:label "Choice Chest"@en ;
+    skos:definition "A container item that presents a selection interface allowing the player to choose one specific reward output from a fixed list."@en ;
     rdfs:comment "A container that allows the player to select one item package from a predefined list of choices."@en .
 
 priory:LegendaryStarterKit a owl:Class ;
     rdfs:subClassOf priory:ChoiceChest ;
     rdfs:label "Legendary Weapon Starter Kit"@en ;
+    skos:definition "A choice chest obtained from the Wizard's Vault that yields a Generation 1 precursor weapon, a weapon-specific Gift, and a Gift of Might or Magic."@en ;
     rdfs:comment "Wizard's Vault starter kit providing a choice of Gen 1 legendary precursors, gifts, and crafting materials."@en .
 
 priory:TimeGate a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000008 ;
     rdfs:label "Time Gate & Cooldown Constraint"@en ;
     skos:altLabel "daily reset"@en, "weekly reset"@en, "cooldown"@en, "time gate"@en ;
-    skos:definition "Limits the frequency or quantity of crafting/purchasing per unit time."@en ;
+    skos:definition "A temporal region constraint that bounds the maximum frequency or quantity of a recipe execution or vendor purchase within a daily or weekly reset interval."@en ;
     rdfs:comment "Limits the frequency or quantity of crafting/purchasing per unit time."@en .
 
+priory:TimeGatedItem a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:Item
+            [
+                a owl:Restriction ;
+                owl:onProperty priory:hasTimeGate ;
+                owl:someValuesFrom priory:TimeGate
+            ]
+        )
+    ] ;
+    rdfs:label "Time-Gated Item"@en ;
+    skos:definition "A game item whose crafting or vendor acquisition is directly governed by a daily or weekly TimeGate constraint."@en ;
+    rdfs:comment "An item subject to a daily or weekly crafting or purchase cooldown."@en .
+
 priory:ItemBuff a owl:Class ;
-    rdfs:subClassOf priory:Entity ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000016 ;
     rdfs:label "Item Buff / Booster"@en ;
+    skos:definition "A disposition conferred by a consumable booster, guild enhancement, or enrichment that increases experience, reward track progress, or magic find rates."@en ;
     rdfs:comment "A consumable booster, guild tavern buff, or enhancement that accelerates gameplay or reward track progression."@en .
+
+priory:DragonFacet a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000020 ;
+    rdfs:label "Elder Dragon Facet Variant"@en ;
+    skos:definition "A specifically dependent continuant visual and thematic variant unlocked for an Aurene Generation 3 Legendary Weapon that channels the magic of a specific Elder Dragon."@en ;
+    rdfs:comment "Elder Dragon thematic skin and visual effect variant for Generation 3 Aurene Legendary Weapons."@en .
 
 # --- Convenience Gizmos & VIP Lounges ---
 
@@ -295,52 +448,62 @@ priory:ConvenienceGizmo a owl:Class ;
     rdfs:subClassOf priory:Item ;
     rdfs:label "Convenience Gizmo"@en ;
     skos:altLabel "Gizmo"@en, "Utility Gizmo"@en ;
+    skos:definition "A game item that provides reusable account utility, portable services, infinite salvaging, or teleportation to hub lounges."@en ;
     rdfs:comment "An account utility gizmo, infinite salvage tool, or VIP teleportation pass."@en .
 
 priory:VIPLoungePass a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "VIP Lounge Pass"@en ;
     skos:altLabel "Passkey"@en, "Lounge Scroll"@en, "Bastion Pass"@en ;
+    skos:definition "A convenience gizmo that teleports the user to an exclusive lounge hub equipped with crafting stations, banking, trading post, and Mystic Forge amenities."@en ;
     rdfs:comment "A permanent or reusable pass providing unlimited access to exclusive lounges and bastion hubs with complete amenities."@en .
 
 priory:InfiniteSalvageItem a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "Infinite Salvage-o-Matic"@en ;
     skos:altLabel "Salvage-o-Matic"@en, "Infinite Salvage Kit"@en ;
+    skos:definition "A convenience gizmo that performs unlimited item salvaging in exchange for a fixed per-use coin or karma fee."@en ;
     rdfs:comment "An infinite-use salvage kit powered by account copper/silver or karma."@en .
 
 priory:PermanentContract a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "Permanent Contract"@en ;
     skos:altLabel "Permanent Service Contract"@en, "Express Contract"@en ;
+    skos:definition "A convenience gizmo that summons an on-demand NPC agent or interface for banking, trading post, merchant, or aesthetic services anywhere in the game world."@en ;
     rdfs:comment "A permanent, unlimited-use contract granting instant portable access to banking, trading post, merchant, or styling services from anywhere."@en .
 
 priory:CurrencyConverter a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "Currency Converter / Gobbler"@en ;
     skos:altLabel "Converter"@en, "Gobbler"@en, "Material Converter"@en ;
+    skos:definition "A convenience gizmo that consumes surplus crafting materials or map currencies to yield randomized reward containers or boosters."@en ;
     rdfs:comment "A portable exchanger or gobbler consuming crafting materials, karma, or map currencies in exchange for reward containers and boosts."@en .
 
 priory:PortalTome a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "Portal Tome / Teleporter"@en ;
     skos:altLabel "Teleportation Scroll"@en, "Portal Tome"@en, "Portal Scroll"@en ;
+    skos:definition "A convenience gizmo that teleports characters to specific Living World maps, expansion hubs, or world boss encounters without waypoint fees."@en ;
     rdfs:comment "A reusable tome, scroll, or stone that transports players to specific Living World or expansion zones."@en .
 
 priory:AccountStorageUpgrade a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "Account Storage Upgrade"@en ;
     skos:altLabel "Storage Upgrade"@en, "Account Expansion"@en ;
+    skos:definition "A convenience gizmo that permanently expands account-wide shared inventory slots, bank tabs, or material storage stack capacity."@en ;
     rdfs:comment "An account-wide upgrade expanding shared inventory slots, bank tab capacity, or material storage limit."@en .
 
 priory:SafeStagingBag a owl:Class ;
     rdfs:subClassOf priory:ConvenienceGizmo ;
     rdfs:label "Safe Staging Bag / Invisible Bag / Safe Box"@en ;
     skos:altLabel "Invisible Bag"@en, "Safe Box"@en, "Invisible Pack"@en, "Safe Staging Bag"@en ;
+    skos:definition "A convenience gizmo inventory bag whose contents are isolated from merchant sell lists, material auto-deposit, and inventory compaction."@en ;
     rdfs:comment "An inventory bag or safe box whose contents are immune to vendor selling, deposit all materials, and auto-compaction, used for staging valuable legendary precursors and unbound items."@en .
 
 priory:LoungeFeature a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000016 ;
     rdfs:label "Lounge Amenity / Feature"@en ;
+    skos:definition "A disposition inhering in a VIP Lounge or convenience hub that provides players with access to a specific crafting, commerce, or travel service."@en ;
     rdfs:comment "An amenity, service, or portal feature available within a VIP Lounge or hub."@en .
 
 # ==============================================================================
@@ -348,135 +511,301 @@ priory:LoungeFeature a owl:Class ;
 # ==============================================================================
 
 priory:playsRole a owl:ObjectProperty ;
+    rdfs:subPropertyOf bfo:BFO_0000053 ;
     rdfs:domain priory:Entity ;
     rdfs:range role:GameRole ;
     rdfs:label "plays role"@en ;
+    skos:definition "A bearer-of relation that links a game entity to a contextual GameRole that inheres in it within a crafting, economic, or combat system."@en ;
     rdfs:comment "Links an entity to a realizable game role it assumes in systemic gameplay contexts."@en .
 
 priory:unpacksInto a owl:ObjectProperty ;
-    rdfs:domain priory:ContainerItem ;
-    rdfs:range priory:Item ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
     rdfs:label "unpacks into"@en ;
-    skos:definition "Connects a container or starter kit to the items it produces when opened or selected."@en .
+    skos:definition "An object relation that connects a container item or starter kit to a reward item that can be obtained when the container is opened."@en .
 
 priory:unpacksFrom a owl:ObjectProperty ;
     owl:inverseOf priory:unpacksInto ;
-    rdfs:domain priory:Item ;
-    rdfs:range priory:ContainerItem ;
-    rdfs:label "unpacks from"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "unpacks from"@en ;
+    skos:definition "An object relation that connects a reward item to the container item or starter kit from which it can be unpacked."@en .
 
 priory:fromContainer a owl:ObjectProperty ;
-    rdfs:domain priory:ContainerUnpackPath ;
-    rdfs:range priory:ContainerItem ;
-    rdfs:label "from container"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "from container"@en ;
+    skos:definition "An object relation that links a container unpack acquisition pathway to the specific container item being opened."@en .
 
 priory:grantsItem a owl:ObjectProperty ;
-    rdfs:domain priory:ContainerUnpackPath ;
-    rdfs:range priory:Item ;
-    rdfs:label "grants item"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "grants item"@en ;
+    skos:definition "An object relation that links an acquisition pathway or container choice option to the item yielded upon completion."@en .
 
 priory:producesItem a owl:ObjectProperty ;
-    rdfs:domain priory:Recipe ;
-    rdfs:range priory:Item ;
-    rdfs:label "produces item"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "produces item"@en ;
+    skos:definition "An object relation that links a recipe or acquisition pathway to the output item or resource that it yields."@en .
 
 priory:producedBy a owl:ObjectProperty ;
     owl:inverseOf priory:producesItem ;
-    rdfs:domain priory:Item ;
-    rdfs:range priory:Recipe ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
     rdfs:label "produced by"@en ;
     skos:altLabel "craft"@en, "forge"@en, "make"@en, "build"@en ;
-    skos:definition "Links an item to the crafting or Mystic Forge recipe that produces it."@en .
+    skos:definition "An object relation that links an output item to a recipe or acquisition pathway that produces it."@en .
 
 priory:hasIngredientRequirement a owl:ObjectProperty ;
-    rdfs:domain priory:Recipe ;
+    rdfs:domain priory:Entity ;
     rdfs:range priory:IngredientRequirement ;
-    rdfs:label "has ingredient requirement"@en .
+    rdfs:label "has ingredient requirement"@en ;
+    skos:definition "An object relation that associates a recipe or acquisition pathway with a reified IngredientRequirement specifying a required input and quantity."@en .
 
 priory:requiresItem a owl:ObjectProperty ;
-    rdfs:domain priory:IngredientRequirement ;
-    rdfs:range priory:Item ;
-    rdfs:label "requires item"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "requires item"@en ;
+    skos:definition "An object relation that links an IngredientRequirement or acquisition pathway to the specific item required as an input."@en .
 
 priory:requiresCurrency a owl:ObjectProperty ;
-    rdfs:range skos:Concept ;
-    rdfs:label "requires currency"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "requires currency"@en ;
+    skos:definition "An object relation that links a requirement or acquisition pathway to the specific currency required for the transaction."@en .
 
 priory:requiresIngredient a owl:ObjectProperty ;
-    rdfs:domain priory:Recipe ;
-    rdfs:range priory:Item ;
-    rdfs:label "requires ingredient (RDF-star compatible)"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    owl:propertyChainAxiom ( priory:hasIngredientRequirement priory:requiresItem ) ;
+    rdfs:label "requires ingredient (RDF-star compatible)"@en ;
+    skos:definition "A direct object relation that connects a recipe or pathway to an input item required by any of its ingredient requirements."@en .
+
+priory:dependsOnItem a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    owl:propertyChainAxiom ( priory:producedBy priory:requiresIngredient ) ;
+    rdfs:label "depends on item"@en ;
+    skos:definition "A transitive dependency relation that holds between a crafted item and any direct or upstream component item required to produce it."@en .
 
 priory:acquiredVia a owl:ObjectProperty ;
-    rdfs:domain priory:Item ;
-    rdfs:range priory:AcquisitionPath ;
-    rdfs:label "acquired via"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "acquired via"@en ;
+    skos:definition "An object relation that links a game entity to an AcquisitionPath or Recipe through which players can obtain it."@en .
 
 priory:hasSubstituteSource a owl:ObjectProperty ;
-    rdfs:domain priory:Item ;
-    rdfs:range priory:AcquisitionPath ;
-    rdfs:label "has alternative acquisition source"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has alternative acquisition source"@en ;
+    skos:definition "An object relation that links an item to an alternative AcquisitionPath or Recipe that can substitute for its primary crafting or farming method."@en .
 
 priory:requiresDiscipline a owl:ObjectProperty ;
     rdfs:domain priory:DisciplineRecipe ;
     rdfs:range skos:Concept ;
-    rdfs:label "requires discipline"@en .
+    priory:associatedScheme priory:DisciplineScheme ;
+    rdfs:label "requires discipline"@en ;
+    skos:definition "An object relation that links a discipline crafting recipe to the SKOS crafting discipline concept required to execute it."@en .
 
 priory:hasRarity a owl:ObjectProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
     rdfs:range skos:Concept ;
-    rdfs:label "has rarity"@en .
+    priory:associatedScheme priory:RarityScheme ;
+    rdfs:label "has rarity"@en ;
+    skos:definition "An object relation that associates an item or currency entity with its quality tier concept in the RarityScheme."@en .
 
 priory:hasWeaponType a owl:ObjectProperty ;
     rdfs:domain priory:Weapon ;
     rdfs:range skos:Concept ;
-    rdfs:label "has weapon type"@en .
+    priory:associatedScheme priory:WeaponScheme ;
+    rdfs:label "has weapon type"@en ;
+    skos:definition "An object relation that classifies a weapon by its structural weapon type concept in the WeaponScheme."@en .
 
 priory:hasArmorWeight a owl:ObjectProperty ;
-    rdfs:domain priory:Armor ;
+    rdfs:domain priory:Entity ;
     rdfs:range skos:Concept ;
-    rdfs:label "has armor weight"@en .
+    priory:associatedScheme priory:ArmorWeightScheme ;
+    rdfs:label "has armor weight"@en ;
+    skos:definition "An object relation that classifies an armor piece or profession by its weight class concept in the ArmorWeightScheme."@en .
 
 priory:hasEquipmentSlot a owl:ObjectProperty ;
     rdfs:domain priory:EquipableItem ;
     rdfs:range skos:Concept ;
-    rdfs:label "has equipment slot"@en .
+    priory:associatedScheme priory:EquipmentSlotScheme ;
+    rdfs:label "has equipment slot"@en ;
+    skos:definition "An object relation that specifies the equipment slot concept occupied by an equipable item."@en .
 
 priory:hasItemType a owl:ObjectProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
     rdfs:range skos:Concept ;
-    rdfs:label "has item type"@en .
+    priory:associatedScheme priory:ItemTypeScheme ;
+    rdfs:label "has item type"@en ;
+    skos:definition "An object relation that classifies an item by its high-level ArenaNet API item category concept."@en .
 
 priory:hasUpgradeType a owl:ObjectProperty ;
     rdfs:domain priory:UpgradeComponent ;
     rdfs:range skos:Concept ;
-    rdfs:label "has upgrade type"@en .
+    priory:associatedScheme priory:UpgradeTypeScheme ;
+    rdfs:label "has upgrade type"@en ;
+    skos:definition "An object relation that classifies an upgrade component by its functional sub-category concept in the UpgradeTypeScheme."@en .
 
 priory:hasGameMode a owl:ObjectProperty ;
-    rdfs:domain priory:AcquisitionPath ;
+    rdfs:domain priory:Entity ;
     rdfs:range skos:Concept ;
-    rdfs:label "associated game mode"@en .
+    priory:associatedScheme priory:GameModeScheme ;
+    rdfs:label "associated game mode"@en ;
+    skos:definition "An object relation that links an acquisition pathway or item to the primary game mode concept in which it is pursued."@en .
 
 priory:hasTimeGate a owl:ObjectProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:Recipe priory:AcquisitionPath priory:Item) ] ;
+    rdfs:domain priory:Entity ;
     rdfs:range priory:TimeGate ;
-    rdfs:label "has time gate"@en .
+    rdfs:label "has time gate"@en ;
+    skos:definition "An object relation that associates a recipe, acquisition pathway, or item with a daily or weekly TimeGate cooldown constraint."@en .
 
 priory:acceleratedBy a owl:ObjectProperty ;
-    rdfs:domain priory:AcquisitionPath ;
+    rdfs:domain priory:Entity ;
     rdfs:range priory:ItemBuff ;
     rdfs:label "accelerated by"@en ;
+    skos:definition "An object relation that links an acquisition pathway to an ItemBuff disposition that increases its rate of progress."@en ;
     rdfs:comment "Specifies consumable boosters, guild tavern enhancements, or account buffs that accelerate progression on this acquisition path."@en .
 
 priory:hasFeature a owl:ObjectProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
     rdfs:label "has feature / amenity"@en ;
+    skos:definition "An object relation that links a convenience item or VIP lounge pass to a service feature or amenity it provides."@en ;
     rdfs:comment "Specifies an amenity, portal, or convenience feature provided by this item or lounge."@en .
 
 priory:hasLoungeFeature a owl:ObjectProperty ;
     rdfs:subPropertyOf priory:hasFeature ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
     rdfs:label "has lounge amenity"@en ;
+    skos:definition "A subproperty of hasFeature that links a VIP lounge pass to a specific LoungeFeature available inside its hub."@en ;
     rdfs:comment "Specifies a VIP lounge service or amenity available at this lounge hub."@en .
+
+priory:targetItem a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "target item"@en ;
+    skos:definition "An object relation that links an acquisition pathway, recipe, or collection step to the target item it produces or unlocks."@en .
+
+priory:sourceItem a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "source item"@en ;
+    skos:definition "An object relation that links a salvage or promotion pathway to the input item consumed in the transformation."@en .
+
+priory:mountRecommendation a owl:ObjectProperty ;
+    rdfs:subPropertyOf priory:recommendedMount ;
+    rdfs:domain priory:Entity ;
+    rdfs:range skos:Concept ;
+    rdfs:label "mount recommendation"@en ;
+    skos:definition "An object relation that identifies the mount concept recommended for traversing a specific exploration zone or farming route."@en .
+
+priory:requiresDungeonCurrency a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "requires dungeon currency"@en ;
+    skos:definition "An object relation that links a dungeon gift or vendor pathway to the dungeon currency required to purchase it."@en .
+
+priory:dungeonCurrency a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "dungeon currency"@en ;
+    skos:definition "An object relation that associates a dungeon or dungeon path with the currency token awarded upon completion."@en .
+
+priory:hasStep a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has collection step"@en ;
+    skos:definition "An object relation that links a multi-stage collection or crafting pathway to one of its constituent sequential steps."@en .
+
+priory:hasMember a owl:ObjectProperty ;
+    rdfs:subPropertyOf bfo:BFO_0000051 ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has set member"@en ;
+    skos:definition "A mereological relation that links a LegendaryTrinketSet or item collection to one of its member items."@en .
+
+priory:hasTier1Variant a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has Tier 1 precursor variant"@en ;
+    skos:definition "An object relation that links an armor or weapon lineage to its Tier 1 precursor item."@en .
+
+priory:hasTier2Variant a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has Tier 2 precursor variant"@en ;
+    skos:definition "An object relation that links an armor or weapon lineage to its Tier 2 refined precursor item."@en .
+
+priory:hasTier3Variant a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has Tier 3 legendary variant"@en ;
+    skos:definition "An object relation that links an armor or weapon lineage to its final Tier 3 Legendary item."@en .
+
+priory:upgradesFrom a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "upgrades from"@en ;
+    skos:definition "An object relation that links a higher-tier item or precursor to the lower-tier item from which it is upgraded."@en .
+
+priory:outputsCurrency a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "outputs currency"@en ;
+    skos:definition "An object relation that links a salvage or conversion pathway to the wallet currency yielded by the operation."@en .
+
+priory:associatedZone a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "associated exploration zone"@en ;
+    skos:definition "An object relation that links an item, dungeon, or achievement pathway to the geographic zone in which it takes place."@en .
+
+priory:locatedInZone a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "located in zone"@en ;
+    skos:definition "A spatial relation that links a dungeon, vendor, or farming location to the exploration zone that contains it."@en .
+
+priory:forDiscipline a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range skos:Concept ;
+    rdfs:label "for crafting discipline"@en ;
+    skos:definition "An object relation that links a gift or recipe component to the crafting discipline associated with it."@en .
+
+priory:forSlot a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range skos:Concept ;
+    rdfs:label "for equipment slot"@en ;
+    skos:definition "An object relation that links an armor recipe or gift component to the target equipment slot it serves."@en .
+
+priory:forWeight a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range skos:Concept ;
+    rdfs:label "for armor weight"@en ;
+    skos:definition "An object relation that links an armor recipe or gift component to the armor weight class it produces."@en .
+
+priory:salvagesInto a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "salvages into"@en ;
+    skos:definition "An object relation that links a salvageable item to a crafting material or currency produced when it is salvaged."@en .
+
+priory:unlocksSkinVariant a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "unlocks skin variant"@en ;
+    skos:definition "An object relation that links a Generation 3 Legendary Weapon or achievement to an Elder Dragon facet skin variant."@en .
+
+priory:requiresResource a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "requires resource"@en ;
+    skos:definition "An object relation that links a collection or crafting step to a material or currency resource it consumes."@en .
 
 # ==============================================================================
 # Datatype Properties (Noun Phrases / Booleans)
@@ -486,99 +815,139 @@ priory:apiWalletId a owl:DatatypeProperty ;
     rdfs:domain priory:AccountWalletScalar ;
     rdfs:range xsd:integer ;
     rdfs:label "API wallet currency ID"@en ;
+    skos:definition "A datatype property that records the integer identifier assigned to an account wallet currency in the ArenaNet `/v2/currencies` API."@en ;
     rdfs:comment "Unique identifier corresponding to the Guild Wars 2 account wallet currency endpoint."@en .
 
 priory:isContainerized a owl:DatatypeProperty ;
-    rdfs:domain priory:LedgerToken ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
     rdfs:label "is containerized"@en ;
+    skos:definition "A boolean datatype property that indicates whether a ledger token or item occupies discrete container slots rather than the account wallet."@en ;
     rdfs:comment "Indicates whether a token occupies discrete inventory/bank container slots."@en .
 
 priory:isDestroyable a owl:DatatypeProperty ;
-    rdfs:domain priory:LedgerToken ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
     rdfs:label "is destroyable"@en ;
+    skos:definition "A boolean datatype property that indicates whether an item or token can be manually destroyed from a player's inventory."@en ;
     rdfs:comment "Indicates whether the token can be dragged out of inventory or destroyed."@en .
 
 priory:isMailable a owl:DatatypeProperty ;
-    rdfs:domain priory:LedgerToken ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
     rdfs:label "is mailable"@en ;
+    skos:definition "A boolean datatype property that indicates whether an item can be transferred to another player via in-game mail."@en ;
     rdfs:comment "Indicates whether the token can be attached to in-game mail."@en .
 
 priory:isTradeable a owl:DatatypeProperty ;
-    rdfs:domain priory:LedgerToken ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
     rdfs:label "is tradeable"@en ;
+    skos:definition "A boolean datatype property that indicates whether an item is unbound and eligible for trading on the Black Lion Trading Post."@en ;
     rdfs:comment "Indicates whether the token can be bought and sold on the Black Lion Trading Post."@en .
 
 priory:isSalvageable a owl:DatatypeProperty ;
-    rdfs:domain priory:LedgerToken ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
     rdfs:label "is salvageable"@en ;
+    skos:definition "A boolean datatype property that indicates whether an item can be dismantled using a salvage kit or research kit."@en ;
     rdfs:comment "Indicates whether the token can be processed with salvage kits."@en .
 
+priory:isEquipable a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is equipable"@en ;
+    skos:definition "A boolean datatype property that indicates whether an item can be equipped into a character equipment slot."@en .
+
+priory:isChoiceBox a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is choice box"@en ;
+    skos:definition "A boolean datatype property that indicates whether a container item presents a user-selectable choice of output items."@en .
+
 priory:maxStackSize a owl:DatatypeProperty ;
-    rdfs:domain priory:ContainerizedToken ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "max stack size"@en ;
+    skos:definition "An integer datatype property that specifies the maximum number of identical units that can stack in a single inventory slot."@en ;
     rdfs:comment "Maximum stack capacity for this item in a discrete container slot (typically 250)."@en .
 
 priory:icon a owl:DatatypeProperty ;
     rdfs:domain priory:Entity ;
     rdfs:range xsd:anyURI ;
     rdfs:label "icon URL"@en ;
+    skos:definition "A URI datatype property that points to the official ArenaNet render service image for an entity."@en ;
     rdfs:comment "Official ArenaNet render image URL for the entity or concept."@en .
 
 priory:gw2Id a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:Item priory:Recipe priory:Currency) ] ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
-    rdfs:label "GW2 Official API Item ID"@en .
+    rdfs:label "GW2 Official API Item ID"@en ;
+    skos:definition "An integer datatype property that records the primary key identifier of an item, currency, or recipe in the official Guild Wars 2 API."@en .
 
 priory:gw2RecipeId a owl:DatatypeProperty ;
     rdfs:domain priory:Recipe ;
     rdfs:range xsd:integer ;
-    rdfs:label "GW2 Official API Recipe ID"@en .
+    rdfs:label "GW2 Official API Recipe ID"@en ;
+    skos:definition "An integer datatype property that records the official Guild Wars 2 `/v2/recipes` identifier for a discipline crafting recipe."@en .
 
 priory:chatCode a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
-    rdfs:range xsd:string ;
-    rdfs:label "In-game Chat Link Code"@en .
+    rdfs:range rdfs:Literal ;
+    rdfs:label "In-game Chat Link Code"@en ;
+    skos:definition "A literal datatype property that stores the base64-encoded bracketed chat link string (`[&...]`) used to reference an item or waypoint in Guild Wars 2."@en .
 
 priory:chatLink a owl:DatatypeProperty ;
     rdfs:subPropertyOf priory:chatCode ;
     owl:equivalentProperty priory:chatCode ;
     rdfs:domain priory:Item ;
-    rdfs:range xsd:string ;
-    rdfs:label "In-game Chat Link Code (alias)"@en .
+    rdfs:range rdfs:Literal ;
+    rdfs:label "In-game Chat Link Code (alias)"@en ;
+    skos:definition "A literal datatype property that is equivalent to chatCode and represents an in-game bracketed chat link."@en .
 
 priory:requiredQuantity a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
-    rdfs:label "required quantity"@en .
+    rdfs:label "required quantity"@en ;
+    skos:definition "An integer datatype property that specifies the exact count of an item or currency required by an IngredientRequirement."@en .
+
+priory:costQuantity a owl:DatatypeProperty ;
+    rdfs:subPropertyOf priory:requiredQuantity ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "cost quantity"@en ;
+    skos:definition "An integer datatype property that specifies the quantity of currency or tokens required by a vendor CostRequirement."@en .
 
 priory:outputQuantity a owl:DatatypeProperty ;
-    rdfs:domain priory:Recipe ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
-    rdfs:label "output quantity"@en .
+    rdfs:label "output quantity"@en ;
+    skos:definition "An integer datatype property that specifies the number of units produced by a single execution of a recipe or acquisition path."@en .
 
 priory:requiredRating a owl:DatatypeProperty ;
-    rdfs:domain priory:DisciplineRecipe ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
-    rdfs:label "required discipline rating (0-500)"@en .
+    rdfs:label "required discipline rating (0-500)"@en ;
+    skos:definition "An integer datatype property that specifies the minimum crafting discipline skill level (0 to 500) required to craft a recipe."@en .
 
 priory:requiresRating a owl:DatatypeProperty ;
     rdfs:subPropertyOf priory:requiredRating ;
-    rdfs:label "required discipline rating (legacy alias)"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "required discipline rating (legacy alias)"@en ;
+    skos:definition "An integer subproperty of requiredRating that records the minimum crafting skill level required for a recipe."@en .
 
 priory:maxRating a owl:DatatypeProperty ;
     rdfs:range xsd:integer ;
     rdfs:label "maximum achievable discipline rating (400 or 500)"@en ;
+    skos:definition "An integer datatype property that specifies the maximum crafting skill cap (400 or 500) attainable in a crafting discipline."@en ;
     rdfs:comment "Specifies the highest crafting level achievable for a crafting discipline in Guild Wars 2."@en .
 
 priory:isAccountBound a owl:DatatypeProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "is account bound"@en .
+    rdfs:label "is account bound"@en ;
+    skos:definition "A boolean datatype property that indicates whether an item is bound to the player's account upon acquisition and cannot be traded."@en .
 
 # --- Item Attributes, Combat Capabilities & Gear Metrics ---
 
@@ -586,135 +955,246 @@ priory:requiredLevel a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
     rdfs:range xsd:integer ;
     rdfs:label "required level"@en ;
+    skos:definition "An integer datatype property that specifies the minimum character level (1 to 80) required to equip or consume an item."@en ;
     rdfs:comment "Character level required to equip or use this item (0-80)."@en .
 
 priory:hasVendorValue a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
     rdfs:range xsd:integer ;
     rdfs:label "vendor sell value"@en ;
+    skos:definition "An integer datatype property that specifies the copper coin value received when selling an item to an NPC merchant."@en ;
     rdfs:comment "Base merchant purchase value in copper coins."@en .
 
 priory:itemFlags a owl:DatatypeProperty ;
     rdfs:domain priory:Item ;
-    rdfs:range xsd:string ;
+    rdfs:range rdfs:Literal ;
     rdfs:label "item flags"@en ;
+    skos:definition "A literal datatype property that lists the ArenaNet API behavioral flags (such as AccountBound, Unique, or NoSalvage) assigned to an item."@en ;
     rdfs:comment "Comma-separated flags controlling item behavior (e.g. AccountBound, NoSalvage)."@en .
 
 priory:damageType a owl:DatatypeProperty ;
     rdfs:domain priory:Weapon ;
-    rdfs:range xsd:string ;
+    rdfs:range rdfs:Literal ;
     rdfs:label "weapon damage type"@en ;
+    skos:definition "A literal datatype property that records the physical or elemental damage type associated with a weapon's strike attacks."@en ;
     rdfs:comment "Elemental or physical damage type inflicted by this weapon."@en .
 
 priory:minWeaponPower a owl:DatatypeProperty ;
     rdfs:domain priory:Weapon ;
     rdfs:range xsd:integer ;
     rdfs:label "minimum weapon power"@en ;
+    skos:definition "An integer datatype property that specifies the lower bound of a weapon's base weapon strength roll."@en ;
     rdfs:comment "Minimum weapon strike damage value."@en .
 
 priory:maxWeaponPower a owl:DatatypeProperty ;
     rdfs:domain priory:Weapon ;
     rdfs:range xsd:integer ;
     rdfs:label "maximum weapon power"@en ;
+    skos:definition "An integer datatype property that specifies the upper bound of a weapon's base weapon strength roll."@en ;
     rdfs:comment "Maximum weapon strike damage value."@en .
 
 priory:armorDefense a owl:DatatypeProperty ;
     rdfs:domain priory:Armor ;
     rdfs:range xsd:integer ;
     rdfs:label "armor defense"@en ;
+    skos:definition "An integer datatype property that specifies the base defense rating contributed by an armor piece to a character's Armor attribute."@en ;
     rdfs:comment "Base armor defense rating."@en .
 
 priory:expectedYieldRate a owl:DatatypeProperty ;
-    rdfs:domain priory:MysticForgeRecipe ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:decimal ;
-    rdfs:label "expected yield probability rate"@en .
+    rdfs:label "expected yield probability rate"@en ;
+    skos:definition "A decimal datatype property that records the expected output yield or conversion probability of a probabilistic Mystic Forge recipe."@en .
 
 priory:duration a owl:DatatypeProperty ;
-    rdfs:domain priory:ItemBuff ;
-    rdfs:range xsd:string ;
-    rdfs:label "buff duration"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "buff duration"@en ;
+    skos:definition "A literal datatype property that specifies the active duration of an item buff or enhancement."@en .
 
 priory:accelerationMultiplier a owl:DatatypeProperty ;
-    rdfs:domain priory:ItemBuff ;
-    rdfs:range xsd:string ;
-    rdfs:label "acceleration multiplier rate"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "acceleration multiplier rate"@en ;
+    skos:definition "A literal datatype property that specifies the percentage or multiplier bonus granted by an item buff to reward track or experience progression."@en .
+
+priory:legendaryGeneration a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "legendary generation"@en ;
+    skos:definition "An integer datatype property that identifies the release generation (1, 2, or 3) of a Legendary Weapon or Precursor."@en .
+
+priory:generation a owl:DatatypeProperty ;
+    rdfs:subPropertyOf priory:legendaryGeneration ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "generation"@en ;
+    skos:definition "An integer subproperty of legendaryGeneration that indicates the generation number of a legendary item."@en .
+
+priory:cooldownNote a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "cooldown note"@en ;
+    skos:definition "A literal datatype property that describes the daily or weekly reset schedule and quantity limit of a TimeGate constraint."@en .
+
+priory:expansion a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "expansion"@en ;
+    skos:definition "A literal datatype property that names the Guild Wars 2 expansion or Living World season associated with an entity."@en .
+
+priory:dragonName a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Elder Dragon name"@en ;
+    skos:definition "A literal datatype property that specifies the Elder Dragon associated with a Generation 3 DragonFacet variant."@en .
+
+priory:hasPath a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "has explorable path"@en ;
+    skos:definition "A literal datatype property that lists an explorable path identifier or route name within a Dungeon."@en .
+
+priory:masteryName a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "required mastery name"@en ;
+    skos:definition "A literal datatype property that specifies the name of the Mastery track required for a crafting or collection step."@en .
+
+priory:requiresMastery a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "requires mastery"@en ;
+    skos:definition "A literal datatype property that specifies an account Mastery requirement for an acquisition pathway."@en .
+
+priory:metaAchievement a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "meta achievement name"@en ;
+    skos:definition "A literal datatype property that records the title of the overarching meta-achievement required by an AchievementCollectionPath."@en .
+
+priory:vendorName a owl:DatatypeProperty ;
+    rdfs:subPropertyOf priory:vendorNPC ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "vendor name"@en ;
+    skos:definition "A literal subproperty of vendorNPC that records the display name of an NPC merchant."@en .
+
+priory:archetypeTag a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "combat archetype tag"@en ;
+    skos:definition "A literal datatype property that tags an equipment item or relic with its primary combat build archetype (such as Power DPS, Condition DPS, or Heal Support)."@en .
+
+priory:stepOrder a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "step order"@en ;
+    skos:definition "An integer datatype property that specifies the sequential index of a step within a multi-part collection pathway."@en .
+
+priory:stepNumber a owl:DatatypeProperty ;
+    rdfs:subPropertyOf priory:stepOrder ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "step number"@en ;
+    skos:definition "An integer subproperty of stepOrder that records the ordinal step number in a crafting or collection sequence."@en .
+
+priory:grantsAuraTier a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "grants aura tier"@en ;
+    skos:definition "An integer datatype property that specifies the visual aura progression tier (1, 2, or 3) contributed by a Legendary Trinket."@en .
 
 # --- Convenience Gizmo & VIP Lounge Properties ---
 
 priory:salvageCostPerUse a owl:DatatypeProperty ;
-    rdfs:domain priory:InfiniteSalvageItem ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "salvage cost per use (copper)"@en ;
+    skos:definition "An integer datatype property that specifies the copper coin fee charged per salvage operation by an InfiniteSalvageItem."@en ;
     rdfs:comment "Cost in copper coins per salvage action."@en .
 
 priory:salvageRarityRate a owl:DatatypeProperty ;
-    rdfs:domain priory:InfiniteSalvageItem ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:decimal ;
     rdfs:label "salvage rare material rate"@en ;
+    skos:definition "A decimal datatype property (0.0 to 1.0) that specifies the probability multiplier for obtaining higher-tier materials when salvaging."@en ;
     rdfs:comment "Percentage probability of obtaining rarer materials (0.0 to 1.0)."@en .
 
 priory:salvageUpgradeRate a owl:DatatypeProperty ;
-    rdfs:domain priory:InfiniteSalvageItem ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:decimal ;
     rdfs:label "salvage upgrade recovery rate"@en ;
+    skos:definition "A decimal datatype property (0.0 to 1.0) that specifies the probability of extracting sigils, runes, charms, or symbols during salvaging."@en ;
     rdfs:comment "Percentage probability of recovering upgrades or charm/symbol conversion rate (0.0 to 1.0)."@en .
 
 priory:hasCraftingStations a owl:DatatypeProperty ;
-    rdfs:domain priory:VIPLoungePass ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "has all crafting stations"@en .
+    rdfs:label "has all crafting stations"@en ;
+    skos:definition "A boolean datatype property that indicates whether a VIP lounge hub provides access to all crafting discipline stations."@en .
 
 priory:hasMysticForge a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VIPLoungePass priory:ConvenienceGizmo) ] ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "has Mystic Forge access"@en .
+    rdfs:label "has Mystic Forge access"@en ;
+    skos:definition "A boolean datatype property that indicates whether a VIP lounge hub or gizmo provides direct access to the Mystic Forge."@en .
 
 priory:hasBank a owl:DatatypeProperty ;
-    rdfs:domain priory:VIPLoungePass ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "has bank and guild bank access"@en .
+    rdfs:label "has bank and guild bank access"@en ;
+    skos:definition "A boolean datatype property that indicates whether a VIP lounge hub provides account vault and guild bank access."@en .
 
 priory:hasTradingPost a owl:DatatypeProperty ;
-    rdfs:domain priory:VIPLoungePass ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "has Black Lion Trading Post access"@en .
+    rdfs:label "has Black Lion Trading Post access"@en ;
+    skos:definition "A boolean datatype property that indicates whether a VIP lounge hub provides a Black Lion Trading Post merchant."@en .
 
 priory:hasVendor a owl:DatatypeProperty ;
-    rdfs:domain priory:VIPLoungePass ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "has merchants and armor repair vendors"@en .
+    rdfs:label "has merchants and armor repair vendors"@en ;
+    skos:definition "A boolean datatype property that indicates whether a VIP lounge hub provides general merchants and utility vendors."@en .
 
 priory:hasInstantReturn a owl:DatatypeProperty ;
-    rdfs:domain priory:VIPLoungePass ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:boolean ;
-    rdfs:label "has instant return to previous open world map"@en .
+    rdfs:label "has instant return to previous open world map"@en ;
+    skos:definition "A boolean datatype property that indicates whether a VIP lounge pass allows returning to the character's previous open-world coordinates."@en .
 
 priory:bagSlots a owl:DatatypeProperty ;
-    rdfs:domain priory:SafeStagingBag ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
-    rdfs:label "bag slot capacity"@en .
+    rdfs:label "bag slot capacity"@en ;
+    skos:definition "An integer datatype property that specifies the number of inventory container slots provided by an inventory bag."@en .
 
 # --- Spatial & Waypoint Navigation Properties ---
 
 priory:vendorNPC a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
-    rdfs:range xsd:string ;
-    rdfs:label "Vendor / Relevant NPC Name"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Vendor / Relevant NPC Name"@en ;
+    skos:definition "A literal datatype property that records the name of the NPC merchant or contact associated with an acquisition pathway or zone."@en .
 
 priory:zoneName a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
-    rdfs:range xsd:string ;
-    rdfs:label "Map / Zone Name"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Map / Zone Name"@en ;
+    skos:definition "A literal datatype property that specifies the name of the in-game map or geographic zone where an entity or vendor is located."@en .
 
 priory:waypointName a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
-    rdfs:range xsd:string ;
-    rdfs:label "Waypoint Name"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Waypoint Name"@en ;
+    skos:definition "A literal datatype property that specifies the display name of the nearest landmark waypoint for an activity or vendor."@en .
 
 priory:nearestWaypoint a owl:DatatypeProperty ;
-    rdfs:domain [ a owl:Class ; owl:unionOf (priory:VendorExchangePath priory:AcquisitionPath) ] ;
-    rdfs:range xsd:string ;
-    rdfs:label "Nearest In-Game Waypoint Chat Code"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "Nearest In-Game Waypoint Chat Code"@en ;
+    skos:definition "A literal datatype property that records the in-game waypoint name or chat link code (`[&...]`) nearest to a vendor, dungeon, or farming site."@en .
 
 # ==============================================================================
 # Controlled Vocabularies: Weapon Taxonomy (SKOS)
@@ -722,172 +1202,226 @@ priory:nearestWaypoint a owl:DatatypeProperty ;
 
 priory:WeaponScheme a skos:ConceptScheme ;
     rdfs:label "Guild Wars 2 Weapon Types Taxonomy"@en ;
-    skos:prefLabel "Weapon Scheme"@en .
+    skos:prefLabel "Weapon Scheme"@en ;
+    skos:definition "A SKOS concept scheme that organizes Guild Wars 2 weapon types by wielding configuration (One-Handed, Off-Hand, Two-Handed, and Aquatic)."@en .
 
-weapon:TwoHandedWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "Two-Handed Weapon"@en .
+weapon:TwoHandedWeapon a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:prefLabel "Two-Handed Weapon"@en ;
+    skos:definition "A weapon category concept representing terrestrial weapons that occupy both main-hand and off-hand slots simultaneously and determine all five weapon skills."@en .
 
-weapon:OneHandedWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "One-Handed Weapon"@en .
+weapon:OneHandedWeapon a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:prefLabel "One-Handed Weapon"@en ;
+    skos:definition "A weapon category concept representing terrestrial weapons that can be equipped in the main-hand slot to determine weapon skills 1 through 3."@en .
 
-weapon:OffHandWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "Off-Hand Weapon"@en .
+weapon:OffHandWeapon a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:prefLabel "Off-Hand Weapon"@en ;
+    skos:definition "A weapon category concept representing dedicated auxiliary weapons that can only be equipped in the off-hand slot to determine weapon skills 4 and 5."@en .
 
-weapon:AquaticWeapon a skos:Concept ; skos:inScheme priory:WeaponScheme ; skos:prefLabel "Aquatic Weapon"@en .
+weapon:AquaticWeapon a skos:Concept ;
+    skos:inScheme priory:WeaponScheme ;
+    skos:prefLabel "Aquatic Weapon"@en ;
+    skos:definition "A weapon category concept representing underwater weapons equipped in the aquatic weapon slots for submerged combat."@en .
 
 weapon:Greatsword a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon ;
-    skos:prefLabel "Greatsword"@en .
+    skos:prefLabel "Greatsword"@en ;
+    skos:definition "A two-handed weapon concept representing a heavy two-handed blade crafted by a Weaponsmith."@en .
 
 weapon:Hammer a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon ;
-    skos:prefLabel "Hammer"@en .
+    skos:prefLabel "Hammer"@en ;
+    skos:definition "A two-handed weapon concept representing a heavy bludgeoning maul crafted by a Weaponsmith for crowd control and cleave damage."@en .
 
 weapon:Longbow a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon ;
-    skos:prefLabel "Longbow"@en .
+    skos:prefLabel "Longbow"@en ;
+    skos:definition "A two-handed weapon concept representing a long-range martial bow crafted by a Huntsman."@en .
 
 weapon:Rifle a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon ;
-    skos:prefLabel "Rifle"@en .
+    skos:prefLabel "Rifle"@en ;
+    skos:definition "A two-handed weapon concept representing a long-barrel firearm crafted by a Huntsman."@en .
 
 weapon:ShortBow a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon ;
-    skos:prefLabel "Short Bow"@en .
+    skos:prefLabel "Short Bow"@en ;
+    skos:definition "A two-handed weapon concept representing a rapid-fire skirmishing bow crafted by a Huntsman."@en .
 
 weapon:Staff a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon ;
-    skos:prefLabel "Staff"@en .
+    skos:prefLabel "Staff"@en ;
+    skos:definition "A two-handed weapon concept representing a magical or martial polearm crafted by an Artificer."@en .
 
 weapon:Axe a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OneHandedWeapon ;
-    skos:prefLabel "Axe"@en .
+    skos:prefLabel "Axe"@en ;
+    skos:definition "A one-handed weapon concept representing a single-handed cleaving axe crafted by a Huntsman or Weaponsmith."@en .
 
 weapon:Dagger a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OneHandedWeapon ;
-    skos:prefLabel "Dagger"@en .
+    skos:prefLabel "Dagger"@en ;
+    skos:definition "A one-handed weapon concept representing a fast, short blade crafted by a Weaponsmith for main-hand or off-hand combat."@en .
 
 weapon:Mace a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OneHandedWeapon ;
-    skos:prefLabel "Mace"@en .
+    skos:prefLabel "Mace"@en ;
+    skos:definition "A one-handed weapon concept representing a blunt flanged weapon crafted by a Weaponsmith."@en .
 
 weapon:Pistol a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OneHandedWeapon ;
-    skos:prefLabel "Pistol"@en .
+    skos:prefLabel "Pistol"@en ;
+    skos:definition "A one-handed weapon concept representing a sidearm firearm crafted by a Huntsman for main-hand or off-hand ranged attacks."@en .
 
 weapon:Scepter a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OneHandedWeapon ;
-    skos:prefLabel "Scepter"@en .
+    skos:prefLabel "Scepter"@en ;
+    skos:definition "A one-handed weapon concept representing a magical main-hand wand crafted by an Artificer."@en .
 
 weapon:Sword a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OneHandedWeapon ;
-    skos:prefLabel "Sword"@en .
+    skos:prefLabel "Sword"@en ;
+    skos:definition "A one-handed weapon concept representing a balanced martial blade crafted by a Weaponsmith for main-hand or off-hand use."@en .
 
 weapon:Focus a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OffHandWeapon ;
-    skos:prefLabel "Focus"@en .
+    skos:prefLabel "Focus"@en ;
+    skos:definition "An off-hand weapon concept representing an arcane talisman or artifact crafted by an Artificer."@en .
 
 weapon:Shield a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OffHandWeapon ;
-    skos:prefLabel "Shield"@en .
+    skos:prefLabel "Shield"@en ;
+    skos:definition "An off-hand weapon concept representing a defensive barrier crafted by a Weaponsmith that adds bonus armor defense."@en .
 
 weapon:Torch a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OffHandWeapon ;
-    skos:prefLabel "Torch"@en .
+    skos:prefLabel "Torch"@en ;
+    skos:definition "An off-hand weapon concept representing a burning brand crafted by a Huntsman that inflicts burning and illumination."@en .
 
 weapon:Warhorn a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:OffHandWeapon ;
-    skos:prefLabel "Warhorn"@en .
+    skos:prefLabel "Warhorn"@en ;
+    skos:definition "An off-hand weapon concept representing a acoustic signaling horn crafted by a Huntsman that grants boons to allies."@en .
 
 weapon:Spear a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:TwoHandedWeapon, weapon:AquaticWeapon ;
-    skos:prefLabel "Spear"@en .
+    skos:prefLabel "Spear"@en ;
+    skos:definition "A two-handed and aquatic weapon concept representing a polearm crafted by a Weaponsmith that can be wielded both underwater and on land (via Janthir Wilds proficiency)."@en .
 
 weapon:HarpoonGun a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:AquaticWeapon ;
-    skos:prefLabel "Harpoon Gun"@en .
+    skos:prefLabel "Harpoon Gun"@en ;
+    skos:definition "An aquatic weapon concept representing a mechanical underwater projectile launcher crafted by a Huntsman."@en .
 
 weapon:Trident a skos:Concept ;
     skos:inScheme priory:WeaponScheme ;
     skos:broader weapon:AquaticWeapon ;
-    skos:prefLabel "Trident"@en .
+    skos:prefLabel "Trident"@en ;
+    skos:definition "An aquatic weapon concept representing a three-pronged magical underwater polearm crafted by an Artificer."@en .
 
 # --- Exploration & Spatial Navigation ---
+
 priory:ExplorationZone a owl:Class ;
-    rdfs:subClassOf priory:Entity ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000029 ;
     rdfs:label "Exploration Zone"@en ;
+    skos:definition "A spatial site in Tyria that constitutes an explorable map zone containing waypoints, renown hearts, vistas, and points of interest."@en ;
     rdfs:comment "A geographic zone in Core Tyria contributing to Gift of Exploration map completion."@en .
 
+priory:Dungeon a owl:Class ;
+    rdfs:subClassOf priory:ExplorationZone ;
+    rdfs:label "Dungeon Instance"@en ;
+    skos:definition "An exploration zone that is a five-player instanced dungeon featuring story mode and explorable paths that award Tales of Dungeon Delving."@en ;
+    rdfs:comment "A 5-player instanced dungeon in Core Tyria."@en .
+
 priory:FarmingLocation a owl:Class ;
-    rdfs:subClassOf priory:Entity ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000029 ;
     rdfs:label "Farming Location"@en ;
+    skos:definition "A spatial site within an exploration zone where players gather materials, complete meta-events, or farm currencies at high efficiency."@en ;
     rdfs:comment "An in-game location optimized for farming specific materials or currencies."@en .
 
 priory:DungeonPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Dungeon Path Acquisition"@en ;
     skos:altLabel "dungeon"@en, "dungeon run"@en, "dungeon path"@en ;
-    skos:definition "Acquiring items or tokens by completing specific dungeon explorable paths."@en .
+    skos:definition "An acquisition pathway in which a player completes five-player dungeon explorable paths to earn dungeon currencies and gifts."@en .
 
 priory:OpenWorldFarmPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Open World Farming"@en ;
     skos:altLabel "farm"@en, "grind"@en, "meta event"@en, "RIBA"@en ;
-    skos:definition "Acquiring materials through open world meta events, champion trains, or material node farming."@en .
+    skos:definition "An acquisition pathway in which a player repeatedly participates in open-world meta-events, node harvesting routes, or rift hunting to gather materials."@en .
 
 priory:MysticForgePromotionPath a owl:Class ;
     rdfs:subClassOf priory:AcquisitionPath ;
     rdfs:label "Mystic Forge Material Promotion"@en ;
     skos:altLabel "promote"@en, "forge promote"@en, "transmute"@en ;
-    skos:definition "Using the Mystic Forge to upgrade lower-tier materials into higher-tier materials."@en .
+    skos:definition "An acquisition pathway in which a player combines lower-tier crafting materials with Dust, Philosopher's Stones, or Mystic Crystals in the Mystic Forge to yield higher-tier materials."@en .
 
 priory:requiresExpansion a owl:DatatypeProperty ;
-    rdfs:range xsd:string ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
     rdfs:label "requires expansion"@en ;
+    skos:definition "A literal datatype property that specifies the Guild Wars 2 expansion or Living World release required to access a zone, item, or pathway."@en ;
     rdfs:comment "The expansion or living world season required to access this content."@en .
 
 priory:recommendedMount a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
     rdfs:range skos:Concept ;
     rdfs:label "recommended mount"@en ;
+    skos:definition "An object relation that links an exploration zone or farming route to the mount concept that provides optimal traversal speed or verticality."@en ;
     rdfs:comment "The mount type that provides the greatest mobility advantage for this activity or zone."@en .
 
 priory:zoneLevel a owl:DatatypeProperty ;
-    rdfs:range xsd:integer ;
-    rdfs:label "zone minimum level"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "zone level range"@en ;
+    skos:definition "A literal datatype property that specifies the effective character level or level range of an exploration zone."@en .
 
 priory:explorationDifficulty a owl:DatatypeProperty ;
-    rdfs:range xsd:string ;
-    rdfs:label "exploration difficulty rating"@en .
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "exploration difficulty rating"@en ;
+    skos:definition "A literal datatype property that rates the navigational and combat complexity of completing all map objectives in an exploration zone."@en .
 
 priory:farmingEfficiency a owl:DatatypeProperty ;
-    rdfs:range xsd:string ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
     rdfs:label "farming efficiency rating"@en ;
+    skos:definition "A literal datatype property that characterizes the expected yield rate or gold-per-hour efficiency of a farming location or pathway."@en ;
     rdfs:comment "Approximate gold-per-hour or items-per-hour efficiency for this farming location."@en .
 
 priory:eventCadence a owl:DatatypeProperty ;
-    rdfs:range xsd:string ;
+    rdfs:domain priory:Entity ;
+    rdfs:range rdfs:Literal ;
     rdfs:label "event cadence"@en ;
+    skos:definition "A literal datatype property that describes the spawn timer or recurrence schedule of a world boss or meta-event."@en ;
     rdfs:comment "How frequently this event spawns or can be triggered (e.g. every 2 hours, on demand)."@en .
 
 priory:hasRegion a owl:ObjectProperty ;
-    rdfs:domain priory:ExplorationZone ;
+    rdfs:domain priory:Entity ;
     rdfs:range skos:Concept ;
-    rdfs:label "belongs to region"@en .
+    rdfs:label "belongs to region"@en ;
+    skos:definition "An object relation that links an ExplorationZone to its broader geographic region concept in the RegionScheme."@en .
 
 # ==============================================================================
 # Controlled Vocabularies: Rarity Tiers (SKOS)
@@ -895,23 +1429,48 @@ priory:hasRegion a owl:ObjectProperty ;
 
 priory:RarityScheme a skos:ConceptScheme ;
     rdfs:label "Guild Wars 2 Item Rarity Taxonomy"@en ;
-    skos:prefLabel "Rarity Scheme"@en .
+    skos:prefLabel "Rarity Scheme"@en ;
+    skos:definition "A SKOS concept scheme that defines the eight hierarchical item quality tiers in Guild Wars 2."@en .
 
-rarity:Junk a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Junk"@en .
+rarity:Junk a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Junk"@en ;
+    skos:definition "An item rarity concept (gray) representing vendor trash items that have no crafting or combat utility beyond merchant coin value."@en .
 
-rarity:Basic a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Basic"@en .
+rarity:Basic a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Basic"@en ;
+    skos:definition "An item rarity concept (white) representing baseline unenhanced equipment and common crafting supplies."@en .
 
-rarity:Fine a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Fine"@en .
+rarity:Fine a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Fine"@en ;
+    skos:definition "An item rarity concept (blue) representing minor magic-infused equipment and standard crafting materials."@en .
 
-rarity:Masterwork a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Masterwork"@en .
+rarity:Masterwork a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Masterwork"@en ;
+    skos:definition "An item rarity concept (green) representing mid-tier equipment and refined components."@en .
 
-rarity:Rare a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Rare"@en .
+rarity:Rare a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Rare"@en ;
+    skos:definition "An item rarity concept (yellow) representing high-grade equipment of level 68+ that can be salvaged for Glob of Ectoplasm."@en .
 
-rarity:Exotic a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Exotic"@en .
+rarity:Exotic a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Exotic"@en ;
+    skos:definition "An item rarity concept (orange) representing standard level 80 endgame equipment and Generation 1/3 Legendary precursor weapons."@en .
 
-rarity:Ascended a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Ascended"@en .
+rarity:Ascended a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Ascended"@en ;
+    skos:definition "An item rarity concept (pink) representing account-bound equipment with maximum combat attribute budgets and Agony Resistance infusion slots."@en .
 
-rarity:Legendary a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefLabel "Legendary"@en .
+rarity:Legendary a skos:Concept ;
+    skos:inScheme priory:RarityScheme ;
+    skos:prefLabel "Legendary"@en ;
+    skos:definition "An item rarity concept (purple) representing the pinnacle prestige tier that binds to the account-wide Legendary Armory with free attribute and upgrade swapping."@en .
 
 # ==============================================================================
 # Controlled Vocabularies: VIP Lounge Amenities (SKOS)
@@ -919,69 +1478,83 @@ rarity:Legendary a skos:Concept ; skos:inScheme priory:RarityScheme ; skos:prefL
 
 priory:LoungeFeatureScheme a skos:ConceptScheme ;
     rdfs:label "VIP Lounge Amenities and Features Taxonomy"@en ;
-    skos:prefLabel "Lounge Feature Scheme"@en .
+    skos:prefLabel "Lounge Feature Scheme"@en ;
+    skos:definition "A SKOS concept scheme classifying the crafting, banking, commerce, and travel amenities provided by VIP Lounge passes and convenience gizmos."@en .
 
 priory:FeatureCraftingStations a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "All Crafting Stations"@en ;
+    skos:definition "A lounge feature concept that provides proximate access to all eight crafting discipline stations within a single hub."@en ;
     rdfs:comment "Access to all eight core crafting discipline stations."@en .
 
 priory:FeatureMysticForge a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Mystic Forge"@en ;
+    skos:definition "A lounge feature concept that provides an interactive Mystic Forge conduit or node inside a convenience hub."@en ;
     rdfs:comment "On-site Mystic Forge access."@en .
 
 priory:FeatureBank a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Bank and Guild Bank Access"@en ;
+    skos:definition "A lounge feature concept that provides direct access to the player's account vault, material storage, and guild bank."@en ;
     rdfs:comment "Access to Account Vault and Guild Bank storage."@en .
 
 priory:FeatureTradingPost a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Trading Post Agent"@en ;
+    skos:definition "A lounge feature concept that provides a Black Lion Trading Company representative for picking up coins and purchased items."@en ;
     rdfs:comment "Access to Black Lion Trading Post pickup and delivery merchants."@en .
 
 priory:FeatureVendor a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Merchants and Utility Vendors"@en ;
+    skos:definition "A lounge feature concept that provides general merchants, laurel vendors, and crafting supply NPCs."@en ;
     rdfs:comment "General merchants, laurels, crafting materials, and armor repair."@en .
 
 priory:FeatureInstantReturn a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Instant Return to Open World"@en ;
+    skos:definition "A lounge feature concept that enables teleporting back to the character's exact prior open-world map coordinates upon re-activating the pass."@en ;
     rdfs:comment "Special action skill or portal to instantly return to your exact previous location in the open world."@en .
 
 priory:FeatureFractalLobby a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Fractal Hub Portal & Vendors"@en ;
+    skos:definition "A lounge feature concept that provides direct entry portals and mist-attuned vendors for Fractals of the Mists."@en ;
     rdfs:comment "Direct portals and merchants for Fractals of the Mists (Mistlock Sanctuary)."@en .
 
 priory:FeatureWvWVendors a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "WvW Merchants & Siege Testing Arena"@en ;
+    skos:definition "A lounge feature concept that provides World vs. World skirmish supervisors, siege masters, and team chat integration."@en ;
     rdfs:comment "World vs World siege merchants, tactics, and duel arena (Armistice Bastion)."@en .
 
 priory:FeatureFishing a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Fishing Waters & Jade Bot Workbench"@en ;
+    skos:definition "A lounge feature concept that provides stocked fishing nodes, fishmonger vendors, and a Jade Bot Workbench."@en ;
     rdfs:comment "Exclusive fishing holes, bait vendors, and Jade Bot Workbench (Thousand Seas Pavilion)."@en .
 
 priory:FeatureStrikePortals a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Strike Mission & Raid Portals"@en ;
+    skos:definition "A lounge feature concept that provides direct launch portals to instanced Strike Missions and Aerodrome hubs."@en ;
     rdfs:comment "Direct launch portals to End of Dragons and expansion Strike Missions."@en .
 
 priory:FeatureStylist a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Hairstylist & Aesthetic Services"@en ;
+    skos:definition "A lounge feature concept that provides permanent cosmetic hairstyling and makeover NPC functionality."@en ;
     rdfs:comment "Personal hairstylist and cosmetic appearance modification services."@en .
 
 priory:FeatureToolDelivery a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Tool Delivery Services"@en ;
+    skos:definition "A lounge feature concept that dispenses gathering tools or harvest node bundles to the player."@en ;
     rdfs:comment "Delivery services for infinite gathering tools and harvesting supplies."@en .
 
 priory:FeatureRepair a skos:Concept, priory:LoungeFeature ;
     skos:inScheme priory:LoungeFeatureScheme ;
     skos:prefLabel "Armor Repair Canister Service"@en ;
+    skos:definition "A lounge feature concept that provides on-demand armor reinforcement and repair anvils."@en ;
     rdfs:comment "Instant portable armor repair and reinforcement services."@en .

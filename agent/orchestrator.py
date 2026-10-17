@@ -100,7 +100,7 @@ class PrioryChatSession:
             return guide
 
         # Route SESSION_ITINERARY
-        if resolved_goal.goal_type == GoalType.SESSION_ITINERARY:
+        elif resolved_goal.goal_type == GoalType.SESSION_ITINERARY:
             itinerary = self.orchestrator.solver.schedule_daily_session_itinerary(
                 account=self.account_state,
                 time_budget_minutes=resolved_goal.intent.time_budget_minutes,
@@ -117,7 +117,7 @@ class PrioryChatSession:
             return guide
 
         # Route ARBITRAGE_EVALUATION
-        if resolved_goal.goal_type == GoalType.ARBITRAGE_EVALUATION:
+        elif resolved_goal.goal_type == GoalType.ARBITRAGE_EVALUATION:
             report = self.orchestrator.solver.solve_buy_vs_craft_vs_vault(
                 goal_item_id=resolved_goal.resolved_item_id or 30704,
                 live_prices=live_tp_prices or {},
@@ -133,7 +133,7 @@ class PrioryChatSession:
             return guide
 
         # Route PREREQUISITE_AUDIT
-        if resolved_goal.goal_type == GoalType.PREREQUISITE_AUDIT:
+        elif resolved_goal.goal_type == GoalType.PREREQUISITE_AUDIT:
             report = self.orchestrator.diff_engine.verify_legendary_prerequisites(
                 goal_item_id=resolved_goal.resolved_item_id or 30704,
                 account_state=self.account_state
@@ -148,7 +148,7 @@ class PrioryChatSession:
             return guide
 
         # Route CURRENCY_OPPORTUNITY_COST
-        if resolved_goal.goal_type == GoalType.CURRENCY_OPPORTUNITY_COST:
+        elif resolved_goal.goal_type == GoalType.CURRENCY_OPPORTUNITY_COST:
             target_id = resolved_goal.currency_id or resolved_goal.resolved_item_id or 68
             qty = resolved_goal.target_quantity
             if self.account_state:
@@ -208,7 +208,6 @@ class PrioryChatSession:
                 or getattr(resolved_goal, "prefer_cheap", False)
                 or getattr(resolved_goal.intent, "prefer_cheap", False)
                 or any(k in user_prompt.lower() for k in ["cheapest", "least gold", "lowest cost", "cheapest gold", "minimum gold", "save gold", "cheapest route", "cheapest path"])
-                or True
             )
 
             optimal_plan = twilight_solver.solve_twilight_journey(
@@ -217,7 +216,9 @@ class PrioryChatSession:
                 tp_prices=live_tp_prices,
                 time_budget_minutes=resolved_goal.intent.time_budget_minutes,
                 wizards_vault_exhausted=wv_exhausted,
-                optimize_for_cost=opt_cost
+                optimize_for_cost=opt_cost,
+                excluded_modes=resolved_goal.intent.excluded_game_modes,
+                exhausted_sources=resolved_goal.intent.exhausted_sources
             )
         else:
             optimal_plan = self.orchestrator.solver.solve_optimal_path(

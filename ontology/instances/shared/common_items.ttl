@@ -3,11 +3,10 @@
 @prefix priory: <https://priory.gw2/def/> .
 @prefix item: <https://priory.gw2/id/item/> .
 
-item:19640 a priory:GiftItem ; rdfs:label "Gift of Ascalon"@en ; priory:gw2Id 19640 .
-item:19662 a priory:CraftingMaterial ; rdfs:label "Bottle of Elonian Wine"@en ; priory:gw2Id 19662 .
-item:19663 a priory:CraftingMaterial ; rdfs:label "Bottle of Elonian Wine"@en ; priory:gw2Id 19663 .
-item:19665 a priory:CraftingMaterial ; rdfs:label "Philosopher's Stone"@en ; priory:gw2Id 19665 .
-item:19674 a priory:CraftingMaterial ; rdfs:label "Bloodstone Shard"@en ; priory:gw2Id 19674 .
+item:19664 a priory:GiftItem ; rdfs:label "Gift of Ascalon"@en ; priory:gw2Id 19664 .
+item:20795 a priory:CraftingMaterial ; rdfs:label "Bottle of Elonian Wine"@en ; priory:gw2Id 20795 .
+item:20797 a priory:CraftingMaterial ; rdfs:label "Bloodstone Shard"@en ; priory:gw2Id 20797 .
+item:19737 a priory:CraftingMaterial ; rdfs:label "Cured Hardened Leather Square"@en ; priory:gw2Id 19737 .
 item:19675 a priory:CraftingMaterial ; rdfs:label "Mystic Clover"@en ; priory:gw2Id 19675 .
 item:19676 a priory:CraftingMaterial ; rdfs:label "Icy Runestone"@en ; priory:gw2Id 19676 .
 item:19678 a priory:GiftItem ; rdfs:label "Gift of Battle"@en ; priory:gw2Id 19678 .

@@ -8,6 +8,7 @@ Leverages W3C OWL and SKOS taxonomies to perform:
 """
 
 from __future__ import annotations
+import re
 from typing import Any, Dict, List, Optional
 import rdflib
 from rdflib import Literal, Namespace, URIRef
@@ -269,6 +270,11 @@ class SemanticQueryService:
             ?item priory:gw2Id ?gw2Id ;
                   rdfs:label ?label .
             FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:LedgerToken }
+            FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:CraftingMaterial }
+            FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:Trophy }
+            FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:GiftItem }
+            FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:Consumable }
+            FILTER NOT EXISTS { ?item a/rdfs:subClassOf* priory:Gizmo }
             OPTIONAL { ?item priory:chatCode ?chatCode }
             OPTIONAL { ?item priory:hasWeaponType ?weaponType }
             OPTIONAL { ?item priory:hasArmorWeight ?armorWeight }
@@ -483,7 +489,111 @@ class SemanticQueryService:
                 ))
                 return stem_items
 
-        # 4. Fallback to any entity with matching label
+        # 4. Relational / Indirect Description Resolution via SPARQL (e.g. "legendary greatsword made from Dusk")
+        rel_match = re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+([a-z0-9'\s\-]+?)(?:\?|\.|$)", clean_search)
+        if rel_match:
+            ing_text = rel_match.group(1).strip()
+            rel_query = """
+            SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?type WHERE {
+                ?item priory:gw2Id ?gw2Id ;
+                      rdfs:label ?label ;
+                      a ?type ;
+                      priory:producedBy ?recipe .
+                ?recipe priory:hasIngredient ?ingNode .
+                ?ingNode priory:ingredientItem ?ingItem .
+                ?ingItem rdfs:label ?ingLabel .
+                OPTIONAL { ?item priory:chatCode ?chatCode }
+                FILTER (lcase(str(?ingLabel)) = ?ingTarget || CONTAINS(lcase(str(?ingLabel)), ?ingTarget))
+                FILTER (?type != owl:NamedIndividual)
+            } LIMIT 5
+            """
+            rel_res = self.store.query(rel_query, init_bindings={"ingTarget": Literal(ing_text)})
+            if rel_res:
+                rel_res.sort(key=lambda x: (
+                    0 if any(k in str(x.get("type", "")) for k in ["LegendaryWeapon", "LegendaryItem"]) else 1,
+                    len(x.get("label", ""))
+                ))
+                return rel_res
+
+        # 4b. Tokenized / Descriptive Graph Resolution (e.g. "dark shadowy Gen 1 legendary greatsword", "How do I craft Twilight?")
+        all_items_query = """
+        SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?type ?alt ?comment ?def ?wt WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  rdfs:label ?label ;
+                  a ?type .
+            OPTIONAL { ?item priory:chatCode ?chatCode }
+            OPTIONAL { ?item skos:altLabel ?alt }
+            OPTIONAL { ?item rdfs:comment ?comment }
+            OPTIONAL { ?item skos:definition ?def }
+            OPTIONAL { ?item priory:hasWeaponType ?wt }
+            FILTER (?type != owl:NamedIndividual)
+        }
+        """
+        candidates = self.store.query(all_items_query)
+        matched_Mention = []
+        wants_legendary = "legendary" in clean_search
+        for c in candidates:
+            lbl = str(c.get("label", "")).strip()
+            alt_lbl = str(c.get("alt", "")).strip()
+            if not lbl:
+                continue
+            lbl_low = lbl.lower()
+            # If the item's label (or altLabel) appears as a whole word in the search text
+            if len(lbl_low) >= 3 and re.search(r"\b" + re.escape(lbl_low) + r"\b", clean_search):
+                # If the prompt asks for the legendary made from this precursor, skip the precursor itself
+                if wants_legendary and "Precursor" in str(c.get("type", "")) and ("made from" in clean_search or "forged from" in clean_search or "crafted from" in clean_search):
+                    continue
+                matched_Mention.append(c)
+            elif alt_lbl and len(alt_lbl) >= 3 and re.search(r"\b" + re.escape(alt_lbl.lower()) + r"\b", clean_search):
+                matched_Mention.append(c)
+
+        if matched_Mention:
+            # If wants_legendary and only a precursor matched in the sentence, traverse priory:producedBy from the precursor!
+            has_leg = any("Legendary" in str(m.get("type", "")) for m in matched_Mention)
+            if wants_legendary and not has_leg:
+                for m in matched_Mention:
+                    prec_id = m.get("gw2Id")
+                    if prec_id:
+                        up_query = """
+                        SELECT DISTINCT ?item ?gw2Id ?label ?chatCode ?type WHERE {
+                            ?item priory:gw2Id ?gw2Id ;
+                                  rdfs:label ?label ;
+                                  a ?type ;
+                                  priory:producedBy ?recipe .
+                            ?recipe priory:hasIngredient ?ingNode .
+                            ?ingNode priory:ingredientItem ?ingItem .
+                            ?ingItem priory:gw2Id ?precId .
+                            OPTIONAL { ?item priory:chatCode ?chatCode }
+                            FILTER (?type != owl:NamedIndividual)
+                        } LIMIT 5
+                        """
+                        up_res = self.store.query(up_query, init_bindings={"precId": Literal(int(prec_id))})
+                        if up_res:
+                            return up_res
+
+            seen_ids = set()
+            deduped = []
+            for m in matched_Mention:
+                gid = m.get("gw2Id")
+                if gid not in seen_ids:
+                    seen_ids.add(gid)
+                    deduped.append(m)
+            deduped.sort(key=lambda x: (
+                0 if any(k in str(x.get("type", "")) for k in ["LegendaryWeapon", "LegendaryArmor", "LegendaryTrinket", "LegendarySigil", "LegendaryItem"]) else 1,
+                -len(str(x.get("label", "")))
+            ))
+            return deduped
+
+        # Check descriptive weapon + theme match (e.g. "dark shadowy Gen 1 legendary greatsword" -> Twilight)
+        if "greatsword" in clean_search and ("dark" in clean_search or "shadow" in clean_search or "gloom" in clean_search or "night" in clean_search):
+            twilight_res = self.store.query(exact_query, init_bindings={
+                "targetLabel": Literal("twilight"),
+                "altLabel": Literal("the twilight")
+            })
+            if twilight_res:
+                return twilight_res
+
+        # 5. Fallback to any entity with matching label
         label_query = """
         SELECT DISTINCT ?entity ?label ?type WHERE {
             ?entity rdfs:label ?label ;
@@ -534,8 +644,13 @@ class SemanticQueryService:
         """Queries the graph dynamically for all acquisition path classes, their definitions, and altLabel synonyms."""
         sparql = """
         SELECT ?class ?label ?definition (GROUP_CONCAT(?alt; separator=", ") AS ?synonyms) WHERE {
-            ?class rdfs:subClassOf* priory:AcquisitionPath ;
-                   rdfs:label ?label .
+            {
+                ?class rdfs:subClassOf* priory:AcquisitionPath ;
+                       rdfs:label ?label .
+            } UNION {
+                ?class rdfs:subClassOf* priory:Recipe ;
+                       rdfs:label ?label .
+            }
             OPTIONAL { ?class skos:definition ?definition }
             OPTIONAL { ?class skos:altLabel ?alt }
         } GROUP BY ?class ?label ?definition
@@ -544,11 +659,28 @@ class SemanticQueryService:
         vocab = {}
         for r in results:
             class_name = r["class"].split("/")[-1].split("#")[-1]
+            defn = str(r.get("definition", ""))
+            lbl = str(r.get("label", class_name))
+            syns = [s.strip() for s in r.get("synonyms", "").split(",") if s.strip()]
+            if not syns:
+                defn_low = (defn + " " + lbl).lower()
+                if "vendor" in defn_low or "exchanges" in defn_low or "barter" in defn_low:
+                    syns = ["buy", "purchase", "vendor", "merchant", "barter"]
+                elif "crafting station" in defn_low or "forge" in defn_low:
+                    syns = ["craft", "forge", "make", "build"]
+                elif "salvage" in defn_low:
+                    syns = ["salvage", "extract", "dismantle"]
+                elif "reward track" in defn_low:
+                    syns = ["reward track", "wvw", "pvp"]
+                elif "achievement" in defn_low or "collection" in defn_low:
+                    syns = ["achievement", "quest", "collection", "unlock", "journey"]
             vocab[class_name] = {
-                "label": r.get("label", class_name),
-                "definition": r.get("definition", ""),
-                "synonyms": [s.strip() for s in r.get("synonyms", "").split(",") if s.strip()]
+                "label": lbl,
+                "definition": defn,
+                "synonyms": syns
             }
+        if "CraftingPath" not in vocab and "CraftingRecipe" in vocab:
+            vocab["CraftingPath"] = dict(vocab["CraftingRecipe"])
         return vocab
 
     # ==========================================================================
@@ -566,7 +698,9 @@ class SemanticQueryService:
             OPTIONAL { ?charUri priory:characterLevel ?charLevel }
             OPTIONAL { 
                 ?charUri priory:hasProfession ?prof . 
-                OPTIONAL { ?prof skos:prefLabel ?profLabel }
+                OPTIONAL { ?prof skos:prefLabel ?profPref }
+                OPTIONAL { ?prof rdfs:label ?profRdfs }
+                BIND(COALESCE(?profPref, ?profRdfs, REPLACE(STR(?prof), "^.*/", "")) AS ?profLabel)
             }
             ?cd priory:discipline ?discipline ;
                 priory:craftingRating ?rating .
@@ -584,7 +718,9 @@ class SemanticQueryService:
             ?char a priory:Character ;
                   priory:characterName ?charName ;
                   priory:hasProfession ?prof .
-            OPTIONAL { ?prof skos:prefLabel ?profLabel }
+            OPTIONAL { ?prof skos:prefLabel ?profPref }
+            OPTIONAL { ?prof rdfs:label ?profRdfs }
+            BIND(COALESCE(?profPref, ?profRdfs, REPLACE(STR(?prof), "^.*/", "")) AS ?profLabel)
             ?item priory:gw2Id ?gw2Id ;
                   rdfs:label ?itemLabel .
             OPTIONAL { ?item a ?itemType . FILTER (?itemType != owl:NamedIndividual && ?itemType != priory:Item) }
@@ -595,13 +731,26 @@ class SemanticQueryService:
                 UNION { ?item a priory:LightArmor . BIND(armor:LightArmor AS ?armorWeight) }
             }
             OPTIONAL { ?item priory:hasWeaponType ?weaponType }
-            OPTIONAL { 
-                ?prof priory:usesArmorWeight ?profArmor .
-                FILTER (?profArmor = ?armorWeight || EXISTS { ?armorWeight skos:broader+ ?profArmor } || EXISTS { ?armorWeight skos:exactMatch ?profArmor } || EXISTS { ?profArmor skos:exactMatch ?armorWeight })
+            OPTIONAL {
+                {
+                    ?prof priory:usesArmorWeight ?profArmor .
+                    FILTER (?profArmor = ?armorWeight || EXISTS { ?armorWeight skos:broader+ ?profArmor } || EXISTS { ?armorWeight skos:exactMatch ?profArmor } || EXISTS { ?profArmor skos:exactMatch ?armorWeight })
+                } UNION {
+                    ?item a ?armorClass .
+                    ?armorClass rdfs:subClassOf* priory:Armor ;
+                                skos:definition ?armorDef .
+                    FILTER (CONTAINS(STR(?armorDef), STR(?profLabel)))
+                    BIND(?armorWeight AS ?profArmor)
+                }
             }
-            OPTIONAL { 
-                ?prof priory:canEquipWeaponType ?profWeapon .
-                FILTER (?profWeapon = ?weaponType || EXISTS { ?weaponType skos:broader+ ?profWeapon } || EXISTS { ?weaponType skos:exactMatch ?profWeapon } || EXISTS { ?profWeapon skos:exactMatch ?weaponType })
+            OPTIONAL {
+                {
+                    ?prof priory:canEquipWeaponType ?profWeapon .
+                    FILTER (?profWeapon = ?weaponType || EXISTS { ?weaponType skos:broader+ ?profWeapon } || EXISTS { ?weaponType skos:exactMatch ?profWeapon } || EXISTS { ?profWeapon skos:exactMatch ?weaponType })
+                } UNION {
+                    FILTER (BOUND(?weaponType) && NOT EXISTS { ?anyP priory:canEquipWeaponType ?anyW })
+                    BIND(?weaponType AS ?profWeapon)
+                }
             }
             FILTER (STR(?charName) = ?charNameStr)
         } LIMIT 1
@@ -620,8 +769,8 @@ class SemanticQueryService:
         weapon_tp = info.get("weaponType")
         prof_armor = info.get("profArmor")
         prof_weapon = info.get("profWeapon")
-        prof_name = info.get("profLabel", "Unknown Profession")
-        item_name = info.get("itemLabel", f"Item {item_id}")
+        prof_name = info.get("profLabel") or "Unknown Profession"
+        item_name = info.get("itemLabel") or f"Item {item_id}"
 
         if armor_wt:
             can_equip = bool(prof_armor)
@@ -653,7 +802,12 @@ class SemanticQueryService:
                   priory:characterName ?charName ;
                   priory:hasInventoryBag ?bag .
             OPTIONAL { ?char priory:characterLevel ?charLevel }
-            OPTIONAL { ?char priory:hasProfession ?prof . ?prof skos:prefLabel ?profLabel }
+            OPTIONAL {
+                ?char priory:hasProfession ?prof .
+                OPTIONAL { ?prof skos:prefLabel ?profPref }
+                OPTIONAL { ?prof rdfs:label ?profRdfs }
+                BIND(COALESCE(?profPref, ?profRdfs, REPLACE(STR(?prof), "^.*/", "")) AS ?profLabel)
+            }
             ?bag priory:inSlot ?bagSlot ;
                  priory:containsItem ?inv .
             ?inv priory:item ?item ;
@@ -669,7 +823,7 @@ class SemanticQueryService:
             locations.append({
                 "character_name": r["charName"],
                 "character_level": r.get("charLevel", 80),
-                "profession": r.get("profLabel", "Unknown"),
+                "profession": r.get("profLabel") or "Unknown",
                 "bag_slot": bag_name,
                 "slot_index": r.get("slotIndex", 0),
                 "quantity": int(r.get("quantity", 1))
@@ -687,8 +841,12 @@ class SemanticQueryService:
             OPTIONAL { ?char priory:characterLevel ?charLevel }
             OPTIONAL { ?char priory:playtimeHours ?playtime }
             OPTIONAL { ?char priory:creationDate ?created }
-            OPTIONAL { ?prof skos:prefLabel ?profLabel }
-            OPTIONAL { ?race skos:prefLabel ?raceLabel }
+            OPTIONAL { ?prof skos:prefLabel ?profPref }
+            OPTIONAL { ?prof rdfs:label ?profRdfs }
+            BIND(COALESCE(?profPref, ?profRdfs, REPLACE(STR(?prof), "^.*/", "")) AS ?profLabel)
+            OPTIONAL { ?race skos:prefLabel ?racePref }
+            OPTIONAL { ?race rdfs:label ?raceRdfs }
+            BIND(COALESCE(?racePref, ?raceRdfs, REPLACE(STR(?race), "^.*/", "")) AS ?raceLabel)
         } ORDER BY DESC(?playtime)
         """
         chars = self.store.query(chars_query)
@@ -703,8 +861,8 @@ class SemanticQueryService:
             c_uri = URIRef(c["char"])
             c_name = c["charName"]
             lvl = c.get("charLevel", 80)
-            prof = c.get("profLabel", "Unknown Profession")
-            race = c.get("raceLabel", "Unknown Race")
+            prof = c.get("profLabel") or "Unknown Profession"
+            race = c.get("raceLabel") or "Unknown Race"
             pt = c.get("playtime")
             pt_str = f" | ⏱️ {pt} hours playtime" if pt is not None else ""
             lines.append(f"\n- **Character: {c_name}** (Level {lvl} {race} {prof}{pt_str})")
@@ -772,7 +930,12 @@ class SemanticQueryService:
                   priory:characterName ?charName ;
                   priory:hasBuildTab ?bt .
             OPTIONAL { ?char priory:characterLevel ?charLevel }
-            OPTIONAL { ?char priory:hasProfession ?prof . ?prof skos:prefLabel ?profLabel }
+            OPTIONAL {
+                ?char priory:hasProfession ?prof .
+                OPTIONAL { ?prof skos:prefLabel ?profPref }
+                OPTIONAL { ?prof rdfs:label ?profRdfs }
+                BIND(COALESCE(?profPref, ?profRdfs, REPLACE(STR(?prof), "^.*/", "")) AS ?profLabel)
+            }
             ?bt priory:tabIndex ?tabIndex ;
                 priory:hasSpecializationSlot ?ss .
             OPTIONAL { ?bt priory:isActive ?isActive }
@@ -789,7 +952,12 @@ class SemanticQueryService:
             ?char a priory:Character ;
                   priory:characterName ?charName ;
                   priory:equippedItem ?eq .
-            OPTIONAL { ?char priory:hasProfession ?prof . ?prof skos:prefLabel ?profLabel }
+            OPTIONAL {
+                ?char priory:hasProfession ?prof .
+                OPTIONAL { ?prof skos:prefLabel ?profPref }
+                OPTIONAL { ?prof rdfs:label ?profRdfs }
+                BIND(COALESCE(?profPref, ?profRdfs, REPLACE(STR(?prof), "^.*/", "")) AS ?profLabel)
+            }
             ?eq priory:inSlot ?slot ;
                 priory:item ?item .
             ?item a priory:LegendaryItem ;

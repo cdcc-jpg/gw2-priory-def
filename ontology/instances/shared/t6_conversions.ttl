@@ -40,6 +40,11 @@ path:T6Materials_DrizzlewoodPath a priory:RewardTrackPath ;
 
 recipe:T5ToT6Promotion a priory:MysticForgeRecipe ;
     rdfs:label "Spirit Shard Mystic Forge Promotion (T5 to T6)" ;
-    priory:producesItem item:19748 ;
-    priory:outputQuantity 85 ;
-    rdfs:comment "250 T5 + 1 Philosopher's Stone + 1 Crystal + 1 Elonian Wine -> ~85 T6." .
+    priory:producesItem item:24295 ;
+    priory:outputQuantity 7 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:24294 ; priory:requiredQuantity 50 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:24295 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:24277 ; priory:requiredQuantity 5 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:20796 ; priory:requiredQuantity 5 ] ;
+    rdfs:comment "50 T5 Fine Material + 1 T6 Fine Material + 5 Pile of Crystalline Dust + 5 Philosopher's Stones -> ~5-12 T6." .

@@ -134,33 +134,47 @@ class TwilightJourneySolver:
 
     TWILIGHT_ID = 30704
     DUSK_ID = 29185
-    GIFT_OF_MASTERY_ID = 19626
-    GIFT_OF_FORTUNE_ID = 19627
-    GIFT_OF_TWILIGHT_ID = 19648
+    GIFT_OF_MASTERY_ID = 19674
+    GIFT_OF_FORTUNE_ID = 19626
+    GIFT_OF_TWILIGHT_ID = 19635
     GIFT_OF_EXPLORATION_ID = 19677
     GIFT_OF_BATTLE_ID = 19678
     OBSIDIAN_SHARD_ID = 19925
-    BLOODSTONE_SHARD_ID = 19674
+    BLOODSTONE_SHARD_ID = 20797
     MYSTIC_CLOVER_ID = 19675
     GLOB_OF_ECTOPLASM_ID = 19721
     ICY_RUNESTONE_ID = 19676
     ONYX_LODESTONE_ID = 24310
     ONYX_CORE_ID = 24309
+    SUPERIOR_SIGIL_OF_STRENGTH_ID = 24562
     SUPERIOR_SIGIL_OF_FORCE_ID = 24562
-    
-    GIFT_OF_ASCALON_ID = 19640
-    GIFT_OF_METAL_ID = 19623
-    GIFT_OF_DARKNESS_ID = 19647
+    PHILOSOPHERS_STONE_ID = 20796
+    CURED_HARDENED_LEATHER_SQUARE_ID = 19737
+
+    GIFT_OF_ASCALON_ID = 19664
+    GIFT_OF_METAL_ID = 19622
+    GIFT_OF_DARKNESS_ID = 19630
 
     T6_MATERIAL_IDS = [
-        19748,  # Powerful Blood
-        19745,  # Potent Venom Sac
-        19746,  # Elaborate Totem
-        19732,  # Crystalline Dust
-        19725,  # Vicious Claw
-        19734,  # Armored Scale
-        19723,  # Ancient Bone
-        19728   # Vicious Fang
+        24295,  # Vial of Powerful Blood
+        24283,  # Powerful Venom Sac
+        24300,  # Elaborate Totem
+        24277,  # Pile of Crystalline Dust
+        24351,  # Vicious Claw
+        24289,  # Armored Scale
+        24358,  # Ancient Bone
+        24357   # Vicious Fang
+    ]
+
+    LEGACY_T6_MATERIAL_IDS = [
+        19748,  # Powerful Blood (legacy)
+        19745,  # Potent Venom Sac (legacy)
+        19746,  # Elaborate Totem (legacy)
+        19732,  # Crystalline Dust (legacy)
+        19725,  # Vicious Claw (legacy)
+        19734,  # Armored Scale (legacy)
+        19723,  # Ancient Bone (legacy)
+        19728   # Vicious Fang (legacy)
     ]
 
     def __init__(self, graph_store: PrioryGraphStore):
@@ -227,7 +241,14 @@ class TwilightJourneySolver:
         # Build 4-Chapter Master Sequencer
         chapters = self._build_master_chapters(account, tp_prices, diff_report, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost)
         
-        session_itinerary = self._generate_session_itinerary(pillars, time_budget, account, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost)
+        session_itinerary = self._generate_session_itinerary(
+            pillars,
+            time_budget,
+            account,
+            wizards_vault_exhausted=wizards_vault_exhausted,
+            optimize_for_cost=optimize_for_cost,
+            excluded_modes=excluded_modes,
+        )
 
         # Calculate Overall Readiness (Weighted Average)
         overall_pct = (
@@ -242,7 +263,7 @@ class TwilightJourneySolver:
         precursor_cost = 0.0 if precursor_pillar.readiness_pct >= 100.0 else rec_precursor.estimated_gold_cost
 
         # Remaining Icy Runestones cost (1g each)
-        owned_runestones = account.total_item_count(self.ICY_RUNESTONE_ID)
+        owned_runestones = account.total_item_count(self.ICY_RUNESTONE_ID) + account.total_item_count(19912)
         icy_runestone_cost = max(0, 100 - owned_runestones) * 1.0
 
         total_gold = precursor_cost + icy_runestone_cost + (tp_prices.get(self.ONYX_LODESTONE_ID, 0.40) * max(0, 100 - account.total_item_count(self.ONYX_LODESTONE_ID)))
@@ -447,7 +468,7 @@ class TwilightJourneySolver:
         ecto_count = account.total_item_count(self.GLOB_OF_ECTOPLASM_ID)
 
         t6_total_needed = 8 * 250
-        t6_owned = sum(account.total_item_count(mat_id) for mat_id in self.T6_MATERIAL_IDS)
+        t6_owned = sum(account.total_item_count(mat_id) for mat_id in set(self.T6_MATERIAL_IDS + self.LEGACY_T6_MATERIAL_IDS))
 
         clover_pct = min(100.0, (clover_count / 77.0) * 100.0)
         ecto_pct = min(100.0, (ecto_count / 250.0) * 100.0)
@@ -547,11 +568,13 @@ class TwilightJourneySolver:
         tp_prices: Dict[int, float]
     ) -> JourneyPillar:
         """Evaluates Pillar 4: Gift of Twilight (Disciplines, Icy Runestones, Onyx Lodestones, Sigil)."""
-        weaponsmith_level = account.disciplines.get("weaponsmith", 0)
-        armorsmith_level = account.disciplines.get("armorsmith", 0)
-        runestone_count = account.total_item_count(self.ICY_RUNESTONE_ID)
+        weaponsmith_level = account.max_discipline_rating("weaponsmith")
+        armorsmith_level = account.max_discipline_rating("armorsmith")
+        runestone_count = account.total_item_count(self.ICY_RUNESTONE_ID) + account.total_item_count(19912)
         lodestone_count = account.total_item_count(self.ONYX_LODESTONE_ID)
-        sigil_count = account.total_item_count(self.SUPERIOR_SIGIL_OF_FORCE_ID)
+        sigil_count = account.total_item_count(self.SUPERIOR_SIGIL_OF_STRENGTH_ID) + (
+            account.total_item_count(self.SUPERIOR_SIGIL_OF_FORCE_ID) if self.SUPERIOR_SIGIL_OF_FORCE_ID != self.SUPERIOR_SIGIL_OF_STRENGTH_ID else 0
+        )
 
         disc_pct = ((min(400, weaponsmith_level) / 400.0) + (min(400, armorsmith_level) / 400.0)) / 2.0 * 100.0
         runestone_pct = min(100.0, (runestone_count / 100.0) * 100.0)
@@ -578,12 +601,24 @@ class TwilightJourneySolver:
         ws_char = None
         as_char = None
         for char in account.characters:
+            if not isinstance(char, dict):
+                continue
             char_name = char.get("name", "")
-            discs = {d.get("discipline", "").lower(): d.get("rating", 0) for d in char.get("crafting", [])}
+            raw_discs = char.get("crafting", []) or char.get("disciplines", [])
+            discs = {d.get("discipline", "").lower(): d.get("rating", 0) for d in raw_discs if isinstance(d, dict)}
             if discs.get("weaponsmith", 0) >= 400 and not ws_char:
                 ws_char = char_name
             if discs.get("armorsmith", 0) >= 400 and not as_char:
                 as_char = char_name
+        for char_name, disc_map in account.character_disciplines.items():
+            if not isinstance(disc_map, dict):
+                continue
+            for d_key, d_val in disc_map.items():
+                rating = int(d_val.get("rating", 0)) if isinstance(d_val, dict) else (int(d_val) if isinstance(d_val, (int, float)) else 0)
+                if d_key.lower() == "weaponsmith" and rating >= 400 and not ws_char:
+                    ws_char = char_name
+                if d_key.lower() == "armorsmith" and rating >= 400 and not as_char:
+                    as_char = char_name
 
         if weaponsmith_level < 400:
             blockers.append(f"Weaponsmith level 400 required (current: {weaponsmith_level}).")
@@ -685,11 +720,11 @@ class TwilightJourneySolver:
         return [
             ExplorationPlan(
                 region_name="Kryta",
-                zone_count=8,
+                zone_count=6,
                 estimated_hours=round(3.5 * speed_factor, 1),
                 difficulty="Easy",
                 recommended_mount="Raptor" if has_raptor else None,
-                strategy_notes="Mostly flat terrain. Queensdale, Kessex Hills, Gendarran Fields, Harathi Hinterlands, Bloodtide Coast, Southsun Cove, Lion's Arch, Divinity's Reach.",
+                strategy_notes="Mostly flat terrain. Queensdale, Kessex Hills, Gendarran Fields, Harathi Hinterlands, Bloodtide Coast.",
                 starting_waypoint="[&BO8AAAA=]"
             ),
             ExplorationPlan(
@@ -703,7 +738,7 @@ class TwilightJourneySolver:
             ),
             ExplorationPlan(
                 region_name="Shiverpeak Mountains",
-                zone_count=7,
+                zone_count=6,
                 estimated_hours=round(4.5 * speed_factor, 1),
                 difficulty="Hard",
                 recommended_mount="Skyscale" if has_skyscale else ("Springer" if has_springer else None),
@@ -712,7 +747,7 @@ class TwilightJourneySolver:
             ),
             ExplorationPlan(
                 region_name="Maguuma Jungle",
-                zone_count=5,
+                zone_count=4,
                 estimated_hours=round(3.5 * speed_factor, 1),
                 difficulty="Moderate",
                 recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
@@ -802,7 +837,13 @@ class TwilightJourneySolver:
         """Finds primary mobility character name from eligible exploration characters (excluding completed characters like Kerling)."""
         eligible = account.eligible_exploration_characters()
         if not eligible:
-            return "Skuta Rantakallio"
+            if account.characters:
+                first_char = account.characters[0]
+                if isinstance(first_char, dict) and first_char.get("name"):
+                    return str(first_char.get("name"))
+                elif isinstance(first_char, str):
+                    return first_char
+            return "Any Level 80 Character"
 
         # Check structured characters if available
         if account.characters:
@@ -832,12 +873,38 @@ class TwilightJourneySolver:
         time_budget_minutes: int,
         account: AccountState,
         wizards_vault_exhausted: bool = False,
-        optimize_for_cost: bool = True
+        optimize_for_cost: bool = True,
+        excluded_modes: Optional[List[str]] = None
     ) -> List[JourneyAction]:
         """Prioritizes and fits concrete progression actions into the player's time budget."""
+        excluded_set = set()
+        if excluded_modes:
+            for m in excluded_modes:
+                m_low = m.lower().strip()
+                excluded_set.add(m_low)
+                if m_low in ("dungeon", "dungeons"):
+                    excluded_set.add("dungeon")
+                    excluded_set.add("dungeons")
+                if m_low in ("fractal", "fractals"):
+                    excluded_set.add("fractal")
+                    excluded_set.add("fractals")
+
+        def _is_mode_excluded(action_mode: Optional[str]) -> bool:
+            if not action_mode or not excluded_set:
+                return False
+            return action_mode.lower().strip() in excluded_set
+
         if optimize_for_cost or wizards_vault_exhausted:
             mobility_char = self._find_mobility_character_name(account)
-            mount_str = "Skyscale" if account.has_mount("skyscale") or not account.mount_types else ("Raptor" if account.has_mount("raptor") else "Skyscale")
+            if account.has_mount("skyscale"):
+                mount_str: Optional[str] = "Skyscale"
+                mount_phrase = f" with {mount_str}"
+            elif account.has_mount("raptor"):
+                mount_str = "Raptor"
+                mount_phrase = f" with {mount_str}"
+            else:
+                mount_str = None
+                mount_phrase = ""
 
             candidates = [
                 JourneyAction(
@@ -870,8 +937,8 @@ class TwilightJourneySolver:
                     game_mode="Crafting"
                 ),
                 JourneyAction(
-                    action_title=f"Core Tyria Map Completion on {mobility_char} with {mount_str}",
-                    action_description=f"Progress Core Tyria map completion on your primary mobility character ({mobility_char}) with {mount_str}. 100% completion awards 2x Gifts of Exploration (satisfying Twilight and providing a spare for your next Gen 1 legendary).",
+                    action_title=f"Core Tyria Map Completion on {mobility_char}{mount_phrase}",
+                    action_description=f"Progress Core Tyria map completion on your primary mobility character ({mobility_char}){mount_phrase}. 100% completion awards 2x Gifts of Exploration (satisfying Twilight and providing a spare for your next Gen 1 legendary).",
                     estimated_minutes=45,
                     priority="HIGH",
                     game_mode="OpenWorld",
@@ -879,6 +946,8 @@ class TwilightJourneySolver:
                     assigned_character=mobility_char
                 )
             ]
+
+            candidates = [c for c in candidates if not _is_mode_excluded(c.game_mode)]
 
             itinerary = []
             budget_remaining = time_budget_minutes
@@ -902,7 +971,9 @@ class TwilightJourneySolver:
 
         all_actions: List[JourneyAction] = []
         for pillar in pillars:
-            all_actions.extend(pillar.recommended_actions)
+            for act in pillar.recommended_actions:
+                if not _is_mode_excluded(act.game_mode):
+                    all_actions.append(act)
 
         priority_rank = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
         all_actions.sort(key=lambda a: priority_rank.get(a.priority, 99))
@@ -939,8 +1010,11 @@ class TwilightJourneySolver:
         best_ws = None
         best_as = None
         for char in account.characters:
+            if not isinstance(char, dict):
+                continue
             char_name = char.get("name", "")
-            discs = {d.get("discipline", "").lower(): d.get("rating", 0) for d in char.get("crafting", [])}
+            raw_discs = char.get("crafting", []) or char.get("disciplines", [])
+            discs = {d.get("discipline", "").lower(): d.get("rating", 0) for d in raw_discs if isinstance(d, dict)}
             ws_level = discs.get("weaponsmith", 0)
             as_level = discs.get("armorsmith", 0)
             if ws_level >= 400:
@@ -949,7 +1023,25 @@ class TwilightJourneySolver:
                 best_as = char_name
             if ws_level >= 400 and as_level >= 400:
                 return f"{char_name} (Weaponsmith {ws_level}, Armorsmith {as_level})"
-                
+
+        for char_name, disc_map in account.character_disciplines.items():
+            if not isinstance(disc_map, dict):
+                continue
+            ws_level = 0
+            as_level = 0
+            for d_key, d_val in disc_map.items():
+                rating = int(d_val.get("rating", 0)) if isinstance(d_val, dict) else (int(d_val) if isinstance(d_val, (int, float)) else 0)
+                if d_key.lower() == "weaponsmith":
+                    ws_level = rating
+                elif d_key.lower() == "armorsmith":
+                    as_level = rating
+            if ws_level >= 400 and not best_ws:
+                best_ws = char_name
+            if as_level >= 400 and not best_as:
+                best_as = char_name
+            if ws_level >= 400 and as_level >= 400:
+                return f"{char_name} (Weaponsmith {ws_level}, Armorsmith {as_level})"
+
         if best_ws and best_as and best_ws != best_as:
             return f"Split: {best_ws} (Weaponsmith) / {best_as} (Armorsmith)"
         elif best_ws:
@@ -1105,30 +1197,44 @@ class TwilightJourneySolver:
         ]
 
         if not has_exploration:
-            char_list = [c.get("name") for c in account.characters if isinstance(c, dict) and c.get("name")]
-            if not char_list:
-                char_list = DEFAULT_CHARACTERS
+            char_list = [
+                (c.get("name") if isinstance(c, dict) else str(c))
+                for c in account.characters
+                if (isinstance(c, dict) and c.get("name")) or isinstance(c, str)
+            ]
+            is_default_roster = "Kerling" in char_list
 
             # Select primary mobility character from eligible exploration characters
             mobility_char = self._find_mobility_character_name(account)
 
-            skyscale_mount_str = "Skyscale" if account.has_mount("skyscale") else ("Raptor" if account.has_mount("raptor") else "Skyscale")
+            if account.has_mount("skyscale"):
+                skyscale_mount_str = "with Skyscale"
+            elif account.has_mount("raptor"):
+                skyscale_mount_str = "with Raptor"
+            else:
+                skyscale_mount_str = "on foot"
 
             notice_str = ""
-            if account.is_character_map_completed("Kerling") or account.map_completed_characters:
-                completed_names = ", ".join(account.map_completed_characters) if account.map_completed_characters else "Kerling"
+            if account.map_completed_characters and (is_default_roster or any(m in char_list for m in account.map_completed_characters)):
+                completed_names = ", ".join(account.map_completed_characters)
+                if is_default_roster:
+                    eligible_examples = "Skuta Rantakallio, Sara Loy, or Legacy Of Harathi"
+                else:
+                    eligible_examples = ", ".join(account.eligible_exploration_characters()[:3]) or mobility_char
+                mount_hint = " with your Skyscale" if account.has_mount("skyscale") else ""
                 notice_str = (
                     f"✅ 100% Map Complete Character: {completed_names} has already completed 100% Core Tyria Map Completion and claimed their Gifts of Exploration. "
                     f"Since Gifts of Exploration are awarded once per character upon 100% world completion, select an eligible alt character from your roster "
-                    f"(e.g. Skuta Rantakallio, Sara Loy, or Legacy Of Harathi) to run the 5 Core Tyria regions with your Skyscale to claim 2x new Gifts of Exploration!\n\n"
+                    f"(e.g. {eligible_examples}) to run the 5 Core Tyria regions{mount_hint} to claim 2x new Gifts of Exploration!\n\n"
                 )
 
+            roster_str = f"Assessed account roster of {len(char_list)} characters: {', '.join(char_list)}. " if char_list else ""
             c2_actions.append(JourneyAction(
                 action_title="Core Tyria Map Completion (2x Gifts of Exploration)",
                 action_description=(
                     f"{notice_str}"
-                    f"Recommend 100% Core Tyria map completion on your primary mobility character ({mobility_char}) with {skyscale_mount_str}. "
-                    f"Assessed account roster of {len(char_list)} characters: {', '.join(char_list)}. "
+                    f"Recommend 100% Core Tyria map completion on your primary mobility character ({mobility_char}) {skyscale_mount_str}. "
+                    f"{roster_str}"
                     f"✨ Milestone Reward: Completing 100% Core Map awards 2x Gifts of Exploration (satisfying Twilight AND providing a spare for your next Gen 1 legendary)!"
                 ),
                 estimated_minutes=30,
@@ -1140,7 +1246,7 @@ class TwilightJourneySolver:
 
             c2_actions.append(JourneyAction(
                 action_title="Complete Shiverpeaks Map",
-                action_description="Explore Shiverpeak Mountains. Skyscale recommended for high elevation.",
+                action_description="Explore Shiverpeak Mountains. Skyscale recommended for high elevation." if account.has_mount("skyscale") else "Explore Shiverpeak Mountains.",
                 estimated_minutes=180,
                 priority="HIGH",
                 recommended_mount="Skyscale" if account.has_mount("skyscale") else None,
@@ -1149,7 +1255,7 @@ class TwilightJourneySolver:
             ))
             c2_actions.append(JourneyAction(
                 action_title="Complete Ascalon Map",
-                action_description="Explore Ascalon. Raptor/Jackal recommended.",
+                action_description="Explore Ascalon. Raptor/Jackal recommended." if account.has_mount("raptor") else "Explore Ascalon.",
                 estimated_minutes=180,
                 priority="HIGH",
                 recommended_mount="Raptor" if account.has_mount("raptor") else None,
@@ -1158,7 +1264,7 @@ class TwilightJourneySolver:
             ))
             c2_actions.append(JourneyAction(
                 action_title="Complete Kryta Map",
-                action_description="Explore Kryta. Raptor recommended.",
+                action_description="Explore Kryta. Raptor recommended." if account.has_mount("raptor") else "Explore Kryta.",
                 estimated_minutes=180,
                 priority="HIGH",
                 recommended_mount="Raptor" if account.has_mount("raptor") else None,
@@ -1167,7 +1273,7 @@ class TwilightJourneySolver:
             ))
             c2_actions.append(JourneyAction(
                 action_title="Complete Maguuma Map",
-                action_description="Explore Maguuma Jungle. Skyscale recommended.",
+                action_description="Explore Maguuma Jungle. Skyscale recommended." if account.has_mount("skyscale") else "Explore Maguuma Jungle.",
                 estimated_minutes=180,
                 priority="HIGH",
                 recommended_mount="Skyscale" if account.has_mount("skyscale") else None,
@@ -1176,7 +1282,7 @@ class TwilightJourneySolver:
             ))
             c2_actions.append(JourneyAction(
                 action_title="Complete Orr Map",
-                action_description="Explore Ruins of Orr. Skyscale recommended.",
+                action_description="Explore Ruins of Orr. Skyscale recommended." if account.has_mount("skyscale") else "Explore Ruins of Orr.",
                 estimated_minutes=180,
                 priority="HIGH",
                 recommended_mount="Skyscale" if account.has_mount("skyscale") else None,
@@ -1195,14 +1301,14 @@ class TwilightJourneySolver:
         
         # --- Chapter 3: Currencies, Dungeons & Daily Rituals ---
         tales_count = account.dungeon_tales_count()
-        has_ascalon = account.total_item_count(self.GIFT_OF_ASCALON_ID) > 0
+        has_ascalon = any(account.total_item_count(aid) > 0 for aid in [self.GIFT_OF_ASCALON_ID, 19667, 19640])
         has_battle = account.has_gift_of_battle()
         has_bloodstone = account.has_bloodstone_shard()
         spirit_shards = account.spirit_shards_count()
         obsidian_count = account.total_item_count(self.OBSIDIAN_SHARD_ID)
-        runestone_count = account.total_item_count(self.ICY_RUNESTONE_ID)
+        runestone_count = account.total_item_count(self.ICY_RUNESTONE_ID) + account.total_item_count(19912)
         lodestone_count = account.total_item_count(self.ONYX_LODESTONE_ID)
-        t6_owned = sum(account.total_item_count(mat_id) for mat_id in self.T6_MATERIAL_IDS)
+        t6_owned = sum(account.total_item_count(mat_id) for mat_id in set(self.T6_MATERIAL_IDS + self.LEGACY_T6_MATERIAL_IDS))
         t6_total_needed = 2000
         ecto_count = account.total_item_count(self.GLOB_OF_ECTOPLASM_ID)
         clover_count = account.total_item_count(self.MYSTIC_CLOVER_ID)
@@ -1547,22 +1653,45 @@ class TwilightJourneySolver:
         ))
         
         # --- Chapter 4: The Forge Ceremony & Character Hand-offs ---
-        weaponsmith_level = account.disciplines.get("weaponsmith", 0)
-        armorsmith_level = account.disciplines.get("armorsmith", 0)
+        weaponsmith_level = account.max_discipline_rating("weaponsmith")
+        armorsmith_level = account.max_discipline_rating("armorsmith")
         
         ws_char = None
         as_char = None
         primary_crafter = None
         
         for char in account.characters:
+            if not isinstance(char, dict):
+                continue
             char_name = char.get("name", "")
-            discs = {d.get("discipline", "").lower(): d.get("rating", 0) for d in char.get("crafting", [])}
+            raw_discs = char.get("crafting", []) or char.get("disciplines", [])
+            discs = {d.get("discipline", "").lower(): d.get("rating", 0) for d in raw_discs if isinstance(d, dict)}
             ws_rating = discs.get("weaponsmith", 0)
             as_rating = discs.get("armorsmith", 0)
             if ws_rating > weaponsmith_level:
                 weaponsmith_level = ws_rating
             if as_rating > armorsmith_level:
                 armorsmith_level = as_rating
+            if ws_rating >= 400 and as_rating >= 400 and not primary_crafter:
+                primary_crafter = char_name
+                ws_char = char_name
+                as_char = char_name
+            if ws_rating >= 400 and not ws_char:
+                ws_char = char_name
+            if as_rating >= 400 and not as_char:
+                as_char = char_name
+
+        for char_name, disc_map in account.character_disciplines.items():
+            if not isinstance(disc_map, dict):
+                continue
+            ws_rating = 0
+            as_rating = 0
+            for d_key, d_val in disc_map.items():
+                rating = int(d_val.get("rating", 0)) if isinstance(d_val, dict) else (int(d_val) if isinstance(d_val, (int, float)) else 0)
+                if d_key.lower() == "weaponsmith":
+                    ws_rating = rating
+                elif d_key.lower() == "armorsmith":
+                    as_rating = rating
             if ws_rating >= 400 and as_rating >= 400 and not primary_crafter:
                 primary_crafter = char_name
                 ws_char = char_name
@@ -1580,7 +1709,8 @@ class TwilightJourneySolver:
             elif as_char:
                 primary_crafter = as_char
             elif account.characters:
-                primary_crafter = account.characters[0].get("name")
+                first_c = account.characters[0]
+                primary_crafter = first_c.get("name") if isinstance(first_c, dict) else str(first_c)
 
         ws_assign = ws_char or primary_crafter
         as_assign = as_char or primary_crafter
@@ -1595,9 +1725,9 @@ class TwilightJourneySolver:
         c4_actions = []
         c4_readiness = 0.0
         
-        has_metal = account.total_item_count(self.GIFT_OF_METAL_ID) > 0
-        has_darkness = account.total_item_count(self.GIFT_OF_DARKNESS_ID) > 0
-        has_gift_twilight = account.total_item_count(self.GIFT_OF_TWILIGHT_ID) > 0
+        has_metal = any(account.total_item_count(mid) > 0 for mid in [self.GIFT_OF_METAL_ID, 19623])
+        has_darkness = any(account.total_item_count(did) > 0 for did in [self.GIFT_OF_DARKNESS_ID, 19647])
+        has_gift_twilight = any(account.total_item_count(tid) > 0 for tid in [self.GIFT_OF_TWILIGHT_ID, 19648])
 
         # Build Crafter Summary
         if primary_crafter:
@@ -1843,6 +1973,9 @@ class TwilightJourneySolver:
         # Step 4: 4-Pillar Inventory Staging Checklist (Before Final Forge)
         staging_check_wp = lounge_link if lounge else "[&BBAEAAA=]"
         staging_check_zone = lounge_zone if lounge else "Lion's Arch"
+        sigil_count = account.total_item_count(self.SUPERIOR_SIGIL_OF_STRENGTH_ID) + (
+            account.total_item_count(self.SUPERIOR_SIGIL_OF_FORCE_ID) if self.SUPERIOR_SIGIL_OF_FORCE_ID != self.SUPERIOR_SIGIL_OF_STRENGTH_ID else 0
+        )
 
         p1_check = "[x]" if (owned_dusk > 0 or has_twilight) else "[ ]"
         p2_check = "[x]" if (has_exploration and has_battle and obsidian_count >= 250 and (has_bloodstone or spirit_shards >= 200)) else "[ ]"

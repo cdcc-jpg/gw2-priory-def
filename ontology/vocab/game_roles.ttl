@@ -1,143 +1,69 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix iao: <http://purl.obolibrary.org/obo/> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix role: <https://priory.gw2/ref/role/> .
 
-<https://priory.gw2/ref/role/> a owl:Ontology ;
-    rdfs:label "Guild Wars 2 Game Roles Vocabulary & Taxonomy"@en ;
-    rdfs:comment "SKOS Concept Scheme and OWL 2 DL Punning taxonomy of realizable game roles played by items and tokens."@en ;
-    owl:versionInfo "1.0.0" .
-
-# ==============================================================================
-# Concept Scheme & Root Concept
-# ==============================================================================
-
 role:GameRoleScheme a skos:ConceptScheme ;
-    rdfs:label "Guild Wars 2 Game Role Concept Scheme"@en ;
+    rdfs:label "Guild Wars 2 Contextual Game Roles Taxonomy"@en ;
     skos:prefLabel "Game Role Scheme"@en ;
-    skos:hasTopConcept role:GameRole ;
-    rdfs:comment "Taxonomy of realizable systemic, economic, and operational game roles played by entities in Guild Wars 2."@en .
+    skos:definition "A SKOS concept scheme that classifies contextual BFO roles borne by items and currencies within Guild Wars 2 crafting, commerce, and combat systems."@en .
 
-role:GameRole a owl:Class, skos:Concept ;
-    rdfs:subClassOf bfo:BFO_0000023 ;
-    skos:inScheme role:GameRoleScheme ;
-    skos:topConceptOf role:GameRoleScheme ;
-    rdfs:label "Game Role"@en ;
+role:GameRole a owl:Class ;
+    rdfs:subClassOf priory:Entity, bfo:BFO_0000023 ;
+    owl:disjointWith bfo:BFO_0000004, iao:IAO_0000030 ;
+    rdfs:label "Contextual Game Role"@en ;
     skos:prefLabel "Game Role"@en ;
-    skos:definition "A realizable role played by a Guild Wars 2 entity within economic, crafting, or combat systems."@en ;
-    skos:narrower role:CurrencyExchange, role:CraftingIngredient, role:SalvageTarget,
-                  role:MarketCommodity, role:Precursor, role:EquippedGear, role:JunkSell ;
-    priory:icon "https://render.guildwars2.com/file/F86C0DBF03CCE774807AD37CFF03A993D519CDF0/2699841.png"^^xsd:anyURI .
+    skos:definition "A BFO role that inheres in a game item or ledger token when that entity participates in a specific systemic gameplay context such as crafting, forging, bartering, or combat."@en ;
+    rdfs:comment "A BFO realizable role assumed by an item or currency within a specific gameplay context (crafting, Mystic Forge, vendor exchange, or combat loadout)."@en .
 
-# ==============================================================================
-# Currency Exchange Roles
-# ==============================================================================
-
-role:CurrencyExchange a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
+role:CraftingIngredient a owl:NamedIndividual, role:GameRole, skos:Concept ;
     skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Currency Exchange"@en ;
-    skos:prefLabel "Currency Exchange"@en ;
-    skos:definition "Accepted as medium of exchange by vendors or waypoints."@en ;
-    skos:narrower role:WalletCurrency, role:BarterToken, role:DungeonToken ;
-    priory:icon "https://render.guildwars2.com/file/DAB46301D2175B2CAAC4BACBA02F6A0A2F1DBEB8/631151.png"^^xsd:anyURI .
-
-role:WalletCurrency a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:CurrencyExchange ;
-    skos:inScheme role:GameRoleScheme ;
-    skos:broader role:CurrencyExchange ;
-    rdfs:label "Wallet Currency"@en ;
-    skos:prefLabel "Wallet Currency"@en ;
-    skos:definition "Unlocated, account-wide liquid currency tracked in the API/account wallet."@en ;
-    priory:icon "https://render.guildwars2.com/file/DAB46301D2175B2CAAC4BACBA02F6A0A2F1DBEB8/631151.png"^^xsd:anyURI .
-
-role:BarterToken a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:CurrencyExchange ;
-    skos:inScheme role:GameRoleScheme ;
-    skos:broader role:CurrencyExchange ;
-    rdfs:label "Barter Token"@en ;
-    skos:prefLabel "Barter Token"@en ;
-    skos:definition "Containerized physical item accepted by merchants for specific bartering or exchange."@en ;
-    priory:icon "https://render.guildwars2.com/file/EEBFAE8014D42F375112DF9307C22D145619140C/771002.png"^^xsd:anyURI .
-
-role:DungeonToken a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:CurrencyExchange ;
-    skos:inScheme role:GameRoleScheme ;
-    skos:broader role:CurrencyExchange ;
-    rdfs:label "Dungeon Token"@en ;
-    skos:prefLabel "Dungeon Token"@en ;
-    skos:definition "Tokens earned from dungeon explorable paths used to purchase dungeon armor and weapons."@en ;
-    priory:icon "https://render.guildwars2.com/file/5C6368E7DDAA72C8BEE158002374F19D5F69DA51/511818.png"^^xsd:anyURI .
-
-# ==============================================================================
-# Crafting & Economy Roles
-# ==============================================================================
-
-role:CraftingIngredient a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
-    skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Crafting Ingredient"@en ;
+    rdfs:label "Crafting Ingredient Role"@en ;
     skos:prefLabel "Crafting Ingredient"@en ;
-    skos:definition "Item or material utilized as an input component in crafting discipline or Mystic Forge recipes."@en ;
-    priory:icon "https://render.guildwars2.com/file/0813027CDADB9135602EB1B1AFD90A3FE335410B/849283.png"^^xsd:anyURI .
+    skos:definition "A contextual game role borne by an item or currency when it is required as a quantitative input in a discipline crafting recipe."@en .
 
-role:SalvageTarget a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
+role:MysticForgeInput a owl:NamedIndividual, role:GameRole, skos:Concept ;
     skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Salvage Target"@en ;
-    skos:prefLabel "Salvage Target"@en ;
-    skos:definition "Gear or salvage item targeted for breakdown by salvage kits into raw materials and essences."@en ;
-    priory:icon "https://render.guildwars2.com/file/D10679012504F6AD5829D1DF9F36303FE2EB46B4/64343.png"^^xsd:anyURI .
+    rdfs:label "Mystic Forge Input Role"@en ;
+    skos:prefLabel "Mystic Forge Input"@en ;
+    skos:definition "A contextual game role borne by an item when it is offered as one of the four input stacks in a Mystic Forge transformation."@en .
 
-role:MarketCommodity a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
+role:Precursor a owl:NamedIndividual, role:GameRole, skos:Concept ;
     skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Market Commodity"@en ;
-    skos:prefLabel "Market Commodity"@en ;
-    skos:definition "Tradeable commodity liquidly bought, sold, or speculatively traded on the Black Lion Trading Post."@en ;
-    priory:icon "https://render.guildwars2.com/file/21E0CCFD196D174B0132CCE10909EFE560221DFC/771003.png"^^xsd:anyURI .
+    rdfs:label "Legendary Precursor Role"@en ;
+    skos:prefLabel "Precursor"@en ;
+    skos:definition "A contextual game role borne by an Exotic or Ascended weapon, armor piece, or backpack when it serves as the base artifact transformed into a Legendary item."@en .
 
-# ==============================================================================
-# Equipment & Combat Roles
-# ==============================================================================
-
-role:Precursor a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
+role:CurrencyExchange a owl:NamedIndividual, role:GameRole, skos:Concept ;
     skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Precursor Weapon Role"@en ;
-    skos:prefLabel "Precursor Weapon Role"@en ;
-    skos:definition "Base exotic or ascended weapon role serving as the mandatory foundation for forging a legendary weapon."@en ;
-    priory:icon "https://render.guildwars2.com/file/B441F1C5F53262D54EF5CE07CF61D50E090657C4/1201539.png"^^xsd:anyURI .
+    rdfs:label "Currency / Barter Medium Role"@en ;
+    skos:prefLabel "Currency Exchange"@en ;
+    skos:definition "A contextual game role borne by a wallet currency or containerized barter token when it functions as a medium of exchange at an NPC vendor."@en .
 
-role:EquippedGear a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
+role:EquipmentLoadout a owl:NamedIndividual, role:GameRole, skos:Concept ;
     skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Equipped Gear Role"@en ;
-    skos:prefLabel "Equipped Gear Role"@en ;
-    skos:definition "Active combat equipment slotted into an active character equipment template."@en ;
-    priory:icon "https://render.guildwars2.com/file/F86C0DBF03CCE774807AD37CFF03A993D519CDF0/2699841.png"^^xsd:anyURI .
+    rdfs:label "Equipped Combat Loadout Role"@en ;
+    skos:prefLabel "Equipment Loadout"@en ;
+    skos:definition "A contextual game role borne by an equipable weapon, armor piece, trinket, or backpack when it is actively slotted in a character's combat equipment template."@en .
 
-role:JunkSell a owl:Class, owl:NamedIndividual, skos:Concept ;
-    rdfs:subClassOf role:GameRole ;
+role:UpgradeSlotComponent a owl:NamedIndividual, role:GameRole, skos:Concept ;
     skos:inScheme role:GameRoleScheme ;
-    skos:broader role:GameRole ;
-    rdfs:label "Junk Sell Role"@en ;
-    skos:prefLabel "Junk Sell Role"@en ;
-    skos:definition "Items bearing no combat or crafting utility meant solely to be sold to vendors for coin via Sell Junk."@en ;
-    priory:icon "https://render.guildwars2.com/file/4FA2D6CEF9039B402F2695CF2E740B4CF6F50753/631150.png"^^xsd:anyURI .
+    rdfs:label "Slotted Upgrade Component Role"@en ;
+    skos:prefLabel "Upgrade Slot Component"@en ;
+    skos:definition "A contextual game role borne by a rune, sigil, infusion, or relic when it is inserted into an upgrade slot to modify equipment attributes or combat effects."@en .
 
-# ==============================================================================
-# Disjointness Axioms
-# ==============================================================================
+role:ConsumableUtility a owl:NamedIndividual, role:GameRole, skos:Concept ;
+    skos:inScheme role:GameRoleScheme ;
+    rdfs:label "Consumable / Utility Gizmo Role"@en ;
+    skos:prefLabel "Consumable Utility"@en ;
+    skos:definition "A contextual game role borne by a consumable booster, container, or convenience gizmo when activated by a player to grant a buff, unpack rewards, or access hub services."@en .
 
-role:JunkSell owl:disjointWith role:EquippedGear .
+role:JunkSell a owl:NamedIndividual, role:GameRole, skos:Concept ;
+    skos:inScheme role:GameRoleScheme ;
+    rdfs:label "Merchant Liquidation Role"@en ;
+    skos:prefLabel "Junk / Vendor Sell"@en ;
+    skos:definition "A contextual game role borne by a trophy or junk item whose systemic utility consists in being sold to an NPC merchant for copper coin."@en .

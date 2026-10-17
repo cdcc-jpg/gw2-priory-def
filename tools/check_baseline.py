@@ -170,16 +170,13 @@ def run_reasoner():
   import owlready2
 
   core_g = rdflib.Graph()
-  core_g.parse(
-      REPO_ROOT / "ontology" / "bfo_subset.ttl", format="turtle"
-  )
-  core_g.parse(
-      REPO_ROOT / "ontology" / "priory_core.ttl", format="turtle"
-  )
+  for f in sorted((REPO_ROOT / "ontology").rglob("*.ttl")):
+    if "shapes" not in f.parts and f.name != "priory_shacl.ttl":
+      core_g.parse(f, format="turtle")
 
-  with tempfile.NamedTemporaryFile(suffix=".ttl", delete=False) as tmp:
+  with tempfile.NamedTemporaryFile(suffix=".xml", delete=False) as tmp:
     tmp_path = tmp.name
-    core_g.serialize(tmp_path, format="turtle")
+    core_g.serialize(tmp_path, format="xml")
 
   # HermiT via owlready2 classpath
   hermit_dir = Path(owlready2.__file__).parent / "hermit"
@@ -216,13 +213,13 @@ def run_reasoner():
   if is_consistent:
     status = "PASS"
     details = (
-        f"Core TBox (priory_core + bfo) consistent, 0 unsat classes"
+        f"Full TBox + ABox ({len(core_g)} triples) consistent, 0 unsat classes"
         f" ({duration:.2f}s)"
     )
     return status, details, True
   else:
     status = "FAIL"
-    details = f"Inconsistency in core TBox: {res.stderr[:200]}"
+    details = f"Inconsistency in TBox/ABox: {res.stderr[:200]}"
     return status, details, False
 
 

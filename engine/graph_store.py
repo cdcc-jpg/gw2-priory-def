@@ -135,8 +135,64 @@ class PrioryGraphStore:
             for ttl_file in instances_dir.rglob("*.ttl"):
                 self.graph.parse(ttl_file, format="turtle")
 
+        # 5. Materialize OWL 2 RL property chains, inverses, and transitive closure
+        self._materialize_owl_entailments()
+
         self._loaded = True
         return len(self.graph) - total_triples_before
+
+    def _materialize_owl_entailments(self) -> None:
+        """Materializes OWL 2 RL property chains, inverses, and transitive closure of dependsOnItem."""
+        p_produces = PRIORY.producesItem
+        p_produced_by = PRIORY.producedBy
+        p_precursor_to = PRIORY.precursorTo
+        p_has_precursor = PRIORY.hasPrecursor
+        p_has_req = PRIORY.hasIngredientRequirement
+        p_req_item = PRIORY.requiresItem
+        p_req_ing = PRIORY.requiresIngredient
+        p_depends = PRIORY.dependsOnItem
+
+        # 1. Canonical recipe output & precursor inverses (producedBy -> producesItem, precursorTo <-> hasPrecursor)
+        for item, _, r in list(self.graph.triples((None, p_produced_by, None))):
+            if (r, p_produces, None) not in self.graph:
+                self.graph.add((r, p_produces, item))
+        for prec, _, leg in list(self.graph.triples((None, p_precursor_to, None))):
+            self.graph.add((leg, p_has_precursor, prec))
+        for leg, _, prec in list(self.graph.triples((None, p_has_precursor, None))):
+            self.graph.add((prec, p_precursor_to, leg))
+
+        # 2. Property chain: (hasIngredientRequirement o requiresItem) -> requiresIngredient
+        req_to_items: Dict[Any, List[Any]] = {}
+        for req, _, ing in self.graph.triples((None, p_req_item, None)):
+            req_to_items.setdefault(req, []).append(ing)
+        for r, _, req in list(self.graph.triples((None, p_has_req, None))):
+            for ing in req_to_items.get(req, []):
+                self.graph.add((r, p_req_ing, ing))
+
+        # 3. Property chain: (producedBy o requiresIngredient) -> dependsOnItem
+        recipe_to_ings: Dict[Any, List[Any]] = {}
+        for r, _, ing in self.graph.triples((None, p_req_ing, None)):
+            recipe_to_ings.setdefault(r, []).append(ing)
+        adj: Dict[Any, set] = {}
+        for item, _, r in self.graph.triples((None, p_produced_by, None)):
+            for ing in recipe_to_ings.get(r, []):
+                if item != ing:
+                    self.graph.add((item, p_depends, ing))
+                    adj.setdefault(item, set()).add(ing)
+
+        # 4. Transitive closure of dependsOnItem
+        for src in list(adj.keys()):
+            visited = set()
+            stack = list(adj.get(src, []))
+            while stack:
+                curr = stack.pop()
+                if curr in visited or curr == src:
+                    continue
+                visited.add(curr)
+                self.graph.add((src, p_depends, curr))
+                for nxt in adj.get(curr, []):
+                    if nxt not in visited:
+                        stack.append(nxt)
 
     def query(self, sparql_str: str, init_bindings: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """Executes a SPARQL query against the graph/dataset and returns list of dict results."""

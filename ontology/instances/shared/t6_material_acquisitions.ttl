@@ -46,7 +46,7 @@ recipe:promote_potent_blood a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones (Spirit Shards)
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones (Spirit Shards)
         priory:requiredQuantity 5
     ] ;
     rdfs:comment "Transmutes 50 T5 Potent Blood into ~7 T6 Powerful Blood using Spirit Shards."@en .
@@ -83,7 +83,7 @@ recipe:promote_large_bone a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 
@@ -120,7 +120,7 @@ recipe:promote_intricate_totem a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 
@@ -156,7 +156,7 @@ recipe:promote_incandescent_dust a priory:MysticForgeRecipe, owl:NamedIndividual
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 
@@ -193,7 +193,7 @@ recipe:promote_large_claw a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 
@@ -230,7 +230,7 @@ recipe:promote_large_fang a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 
@@ -267,7 +267,7 @@ recipe:promote_large_scale a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 
@@ -304,7 +304,7 @@ recipe:promote_potent_venom a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 5
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 5 Philosopher's Stones
+        priory:requiresItem item:20796 ; # 5 Philosopher's Stones
         priory:requiredQuantity 5
     ] .
 

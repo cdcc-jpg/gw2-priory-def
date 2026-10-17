@@ -130,7 +130,8 @@ BENCHMARK_FALLBACK_PRICES: Dict[int, float] = {
     19721: 0.301,  # Glob of Ectoplasm
     19976: 1.950,  # Mystic Coin
     19675: 7.420,  # Mystic Clover (crafting cost basis)
-    19912: 1.000,  # Icy Runestone (1 gold)
+    19912: 1.000,  # Icy Runestone (legacy ID, 1 gold)
+    19676: 1.000,  # Icy Runestone (canonical ID, 1 gold)
     24295: 0.221,  # Vial of Powerful Blood (T6)
     24294: 0.035,  # Potent Blood (T5)
     24276: 0.189,  # Ancient Bone (T6)
@@ -165,6 +166,10 @@ BENCHMARK_FALLBACK_PRICES: Dict[int, float] = {
     29167: 140.0,  # Spark
     29168: 160.0,  # Zap
     29180: 150.0,  # The Legend
+    96088: 0.550,  # Memory of Aurene
+    96978: 1.500,  # Antique Summoning Stone
+    96347: 1.850,  # Chunk of Ancient Ambergris
+    96722: 0.720,  # Jade Runestone
 }
 
 T6_FINE_MATERIALS: Dict[str, Dict[str, Any]] = {
@@ -229,6 +234,8 @@ T6_FINE_MATERIALS: Dict[str, Dict[str, Any]] = {
 T6_ID_TO_CAT: Dict[int, str] = {info["t6_id"]: cat for cat, info in T6_FINE_MATERIALS.items()}
 
 STARTER_KIT_PRECURSORS: Set[int] = {
+    29185,  # Dusk (Twilight)
+    29184,  # Dawn (Sunrise)
     29167,  # Zap (Bolt)
     29174,  # The Legend (The Bifrost)
     29170,  # Storm (Meteorlogicus)
@@ -712,7 +719,13 @@ class PathSolver:
 
         already_owned_prec = account_state.total_item_count(prec_id) > 0 if prec_id else False
 
-        if has_starter_kit_chest or is_starter_kit_candidate:
+        vault_eligible = has_starter_kit_chest or (
+            is_starter_kit_candidate and (
+                prec_id not in (29185, 29184) or account_state.astral_acclaim_count() >= 1000
+            )
+        )
+
+        if vault_eligible:
             prec_rec = "WIZARDS_VAULT"
         elif prec_buy_order > 0 and prec_buy_order <= hobbs_cost:
             prec_rec = "BUY_ORDER"
@@ -739,7 +752,7 @@ class PathSolver:
 
         # 5. Component Pricing Helper
         def _evaluate_mat_unit_cost(mat_id: int, is_scratch: bool) -> int:
-            if mat_id == 19912:  # Icy Runestone
+            if mat_id in (19912, 19676):  # Icy Runestone (canonical 19676, legacy 19912)
                 return 10000
             if mat_id == 19675:  # Mystic Clover
                 if clover_strategy["recommended_option"] == "WIZARDS_VAULT":
@@ -828,38 +841,7 @@ class PathSolver:
         time_budget_minutes: int = 120
     ) -> OptimalCraftingPlan:
         # Standard benchmark fallback prices (in gold) based on live API averages
-        benchmark_prices = {
-            19721: 0.301,  # Glob of Ectoplasm
-            19976: 1.950,  # Mystic Coin
-            19675: 7.420,  # Mystic Clover (crafting cost basis)
-            24295: 0.221,  # Vial of Powerful Blood
-            24283: 0.189,  # Powerful Venom Sac
-            24300: 0.156,  # Elaborate Totem
-            24277: 0.161,  # Pile of Crystalline Dust
-            24357: 0.129,  # Vicious Fang
-            24289: 0.188,  # Armored Scale
-            24351: 0.159,  # Vicious Claw
-            24358: 0.189,  # Ancient Bone
-            89103: 0.056,  # Lucent Crystal
-            89258: 0.045,  # Symbol of Control
-            89182: 0.045,  # Symbol of Enhancement
-            89140: 0.045,  # Symbol of Pain
-            19700: 0.025,  # Mithril Ingot
-            19701: 0.085,  # Orichalcum Ingot
-            19739: 0.040,  # Elder Wood Plank
-            19740: 0.120,  # Ancient Wood Plank
-            19729: 0.035,  # Silk Bolt
-            19732: 0.150,  # Gossamer Bolt
-            19735: 0.060,  # Thick Leather Section
-            19737: 0.220,  # Hardened Leather Section
-            29185: 179.9,  # Dusk
-            29169: 159.5,  # Dawn
-            29166: 120.0,  # Tooth of Frostfang
-            29167: 140.0,  # Spark
-            29168: 160.0,  # Zap
-            29180: 150.0,  # The Legend
-        }
-        prices = dict(benchmark_prices)
+        prices = dict(BENCHMARK_FALLBACK_PRICES)
         if tp_prices:
             prices.update(tp_prices)
 
@@ -1120,7 +1102,12 @@ class PathSolver:
                 curr_qty = row.get("currQty")
 
                 if "AchievementCollectionPath" in ptype:
-                    bottlenecks.append(f"🗺️ **{mat_name}:** {definition or 'Requires 100% Core Tyria Map Completion (Cannot be bought with gold).'}")
+                    default_ach_desc = (
+                        "Requires 100% Core Tyria Map Completion (Cannot be bought with gold)."
+                        if "Exploration" in mat_name
+                        else "Requires completing the associated achievement or collection step."
+                    )
+                    bottlenecks.append(f"🗺️ **{mat_name}:** {definition or default_ach_desc}")
                 elif "RewardTrackPath" in ptype:
                     bottlenecks.append(f"⚔️ **{mat_name}:** {definition or 'Requires completing competitive WvW/PvP reward tracks.'}")
                 elif "VendorExchangePath" in ptype:

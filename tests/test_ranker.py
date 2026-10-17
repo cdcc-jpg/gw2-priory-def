@@ -180,13 +180,13 @@ class TestAccountRanker(unittest.TestCase):
 
         # Compute diff on Sunrise (item 30703, Gen 1 Greatsword)
         self.ranker.diff_engine.compute_diff(30703, account)
-        # Verify that Gift of Fortune (19627) sub-tree was memoized
-        fortune_key = (19627, 1, id(account))
+        # Verify that Gift of Fortune (19626) sub-tree was memoized
+        fortune_key = (19626, 1, id(account))
         self.assertIn(fortune_key, self.ranker.diff_engine._sub_tree_memo)
 
         # Compute diff on Twilight (item 30704, Gen 1 Greatsword) - should reuse memoized Gift of Fortune
         cached_node, cached_mats, _, _ = self.ranker.diff_engine._sub_tree_memo[fortune_key]
-        self.assertEqual(cached_node.item_id, 19627)
+        self.assertEqual(cached_node.item_id, 19626)
         self.assertIn("Glob of Ectoplasm", cached_mats)
 
     def test_full_ranker_performance_benchmark(self):

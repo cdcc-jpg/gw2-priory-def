@@ -441,42 +441,19 @@ def route_crafting_discipline(
     inactive_candidates: List[Dict[str, Any]] = []
     underleveled_candidates: List[Dict[str, Any]] = []
 
-    # 1. Check account_state data structures
+    account_char_names: set = set()
     if account_state is not None:
         if hasattr(account_state, "character_disciplines") and account_state.character_disciplines:
-            for char_name, discs in account_state.character_disciplines.items():
-                if disc_lower in discs:
-                    info = discs[disc_lower]
-                    r = int(info.get("rating", 0))
-                    act = bool(info.get("active", True))
-                    cand = {"name": char_name, "rating": r, "active": act}
-                    if act and r >= required_rating:
-                        active_candidates.append(cand)
-                    elif not act and r >= required_rating:
-                        inactive_candidates.append(cand)
-                    elif r < required_rating:
-                        underleveled_candidates.append(cand)
-
-        if not active_candidates and not inactive_candidates and hasattr(account_state, "characters") and account_state.characters:
+            account_char_names.update(account_state.character_disciplines.keys())
+        if hasattr(account_state, "characters") and account_state.characters:
             for c in account_state.characters:
-                c_name = c.get("name", "")
-                for cd in c.get("crafting", []):
-                    if cd.get("discipline", "").lower() == disc_lower:
-                        r = int(cd.get("rating", 0))
-                        act = bool(cd.get("active", True))
-                        cand = {"name": c_name, "rating": r, "active": act}
-                        if act and r >= required_rating:
-                            if cand not in active_candidates:
-                                active_candidates.append(cand)
-                        elif not act and r >= required_rating:
-                            if cand not in inactive_candidates:
-                                inactive_candidates.append(cand)
-                        elif r < required_rating:
-                            if cand not in underleveled_candidates:
-                                underleveled_candidates.append(cand)
+                if isinstance(c, dict) and c.get("name"):
+                    account_char_names.add(c["name"])
+                elif isinstance(c, str):
+                    account_char_names.add(c)
 
-    # 2. Check graph_store (SPARQL across hydrated ephemeral character named graphs)
-    if graph_store is not None and (not active_candidates and not inactive_candidates):
+    # 1. Check graph_store first (SPARQL across hydrated ephemeral character named graphs)
+    if graph_store is not None:
         sparql = """
         SELECT DISTINCT ?charName ?rating ?isActive WHERE {
             ?char a priory:Character ;
@@ -491,6 +468,8 @@ def route_crafting_discipline(
         res = graph_store.query(sparql, init_bindings={"discLower": Literal(disc_lower)})
         for row in res:
             c_name = str(row["charName"])
+            if account_char_names and c_name not in account_char_names:
+                continue
             r = int(row.get("rating", 0))
             act = str(row.get("isActive", "true")).lower() == "true"
             cand = {"name": c_name, "rating": r, "active": act}
@@ -503,6 +482,91 @@ def route_crafting_discipline(
             elif r < required_rating:
                 if cand not in underleveled_candidates:
                     underleveled_candidates.append(cand)
+
+    # 2. Check account_state data structures if not already resolved from graph_store
+    if account_state is not None and not active_candidates and not inactive_candidates:
+        # Build lookup of active status from account_state.characters and active_disciplines
+        char_disc_active_lookup: Dict[tuple, bool] = {}
+        if hasattr(account_state, "characters") and account_state.characters:
+            for c in account_state.characters:
+                if not isinstance(c, dict):
+                    continue
+                c_name = c.get("name", "")
+                for list_key in ("crafting", "disciplines"):
+                    for cd in (c.get(list_key) or []):
+                        if isinstance(cd, dict):
+                            d_name = str(cd.get("discipline", "")).strip().lower()
+                            if d_name and "active" in cd:
+                                char_disc_active_lookup[(c_name, d_name)] = bool(cd.get("active", True))
+
+        active_disc_chars: Optional[List[str]] = None
+        if hasattr(account_state, "active_disciplines") and account_state.active_disciplines:
+            for ak, av in account_state.active_disciplines.items():
+                if str(ak).strip().lower() == disc_lower:
+                    active_disc_chars = list(av)
+                    break
+
+        if hasattr(account_state, "character_disciplines") and account_state.character_disciplines:
+            for char_name, discs in account_state.character_disciplines.items():
+                if not isinstance(discs, dict):
+                    continue
+                matched_info = None
+                for dk, dv in discs.items():
+                    if str(dk).strip().lower() == disc_lower:
+                        matched_info = dv
+                        break
+                if matched_info is not None:
+                    if isinstance(matched_info, int):
+                        r = matched_info
+                        if (char_name, disc_lower) in char_disc_active_lookup:
+                            act = char_disc_active_lookup[(char_name, disc_lower)]
+                        elif active_disc_chars is not None:
+                            act = char_name in active_disc_chars
+                        else:
+                            act = True
+                    elif isinstance(matched_info, dict):
+                        r = int(matched_info.get("rating", 0))
+                        if "active" in matched_info:
+                            act = bool(matched_info.get("active", True))
+                        elif (char_name, disc_lower) in char_disc_active_lookup:
+                            act = char_disc_active_lookup[(char_name, disc_lower)]
+                        elif active_disc_chars is not None:
+                            act = char_name in active_disc_chars
+                        else:
+                            act = True
+                    else:
+                        continue
+                    cand = {"name": char_name, "rating": r, "active": act}
+                    if act and r >= required_rating:
+                        if cand not in active_candidates:
+                            active_candidates.append(cand)
+                    elif not act and r >= required_rating:
+                        if cand not in inactive_candidates:
+                            inactive_candidates.append(cand)
+                    elif r < required_rating:
+                        if cand not in underleveled_candidates:
+                            underleveled_candidates.append(cand)
+
+        if not active_candidates and not inactive_candidates and hasattr(account_state, "characters") and account_state.characters:
+            for c in account_state.characters:
+                if not isinstance(c, dict):
+                    continue
+                c_name = c.get("name", "")
+                for list_key in ("crafting", "disciplines"):
+                    for cd in (c.get(list_key) or []):
+                        if isinstance(cd, dict) and str(cd.get("discipline", "")).strip().lower() == disc_lower:
+                            r = int(cd.get("rating", 0))
+                            act = bool(cd.get("active", True))
+                            cand = {"name": c_name, "rating": r, "active": act}
+                            if act and r >= required_rating:
+                                if cand not in active_candidates:
+                                    active_candidates.append(cand)
+                            elif not act and r >= required_rating:
+                                if cand not in inactive_candidates:
+                                    inactive_candidates.append(cand)
+                            elif r < required_rating:
+                                if cand not in underleveled_candidates:
+                                    underleveled_candidates.append(cand)
 
     # 3. Formulate character routing decision
     if active_candidates:

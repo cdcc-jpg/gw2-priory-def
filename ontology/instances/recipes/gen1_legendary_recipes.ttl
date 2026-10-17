@@ -30,7 +30,7 @@ item:19712 a owl:NamedIndividual,
 
 item:19714 a owl:NamedIndividual,
         priory:CraftingMaterial ;
-    rdfs:label "Ancient Wood Plank"@en ;
+    rdfs:label "Seasoned Wood Plank"@en ;
     priory:gw2Id 19714 .
 
 item:19732 a owl:NamedIndividual,
@@ -802,7 +802,7 @@ recipe:forge_the_predator_gift a priory:MysticForgeRecipe ;
 
 recipe:req_bolt_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_bolt_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -818,7 +818,7 @@ recipe:req_bolt_gift a priory:IngredientRequirement ;
 
 recipe:req_bolt_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_bolt_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -826,7 +826,7 @@ recipe:req_bolt_precursor a priory:IngredientRequirement ;
 
 recipe:req_frenzy_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_frenzy_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -842,7 +842,7 @@ recipe:req_frenzy_gift a priory:IngredientRequirement ;
 
 recipe:req_frenzy_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_frenzy_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -850,7 +850,7 @@ recipe:req_frenzy_precursor a priory:IngredientRequirement ;
 
 recipe:req_frostfang_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_frostfang_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -866,7 +866,7 @@ recipe:req_frostfang_gift a priory:IngredientRequirement ;
 
 recipe:req_frostfang_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_frostfang_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -874,7 +874,7 @@ recipe:req_frostfang_precursor a priory:IngredientRequirement ;
 
 recipe:req_howler_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_howler_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -890,7 +890,7 @@ recipe:req_howler_gift a priory:IngredientRequirement ;
 
 recipe:req_howler_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_howler_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -898,7 +898,7 @@ recipe:req_howler_precursor a priory:IngredientRequirement ;
 
 recipe:req_incinerator_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_incinerator_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -914,7 +914,7 @@ recipe:req_incinerator_gift a priory:IngredientRequirement ;
 
 recipe:req_incinerator_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_incinerator_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -922,7 +922,7 @@ recipe:req_incinerator_precursor a priory:IngredientRequirement ;
 
 recipe:req_kamohoalii_kotaki_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_kamohoalii_kotaki_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -938,7 +938,7 @@ recipe:req_kamohoalii_kotaki_gift a priory:IngredientRequirement ;
 
 recipe:req_kamohoalii_kotaki_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_kamohoalii_kotaki_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -946,7 +946,7 @@ recipe:req_kamohoalii_kotaki_precursor a priory:IngredientRequirement ;
 
 recipe:req_kraitkin_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_kraitkin_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -962,7 +962,7 @@ recipe:req_kraitkin_gift a priory:IngredientRequirement ;
 
 recipe:req_kraitkin_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_kraitkin_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -970,7 +970,7 @@ recipe:req_kraitkin_precursor a priory:IngredientRequirement ;
 
 recipe:req_kudzu_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_kudzu_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -986,7 +986,7 @@ recipe:req_kudzu_gift a priory:IngredientRequirement ;
 
 recipe:req_kudzu_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_kudzu_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -994,7 +994,7 @@ recipe:req_kudzu_precursor a priory:IngredientRequirement ;
 
 recipe:req_meteorlogicus_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_meteorlogicus_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1010,7 +1010,7 @@ recipe:req_meteorlogicus_gift a priory:IngredientRequirement ;
 
 recipe:req_meteorlogicus_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_meteorlogicus_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1018,7 +1018,7 @@ recipe:req_meteorlogicus_precursor a priory:IngredientRequirement ;
 
 recipe:req_quip_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_quip_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1034,7 +1034,7 @@ recipe:req_quip_gift a priory:IngredientRequirement ;
 
 recipe:req_quip_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_quip_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1042,7 +1042,7 @@ recipe:req_quip_precursor a priory:IngredientRequirement ;
 
 recipe:req_rodgort_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_rodgort_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1058,7 +1058,7 @@ recipe:req_rodgort_gift a priory:IngredientRequirement ;
 
 recipe:req_rodgort_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_rodgort_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1066,7 +1066,7 @@ recipe:req_rodgort_precursor a priory:IngredientRequirement ;
 
 recipe:req_sunrise_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_sunrise_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1082,7 +1082,7 @@ recipe:req_sunrise_gift a priory:IngredientRequirement ;
 
 recipe:req_sunrise_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_sunrise_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1090,7 +1090,7 @@ recipe:req_sunrise_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_bifrost_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_bifrost_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1106,7 +1106,7 @@ recipe:req_the_bifrost_gift a priory:IngredientRequirement ;
 
 recipe:req_the_bifrost_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_bifrost_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1114,7 +1114,7 @@ recipe:req_the_bifrost_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_dreamer_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_dreamer_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1130,7 +1130,7 @@ recipe:req_the_dreamer_gift a priory:IngredientRequirement ;
 
 recipe:req_the_dreamer_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_dreamer_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1138,7 +1138,7 @@ recipe:req_the_dreamer_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_flameseeker_prophecies_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_flameseeker_prophecies_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1154,7 +1154,7 @@ recipe:req_the_flameseeker_prophecies_gift a priory:IngredientRequirement ;
 
 recipe:req_the_flameseeker_prophecies_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_flameseeker_prophecies_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1162,7 +1162,7 @@ recipe:req_the_flameseeker_prophecies_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_juggernaut_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_juggernaut_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1178,7 +1178,7 @@ recipe:req_the_juggernaut_gift a priory:IngredientRequirement ;
 
 recipe:req_the_juggernaut_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_juggernaut_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1186,7 +1186,7 @@ recipe:req_the_juggernaut_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_minstrel_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_minstrel_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1202,7 +1202,7 @@ recipe:req_the_minstrel_gift a priory:IngredientRequirement ;
 
 recipe:req_the_minstrel_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_minstrel_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1210,7 +1210,7 @@ recipe:req_the_minstrel_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_moot_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_moot_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1226,7 +1226,7 @@ recipe:req_the_moot_gift a priory:IngredientRequirement ;
 
 recipe:req_the_moot_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_moot_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
@@ -1234,7 +1234,7 @@ recipe:req_the_moot_precursor a priory:IngredientRequirement ;
 
 recipe:req_the_predator_fortune a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19627 .
+    priory:requiresItem item:19626 .
 
 recipe:req_the_predator_g_icy a priory:IngredientRequirement ;
     priory:requiredQuantity 100 ;
@@ -1250,7 +1250,7 @@ recipe:req_the_predator_gift a priory:IngredientRequirement ;
 
 recipe:req_the_predator_mastery a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;
-    priory:requiresItem item:19626 .
+    priory:requiresItem item:19674 .
 
 recipe:req_the_predator_precursor a priory:IngredientRequirement ;
     priory:requiredQuantity 1 ;

@@ -46,7 +46,12 @@ recipe:craft_dusk_experiment a priory:DisciplineRecipe, owl:NamedIndividual ;
     priory:requiresDiscipline discipline:Weaponsmith ;
     priory:requiredRating 450 ;
     priory:requiresMasteryTier priory:mastery_revered_antiquarian ;
-    rdfs:comment "Crafted at Weaponsmithing rating 450 using Essence of the End, Experimental Nightsword Blade, Experimental Nightsword Hilt, and Legendary Inscription."@en .
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:46738 ; # Deldrimor Steel Ingot
+        priory:requiredQuantity 15
+    ] ;
+    rdfs:comment "Crafted at Weaponsmithing rating 450 using 15 Deldrimor Steel Ingots, Essence of the End, Experimental Nightsword Blade, Experimental Nightsword Hilt, and Legendary Inscription."@en .
 
 # --- Dusk Tier 1 Collection Journey ---
 priory:col_dusk_vol1 a priory:AchievementCollectionPath, owl:NamedIndividual ;
@@ -94,8 +99,12 @@ recipe:craft_perfected_nightsword a priory:DisciplineRecipe, owl:NamedIndividual
         a priory:IngredientRequirement ;
         priory:requiresItem item:73524 ; # Spirit of the Dusk Experiment
         priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:46738 ; # Deldrimor Steel Ingot
+        priory:requiredQuantity 35
     ] ;
-    rdfs:comment "Crafted at Weaponsmithing rating 450 using Spirit of the Dusk Experiment, Expertise in Nightsword Crafting, Jar of Luminesce Polish, and Prismatic Lodestone."@en .
+    rdfs:comment "Crafted at Weaponsmithing rating 450 using 35 Deldrimor Steel Ingots, Spirit of the Dusk Experiment, Expertise in Nightsword Crafting, Jar of Luminesce Polish, and Prismatic Lodestone."@en .
 
 # --- Dusk Tier 2 Collection Journey ---
 priory:col_dusk_vol2 a priory:AchievementCollectionPath, owl:NamedIndividual ;
@@ -118,6 +127,7 @@ item:29185 a priory:PrecursorWeapon, priory:Item, owl:NamedIndividual ;
     priory:hasRarity rarity:Exotic ;
     priory:hasWeaponType weapon:Greatsword ;
     priory:hasPrecursorType priory:TradablePrecursor ;
+    priory:isPrecursorOf item:30704 ;
     priory:producedBy recipe:craft_dusk_tier3 ;
     priory:requiresMasteryTier priory:mastery_historian_of_the_armaments ;
     priory:acquiredVia priory:col_dusk_vol3 .
@@ -160,7 +170,7 @@ recipe:craft_dusk_tier3 a priory:DisciplineRecipe, owl:NamedIndividual ;
     priory:producesItem item:29185 ;
     priory:outputQuantity 1 ;
     priory:requiresDiscipline discipline:Weaponsmith ;
-    priory:requiredRating 500 ;
+    priory:requiredRating 450 ;
     priory:requiresMasteryTier priory:mastery_historian_of_the_armaments ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
@@ -178,8 +188,12 @@ recipe:craft_dusk_tier3 a priory:DisciplineRecipe, owl:NamedIndividual ;
         a priory:IngredientRequirement ;
         priory:requiresItem item:73411 ; # Dimensional Destabilizer
         priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:46738 ; # Deldrimor Steel Ingot
+        priory:requiredQuantity 25
     ] ;
-    rdfs:comment "Final Weaponsmith 500 precursor recipe producing Dusk, requiring Central Tyria Mastery Tier 3: Historian of the Armaments."@en .
+    rdfs:comment "Final Weaponsmith 450 precursor recipe producing Dusk, requiring 25 Deldrimor Steel Ingots and Central Tyria Mastery Tier 3: Historian of the Armaments."@en .
 
 # --- Dusk Tier 3 Collection Journey ---
 priory:col_dusk_vol3 a priory:AchievementCollectionPath, owl:NamedIndividual ;

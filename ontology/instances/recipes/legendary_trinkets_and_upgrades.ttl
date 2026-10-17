@@ -140,8 +140,7 @@ item:93105 a owl:NamedIndividual,
         "conflux"@en .
 
 item:95380 a owl:NamedIndividual,
-        priory:LegendaryTrinket,
-        priory:AchievementCollectionPath ;
+        priory:LegendaryTrinket ;
     rdfs:label "Prismatic Champion's Regalia"@en ;
     priory:metaAchievement "Seasons of the Dragons"@en ;
     priory:gw2Id 95380 ;
@@ -158,7 +157,8 @@ item:95380 a owl:NamedIndividual,
         "prismatic champion's regalia"@en .
 
 priory:Path_SeasonsOfTheDragons a priory:AchievementCollectionPath, priory:AcquisitionPath, owl:NamedIndividual ;
-    rdfs:label "Complete Seasons of the Dragons Meta-Achievement"@en .
+    rdfs:label "Complete Seasons of the Dragons Meta-Achievement"@en ;
+    priory:metaAchievement "Seasons of the Dragons"@en .
 
 item:101582 a owl:NamedIndividual,
         priory:LegendaryUpgrade ;

@@ -2,19 +2,26 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix iao: <http://purl.obolibrary.org/obo/> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix role: <https://priory.gw2/ref/role/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
 
+priory:CurrencyScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Account Wallet Currencies Taxonomy"@en ;
+    skos:prefLabel "Currency Scheme"@en ;
+    skos:definition "A SKOS concept scheme that classifies account-wide wallet scalar currencies tracked by the Guild Wars 2 `/v2/currencies` API."@en .
+
 currency:Coin a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Coin" ;
-    skos:prefLabel "Coin" ;
-    skos:altLabel "Coin" ;
-    skos:definition "The Coin currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Coin"@en ;
+    skos:prefLabel "Coin"@en ;
+    skos:altLabel "Gold"@en, "Silver"@en, "Copper"@en ;
+    skos:definition "An account wallet scalar currency that serves as the primary liquid monetary medium of exchange (denominated in copper, silver, and gold) for Trading Post commerce, vendor purchases, and waypoint travel."@en ;
     priory:apiWalletId 1 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -25,13 +32,14 @@ currency:1 a owl:NamedIndividual ;
     owl:sameAs currency:Coin .
 
 currency:Karma a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Karma" ;
-    skos:prefLabel "Karma" ;
-    skos:altLabel "Karma" ;
-    skos:definition "The Karma currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Karma"@en ;
+    skos:prefLabel "Karma"@en ;
+    skos:altLabel "Karma"@en ;
+    skos:definition "An account wallet scalar currency that is awarded for completing dynamic events and renown hearts and exchanged with karma merchants for Obsidian Shards, recipes, and equipment."@en ;
     priory:apiWalletId 2 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -42,13 +50,14 @@ currency:2 a owl:NamedIndividual ;
     owl:sameAs currency:Karma .
 
 currency:Laurel a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Laurel" ;
-    skos:prefLabel "Laurel" ;
-    skos:altLabel "Laurel" ;
-    skos:definition "The Laurel currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Laurel"@en ;
+    skos:prefLabel "Laurel"@en ;
+    skos:altLabel "Laurel"@en ;
+    skos:definition "An account wallet scalar currency that is obtained from the Wizard's Vault and exchanged at Laurel Merchants for crafting bags, Ascended trinkets, and recipes."@en ;
     priory:apiWalletId 3 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -59,13 +68,14 @@ currency:3 a owl:NamedIndividual ;
     owl:sameAs currency:Laurel .
 
 currency:Gems a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Gems" ;
-    skos:prefLabel "Gems" ;
-    skos:altLabel "Gems" ;
-    skos:definition "The Gems currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Gems"@en ;
+    skos:prefLabel "Gems"@en ;
+    skos:altLabel "Gems"@en ;
+    skos:definition "An account wallet scalar currency that serves as the premium currency of the Black Lion Gem Store for purchasing account upgrades, VIP lounge passes, and cosmetics."@en ;
     priory:apiWalletId 4 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -76,13 +86,14 @@ currency:4 a owl:NamedIndividual ;
     owl:sameAs currency:Gems .
 
 currency:FractalRelic a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Fractal Relic" ;
-    skos:prefLabel "Fractal Relic" ;
-    skos:altLabel "Fractal Relic" ;
-    skos:definition "The Fractal Relic currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Fractal Relic"@en ;
+    skos:prefLabel "Fractal Relic"@en ;
+    skos:altLabel "Fractal Relic"@en ;
+    skos:definition "An account wallet scalar currency that is earned by completing Fractals of the Mists scales and exchanged for Mystic Clovers, Gifts of Ascension, and fractal equipment."@en ;
     priory:apiWalletId 7 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -93,13 +104,14 @@ currency:7 a owl:NamedIndividual ;
     owl:sameAs currency:FractalRelic .
 
 currency:AirshipPart a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Airship Part" ;
-    skos:prefLabel "Airship Part" ;
-    skos:altLabel "Airship Part" ;
-    skos:definition "The Airship Part currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Airship Part"@en ;
+    skos:prefLabel "Airship Part"@en ;
+    skos:altLabel "Airship Part"@en ;
+    skos:definition "An account wallet scalar currency that is salvaged from Pact airship cargo in Verdant Brink and exchanged with Itzel vendors for Heart of Thorns mastery gifts."@en ;
     priory:apiWalletId 19 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -109,34 +121,51 @@ currency:AirshipPart a owl:NamedIndividual,
 currency:19 a owl:NamedIndividual ;
     owl:sameAs currency:AirshipPart .
 
-currency:LumpOfAurillium a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+currency:LeyLineCrystal a owl:NamedIndividual,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Ley Line Crystal"@en ;
+    skos:prefLabel "Ley Line Crystal"@en ;
+    skos:altLabel "Ley Line Crystal"@en ;
+    skos:definition "An account wallet scalar currency that is earned from Chak Gerent and outpost events in Tangled Depths and exchanged with Nuhoch vendors for Heart of Thorns mastery components."@en ;
+    priory:apiWalletId 20 ;
+    priory:isContainerized false ;
+    priory:playsRole role:CurrencyExchange,
+        role:CraftingIngredient ;
+    owl:sameAs currency:20 .
+
+currency:20 a owl:NamedIndividual ;
+    owl:sameAs currency:LeyLineCrystal .
+
+currency:LumpOfAurillium a owl:NamedIndividual,
+        skos:Concept,
+        priory:Currency,
+        priory:AccountWalletScalar ;
+    skos:inScheme priory:CurrencyScheme ;
     rdfs:label "Lump of Aurillium"@en ;
     skos:prefLabel "Lump of Aurillium"@en ;
     skos:altLabel "Lump of Aurillium"@en ;
-    skos:definition "The Lump of Aurillium currency obtained from Auric Basin."@en ;
+    skos:definition "An account wallet scalar currency that is earned from Octovine and pylon events in Auric Basin and exchanged with Exalted vendors for Heart of Thorns mastery components."@en ;
     priory:apiWalletId 22 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
         role:CraftingIngredient ;
-    owl:sameAs currency:22, currency:LeyLineSpark .
-
-currency:LeyLineSpark a owl:NamedIndividual ;
-    owl:sameAs currency:22, currency:LumpOfAurillium .
+    owl:sameAs currency:22 .
 
 currency:22 a owl:NamedIndividual ;
-    owl:sameAs currency:LumpOfAurillium, currency:LeyLineSpark .
+    owl:sameAs currency:LumpOfAurillium .
 
 currency:SpiritShard a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Spirit Shard" ;
-    skos:prefLabel "Spirit Shard" ;
-    skos:altLabel "Spirit Shard" ;
-    skos:definition "The Spirit Shard currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Spirit Shard"@en ;
+    skos:prefLabel "Spirit Shard"@en ;
+    skos:altLabel "Spirit Shard"@en ;
+    skos:definition "An account wallet scalar currency that is earned after level 80 mastery completion and exchanged with Miyani at the Mystic Forge for Bloodstone Shards, Philosopher's Stones, and Eldritch Scrolls."@en ;
     priory:apiWalletId 23 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -147,13 +176,14 @@ currency:23 a owl:NamedIndividual ;
     owl:sameAs currency:SpiritShard .
 
 currency:PristineFractalRelic a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Pristine Fractal Relic" ;
-    skos:prefLabel "Pristine Fractal Relic" ;
-    skos:altLabel "Pristine Fractal Relic" ;
-    skos:definition "The Pristine Fractal Relic currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Pristine Fractal Relic"@en ;
+    skos:prefLabel "Pristine Fractal Relic"@en ;
+    skos:altLabel "Pristine Fractal Relic"@en ;
+    skos:definition "An account wallet scalar currency that is awarded for completing daily recommended and tier Fractals of the Mists and exchanged for Fractal Relics and Ad Infinitum components."@en ;
     priory:apiWalletId 24 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -164,13 +194,14 @@ currency:24 a owl:NamedIndividual ;
     owl:sameAs currency:PristineFractalRelic .
 
 currency:CrystallineOre a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Crystalline Ore" ;
-    skos:prefLabel "Crystalline Ore" ;
-    skos:altLabel "Crystalline Ore" ;
-    skos:definition "The Crystalline Ore currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Crystalline Ore"@en ;
+    skos:prefLabel "Crystalline Ore"@en ;
+    skos:altLabel "Crystalline Ore"@en ;
+    skos:definition "An account wallet scalar currency that is harvested from Noxious Pods during the Dragon's Stand meta-event and required for Gift of the Pact and Crystalline Ingots."@en ;
     priory:apiWalletId 27 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -181,13 +212,14 @@ currency:27 a owl:NamedIndividual ;
     owl:sameAs currency:CrystallineOre .
 
 currency:MagnetiteShard a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Magnetite Shard" ;
-    skos:prefLabel "Magnetite Shard" ;
-    skos:altLabel "Magnetite Shard" ;
-    skos:definition "The Magnetite Shard currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Magnetite Shard"@en ;
+    skos:prefLabel "Magnetite Shard"@en ;
+    skos:altLabel "Magnetite Shard"@en ;
+    skos:definition "An account wallet scalar currency that is earned from Heart of Thorns and Path of Fire raid encounters and exchanged with Glenna for Mystic Clovers and Ascended raid equipment."@en ;
     priory:apiWalletId 28 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -198,13 +230,14 @@ currency:28 a owl:NamedIndividual ;
     owl:sameAs currency:MagnetiteShard .
 
 currency:UnboundMagic a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Unbound Magic" ;
-    skos:prefLabel "Unbound Magic" ;
-    skos:altLabel "Unbound Magic" ;
-    skos:definition "The Unbound Magic currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Unbound Magic"@en ;
+    skos:prefLabel "Unbound Magic"@en ;
+    skos:altLabel "Unbound Magic"@en ;
+    skos:definition "An account wallet scalar currency that is gathered across Living World Season 3 maps and exchanged for Magic-Warped Bundles, Obsidian Shards, and Aurora components."@en ;
     priory:apiWalletId 32 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -215,13 +248,14 @@ currency:32 a owl:NamedIndividual ;
     owl:sameAs currency:UnboundMagic .
 
 currency:PvPLeagueTicket a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "PvP League Ticket" ;
-    skos:prefLabel "PvP League Ticket" ;
-    skos:altLabel "PvP League Ticket" ;
-    skos:definition "The PvP League Ticket currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "PvP League Ticket"@en ;
+    skos:prefLabel "PvP League Ticket"@en ;
+    skos:altLabel "PvP League Ticket"@en ;
+    skos:definition "An account wallet scalar currency that is earned from Ranked Structured PvP division chests and exchanged for The Ascension, Transcendence, and Legendary PvP armor."@en ;
     priory:apiWalletId 34 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -232,13 +266,14 @@ currency:34 a owl:NamedIndividual ;
     owl:sameAs currency:PvPLeagueTicket .
 
 currency:ElegyMosaic a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Elegy Mosaic" ;
-    skos:prefLabel "Elegy Mosaic" ;
-    skos:altLabel "Elegy Mosaic" ;
-    skos:definition "The Elegy Mosaic currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Elegy Mosaic"@en ;
+    skos:prefLabel "Elegy Mosaic"@en ;
+    skos:altLabel "Elegy Mosaic"@en ;
+    skos:definition "An account wallet scalar currency that is awarded for defeating Legendary Bounties in the Crystal Desert and exchanged for Funerary Incense and Gift of the Rider."@en ;
     priory:apiWalletId 35 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -252,13 +287,14 @@ currency:39 a owl:NamedIndividual ;
     owl:sameAs currency:ElegyMosaic .
 
 currency:WvWSkirmishClaimTicket a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "WvW Skirmish Claim Ticket" ;
-    skos:prefLabel "WvW Skirmish Claim Ticket" ;
-    skos:altLabel "WvW Skirmish Claim Ticket" ;
-    skos:definition "The WvW Skirmish Claim Ticket currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "WvW Skirmish Claim Ticket"@en ;
+    skos:prefLabel "WvW Skirmish Claim Ticket"@en ;
+    skos:altLabel "WvW Skirmish Claim Ticket"@en ;
+    skos:definition "An account wallet scalar currency that is earned from weekly World vs. World skirmish pip chests and exchanged for Warbringer, Conflux, and Triumphant Hero's Legendary Armor."@en ;
     priory:apiWalletId 44 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -269,13 +305,14 @@ currency:44 a owl:NamedIndividual ;
     owl:sameAs currency:WvWSkirmishClaimTicket .
 
 currency:VolatileMagic a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Volatile Magic" ;
-    skos:prefLabel "Volatile Magic" ;
-    skos:altLabel "Volatile Magic" ;
-    skos:definition "The Volatile Magic currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Volatile Magic"@en ;
+    skos:prefLabel "Volatile Magic"@en ;
+    skos:altLabel "Volatile Magic"@en ;
+    skos:definition "An account wallet scalar currency that is gathered across Living World Season 4 maps and exchanged for Trophy Shipments, Vision components, and Obsidian Shards."@en ;
     priory:apiWalletId 45 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -286,13 +323,14 @@ currency:45 a owl:NamedIndividual ;
     owl:sameAs currency:VolatileMagic .
 
 currency:TradeContract a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Trade Contract" ;
-    skos:prefLabel "Trade Contract" ;
-    skos:altLabel "Trade Contract" ;
-    skos:definition "The Trade Contract currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Trade Contract"@en ;
+    skos:prefLabel "Trade Contract"@en ;
+    skos:altLabel "Trade Contract"@en ;
+    skos:definition "An account wallet scalar currency that is earned across Path of Fire Crystal Desert maps and exchanged for Desert Crafting Material Coffers and Gift of the Desert components."@en ;
     priory:apiWalletId 49 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -303,13 +341,14 @@ currency:49 a owl:NamedIndividual ;
     owl:sameAs currency:TradeContract .
 
 currency:ImperialFavor a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Imperial Favor" ;
-    skos:prefLabel "Imperial Favor" ;
-    skos:altLabel "Imperial Favor" ;
-    skos:definition "The Imperial Favor currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Imperial Favor"@en ;
+    skos:prefLabel "Imperial Favor"@en ;
+    skos:altLabel "Imperial Favor"@en ;
+    skos:definition "An account wallet scalar currency that is earned from End of Dragons meta-events in Cantha and required for Blessings of the Jade Empress and Generation 3 Aurene Legendary Weapons."@en ;
     priory:apiWalletId 59 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -320,13 +359,14 @@ currency:59 a owl:NamedIndividual ;
     owl:sameAs currency:ImperialFavor .
 
 currency:AstralAcclaim a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Astral Acclaim" ;
-    skos:prefLabel "Astral Acclaim" ;
-    skos:altLabel "Astral Acclaim" ;
-    skos:definition "The Astral Acclaim currency." ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Astral Acclaim"@en ;
+    skos:prefLabel "Astral Acclaim"@en ;
+    skos:altLabel "Astral Acclaim"@en ;
+    skos:definition "An account wallet scalar currency that is earned by completing daily, weekly, and special Wizard's Vault objectives and exchanged for Legendary Weapon Starter Kits, Mystic Clovers, and Mystic Coins."@en ;
     priory:apiWalletId 68 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -336,31 +376,33 @@ currency:AstralAcclaim a owl:NamedIndividual,
 currency:68 a owl:NamedIndividual ;
     owl:sameAs currency:AstralAcclaim .
 
-currency:LeyLineCrystal a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+currency:TalesOfDungeonDelving a owl:NamedIndividual,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
-    rdfs:label "Ley Line Crystal"@en ;
-    skos:prefLabel "Ley Line Crystal"@en ;
-    skos:altLabel "Ley Line Crystal"@en ;
-    skos:definition "The Ley Line Crystal currency obtained from events in Tangled Depths."@en ;
-    priory:apiWalletId 20 ;
+    skos:inScheme priory:CurrencyScheme ;
+    rdfs:label "Tales of Dungeon Delving"@en ;
+    skos:prefLabel "Tales of Dungeon Delving"@en ;
+    skos:altLabel "Dungeon Token"@en ;
+    skos:definition "An account wallet scalar currency that unifies rewards from all eight Core Tyria dungeons and is exchanged at Dungeon Armor and Weaponsmiths for Generation 1 dungeon gifts."@en ;
+    priory:apiWalletId 69 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
         role:CraftingIngredient ;
-    owl:sameAs currency:20 .
+    owl:sameAs currency:69 .
 
-currency:20 a owl:NamedIndividual ;
-    owl:sameAs currency:LeyLineCrystal .
+currency:69 a owl:NamedIndividual ;
+    owl:sameAs currency:TalesOfDungeonDelving .
 
 currency:PinchOfStardust a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
+    skos:inScheme priory:CurrencyScheme ;
     rdfs:label "Pinch of Stardust"@en ;
     skos:prefLabel "Pinch of Stardust"@en ;
     skos:altLabel "Pinch of Stardust"@en ;
-    skos:definition "The Pinch of Stardust currency obtained from Amnytas in Secrets of the Obscure."@en ;
+    skos:definition "An account wallet scalar currency that is earned from events in Amnytas (Secrets of the Obscure) and exchanged for Pouch of Stardust and Obsidian armor gifts."@en ;
     priory:apiWalletId 73 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -371,13 +413,14 @@ currency:73 a owl:NamedIndividual ;
     owl:sameAs currency:PinchOfStardust .
 
 currency:StaticCharge a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
+    skos:inScheme priory:CurrencyScheme ;
     rdfs:label "Static Charge"@en ;
     skos:prefLabel "Static Charge"@en ;
     skos:altLabel "Static Charge"@en ;
-    skos:definition "The Static Charge currency obtained from Skywatch Archipelago in Secrets of the Obscure."@en ;
+    skos:definition "An account wallet scalar currency that is earned from events in Skywatch Archipelago (Secrets of the Obscure) and exchanged for Captured Lightning and Obsidian armor gifts."@en ;
     priory:apiWalletId 75 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,
@@ -388,13 +431,14 @@ currency:75 a owl:NamedIndividual ;
     owl:sameAs currency:StaticCharge .
 
 currency:CaseOfCapturedLightning a owl:NamedIndividual,
-        bfo:IndependentContinuant,
+        skos:Concept,
         priory:Currency,
         priory:AccountWalletScalar ;
+    skos:inScheme priory:CurrencyScheme ;
     rdfs:label "Case of Captured Lightning"@en ;
     skos:prefLabel "Case of Captured Lightning"@en ;
     skos:altLabel "Case of Captured Lightning"@en ;
-    skos:definition "The Case of Captured Lightning currency obtained from The Wizard's Tower in Secrets of the Obscure."@en ;
+    skos:definition "An account wallet scalar currency that is purchased in the Wizard's Tower using Static Charges and Pinches of Stardust to craft Obsidian Legendary Armor."@en ;
     priory:apiWalletId 76 ;
     priory:isContainerized false ;
     priory:playsRole role:CurrencyExchange,

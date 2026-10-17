@@ -227,6 +227,20 @@ class IntentParser:
             "can i craft", "what legendaries", "which legendaries"
         ])
 
+        if not intent.time_budget_minutes or intent.time_budget_minutes <= 0:
+            intent.time_budget_minutes = 120
+
+        if ("no dungeon" in p_lower or "hate dungeon" in p_lower or "avoid dungeon" in p_lower or "without dungeon" in p_lower) and "Dungeons" not in intent.excluded_game_modes:
+            intent.excluded_game_modes.append("Dungeons")
+
+        # Relational / indirect description check (e.g. "legendary greatsword made from Dusk", "dark shadowy Gen 1 legendary greatsword")
+        has_indirect_twilight = bool(
+            re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dusk\b", p_lower)
+            or ("greatsword" in p_lower and ("dark" in p_lower or "shadow" in p_lower or ("legendary" in p_lower and "dusk" in p_lower)))
+        )
+        if has_indirect_twilight:
+            intent.target_item_name = "Twilight"
+
         # Check if single specific item is explicitly named in prompt
         known_specific_names = [
             "twilight", "sunrise", "eternity", "kudzu", "the moot", "the juggernaut",
@@ -236,7 +250,10 @@ class IntentParser:
             "klobjarne geirr", "klobjarne harvester", "kamohoali'i kotaki",
             "dusk", "mystic clover", "mystic coin", "sigil", "sigils", "rune", "runes"
         ]
-        has_named_specific_item = any(re.search(r"\b" + re.escape(name) + r"\b", p_lower) for name in known_specific_names)
+        has_named_specific_item = (
+            has_indirect_twilight
+            or any(re.search(r"\b" + re.escape(name) + r"\b", p_lower) for name in known_specific_names)
+        )
 
         # Heuristic classification fallback if LLM defaulted to SPECIFIC_ITEM (evaluated on current prompt)
         is_arbitrage = any(k in p_lower for k in [
@@ -266,6 +283,21 @@ class IntentParser:
             "what should i do in", "what to do in"
         ]) or ("what should i do" in p_lower and any(t in p_lower for t in ["tonight", "today", "mins", "minutes", "hour"]))
 
+        generic_category_targets = {
+            "ring", "rings", "amulet", "amulets", "accessory", "accessories",
+            "trinket", "trinkets", "backpack", "back", "jewelry", "armor",
+            "upgrade", "upgrades", "spear", "spears", "legendary", "legendaries",
+            "gen 1", "gen 2", "gen 3", "generation 1", "generation 2", "generation 3"
+        }
+
+        # If LLM classified as COMPARATIVE_RANKING but a concrete non-category target_item_name is present and no comparative terms were used, downgrade to SPECIFIC_ITEM
+        if intent.goal_type == GoalType.COMPARATIVE_RANKING and intent.target_item_name:
+            t_low = intent.target_item_name.strip().lower()
+            if t_low not in generic_category_targets and (has_named_specific_item or not has_comparative_terms):
+                resolved_check = self.semantic_service.resolve_entity_by_text(intent.target_item_name)
+                if resolved_check and resolved_check[0].get("gw2Id"):
+                    intent.goal_type = GoalType.SPECIFIC_ITEM
+
         if intent.goal_type == GoalType.SPECIFIC_ITEM:
             if is_arbitrage:
                 intent.goal_type = GoalType.ARBITRAGE_EVALUATION
@@ -279,14 +311,10 @@ class IntentParser:
                 # Promote to COMPARATIVE_RANKING if no recognizable specific item found
                 is_generic_or_missing_target = (
                     not intent.target_item_name
-                    or (intent.target_item_name.lower() in ["twilight"] and "twilight" not in p_lower)
-                    or intent.target_item_name.lower() in [
-                        "ring", "rings", "amulet", "amulets", "accessory", "accessories",
-                        "trinket", "trinkets", "backpack", "back", "jewelry", "armor",
-                        "upgrade", "upgrades", "spear", "spears", "legendary", "legendaries"
-                    ]
+                    or (intent.target_item_name.lower() in ["twilight"] and "twilight" not in p_lower and not has_indirect_twilight)
+                    or intent.target_item_name.lower() in generic_category_targets
                 )
-                has_no_recognized_item = is_generic_or_missing_target or not has_named_specific_item
+                has_no_recognized_item = is_generic_or_missing_target and not has_named_specific_item
 
                 if has_no_recognized_item and (has_category_terms or has_comparative_terms):
                     intent.goal_type = GoalType.COMPARATIVE_RANKING
@@ -350,6 +378,7 @@ class IntentParser:
                 resolved_item_id=resolved_item_id,
                 resolved_item_name=resolved_item_name,
                 chat_code=chat_code,
+                time_budget_minutes=intent.time_budget_minutes,
                 target_quantity=intent.target_quantity
             )
 
@@ -379,6 +408,7 @@ class IntentParser:
                 resolved_item_id=resolved_item_id,
                 resolved_item_name=resolved_item_name,
                 chat_code=chat_code,
+                time_budget_minutes=intent.time_budget_minutes,
                 target_quantity=intent.target_quantity
             )
 
@@ -416,6 +446,7 @@ class IntentParser:
                 currency_id=curr_id,
                 currency_name=curr_name,
                 chat_code=chat_code,
+                time_budget_minutes=intent.time_budget_minutes,
                 target_quantity=intent.target_quantity
             )
 
@@ -429,6 +460,7 @@ class IntentParser:
                 prefer_cheap=intent.prefer_cheap or is_cheapest,
                 wizards_vault_exhausted=intent.wizards_vault_exhausted,
                 optimization_target=intent.optimization_target,
+                time_budget_minutes=intent.time_budget_minutes,
                 target_quantity=intent.target_quantity
             )
 
@@ -449,6 +481,8 @@ class IntentParser:
             target_quantity = intent.target_quantity if intent.target_quantity > 1 else previous_goal.target_quantity
         else:
             resolved_entities = self.semantic_service.resolve_entity_by_text(item_query or user_prompt)
+            if not resolved_entities and item_query and item_query != user_prompt:
+                resolved_entities = self.semantic_service.resolve_entity_by_text(user_prompt)
             if resolved_entities:
                 top_match = resolved_entities[0]
                 resolved_item_id = top_match.get("gw2Id")
@@ -471,6 +505,7 @@ class IntentParser:
                         prefer_cheap=intent.prefer_cheap or is_cheapest,
                         wizards_vault_exhausted=intent.wizards_vault_exhausted,
                         optimization_target=intent.optimization_target,
+                        time_budget_minutes=intent.time_budget_minutes,
                         target_quantity=intent.target_quantity
                     )
             target_quantity = intent.target_quantity
@@ -487,6 +522,7 @@ class IntentParser:
             prefer_cheap=intent.prefer_cheap or is_cheapest,
             wizards_vault_exhausted=intent.wizards_vault_exhausted,
             optimization_target=intent.optimization_target,
+            time_budget_minutes=intent.time_budget_minutes,
             target_quantity=target_quantity,
             chat_code=chat_code
         )

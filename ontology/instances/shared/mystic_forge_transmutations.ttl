@@ -44,11 +44,11 @@ recipe:OnyxCorePromotion a priory:MysticForgeRecipe, owl:NamedIndividual ;
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19663 ; # 1 Bottle of Elonian Wine
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 1 Philosopher's Stone
+        priory:requiresItem item:20796 ; # 1 Philosopher's Stone
         priory:requiredQuantity 1
     ] .
 
@@ -66,11 +66,11 @@ recipe:transmute_onyx_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual 
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19661 ; # 1 Mystic Crystal
+        priory:requiresItem item:20799 ; # 1 Mystic Crystal
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] .
 
@@ -80,19 +80,25 @@ item:24277 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false .
 
-item:19663 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:20795 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Bottle of Elonian Wine"@en ;
-    priory:gw2Id 19663 ;
-    priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false .
-
-item:19665 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Philosopher's Stone"@en ;
-    priory:gw2Id 19665 ;
+    priory:gw2Id 20795 ;
     priory:hasRarity rarity:Fine ;
     priory:isAccountBound true .
 
-# --- Molten Lodestone (24305) from Molten Cores (24304) ---
+item:20796 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Philosopher's Stone"@en ;
+    priory:gw2Id 20796 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound true .
+
+item:20799 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mystic Crystal"@en ;
+    priory:gw2Id 20799 ;
+    priory:hasRarity rarity:Basic ;
+    priory:isAccountBound true .
+
+# --- Charged Lodestone (24305) from Charged Cores (24304) ---
 item:24304 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Charged Core"@en ;
     priory:gw2Id 24304 ;
@@ -104,15 +110,15 @@ item:24305 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:gw2Id 24305 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false ;
-    priory:acquiredVia recipe:transmute_molten_lodestone .
+    priory:acquiredVia recipe:transmute_charged_lodestone .
 
-recipe:transmute_molten_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Mystic Forge: Molten Lodestone Transmutation"@en ;
+recipe:transmute_charged_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge: Charged Lodestone Transmutation"@en ;
     priory:producesItem item:24305 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:24304 ; # 2 Molten Core
+        priory:requiresItem item:24304 ; # 2 Charged Core
         priory:requiredQuantity 2
     ] , [
         a priory:IngredientRequirement ;
@@ -120,35 +126,35 @@ recipe:transmute_molten_lodestone a priory:MysticForgeRecipe, owl:NamedIndividua
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19661 ; # 1 Mystic Crystal
+        priory:requiresItem item:20799 ; # 1 Mystic Crystal
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] .
 
-# --- Glacial Lodestone (24307) from Glacial Cores (24306) ---
-item:24306 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Onyx Sliver"@en ;
-    priory:gw2Id 24306 ;
+# --- Glacial Lodestone (24320) from Glacial Cores (24319) ---
+item:24319 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Glacial Core"@en ;
+    priory:gw2Id 24319 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false .
 
-item:24307 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Onyx Fragment"@en ;
-    priory:gw2Id 24307 ;
+item:24320 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Glacial Lodestone"@en ;
+    priory:gw2Id 24320 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false ;
     priory:acquiredVia recipe:transmute_glacial_lodestone .
 
 recipe:transmute_glacial_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
     rdfs:label "Mystic Forge: Glacial Lodestone Transmutation"@en ;
-    priory:producesItem item:24307 ;
+    priory:producesItem item:24320 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:24306 ; # 2 Glacial Core
+        priory:requiresItem item:24319 ; # 2 Glacial Core
         priory:requiredQuantity 2
     ] , [
         a priory:IngredientRequirement ;
@@ -156,81 +162,15 @@ recipe:transmute_glacial_lodestone a priory:MysticForgeRecipe, owl:NamedIndividu
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19661 ; # 1 Mystic Crystal
+        priory:requiresItem item:20799 ; # 1 Mystic Crystal
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] .
 
-# --- Charged Lodestone (24303) from Charged Cores (24302) ---
-item:24302 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Charged Fragment"@en ;
-    priory:gw2Id 24302 ;
-    priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false .
-
-item:24303 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Charged Shard"@en ;
-    priory:gw2Id 24303 ;
-    priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false ;
-    priory:acquiredVia recipe:transmute_charged_lodestone .
-
-recipe:transmute_charged_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Mystic Forge: Charged Lodestone Transmutation"@en ;
-    priory:producesItem item:24303 ;
-    priory:outputQuantity 1 ;
-    priory:hasIngredientRequirement [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:24302 ; # 2 Charged Core
-        priory:requiredQuantity 2
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:24277 ; # 1 Crystalline Dust
-        priory:requiredQuantity 1
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:19661 ; # 1 Mystic Crystal
-        priory:requiredQuantity 1
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
-        priory:requiredQuantity 1
-    ] .
-
-# --- Destroyer Lodestone (24308) from Destroyer Cores (24307) ---
-item:24308 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Onyx Shard"@en ;
-    priory:gw2Id 24308 ;
-    priory:hasRarity rarity:Rare ;
-    priory:isAccountBound false ;
-    priory:acquiredVia recipe:transmute_destroyer_lodestone .
-
-recipe:transmute_destroyer_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Mystic Forge: Destroyer Lodestone Transmutation"@en ;
-    priory:producesItem item:24308 ;
-    priory:outputQuantity 1 ;
-    priory:hasIngredientRequirement [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:24307 ; # 2 Destroyer Core
-        priory:requiredQuantity 2
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:24277 ; # 1 Crystalline Dust
-        priory:requiredQuantity 1
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:19661 ; # 1 Mystic Crystal
-        priory:requiredQuantity 1
-    ] , [
-        a priory:IngredientRequirement ;
-        priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
-        priory:requiredQuantity 1
-    ] .
-
-# --- Corrupted Lodestone (24315) from Corrupted Cores (24314) ---
+# --- Molten Lodestone (24315) from Molten Cores (24314) ---
 item:24314 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Molten Core"@en ;
     priory:gw2Id 24314 ;
@@ -242,15 +182,15 @@ item:24315 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:gw2Id 24315 ;
     priory:hasRarity rarity:Rare ;
     priory:isAccountBound false ;
-    priory:acquiredVia recipe:transmute_corrupted_lodestone .
+    priory:acquiredVia recipe:transmute_molten_lodestone .
 
-recipe:transmute_corrupted_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
-    rdfs:label "Mystic Forge: Corrupted Lodestone Transmutation"@en ;
+recipe:transmute_molten_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge: Molten Lodestone Transmutation"@en ;
     priory:producesItem item:24315 ;
     priory:outputQuantity 1 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:24314 ; # 2 Corrupted Core
+        priory:requiresItem item:24314 ; # 2 Molten Core
         priory:requiredQuantity 2
     ] , [
         a priory:IngredientRequirement ;
@@ -258,11 +198,83 @@ recipe:transmute_corrupted_lodestone a priory:MysticForgeRecipe, owl:NamedIndivi
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19661 ; # 1 Mystic Crystal
+        priory:requiresItem item:20799 ; # 1 Mystic Crystal
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19662 ; # 1 Bottle of Elonian Wine
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
+        priory:requiredQuantity 1
+    ] .
+
+# --- Destroyer Lodestone (24325) from Destroyer Cores (24324) ---
+item:24324 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Destroyer Core"@en ;
+    priory:gw2Id 24324 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:24325 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Destroyer Lodestone"@en ;
+    priory:gw2Id 24325 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia recipe:transmute_destroyer_lodestone .
+
+recipe:transmute_destroyer_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge: Destroyer Lodestone Transmutation"@en ;
+    priory:producesItem item:24325 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24324 ; # 2 Destroyer Core
+        priory:requiredQuantity 2
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 1 Crystalline Dust
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:20799 ; # 1 Mystic Crystal
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
+        priory:requiredQuantity 1
+    ] .
+
+# --- Corrupted Lodestone (24340) from Corrupted Cores (24339) ---
+item:24339 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Corrupted Core"@en ;
+    priory:gw2Id 24339 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false .
+
+item:24340 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Corrupted Lodestone"@en ;
+    priory:gw2Id 24340 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound false ;
+    priory:acquiredVia recipe:transmute_corrupted_lodestone .
+
+recipe:transmute_corrupted_lodestone a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge: Corrupted Lodestone Transmutation"@en ;
+    priory:producesItem item:24340 ;
+    priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24339 ; # 2 Corrupted Core
+        priory:requiredQuantity 2
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ; # 1 Crystalline Dust
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:20799 ; # 1 Mystic Crystal
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] .
 

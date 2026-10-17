@@ -58,6 +58,11 @@ recipe:DuskForgePromotion a priory:MysticForgeRecipe ;
     priory:producesItem item:29185 ;
     priory:outputQuantity 1 ;
     priory:expectedYieldRate 0.02 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19983 ;
+        priory:requiredQuantity 4
+    ] ;
     rdfs:comment "Promotes 4x Rare Greatswords into an Exotic/Precursor. RNG-dependent (approx 2% chance per attempt) and not recommended as a primary strategy." .
 
 # -----------------------------------------------------------------------------
@@ -96,9 +101,9 @@ item:19678_RewardTrackPath a priory:RewardTrackPath ;
 # SECTION 5: BLOODSTONE SHARD — SPIRIT SHARD ECONOMY
 # -----------------------------------------------------------------------------
 
-item:19674_MiyaniPath a priory:VendorExchangePath ;
+item:20797_MiyaniPath a priory:VendorExchangePath ;
     rdfs:label "Purchase Bloodstone Shard from Miyani" ;
-    priory:targetItem item:19674 ;
+    priory:targetItem item:20797 ;
     priory:vendorNPC "Miyani" ;
     priory:zoneName "Lion's Arch" ;
     priory:waypointName "Trader's Forum Waypoint" ;
@@ -107,8 +112,8 @@ item:19674_MiyaniPath a priory:VendorExchangePath ;
     priory:requiredQuantity 200 ;
     rdfs:comment "Purchased from Miyani using 200 Spirit Shards in Lion's Arch [&BBAEAAA=]. Spirit Shards are gained from Tomes of Knowledge, post-80 level-ups, and periodic login rewards." .
 
-item:19674_SpiritShardComment a rdf:Statement ;
-    rdf:subject item:19674 ;
+item:20797_SpiritShardComment a rdf:Statement ;
+    rdf:subject item:20797 ;
     rdf:predicate rdfs:comment ;
     rdf:object "Purchased from Miyani using 200 Spirit Shards [&BBAEAAA=]. Spirit Shards are gained from Tomes of Knowledge, post-80 level-ups, and periodic login rewards." .
 
@@ -143,8 +148,8 @@ item:GiftOfDarkness_Comment a rdf:Statement ;
     rdf:object "Leveling Armorsmith from 0 to 400 costs approximately 15-25 gold using crafting guides (gw2crafts.net). Crafting stations in Black Citadel [&BKgDAAA=], Lion's Arch [&BBAEAAA=]." .
 
 # 8C. Icy Runestones
-item:20799_Comment a rdf:Statement ;
-    rdf:subject item:20799 ;
+item:19676_Comment a rdf:Statement ;
+    rdf:subject item:19676 ;
     rdf:predicate rdfs:comment ;
     rdf:object "100 needed, purchased for 1 gold each (100 gold total). Significant flat gold sink." .
 
@@ -168,20 +173,38 @@ recipe:OnyxCorePromotion a priory:MysticForgeRecipe ;
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19663 ; # 1 Bottle of Elonian Wine
+        priory:requiresItem item:20795 ; # 1 Bottle of Elonian Wine
         priory:requiredQuantity 1
     ] , [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19665 ; # 1 Philosopher's Stone
+        priory:requiresItem item:20796 ; # 1 Philosopher's Stone
         priory:requiredQuantity 1
     ] ;
     rdfs:comment "2 Onyx Cores + 1 Crystalline Dust + 1 Bottle of Elonian Wine + 1 Philosopher's Stone -> 1 Onyx Lodestone." .
 
 recipe:OnyxLodestoneForge a priory:MysticForgeRecipe ;
+    owl:sameAs recipe:OnyxCorePromotion ;
     rdfs:label "Onyx Lodestone Forge Promotion" ;
     priory:producesItem item:24310 ;
     priory:outputQuantity 1 ;
-    rdfs:comment "2 Onyx Cores + 1 Crystal + 1 Bottle of Elonian Wine + 1 Philosopher's Stone -> 1 Onyx Lodestone." .
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24309 ;
+        priory:requiredQuantity 2
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:24277 ;
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:20795 ;
+        priory:requiredQuantity 1
+    ] , [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:20796 ;
+        priory:requiredQuantity 1
+    ] ;
+    rdfs:comment "2 Onyx Cores + 1 Crystalline Dust + 1 Bottle of Elonian Wine + 1 Philosopher's Stone -> 1 Onyx Lodestone." .
 
 item:24310_TwilightArborPath a priory:OpenWorldFarmPath ;
     rdfs:label "Twilight Arbor (Aetherpath) Farm" ;
@@ -203,9 +226,9 @@ item:24310_OrrFarmPath a priory:OpenWorldFarmPath ;
     priory:zoneName "Ruins of Orr" ;
     rdfs:comment "Risen enemies in Orr drop Onyx Cores." .
 
-# 8E. Superior Sigil of Force
-item:24615_Comment a rdf:Statement ;
-    rdf:subject item:24615 ;
+# 8E. Superior Sigil of Strength / Force
+item:24562_Comment a rdf:Statement ;
+    rdf:subject item:24562 ;
     rdf:predicate rdfs:comment ;
     rdf:object "Can be purchased from Trading Post or salvaged from Exotic weapons." .
 
@@ -231,9 +254,14 @@ item:19721_SilverwastesPath a priory:OpenWorldFarmPath ;
     rdfs:comment "Rare drops from champion bags during the meta." .
 
 recipe:EctoGamble a priory:MysticForgeRecipe ;
-    rdfs:label "Mystic Forge Ecto Gamble" ;
+    rdfs:label "Mystic Forge Ecto Gamble (Tarrktun)" ;
     priory:producesItem item:19721 ;
     priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement [
+        a priory:IngredientRequirement ;
+        priory:requiresItem item:19721 ;
+        priory:requiredQuantity 250
+    ] ;
     rdfs:comment "NOT recommended." .
 
 # -----------------------------------------------------------------------------
@@ -247,4 +275,9 @@ recipe:TwilightFinalAssembly a priory:MysticForgeRecipe, owl:NamedIndividual ;
     priory:outputQuantity 1 ;
     priory:zoneName "Lion's Arch" ;
     priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:29185 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19626 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19674 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19648 ; priory:requiredQuantity 1 ] ;
     rdfs:comment "Insert: Dusk + Gift of Fortune + Gift of Mastery + Gift of Twilight at the Mystic Forge. The ceremonial final moment to craft Twilight." .

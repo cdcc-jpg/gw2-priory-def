@@ -547,9 +547,9 @@ class GW2ApiClient:
                     if char.get("title") == 12 and char.get("name"):
                         map_completed_characters.append(char["name"])
                 # 2. If title 12 is unlocked on account but no character is actively wearing it,
-                # attribute to primary oldest level 80 character (e.g. Kerling)
-                if not map_completed_characters and raw_characters:
-                    map_completed_characters.append(raw_characters[0].get("name", "Kerling"))
+                # attribute to primary oldest level 80 character
+                if not map_completed_characters and raw_characters and raw_characters[0].get("name"):
+                    map_completed_characters.append(raw_characters[0]["name"])
 
             return AccountState(
                 materials=materials,
@@ -667,7 +667,8 @@ FALLBACK_ITEM_PRICES_COPPER: Dict[int, Dict[str, int]] = {
     19721: {"sells": 3000, "buys": 2800},       # Glob of Ectoplasm (0.30g / 0.28g)
     19976: {"sells": 19500, "buys": 18000},     # Mystic Coin (1.95g / 1.80g)
     19675: {"sells": 74200, "buys": 63070},     # Mystic Clover (crafting cost basis)
-    19912: {"sells": 10000, "buys": 10000},     # Icy Runestone (1.00g vendor)
+    19676: {"sells": 10000, "buys": 10000},     # Icy Runestone (1.00g vendor, canonical ID)
+    19912: {"sells": 10000, "buys": 10000},     # Icy Runestone (1.00g vendor, legacy ID)
     24295: {"sells": 2500, "buys": 2200},       # Powerful Blood (T6)
     24294: {"sells": 50, "buys": 40},           # Potent Blood (T5)
     24276: {"sells": 1890, "buys": 1600},       # Ancient Bone (T6)

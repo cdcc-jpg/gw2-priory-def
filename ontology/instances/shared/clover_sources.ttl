@@ -45,6 +45,11 @@ recipe:MysticCloverForge a priory:MysticForgeRecipe ;
     priory:producesItem item:19675 ;
     priory:outputQuantity 1 ;
     priory:expectedYieldRate 0.33 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19925 ; priory:requiredQuantity 10 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19976 ; priory:requiredQuantity 10 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19721 ; priory:requiredQuantity 10 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:20796 ; priory:requiredQuantity 10 ] ;
     rdfs:comment "10 Obsidian Shards + 10 Mystic Coins + 10 Globs of Ectoplasm + 10 Philosopher's Stones. ~33% success rate per attempt." .
 
 # ------------------------------------------------------------------------------

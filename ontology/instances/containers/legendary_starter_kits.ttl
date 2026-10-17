@@ -130,5 +130,7 @@ item:29176 a priory:PrecursorWeapon, priory:Item, owl:NamedIndividual ;
     rdfs:label "Storm"@en ;
     priory:gw2Id 29176 ;
     priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType <https://priory.gw2/ref/weapon/Scepter> ;
+    priory:isPrecursorOf item:30695 ;
     priory:isAccountBound false ;
     rdfs:comment "Precursor weapon for the legendary scepter Meteorlogicus."@en .

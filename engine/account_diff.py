@@ -646,7 +646,7 @@ class AccountState:
     characters: List[Dict[str, Any]] = field(default_factory=list)
     mount_types: List[str] = field(default_factory=list)
     expansion_access: List[str] = field(default_factory=lambda: ['GuildWars2'])
-    map_completed_characters: List[str] = field(default_factory=lambda: ['Kerling'])
+    map_completed_characters: Optional[List[str]] = None
     titles: Set[int] = field(default_factory=set)
     fractal_level: int = 1
     wvw_rank: int = 1
@@ -662,9 +662,23 @@ class AccountState:
     achievement_bits: Dict[int, List[int]] = field(default_factory=dict)
     achievement_repeated: Dict[int, int] = field(default_factory=dict)
     active_disciplines: Dict[str, List[str]] = field(default_factory=dict)
-    character_disciplines: Dict[str, Dict[str, Dict[str, Any]]] = field(default_factory=dict)
+    character_disciplines: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     daily_crafting: List[str] = field(default_factory=list)
     world_bosses: List[str] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        if self.map_completed_characters is None:
+            if self.characters:
+                char_names = {
+                    c.get("name") if isinstance(c, dict) else str(c)
+                    for c in self.characters
+                }
+                if "Kerling" in char_names:
+                    self.map_completed_characters = ["Kerling"]
+                else:
+                    self.map_completed_characters = []
+            else:
+                self.map_completed_characters = []
 
     def total_item_count(self, item_id: int) -> int:
         """Aggregates an item's count across materials, bank, bags (inventory & characters[*].bags), and legendary armory."""
@@ -801,14 +815,82 @@ class AccountState:
         """Returns True if account has unlocked Dungeon Master (Achievement 122 or Title 15)."""
         return 122 in self.completed_achievements or 15 in self.titles
 
+    def max_discipline_rating(self, discipline: str) -> int:
+        """Returns the highest crafting rating for a discipline across account disciplines, character_disciplines, and characters (case-insensitive)."""
+        disc_lower = discipline.strip().lower()
+        best = 0
+        for k, v in (self.disciplines or {}).items():
+            if str(k).strip().lower() == disc_lower:
+                try:
+                    best = max(best, int(v))
+                except (ValueError, TypeError):
+                    pass
+        for _char_name, discs in (self.character_disciplines or {}).items():
+            if isinstance(discs, dict):
+                for k, info in discs.items():
+                    if str(k).strip().lower() == disc_lower:
+                        if isinstance(info, int):
+                            best = max(best, info)
+                        elif isinstance(info, dict):
+                            try:
+                                best = max(best, int(info.get("rating", 0)))
+                            except (ValueError, TypeError):
+                                pass
+        for char in (self.characters or []):
+            if isinstance(char, dict):
+                for key in ("crafting", "disciplines"):
+                    for c_entry in (char.get(key) or []):
+                        if isinstance(c_entry, dict):
+                            c_disc = str(c_entry.get("discipline", "")).strip().lower()
+                            if c_disc == disc_lower:
+                                try:
+                                    best = max(best, int(c_entry.get("rating", 0)))
+                                except (ValueError, TypeError):
+                                    pass
+        return best
+
     def has_active_discipline(self, discipline: str, min_rating: int = 0) -> bool:
         """Returns True if any character has the specified discipline currently active with at least min_rating."""
-        disc = discipline.lower()
-        if disc in self.active_disciplines:
-            for char_name in self.active_disciplines[disc]:
-                info = self.character_disciplines.get(char_name, {}).get(disc, {})
-                if info.get("rating", 0) >= min_rating:
-                    return True
+        disc = discipline.strip().lower()
+        for k, char_list in (self.active_disciplines or {}).items():
+            if str(k).strip().lower() == disc and char_list:
+                for char_name in char_list:
+                    discs_for_char = (self.character_disciplines or {}).get(char_name, {})
+                    info = None
+                    if isinstance(discs_for_char, dict):
+                        for dk, dv in discs_for_char.items():
+                            if str(dk).strip().lower() == disc:
+                                info = dv
+                                break
+                    if isinstance(info, int):
+                        if info >= min_rating:
+                            return True
+                    elif isinstance(info, dict):
+                        if int(info.get("rating", 0)) >= min_rating:
+                            return True
+                    elif min_rating <= 0:
+                        return True
+        for char_name, discs in (self.character_disciplines or {}).items():
+            if isinstance(discs, dict):
+                for dk, info in discs.items():
+                    if str(dk).strip().lower() == disc:
+                        if isinstance(info, int) and info >= min_rating:
+                            active_list = None
+                            for ak, av in (self.active_disciplines or {}).items():
+                                if str(ak).strip().lower() == disc:
+                                    active_list = av
+                                    break
+                            if active_list is None or char_name in active_list:
+                                return True
+                        elif isinstance(info, dict) and bool(info.get("active", True)) and int(info.get("rating", 0)) >= min_rating:
+                            return True
+        for char in (self.characters or []):
+            if isinstance(char, dict):
+                for key in ("crafting", "disciplines"):
+                    for c_entry in (char.get(key) or []):
+                        if isinstance(c_entry, dict) and str(c_entry.get("discipline", "")).strip().lower() == disc:
+                            if bool(c_entry.get("active", True)) and int(c_entry.get("rating", 0)) >= min_rating:
+                                return True
         return False
 
     def gold_count(self) -> float:
@@ -824,8 +906,8 @@ class AccountState:
         return self.wallet.get(23, 0)
 
     def has_bloodstone_shard(self) -> bool:
-        """Returns True if the account owns Bloodstone Shard (item 19674)."""
-        return self.total_item_count(19674) > 0
+        """Returns True if the account owns Bloodstone Shard (canonical item 20797 or legacy 19674)."""
+        return self.total_item_count(20797) > 0 or self.total_item_count(19674) > 0
 
     def has_gift_of_battle(self) -> bool:
         """Returns True if the account owns Gift of Battle (item 19678)."""
@@ -889,7 +971,7 @@ class AccountState:
 
     def is_character_map_completed(self, character_name: str) -> bool:
         """Returns True if the specified character has completed 100% Core Tyria map exploration."""
-        return character_name in self.map_completed_characters
+        return character_name in (self.map_completed_characters or [])
 
     def eligible_exploration_characters(self) -> List[str]:
         """Returns roster characters who have not completed 100% Core Map."""
@@ -901,10 +983,10 @@ class AccountState:
                 elif isinstance(c, str):
                     roster_names.append(c)
         if not roster_names:
-            roster_names = list(DEFAULT_ACCOUNT_ROSTER)
+            return []
 
         eligible = [name for name in roster_names if not self.is_character_map_completed(name)]
-        if not eligible:
+        if not eligible and "Kerling" in roster_names:
             eligible = [name for name in DEFAULT_ACCOUNT_ROSTER if not self.is_character_map_completed(name)]
         return eligible
 
@@ -1674,12 +1756,12 @@ class AccountDiffEngine:
                 if recipes:
                     # Multi-discipline preference: Select recipe matching player's active high-level discipline
                     selected_recipe_str = None
-                    if len(recipes) > 1 and account.disciplines:
+                    if len(recipes) > 1:
                         for r in recipes:
                             disc_raw = r.get("discipline", "")
                             disc_name = disc_raw.split("/")[-1].lower() if disc_raw else ""
                             req_rating = int(r.get("requiredRating", 0)) if r.get("requiredRating") is not None else 0
-                            if disc_name and account.disciplines.get(disc_name, 0) >= req_rating:
+                            if disc_name and account.max_discipline_rating(disc_name) >= req_rating:
                                 selected_recipe_str = r["recipe"]
                                 break
 
@@ -1770,17 +1852,25 @@ class AccountDiffEngine:
                     total_curr_needed = int(v_info.get("requiredQty", 1)) * missing
                     owned_curr = account.total_currency_count(curr_id) if curr_id > 0 else 0
 
-                    if owned_curr >= total_curr_needed:
+                    # Only dedicated token-to-gift exchanges (e.g., Provisioner Tokens 29 for Gift of Craftsmanship,
+                    # Tales of Dungeon Delving 69/61/13 for Gift of Ascalon) auto-satisfy the node from wallet tokens.
+                    # General currencies (Coin 1, Karma 2, Spirit Shards 23, Astral Acclaim 63/68) do not mean the
+                    # player has already bought leaf materials like Icy Runestones (19676), Bloodstone Shard (20797/19674),
+                    # Obsidian Shards (19925), or Mystic Clovers (19675).
+                    auto_satisfy_token = curr_id in (29, 69, 61, 13) and item_id not in (19676, 19912, 20797, 19674, 19925, 19675)
+
+                    if owned_curr >= total_curr_needed and auto_satisfy_token:
                         node.is_satisfied = True
                         node.missing_quantity = 0
                         if can_memoize:
                             self._sub_tree_memo[cache_key] = (node.clone(), {}, {}, set())
                         return node
                     else:
-                        curr_missing = total_curr_needed - owned_curr
-                        local_currs[str(curr_label)] = curr_missing
+                        if owned_curr < total_curr_needed:
+                            curr_missing = total_curr_needed - owned_curr
+                            local_currs[str(curr_label)] = curr_missing
+                            missing_currencies[str(curr_label)] = missing_currencies.get(str(curr_label), 0) + curr_missing
                         local_mats[label] = missing
-                        missing_currencies[str(curr_label)] = missing_currencies.get(str(curr_label), 0) + curr_missing
                         summary_missing[label] = summary_missing.get(label, 0) + missing
 
                         if can_memoize:
@@ -1819,7 +1909,7 @@ class AccountDiffEngine:
                 disc_uri = row.get("discipline", "")
                 disc_name = disc_uri.split("/")[-1].lower() if disc_uri else "unknown"
                 req_rating = int(row.get("requiredRating", 0)) if row.get("requiredRating") is not None else 0
-                player_rating = account.disciplines.get(disc_name, 0)
+                player_rating = account.max_discipline_rating(disc_name)
 
                 # Cross-check with hydrated character graphs if available
                 char_query = """

@@ -425,10 +425,10 @@ recipe:refine_ancient_wood_plank a priory:CraftingRecipe, owl:NamedIndividual ;
 # 3. Leather Sections -> Cured Squares
 # ------------------------------------------------------------------------------
 
-# --- Rawhide Leather (19718) -> Stretched Rawhide (19719) ---
-item:19738 a priory:CraftingMaterial, owl:NamedIndividual ;
-    rdfs:label "Stretched Rawhide Leather Square"@en ;
-    priory:gw2Id 19738 ;
+# --- Rawhide Leather Section (19719) -> Stretched Rawhide Leather Square (19738) ---
+item:19719 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Rawhide Leather Section"@en ;
+    priory:gw2Id 19719 ;
     priory:hasRarity rarity:Basic ;
     priory:isAccountBound false .
 
@@ -446,7 +446,7 @@ recipe:refine_rawhide_leather a priory:CraftingRecipe, owl:NamedIndividual ;
     priory:requiredRating 0 ;
     priory:hasIngredientRequirement [
         a priory:IngredientRequirement ;
-        priory:requiresItem item:19738 ; # 2 Rawhide Section
+        priory:requiresItem item:19719 ; # 2 Rawhide Leather Section
         priory:requiredQuantity 2
     ] .
 

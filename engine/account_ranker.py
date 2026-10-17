@@ -289,11 +289,26 @@ class AccountRanker:
                 if arch_res:
                     row = arch_res[0]
                     prec_arch = str(row["ptag"]) if row.get("ptag") else str(row.get("ptype", "")).split("#")[-1].split("/")[-1]
-                    if row.get("hours"):
+                    if row.get("hours") is not None:
                         try:
                             gameplay_hours = float(row.get("hours"))
                         except Exception:
                             pass
+                    else:
+                        if "CollectionHunt" in prec_arch:
+                            gameplay_hours = 40.0
+                        elif "Shard" in prec_arch:
+                            gameplay_hours = 0.5
+                        elif "Tradable" in prec_arch:
+                            gameplay_hours = 0.0
+                        elif "DragonVendor" in prec_arch:
+                            gameplay_hours = 2.0
+                        elif "Raid" in prec_arch:
+                            gameplay_hours = 15.0
+                        elif "PvP" in prec_arch:
+                            gameplay_hours = 20.0
+                        elif "WvW" in prec_arch:
+                            gameplay_hours = 25.0
                 self._arch_cache[item_id] = (prec_arch, gameplay_hours)
 
             prec_arch, gameplay_hours = self._arch_cache[item_id]

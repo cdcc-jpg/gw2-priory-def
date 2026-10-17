@@ -1067,7 +1067,21 @@ item:95967 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Claw"@en ; 
 item:95994 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Fang"@en ; priory:gw2Id 95994 .
 item:96015 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Wing"@en ; priory:gw2Id 96015 .
 item:96073 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Scale"@en ; priory:gw2Id 96073 .
-item:96137 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Draconic Tribute"@en ; priory:gw2Id 96137 .
+item:96137 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Draconic Tribute"@en ;
+    priory:gw2Id 96137 ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:forge_draconic_tribute .
+
+recipe:forge_draconic_tribute a priory:MysticForgeRecipe, owl:NamedIndividual ;
+    rdfs:label "Forge Draconic Tribute"@en ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:96137 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19675 ; priory:requiredQuantity 38 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:96978 ; priory:requiredQuantity 5 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:70867 ; priory:requiredQuantity 2 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:71994 ; priory:requiredQuantity 2 ] .
 item:96161 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Weight"@en ; priory:gw2Id 96161 .
 item:96193 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Wisdom"@en ; priory:gw2Id 96193 .
 item:96303 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Gaze"@en ; priory:gw2Id 96303 .

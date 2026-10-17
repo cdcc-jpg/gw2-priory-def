@@ -1,92 +1,73 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix mount: <https://priory.gw2/ref/mount/> .
 
-mount:MountScheme a skos:ConceptScheme ;
-    skos:prefLabel "Mount and Mobility Scheme"@en .
-
-mount:GroundMount a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:prefLabel "Ground Mount"@en .
-
-mount:FlyingMount a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:prefLabel "Flying Mount"@en .
-
-mount:SpecialMount a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:prefLabel "Special Mount"@en .
+priory:MountScheme a skos:ConceptScheme ;
+    rdfs:label "Guild Wars 2 Mounts and Mobility Taxonomy"@en ;
+    skos:prefLabel "Mount Scheme"@en ;
+    skos:definition "A SKOS concept scheme that classifies playable mounts in Guild Wars 2 by their traversal biome and movement mechanics."@en .
 
 mount:Raptor a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:GroundMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Raptor"@en ;
-    skos:definition "Canyon leap"@en ;
-    priory:requiresExpansion "PathOfFire" .
+    skos:altLabel "canyon leap"@en, "horizontal jump"@en ;
+    skos:definition "A terrestrial mount concept that specializes in high-speed horizontal canyon leaps and grouping enemies with Tail Spin."@en ;
+    priory:requiresExpansion "Path of Fire / End of Dragons / SotO"@en .
 
 mount:Springer a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:GroundMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Springer"@en ;
-    skos:definition "High jump"@en ;
-    priory:requiresExpansion "PathOfFire" .
+    skos:altLabel "high jump"@en, "bunny"@en, "vertical jump"@en ;
+    skos:definition "A terrestrial mount concept that specializes in charged vertical leaps to scale steep cliffs and heavy defiance-bar crowd control via Cannonball."@en ;
+    priory:requiresExpansion "Path of Fire / End of Dragons"@en .
 
 mount:Skimmer a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:GroundMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Skimmer"@en ;
-    skos:definition "Water hover"@en ;
-    priory:requiresExpansion "PathOfFire" .
+    skos:altLabel "water"@en, "underwater"@en, "hover"@en, "quicksand"@en ;
+    skos:definition "An amphibious mount concept that hovers above water surfaces and hazardous terrain and dives underwater via the Skimming the Depths mastery."@en ;
+    priory:requiresExpansion "Path of Fire"@en .
 
 mount:Jackal a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:GroundMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Jackal"@en ;
-    skos:definition "Sand portal"@en ;
-    priory:requiresExpansion "PathOfFire" .
+    skos:altLabel "sand portal"@en, "blink"@en, "teleport"@en, "uphill"@en ;
+    skos:definition "A terrestrial mount concept formed of shifting magic that blinks across short distances, traverses Sand Portals, and maintains momentum uphill."@en ;
+    priory:requiresExpansion "Path of Fire"@en .
 
 mount:Griffon a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:FlyingMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Griffon"@en ;
-    skos:definition "Glide dive"@en ;
-    priory:requiresExpansion "PathOfFire + collection" .
+    skos:altLabel "fast flight"@en, "dive"@en, "aerial speed"@en ;
+    skos:definition "An aerial mount concept that converts altitude into supersonic horizontal gliding speed through aerial dives and climbs."@en ;
+    priory:requiresExpansion "Path of Fire"@en .
 
 mount:RollerBeetle a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:GroundMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Roller Beetle"@en ;
-    skos:definition "High speed"@en ;
-    priory:requiresExpansion "PathOfFire + LS4" .
+    skos:altLabel "beetle"@en, "roll"@en, "fastest ground"@en, "drift"@en ;
+    skos:definition "A terrestrial mount concept that accelerates to extreme ground velocity over flat terrain and smashes through cracked barrier walls."@en ;
+    priory:requiresExpansion "Living World Season 4 (Episode 3: Long Live the Lich)"@en .
 
 mount:Skyscale a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:FlyingMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Skyscale"@en ;
-    skos:definition "Vertical flight"@en ;
-    priory:requiresExpansion "PathOfFire + LS4" .
+    skos:altLabel "helicopter"@en, "hover flight"@en, "wall cling"@en, "fireball"@en ;
+    skos:definition "An aerial dragon mount concept capable of stationary hovering, vertical wall-clinging ascent, and riding ley-lines and updrafts."@en ;
+    priory:requiresExpansion "Living World Season 4 / Secrets of the Obscure"@en .
 
 mount:Warclaw a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:SpecialMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Warclaw"@en ;
-    skos:definition "WvW"@en ;
-    priory:requiresExpansion "Any WvW access" .
+    skos:altLabel "wvw mount"@en, "janthir mount"@en, "double jump"@en, "sniff"@en ;
+    skos:definition "A combat-ready terrestrial mount concept that provides World vs. World siege mobility and Janthir Wilds mid-air dash and treasure-sniffing skills."@en ;
+    priory:requiresExpansion "Path of Fire (WvW) / Janthir Wilds (PvE)"@en .
 
 mount:SiegeTurtle a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:SpecialMount ;
+    skos:inScheme priory:MountScheme, mount:MountScheme ;
     skos:prefLabel "Siege Turtle"@en ;
-    skos:definition "Co-op"@en ;
-    priory:requiresExpansion "EndOfDragons" .
-
-mount:JadeBot a skos:Concept ;
-    skos:inScheme mount:MountScheme ;
-    skos:broader mount:SpecialMount ;
-    skos:prefLabel "Jade Bot"@en ;
-    skos:definition "Fishing platform"@en ;
-    priory:requiresExpansion "EndOfDragons" .
+    skos:altLabel "co-op mount"@en, "two player"@en, "cannons"@en, "siege"@en ;
+    skos:definition "A two-passenger cooperative mount concept armed with heavy jade artillery cannons and booster jets."@en ;
+    priory:requiresExpansion "End of Dragons"@en .

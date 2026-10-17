@@ -56,10 +56,10 @@ priory:Exchange_AstralAcclaim_MysticClover a priory:VendorExchangePath, owl:Name
     priory:producesItem item:19675 ; # Mystic Clover
     priory:outputQuantity 1 ;
     priory:requiresCurrency currency:AstralAcclaim ;
-    priory:requiredQuantity 9 ;
+    priory:requiredQuantity 60 ;
     priory:seasonalCap 20 ;
     priory:hasIngredientRequirement
-        [ a priory:IngredientRequirement ; priory:requiresCurrency currency:AstralAcclaim ; priory:requiredQuantity 9 ] ; # Astral Acclaim
+        [ a priory:IngredientRequirement ; priory:requiresCurrency currency:AstralAcclaim ; priory:requiredQuantity 60 ] ; # Astral Acclaim
     skos:definition "Cheapest and guaranteed source of Mystic Clovers: 9 Astral Acclaim per clover up to 20 per season." .
 
 priory:Exchange_AstralAcclaim_HeavyCraftingBag a priory:VendorExchangePath, owl:NamedIndividual ;

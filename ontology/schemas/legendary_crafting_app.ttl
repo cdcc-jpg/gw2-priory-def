@@ -3,6 +3,8 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix iao: <http://purl.obolibrary.org/obo/> .
 @prefix priory: <https://priory.gw2/def/> .
 
 # ==============================================================================
@@ -11,18 +13,22 @@
 
 priory:LegendaryCraftingAppOntology a owl:Ontology ;
     rdfs:label "Guild Wars 2 Legendary Crafting Application Ontology"@en ;
+    skos:definition "An application ontology module that models precursor acquisition archetypes, time-gated vendor and crafting rate limits, mastery prerequisites, and Legendary Armory saturation capacities."@en ;
     rdfs:comment "Formal OWL 2 DL application schema modeling precursor archetypes, time-gates, account masteries, armory saturation, and stochastic crafting conversions."@en ;
-    owl:versionInfo "0.2.0" .
+    owl:versionInfo "0.3.0" .
 
 # ------------------------------------------------------------------------------
 # 1. Precursor Acquisition Taxonomy (SKOS Concept Scheme)
 # ------------------------------------------------------------------------------
 priory:PrecursorAcquisitionScheme a skos:ConceptScheme ;
     rdfs:label "Precursor Acquisition Taxonomy Scheme"@en ;
-    skos:definition "Taxonomy of precursor acquisition archetypes in Guild Wars 2 determining player gameplay effort vs crafting speed."@en .
+    skos:prefLabel "Precursor Acquisition Scheme"@en ;
+    skos:definition "A SKOS concept scheme that classifies Legendary precursor acquisition archetypes by their balance of gold cost versus active gameplay effort."@en .
 
 priory:PrecursorAcquisitionType a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Precursor Acquisition Type"@en ;
+    skos:definition "An information content entity that categorizes the systemic mechanism by which a Legendary precursor item is obtained."@en ;
     rdfs:comment "Category of precursor acquisition mechanism."@en .
 
 priory:TradablePrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
@@ -30,172 +36,197 @@ priory:TradablePrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:Na
     skos:prefLabel "Tradable Trading Post Precursor"@en ;
     priory:archetypeTag "Tradable on TP — Instant (Gold)"@en ;
     priory:estimatedGameplayHours 0.0 ;
-    skos:definition "Generation 1 precursor that can be purchased directly from the Trading Post for gold or crafted via Hobbs collection."@en .
+    skos:definition "A precursor acquisition archetype representing Generation 1 precursors that are unbound and can be purchased instantaneously on the Trading Post or crafted via Grandmaster Hobbs."@en .
 
 priory:CollectionHuntPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "Narrative Scavenger Hunt Collection Precursor"@en ;
     priory:archetypeTag "Narrative Scavenger Hunt — 40h+ Gameplay Effort"@en ;
     priory:estimatedGameplayHours 40.0 ;
-    skos:definition "Generation 2.0 precursor requiring 4 tiers of extensive open-world collections, jumping puzzles, and events (Astralaria, Nevermore, HOPE, Chuka and Champawat)."@en .
+    skos:definition "A precursor acquisition archetype representing Generation 2.0 precursors (Astralaria, Nevermore, HOPE, and Chuka and Champawat) that require completing four narrative collection tiers."@en .
 
 priory:ShardCraftingPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "Instant Shard Crafting Precursor"@en ;
     priory:archetypeTag "Shard Crafting — Instant (Materials & Currencies)"@en ;
     priory:estimatedGameplayHours 0.5 ;
-    skos:definition "Generation 2.5 precursor requiring 290 weapon shards crafted at discipline level 450 without open-world collections (Ipos, Eureka, Khan-Ur, Exordium, etc.)."@en .
+    skos:definition "A precursor acquisition archetype representing Generation 2.5 precursors crafted directly from 290 weapon shards at crafting rating 450 without open-world scavenger hunts."@en .
 
 priory:DragonVendorPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "Dragon Precursor Vendor Exchange"@en ;
     priory:archetypeTag "Dragon Crafting — Fast (Hydrocatalytic Reagents & Memories)"@en ;
     priory:estimatedGameplayHours 2.0 ;
-    skos:definition "Generation 3 precursor purchased from Leivas in Arborstone or crafted from Hydrocatalytic Reagents and Memories of Aurene."@en .
+    skos:definition "A precursor acquisition archetype representing Generation 3 Dragon's precursors crafted via weapon disciplines or purchased from Leivas in Arborstone."@en .
 
 priory:RaidEnvoyPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "Raid Envoy Collection Precursor"@en ;
     priory:archetypeTag "Raid Progression — Spirit Vale / Salvation Pass"@en ;
     priory:estimatedGameplayHours 15.0 ;
-    skos:definition "Ascended Envoy armor precursor earned from Heart of Thorns raid collections I & II."@en .
+    skos:definition "A precursor acquisition archetype representing Ascended Refined Envoy armor precursors earned by completing Envoy Armor I and II raid collections."@en .
 
 priory:WvWRankPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "WvW Rank & Skirmish Precursor"@en ;
     priory:archetypeTag "WvW Progression — Skirmish Tickets & Rank"@en ;
     priory:estimatedGameplayHours 25.0 ;
-    skos:definition "Ascended Triumphant or Mistforged armor precursor unlocked via WvW Skirmish Claim Tickets and WvW rank milestones."@en .
+    skos:definition "A precursor acquisition archetype representing Ascended Triumphant Hero's armor precursors purchased with WvW Skirmish Claim Tickets and Memories of Battle."@en .
 
 priory:PvPRankPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "PvP League & Shards Precursor"@en ;
     priory:archetypeTag "PvP Progression — League Tickets & Shards of Glory"@en ;
     priory:estimatedGameplayHours 20.0 ;
-    skos:definition "Ascended Ardent Glorious or Mistforged Glorious armor precursor unlocked via PvP League Tickets and Ascended Shards of Glory."@en .
+    skos:definition "A precursor acquisition archetype representing Ascended Ardent Glorious armor precursors purchased with PvP League Tickets and Ascended Shards of Glory."@en .
 
 priory:ObsidianArmorPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
     skos:inScheme priory:PrecursorAcquisitionScheme ;
     skos:prefLabel "Astral Ward Open-World Armor Precursor"@en ;
     priory:archetypeTag "Astral Ward Upgrade — Open World Rifts & Convergences"@en ;
-    skos:definition "Astral Ward armor pieces upgraded with Purified Kryptis Essences at Lyhr in The Wizard's Tower."@en .
+    priory:estimatedGameplayHours 18.0 ;
+    skos:definition "A precursor acquisition archetype representing Oneiros-Spun and Astral Ward armor sets unlocked in Secrets of the Obscure to forge Obsidian Legendary Armor."@en .
 
 # ------------------------------------------------------------------------------
 # 2. Time-Gate & Rate Limit Properties
 # ------------------------------------------------------------------------------
 priory:hasPrecursorType a owl:ObjectProperty ;
-    rdfs:domain priory:LegendaryItem ;
+    rdfs:domain priory:Entity ;
     rdfs:range priory:PrecursorAcquisitionType ;
     rdfs:label "has precursor type"@en ;
+    skos:definition "An object relation that associates a Legendary item or precursor with its PrecursorAcquisitionType archetype."@en ;
     rdfs:comment "Associates a legendary item with its precursor acquisition archetype."@en .
 
 priory:estimatedGameplayHours a owl:DatatypeProperty ;
-    rdfs:domain priory:PrecursorAcquisitionType ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:decimal ;
     rdfs:label "estimated gameplay hours"@en ;
+    skos:definition "A decimal datatype property that estimates the active non-gold gameplay hours required to complete a precursor acquisition archetype."@en ;
     rdfs:comment "Estimated active gameplay hours required to complete open-world collections."@en .
 
 priory:dailyCraftingLimit a owl:DatatypeProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "daily crafting limit"@en ;
+    skos:definition "An integer datatype property that specifies the maximum number of units of a time-gated material or item that can be crafted per account per daily reset."@en ;
     rdfs:comment "Maximum units that can be crafted per account per calendar day."@en .
 
 priory:weeklyVendorLimit a owl:DatatypeProperty ;
-    rdfs:domain priory:VendorExchangePath ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "weekly vendor limit"@en ;
+    skos:definition "An integer datatype property that specifies the maximum number of units that can be purchased from a vendor pathway per account per weekly reset."@en ;
     rdfs:comment "Maximum purchases allowed per account per calendar week (e.g. 5 Antique Summoning Stones from Leivas)."@en .
 
 # ------------------------------------------------------------------------------
 # 3. Mastery Prerequisite Classes & Properties
 # ------------------------------------------------------------------------------
 priory:MasteryTrack a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Mastery Track"@en ;
+    skos:definition "An information content entity that defines a multi-tier account progression track unlocked at level 80 within a specific expansion region."@en ;
     rdfs:comment "An expansion account mastery progression track."@en .
 
 priory:MasteryTier a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Mastery Tier / Level"@en ;
+    skos:definition "An information content entity that represents a specific indexed milestone tier within a parent MasteryTrack."@en ;
     rdfs:comment "An individual tier or level within a mastery track."@en .
 
 priory:MasteryLevel a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Mastery Level"@en ;
     owl:equivalentClass priory:MasteryTier ;
+    skos:definition "An information content entity equivalent to MasteryTier that represents an individual mastery progression rank."@en ;
     rdfs:comment "Alias for Mastery Tier."@en .
 
 priory:requiresMasteryTrack a owl:ObjectProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range priory:MasteryTrack ;
     rdfs:label "requires mastery track"@en ;
+    skos:definition "An object relation that links a vendor, recipe, or acquisition pathway to a MasteryTrack required to access it."@en ;
     rdfs:comment "Specifies the mastery track required to purchase an item or unlock a vendor exchange."@en .
 
 priory:requiresMasteryTier a owl:ObjectProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range priory:MasteryTier ;
     rdfs:label "requires mastery tier"@en ;
+    skos:definition "An object relation that links an item, recipe, or collection step to the specific MasteryTier required to unlock it."@en ;
     rdfs:comment "Specifies the specific mastery tier required for an item, recipe, or collection."@en .
 
 priory:belongsToTrack a owl:ObjectProperty ;
+    rdfs:subPropertyOf bfo:BFO_0000050 ;
     rdfs:domain priory:MasteryTier ;
     rdfs:range priory:MasteryTrack ;
     rdfs:label "belongs to track"@en ;
+    skos:definition "A part-of object relation that connects a MasteryTier milestone to its parent MasteryTrack."@en ;
     rdfs:comment "Connects a mastery tier to its parent mastery track."@en .
 
 priory:hasMasteryTier a owl:ObjectProperty ;
+    rdfs:subPropertyOf bfo:BFO_0000051 ;
     owl:inverseOf priory:belongsToTrack ;
     rdfs:domain priory:MasteryTrack ;
     rdfs:range priory:MasteryTier ;
-    rdfs:label "has mastery tier"@en .
+    rdfs:label "has mastery tier"@en ;
+    skos:definition "A has-part object relation that connects a MasteryTrack to one of its constituent MasteryTier levels."@en .
 
 priory:masteryTier a owl:DatatypeProperty ;
     rdfs:domain priory:MasteryTier ;
     rdfs:range xsd:integer ;
-    rdfs:label "mastery tier index"@en .
+    rdfs:label "mastery tier index"@en ;
+    skos:definition "An integer datatype property that specifies the 1-based ordinal rank of a MasteryTier within its MasteryTrack."@en .
 
 priory:requiredMasteryLevel a owl:DatatypeProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range xsd:integer ;
     rdfs:label "required mastery level"@en ;
+    skos:definition "An integer datatype property that specifies the minimum mastery tier index required within an associated MasteryTrack."@en ;
     rdfs:comment "Minimum level required within the associated mastery track."@en .
 
 # ------------------------------------------------------------------------------
 # 4. Armory Saturation & Equippability Properties
 # ------------------------------------------------------------------------------
 priory:maxArmoryCapacity a owl:DatatypeProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "maximum armory capacity"@en ;
+    skos:definition "An integer datatype property that specifies the maximum number of copies of a Legendary item that can be bound into the account-wide Legendary Armory."@en ;
     rdfs:comment "Maximum number of copies of this item type that can be stored and utilized in the Legendary Armory (1 for 2H weapons, 2 for 1H/offhand, 4 for Sigils, 6 for Runes)."@en .
 
 priory:armoryMaxCap a owl:DatatypeProperty ;
-    rdfs:domain priory:Item ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "armory maximum capacity"@en ;
     owl:equivalentProperty priory:maxArmoryCapacity ;
+    skos:definition "An integer datatype property equivalent to maxArmoryCapacity that records the saturation cap of a Legendary item in the Legendary Armory."@en ;
     rdfs:comment "Maximum useful copies of a legendary item in the Legendary Armory."@en .
 
 # ------------------------------------------------------------------------------
 # 5. Achievement & Narrative Collection Grounding
 # ------------------------------------------------------------------------------
 priory:Achievement a owl:Class ;
+    rdfs:subClassOf priory:Entity, iao:IAO_0000030 ;
     rdfs:label "Achievement"@en ;
+    skos:definition "An information content entity that specifies a trackable account objective or collection milestone indexed in the ArenaNet `/v2/achievements` API."@en ;
     rdfs:comment "An in-game Guild Wars 2 achievement tracked via /v2/account/achievements."@en .
 
 priory:requiresAchievement a owl:ObjectProperty ;
     rdfs:domain owl:Thing ;
-    rdfs:range priory:Achievement ;
+    rdfs:range priory:Entity ;
     rdfs:label "requires achievement"@en ;
+    skos:definition "An object relation that links an item, vendor purchase, or pathway to an Achievement that must be completed as a prerequisite."@en ;
     rdfs:comment "Specifies an achievement that must be completed to unlock an item, collection, or vendor exchange."@en .
 
 priory:achievementId a owl:DatatypeProperty ;
-    rdfs:domain priory:Achievement ;
+    rdfs:domain priory:Entity ;
     rdfs:range xsd:integer ;
     rdfs:label "GW2 achievement ID"@en ;
+    skos:definition "An integer datatype property that records the official numeric identifier of an Achievement in the Guild Wars 2 API."@en ;
     rdfs:comment "The numeric GW2 API achievement ID."@en .
 
 priory:associatedAchievementId a owl:DatatypeProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range xsd:integer ;
     rdfs:label "associated GW2 achievement ID"@en ;
+    skos:definition "An integer datatype property that links a crafting step or collection item directly to its corresponding Guild Wars 2 API achievement ID."@en ;
     rdfs:comment "The official in-game GW2 API achievement ID tied to unlocking this crafting recipe or item."@en .
-

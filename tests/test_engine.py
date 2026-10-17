@@ -279,9 +279,23 @@ class TestEngine(unittest.TestCase):
         self.assertGreaterEqual(len(by_cat["converters_and_gobblers"]), 6)
 
     def test_account_state_map_completion_tracking(self):
-        """Verifies default map_completed_characters, is_character_map_completed, and eligible_exploration_characters."""
-        # 1. Default account state
-        default_account = AccountState()
+        """Verifies blank AccountState has no hardcoded character leak, and explicit rosters track map completion and eligible exploration characters."""
+        # 1. Blank account state (zero hardcoded character leak)
+        blank_account = AccountState()
+        self.assertEqual(blank_account.map_completed_characters, [])
+        self.assertFalse(blank_account.is_character_map_completed("Kerling"))
+        self.assertEqual(blank_account.eligible_exploration_characters(), [])
+
+        # 1b. Account with roster and Kerling map-completed
+        default_account = AccountState(
+            characters=[
+                {"name": "Kerling", "profession": "Guardian", "level": 80},
+                {"name": "Skuta Rantakallio", "profession": "Ranger", "level": 80},
+                {"name": "Sara Loy", "profession": "Thief", "level": 80},
+                {"name": "Legacy Of Harathi", "profession": "Mesmer", "level": 80},
+            ],
+            map_completed_characters=["Kerling"],
+        )
         self.assertEqual(default_account.map_completed_characters, ["Kerling"])
         self.assertTrue(default_account.is_character_map_completed("Kerling"))
         self.assertFalse(default_account.is_character_map_completed("Skuta Rantakallio"))

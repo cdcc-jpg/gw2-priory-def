@@ -13,10 +13,10 @@
 # Shared Legendary Base Components & Acquisition Pathways
 # ==============================================================================
 
-# --- Gift of Mastery (ID: 19626) ---
-item:19626 a priory:GiftItem, owl:NamedIndividual ;
+# --- Gift of Mastery (ID: 19674) ---
+item:19674 a priory:GiftItem, owl:NamedIndividual ;
     rdfs:label "Gift of Mastery"@en ;
-    priory:gw2Id 19626 ;
+    priory:gw2Id 19674 ;
     priory:hasRarity rarity:Legendary ;
     priory:isAccountBound true ;
     skos:definition "Mastery component for Generation 1 legendary weapons requiring World Completion, WvW, and Obsidian/Bloodstone shards."@en .
@@ -49,10 +49,10 @@ item:path_gift_of_battle_track a priory:RewardTrackPath, owl:NamedIndividual ;
     priory:acceleratedBy priory:ExperienceBooster, priory:GuildTavernEnhancement, priory:HeroicBooster ;
     skos:definition "Earned by progressing and completing the WvW Gift of Battle track. Completion takes ~8.0h unboosted or ~4.5h with booster accelerations (Experience Booster, Guild Tavern WvW Tavern Enhancement +10%, Heroic Booster)."@en .
 
-# --- Bloodstone Shard (ID: 19674) ---
-item:19674 a priory:CraftingMaterial, owl:NamedIndividual ;
+# --- Bloodstone Shard (ID: 20797) ---
+item:20797 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Bloodstone Shard"@en ;
-    priory:gw2Id 19674 ;
+    priory:gw2Id 20797 ;
     priory:hasRarity rarity:Exotic ;
     priory:isAccountBound true ;
     priory:acquiredVia item:path_bloodstone_miyani ;
@@ -112,4 +112,9 @@ item:forge_clovers a priory:MysticForgeRecipe, owl:NamedIndividual ;
     rdfs:label "Mystic Forge Clover Promotion"@en ;
     priory:producesItem item:19675 ;
     priory:outputQuantity 1 ;
+    priory:hasIngredientRequirement
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19925 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19976 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:19721 ; priory:requiredQuantity 1 ] ,
+        [ a priory:IngredientRequirement ; priory:requiresItem item:20796 ; priory:requiredQuantity 6 ] ;
     skos:definition "Gambling recipe combining Ectoplasm, Mystic Coins, Obsidian Shards, and Philosopher's Stones (~31.6% yield)."@en .

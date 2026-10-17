@@ -156,7 +156,6 @@ item:83410 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:isAccountBound true ;
     priory:zoneName "Domain of Vabbi" ;
     priory:acquiredVia item:vendor_vabbi ;
-    owl:sameAs item:83318 ;
     skos:definition "Path of Fire currency purchased with Elegy Mosaics and Trade Contracts for Gift of Desert Mastery and Coalescence."@en .
 
 item:83318 a priory:CraftingMaterial, owl:NamedIndividual ;
@@ -166,7 +165,6 @@ item:83318 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:isAccountBound true ;
     priory:zoneName "Domain of Vabbi" ;
     priory:acquiredVia item:vendor_vabbi ;
-    owl:sameAs item:83410 ;
     skos:definition "Path of Fire currency purchased with Elegy Mosaics and Trade Contracts for Gift of Desert Mastery and Coalescence in Tomb of Primeval Kings."@en .
 
 # ------------------------------------------------------------------------------
@@ -223,11 +221,11 @@ item:70842 a priory:CraftingMaterial, owl:NamedIndividual ;
     priory:isContainerized true ;
     priory:playsRole role:CraftingIngredient .
 
-item:19662 a priory:CraftingMaterial, owl:NamedIndividual ;
+item:20795 a priory:CraftingMaterial, owl:NamedIndividual ;
     rdfs:label "Bottle of Elonian Wine"@en ;
-    priory:gw2Id 19662 ;
-    priory:hasRarity rarity:Basic ;
-    priory:isAccountBound false ;
+    priory:gw2Id 20795 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound true ;
     priory:isContainerized true ;
     priory:playsRole role:CraftingIngredient .
 
@@ -240,7 +238,7 @@ recipe:forge_gift_of_crystalline_magic a priory:MysticForgeRecipe ;
     priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:86069 ],
         [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:87645 ],
         [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:86977 ],
-        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19662 ] ;
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:20795 ] ;
     priory:outputQuantity 1 ;
     priory:producesItem item:gift_of_crystalline_magic .
 
@@ -253,7 +251,7 @@ recipe:forge_gift_of_ephemeral_magic a priory:MysticForgeRecipe ;
     priory:hasIngredientRequirement [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:90783 ],
         [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:89537 ],
         [ a priory:IngredientRequirement ; priory:requiredQuantity 100 ; priory:requiresItem item:88955 ],
-        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:19662 ] ;
+        [ a priory:IngredientRequirement ; priory:requiredQuantity 1 ; priory:requiresItem item:20795 ] ;
     priory:outputQuantity 1 ;
     priory:producesItem item:gift_of_ephemeral_magic .
 
@@ -393,7 +391,6 @@ item:100798 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     priory:isContainerized true ;
     priory:playsRole role:CraftingIngredient ;
     priory:acquiredVia item:vendor_lyhr, item:vendor_lyhr_amnytas ;
-    owl:sameAs item:100267 ;
     skos:definition "Secrets of the Obscure regional gift purchased from Lyhr in The Wizard's Tower for 250 Pinches of Stardust and 10 Gold."@en .
 
 item:100424 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
@@ -448,11 +445,7 @@ item:79548 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     priory:isAccountBound true ;
     priory:isContainerized true ;
     priory:playsRole role:CraftingIngredient ;
-    owl:sameAs item:79895 ;
     skos:definition "Competitive PvP gift earned from Shards of Glory and PvP League progression."@en .
-
-item:79895 a owl:NamedIndividual ;
-    owl:sameAs item:79548 .
 
 item:79547 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Gift of War"@en ;
@@ -461,11 +454,7 @@ item:79547 a priory:GiftItem, priory:ContainerizedToken, owl:NamedIndividual ;
     priory:isAccountBound true ;
     priory:isContainerized true ;
     priory:playsRole role:CraftingIngredient ;
-    owl:sameAs item:79585 ;
     skos:definition "Competitive WvW gift earned from Memories of Battle and WvW Skirmish Claim Tickets."@en .
-
-item:79585 a owl:NamedIndividual ;
-    owl:sameAs item:79547 .
 
 item:cube_of_annihilation a priory:CraftingMaterial, priory:ContainerizedToken, owl:NamedIndividual ;
     rdfs:label "Cube of Annihilation"@en ;
@@ -513,6 +502,7 @@ item:103973 a priory:PrecursorWeapon, owl:NamedIndividual ;
     priory:chatCode "[&AgEllgEA]" ;
     priory:hasRarity rarity:Ascended ;
     priory:hasWeaponType weapon:Spear ;
+    priory:isPrecursorOf item:103815 ;
     priory:isAccountBound true .
 
 item:103427 a priory:CraftingMaterial, owl:NamedIndividual ;

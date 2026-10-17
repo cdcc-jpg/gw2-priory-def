@@ -3,14 +3,15 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
-@prefix iao: <http://purl.obolibrary.org/obo/IAO_> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix iao: <http://purl.obolibrary.org/obo/> .
 @prefix priory: <https://priory.gw2/def/> .
 
 <https://priory.gw2/def/bfo-subset> a owl:Ontology ;
     rdfs:label "BFO and IAO Upper-Level Alignment Subset for Project Priory"@en ;
+    skos:definition "An upper-level ontology module that provides Basic Formal Ontology (BFO 2020) and Information Artifact Ontology (IAO) classes and relations for the Guild Wars 2 Priory domain."@en ;
     rdfs:comment "Standardized upper-level BFO 2020 and IAO ontology subset providing formal metaphysical foundations for Guild Wars 2 entities, roles, processes, and information artifacts."@en ;
-    owl:versionInfo "1.0.0" .
+    owl:versionInfo "1.1.0" .
 
 # ==============================================================================
 # BFO 2020 / IAO Upper Classes (TBox)
@@ -19,6 +20,7 @@
 bfo:BFO_0000001 a owl:Class ;
     rdfs:label "entity"@en ;
     skos:prefLabel "Entity"@en ;
+    skos:definition "A root universal that encompasses anything that exists, has existed, or will exist in any domain of discourse."@en ;
     rdfs:comment "An entity is anything that exists or has existed or will exist."@en .
 
 bfo:BFO_0000002 a owl:Class ;
@@ -26,31 +28,52 @@ bfo:BFO_0000002 a owl:Class ;
     rdfs:label "continuant"@en ;
     skos:prefLabel "Continuant"@en ;
     owl:disjointWith bfo:BFO_0000003 ;
+    skos:definition "An entity that exists in full at any time in which it exists at all, persists through time while maintaining its identity, and has no temporal parts."@en ;
     rdfs:comment "An entity that exists in full at any time in which it exists at all, persists through time while maintaining its identity, and has no temporal parts."@en .
 
 bfo:BFO_0000003 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000001 ;
     rdfs:label "occurrent"@en ;
     skos:prefLabel "Occurrent"@en ;
+    skos:definition "An entity that unfolds itself in time or is the instantaneous boundary or temporal region of such an entity and possesses temporal parts."@en ;
     rdfs:comment "An entity that unfolds itself in time or is the instantaneous boundary of such an entity; it has temporal parts."@en .
 
 bfo:BFO_0000004 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000002 ;
     rdfs:label "independent continuant"@en ;
     skos:prefLabel "Independent Continuant"@en ;
-    owl:disjointWith bfo:BFO_0000020 ;
+    owl:disjointWith bfo:BFO_0000020, bfo:BFO_0000031 ;
+    skos:definition "A continuant that is a bearer of quality and realizable entities, in which other entities inhere and which itself cannot inhere in anything."@en ;
     rdfs:comment "A continuant that is a bearer of quality and realizable entities, in which other entities inhere and which itself cannot inhere in anything."@en .
+
+bfo:BFO_0000029 a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000004 ;
+    rdfs:label "site"@en ;
+    skos:prefLabel "Site"@en ;
+    skos:definition "An independent continuant that is a three-dimensional immaterial entity whose boundaries either partially or wholly coincide with the boundaries of one or more material entities."@en ;
+    rdfs:comment "A three-dimensional spatial region or geographic zone bounded by material landmarks."@en .
 
 bfo:BFO_0000020 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000002 ;
     rdfs:label "specifically dependent continuant"@en ;
     skos:prefLabel "Specifically Dependent Continuant"@en ;
+    owl:disjointWith bfo:BFO_0000004, bfo:BFO_0000031 ;
+    skos:definition "A continuant that inheres in or is borne by one or more specific continuant bearers in virtue of their individual identities."@en ;
     rdfs:comment "A continuant that inheres in or is borne by other entities in virtue of their specific identities."@en .
+
+bfo:BFO_0000031 a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000002 ;
+    rdfs:label "generically dependent continuant"@en ;
+    skos:prefLabel "Generically Dependent Continuant"@en ;
+    owl:disjointWith bfo:BFO_0000004, bfo:BFO_0000020 ;
+    skos:definition "A continuant that is dependent on one or more other continuant bearers in such a way that it can migrate or be copied from one bearer to another."@en ;
+    rdfs:comment "A continuant that depends on one or more bearers and can be concretized across multiple physical or digital substrates."@en .
 
 bfo:BFO_0000017 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000020 ;
     rdfs:label "realizable entity"@en ;
     skos:prefLabel "Realizable Entity"@en ;
+    skos:definition "A specifically dependent continuant that inheres in a continuant bearer and is exhibited, manifested, or realized in associated occurrent processes."@en ;
     rdfs:comment "A specifically dependent continuant that inheres in continuant entities and is exhibited, manifested, or realized in certain processes."@en .
 
 bfo:BFO_0000016 a owl:Class ;
@@ -58,31 +81,50 @@ bfo:BFO_0000016 a owl:Class ;
     rdfs:label "disposition"@en ;
     skos:prefLabel "Disposition"@en ;
     owl:disjointWith bfo:BFO_0000023 ;
+    skos:definition "A realizable entity that is a causal tendency or power inhering in a bearer in virtue of its intrinsic structural constitution."@en ;
     rdfs:comment "A realizable entity that is a tendency or power inhering in an independent continuant in virtue of its physical structure."@en .
 
 bfo:BFO_0000034 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000016 ;
     rdfs:label "function"@en ;
     skos:prefLabel "Function"@en ;
+    skos:definition "A disposition that exists in virtue of the bearer's intentional design, systemic purpose, or evolutionary selection."@en ;
     rdfs:comment "A disposition that exists in virtue of the bearer's physical make-up and design, purpose, or evolutionary selection."@en .
 
 bfo:BFO_0000023 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000017 ;
     rdfs:label "role"@en ;
     skos:prefLabel "Role"@en ;
+    skos:definition "A realizable entity that is not necessitated by the bearer's intrinsic structure, but is assumed when the bearer is placed in a specific social, economic, or systemic context."@en ;
     rdfs:comment "A realizable entity that is not necessitated by the bearer's physical structure, but is assumed in specific social, operational, or systemic contexts."@en .
 
 bfo:BFO_0000015 a owl:Class ;
     rdfs:subClassOf bfo:BFO_0000003 ;
     rdfs:label "process"@en ;
     skos:prefLabel "Process"@en ;
+    skos:definition "An occurrent that has temporal proper parts, unfolds through time, and involves one or more continuant participants."@en ;
     rdfs:comment "An occurrent that has temporal proper parts and unfolds in time."@en .
 
+bfo:BFO_0000008 a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000003 ;
+    rdfs:label "temporal region"@en ;
+    skos:prefLabel "Temporal Region"@en ;
+    skos:definition "An occurrent that is a part of time over which processes unfold or temporal constraints are measured."@en ;
+    rdfs:comment "An occurrent that is a temporal interval or instant."@en .
+
 iao:IAO_0000030 a owl:Class ;
-    rdfs:subClassOf bfo:BFO_0000002 ;
+    rdfs:subClassOf bfo:BFO_0000031 ;
     rdfs:label "information content entity"@en ;
     skos:prefLabel "Information Content Entity"@en ;
+    skos:definition "A generically dependent continuant that is about some entity and is concretized in an information bearer."@en ;
     rdfs:comment "A generically dependent continuant that is about some entity."@en .
+
+iao:IAO_0000104 a owl:Class ;
+    rdfs:subClassOf iao:IAO_0000030 ;
+    rdfs:label "plan specification"@en ;
+    skos:prefLabel "Plan Specification"@en ;
+    skos:definition "An information content entity that prescribes a set of actions, inputs, and objective specifications to be realized in a planned process."@en ;
+    rdfs:comment "An information content entity that specifies actions and objectives to be realized in a process, such as a crafting recipe."@en .
 
 # ==============================================================================
 # BFO / IAO Object Properties
@@ -91,15 +133,17 @@ iao:IAO_0000030 a owl:Class ;
 bfo:BFO_0000050 a owl:ObjectProperty, owl:TransitiveProperty ;
     rdfs:label "part of"@en ;
     skos:prefLabel "part of"@en ;
-    skos:altLabel "part_of"@en, "has_part"@en ;
+    skos:altLabel "part_of"@en ;
     owl:inverseOf bfo:BFO_0000051 ;
+    skos:definition "A transitive mereological relation that holds between a part and the whole entity of which it is a component."@en ;
     rdfs:comment "A core mereological relation holding between a part and its whole."@en .
 
 bfo:BFO_0000051 a owl:ObjectProperty, owl:TransitiveProperty ;
     rdfs:label "has part"@en ;
     skos:prefLabel "has part"@en ;
-    skos:altLabel "has_part"@en, "part_of"@en ;
+    skos:altLabel "has_part"@en ;
     owl:inverseOf bfo:BFO_0000050 ;
+    skos:definition "A transitive mereological relation that holds between a composite whole entity and any of its constituent parts."@en ;
     rdfs:comment "Inverse of part of, holding between a whole and its proper or improper parts."@en .
 
 bfo:BFO_0000052 a owl:ObjectProperty ;
@@ -107,18 +151,20 @@ bfo:BFO_0000052 a owl:ObjectProperty ;
     skos:prefLabel "inheres in"@en ;
     skos:altLabel "inheres_in"@en ;
     rdfs:domain bfo:BFO_0000020 ;
-    rdfs:range bfo:BFO_0000004 ;
+    rdfs:range bfo:BFO_0000002 ;
     owl:inverseOf bfo:BFO_0000053 ;
-    rdfs:comment "A relation between a specifically dependent continuant and the independent continuant in which it inheres."@en .
+    skos:definition "A existential dependence relation that holds between a specifically dependent continuant and the continuant bearer in which it inheres."@en ;
+    rdfs:comment "A relation between a specifically dependent continuant and the continuant in which it inheres."@en .
 
 bfo:BFO_0000053 a owl:ObjectProperty ;
     rdfs:label "bearer of"@en ;
     skos:prefLabel "bearer of"@en ;
     skos:altLabel "bearer_of"@en ;
-    rdfs:domain bfo:BFO_0000004 ;
+    rdfs:domain bfo:BFO_0000002 ;
     rdfs:range bfo:BFO_0000020 ;
     owl:inverseOf bfo:BFO_0000052 ;
-    rdfs:comment "Inverse of inheres in, holding between an independent continuant and a specifically dependent continuant it bears."@en .
+    skos:definition "An existential dependence relation that holds between a continuant bearer and a specifically dependent continuant that inheres in it."@en ;
+    rdfs:comment "Inverse of inheres in, holding between a continuant and a specifically dependent continuant it bears."@en .
 
 bfo:BFO_0000054 a owl:ObjectProperty ;
     rdfs:label "realized in"@en ;
@@ -127,6 +173,7 @@ bfo:BFO_0000054 a owl:ObjectProperty ;
     rdfs:domain bfo:BFO_0000017 ;
     rdfs:range bfo:BFO_0000015 ;
     owl:inverseOf bfo:BFO_0000055 ;
+    skos:definition "A relation that holds between a realizable entity and an occurrent process in which that role, disposition, or function is manifested."@en ;
     rdfs:comment "A relation between a realizable entity and a process that is its realization."@en .
 
 bfo:BFO_0000055 a owl:ObjectProperty ;
@@ -135,6 +182,7 @@ bfo:BFO_0000055 a owl:ObjectProperty ;
     rdfs:domain bfo:BFO_0000015 ;
     rdfs:range bfo:BFO_0000017 ;
     owl:inverseOf bfo:BFO_0000054 ;
+    skos:definition "A relation that holds between an occurrent process and a realizable entity whose latent capacity or role is executed during that process."@en ;
     rdfs:comment "Inverse of realized in, relation between a process and a realizable entity that it realizes."@en .
 
 iao:IAO_0000136 a owl:ObjectProperty ;
@@ -143,4 +191,5 @@ iao:IAO_0000136 a owl:ObjectProperty ;
     skos:altLabel "is_about"@en ;
     rdfs:domain iao:IAO_0000030 ;
     rdfs:range bfo:BFO_0000001 ;
+    skos:definition "A semantic Intentionality relation that holds between an information content entity and the target entity that it describes, specifies, or denotes."@en ;
     rdfs:comment "A relation between an information content entity and the entity that the information content entity is about."@en .

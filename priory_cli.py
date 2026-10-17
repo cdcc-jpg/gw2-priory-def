@@ -112,6 +112,29 @@ def resolve_gw2_api_key() -> str | None:
     return None
 
 
+def fetch_live_account_state(api_key: str | None = None) -> AccountState:
+    """Synchronously fetches live AccountState from GW2 API v2 if an API key is available, or returns a clean AccountState."""
+    key = api_key or resolve_gw2_api_key()
+    if not key:
+        return AccountState(map_completed_characters=[])
+    client = GW2ApiClient(api_key=key)
+    try:
+        from ingestion.gw2_api import _run_coroutine_sync
+        return _run_coroutine_sync(client.fetch_account_snapshot)
+    except Exception:
+        return AccountState(map_completed_characters=[])
+
+
+def cmd_solve(user_prompt: str, api_key: str | None = None) -> Any:
+    """One-shot CLI solver entry point that dynamically fetches live account state when GW2_API_KEY is available."""
+    store = PrioryGraphStore()
+    store.load_all()
+    llm_client = get_default_llm_client()
+    account_state = fetch_live_account_state(api_key=api_key)
+    orchestrator = PrioryAgentOrchestrator(graph_store=store, llm_client=llm_client)
+    return orchestrator.run_pipeline(user_prompt=user_prompt, account_state=account_state)
+
+
 async def main():
     print("=" * 78)
     print(" 🏛️  PROJECT PRIORY — NEURO-SYMBOLIC CONVERSATIONAL COPILOT")
