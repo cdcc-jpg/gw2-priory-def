@@ -190,11 +190,8 @@ class PrioryChatSession:
             is_acquisition_query=resolved_goal.is_acquisition_query
         )
 
-        # 3. Path Solver Optimization (using dedicated Twilight solver for item 30704)
-        if resolved_goal.resolved_item_id == 30704:
-            from engine.twilight_journey_solver import TwilightJourneySolver
-            twilight_solver = TwilightJourneySolver(self.orchestrator.store)
-
+        # 3. Path Solver Optimization (route all Legendary Weapons through generalized LegendaryJourneySolver)
+        if self.orchestrator._is_legendary_weapon(resolved_goal.resolved_item_id):
             wv_exhausted = (
                 getattr(resolved_goal, "wizards_vault_exhausted", False)
                 or getattr(resolved_goal.intent, "wizards_vault_exhausted", False)
@@ -210,7 +207,7 @@ class PrioryChatSession:
                 or any(k in user_prompt.lower() for k in ["cheapest", "least gold", "lowest cost", "cheapest gold", "minimum gold", "save gold", "cheapest route", "cheapest path"])
             )
 
-            optimal_plan = twilight_solver.solve_twilight_journey(
+            optimal_plan = self.orchestrator.twilight_solver.solve_twilight_journey(
                 diff_report=diff_report,
                 account=self.account_state,
                 tp_prices=live_tp_prices,
@@ -218,7 +215,8 @@ class PrioryChatSession:
                 wizards_vault_exhausted=wv_exhausted,
                 optimize_for_cost=opt_cost,
                 excluded_modes=resolved_goal.intent.excluded_game_modes,
-                exhausted_sources=resolved_goal.intent.exhausted_sources
+                exhausted_sources=resolved_goal.intent.exhausted_sources,
+                target_item_id=resolved_goal.resolved_item_id,
             )
         else:
             optimal_plan = self.orchestrator.solver.solve_optimal_path(
@@ -257,6 +255,8 @@ class PrioryAgentOrchestrator:
         graph_store: Optional[PrioryGraphStore] = None,
         llm_client: Optional[BaseLLMClient] = None
     ):
+        from engine.twilight_journey_solver import TwilightJourneySolver
+
         self.store = graph_store or PrioryGraphStore()
         self.store.load_all()
 
@@ -265,10 +265,27 @@ class PrioryAgentOrchestrator:
         self.diff_engine = AccountDiffEngine(self.store)
         self.ranker = AccountRanker(self.store, self.diff_engine)
         self.solver = PathSolver(self.store)
+        self.twilight_solver = TwilightJourneySolver(self.store, self.diff_engine, self.solver)
+        self.journey_solver = self.twilight_solver
         self.llm = llm_client or get_default_llm_client()
 
         self.intent_parser = IntentParser(self.semantic_service, self.llm)
         self.guide_generator = GuideGenerator(self.llm)
+
+    def _is_legendary_weapon(self, item_id: Optional[int]) -> bool:
+        """Determines via ontology SPARQL whether item_id is a LegendaryWeapon."""
+        if not item_id:
+            return False
+        from rdflib import Literal
+
+        q = """
+        SELECT ?item WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  a priory:LegendaryWeapon .
+        } LIMIT 1
+        """
+        res = self.store.query(q, init_bindings={"gw2Id": Literal(int(item_id))})
+        return bool(res)
 
     def create_session(self, account_state: Optional[AccountState] = None) -> PrioryChatSession:
         """Creates a stateful multi-turn chat session."""
@@ -283,3 +300,6 @@ class PrioryAgentOrchestrator:
         """Executes a one-shot pipeline execution."""
         session = self.create_session(account_state)
         return session.send_message(user_prompt, live_tp_prices)
+
+    run_query = run_pipeline
+

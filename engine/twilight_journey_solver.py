@@ -114,8 +114,26 @@ class ExplorationPlan(BaseModel):
     starting_waypoint: Optional[str] = None
 
 
+TWILIGHT_ITEM_ID = 30704
+PlaySessionStep = JourneyAction
+
+
 class TwilightJourneyPlan(BaseModel):
-    """Complete multi-dimensional Twilight acquisition plan and master roadmap."""
+    """Complete multi-dimensional Legendary acquisition plan and master roadmap."""
+    target_item_id: int = TWILIGHT_ITEM_ID
+    target_item_name: str = "Twilight"
+    generation: str = "GEN1"
+    precursor_id: Optional[int] = 29185
+    precursor_name: str = "Dusk"
+    tribute_gift_id: Optional[int] = 19626
+    tribute_gift_name: str = "Gift of Fortune"
+    mastery_gift_id: Optional[int] = 19674
+    mastery_gift_name: str = "Gift of Mastery"
+    specific_gift_id: Optional[int] = 19648
+    specific_gift_name: str = "Gift of Twilight"
+    required_clovers: int = 77
+    required_t6_per_type: int = 250
+    required_t6_total: int = 2000
     overall_readiness_pct: float
     estimated_total_gold: float
     estimated_total_hours: float
@@ -125,12 +143,17 @@ class TwilightJourneyPlan(BaseModel):
     exploration_plan: List[ExplorationPlan]
     chapters: List[JourneyChapter] = Field(default_factory=list)
     session_itinerary: List[JourneyAction] = Field(default_factory=list)
+    steps: List[JourneyAction] = Field(default_factory=list)
+    time_gates: List[Dict[str, Any]] = Field(default_factory=list)
     expansion_warnings: List[str] = Field(default_factory=list)
     recommended_character: Optional[str] = None
 
 
+LegendaryJourneyPlan = TwilightJourneyPlan
+
+
 class TwilightJourneySolver:
-    """Multi-criteria graph solver for Twilight (Item ID: 30704) acquisition."""
+    """Multi-criteria ontology-driven graph solver for Legendary Weapon acquisition (Gen 1, Gen 2, Gen 3)."""
 
     TWILIGHT_ID = 30704
     DUSK_ID = 29185
@@ -177,70 +200,468 @@ class TwilightJourneySolver:
         19728   # Vicious Fang (legacy)
     ]
 
-    def __init__(self, graph_store: PrioryGraphStore):
+    def __init__(
+        self,
+        graph_store: PrioryGraphStore,
+        diff_engine: Optional[Any] = None,
+        path_solver: Optional[Any] = None
+    ):
         self.store = graph_store
+        if diff_engine is not None:
+            self.diff_engine = diff_engine
+        else:
+            from engine.account_diff import AccountDiffEngine
+            self.diff_engine = AccountDiffEngine(graph_store) if graph_store else None
+        self.path_solver = path_solver
+
+    def _introspect_weapon_bom(
+        self,
+        target_item_id: int,
+        diff_report: AccountDiffReport,
+        account: AccountState
+    ) -> Dict[str, Any]:
+        """Dynamically introspects the target item's RDF BOM and AccountDiffReport tree."""
+        from engine.account_diff import GEN1_WEAPONS, GEN2_WEAPONS, PRECURSOR_NAMES
+
+        # 1. Target Item Label & Generation / Precursor Archetype
+        target_name = diff_report.goal_item_name if (diff_report and diff_report.goal_item_name and not diff_report.goal_item_name.startswith("Item ")) else ""
+        prec_type_uri = ""
+        alt_labels: List[str] = []
+        if self.store:
+            q_meta = """
+            SELECT ?label ?ptype ?altLabel WHERE {
+                ?item priory:gw2Id ?id .
+                OPTIONAL { ?item rdfs:label ?label }
+                OPTIONAL { ?item priory:hasPrecursorType ?ptype }
+                OPTIONAL { ?item skos:altLabel ?altLabel }
+            }
+            """
+            rows = self.store.query(q_meta, init_bindings={"id": Literal(target_item_id)})
+            if rows:
+                if not target_name and rows[0].get("label"):
+                    target_name = str(rows[0]["label"])
+                for r in rows:
+                    if r.get("ptype") and not prec_type_uri:
+                        prec_type_uri = str(r["ptype"])
+                    if r.get("altLabel"):
+                        alt_labels.append(str(r["altLabel"]))
+        if not target_name:
+            target_name = "Twilight" if target_item_id == self.TWILIGHT_ID else f"Legendary #{target_item_id}"
+
+        alts_lower = " ".join(alt_labels).lower()
+        if "DragonVendorPrecursor" in prec_type_uri or "gen 3" in alts_lower or "generation 3" in alts_lower or "aurene" in target_name.lower() or target_item_id >= 95000:
+            generation = "GEN3"
+        elif "CollectionHuntPrecursor" in prec_type_uri or "ShardCraftingPrecursor" in prec_type_uri or "gen 2" in alts_lower or "generation 2" in alts_lower or target_item_id in GEN2_WEAPONS or (70000 <= target_item_id < 95000):
+            generation = "GEN2"
+        else:
+            generation = "GEN1"
+
+        # 2. Query Top-Level Ingredients from RDF Graph and Diff Report
+        top_ings = self.store.get_direct_recipe_ingredients(target_item_id) if self.store else []
+        sub_nodes_by_id = {n.item_id: n for n in (diff_report.root_node.sub_requirements if diff_report and diff_report.root_node else [])}
+
+        # Enrich top-level ingredients with RDF types and roles
+        ing_meta: Dict[int, Dict[str, Any]] = {}
+        for ing in top_ings:
+            iid = int(ing["ingredientId"])
+            ilabel = str(ing["ingredientLabel"])
+            ing_meta[iid] = {"id": iid, "label": ilabel, "types": set(), "roles": set(), "depends_on": set()}
+
+        for iid, node in sub_nodes_by_id.items():
+            if iid not in ing_meta:
+                ing_meta[iid] = {"id": iid, "label": node.label.split(" (Unpackable")[0].strip(), "types": set(), "roles": set(), "depends_on": set()}
+
+        if self.store and ing_meta:
+            q_ing = """
+            SELECT ?type ?role ?depId WHERE {
+                ?item priory:gw2Id ?id .
+                OPTIONAL { ?item a ?type }
+                OPTIONAL { ?item priory:playsRole ?role }
+                OPTIONAL {
+                    ?item priory:dependsOnItem ?dep .
+                    ?dep priory:gw2Id ?depId .
+                }
+            }
+            """
+            for iid in list(ing_meta.keys()):
+                for r in self.store.query(q_ing, init_bindings={"id": Literal(iid)}):
+                    if r.get("type"):
+                        ing_meta[iid]["types"].add(str(r["type"]))
+                    if r.get("role"):
+                        ing_meta[iid]["roles"].add(str(r["role"]))
+                    if r.get("depId") is not None:
+                        ing_meta[iid]["depends_on"].add(int(r["depId"]))
+
+        # Helper to collect all item_ids in a RequirementNode subtree
+        def _subtree_ids(node: Any) -> Set[int]:
+            if not node:
+                return set()
+            ids = {node.item_id}
+            for child in getattr(node, "sub_requirements", []):
+                ids.update(_subtree_ids(child))
+            return ids
+
+        for iid, meta in ing_meta.items():
+            if iid in sub_nodes_by_id:
+                meta["depends_on"].update(_subtree_ids(sub_nodes_by_id[iid]))
+
+        # A. Identify Precursor dynamically
+        precursor_id: Optional[int] = None
+        precursor_name: str = ""
+        for iid, meta in ing_meta.items():
+            types_str = " ".join(meta["types"])
+            roles_str = " ".join(meta["roles"])
+            if "PrecursorWeapon" in types_str or "TradablePrecursor" in types_str or "Precursor" in roles_str:
+                precursor_id = iid
+                precursor_name = meta["label"]
+                break
+
+        if precursor_id is None and self.store:
+            q_prec = """
+            SELECT ?precId ?precLabel WHERE {
+                ?target priory:gw2Id ?id .
+                {
+                    ?prec priory:precursorTo ?target ;
+                          priory:gw2Id ?precId ;
+                          rdfs:label ?precLabel .
+                } UNION {
+                    ?prec priory:isPrecursorOf ?target ;
+                          priory:gw2Id ?precId ;
+                          rdfs:label ?precLabel .
+                }
+            } LIMIT 1
+            """
+            p_rows = self.store.query(q_prec, init_bindings={"id": Literal(target_item_id)})
+            if p_rows:
+                precursor_id = int(p_rows[0]["precId"])
+                precursor_name = str(p_rows[0]["precLabel"])
+
+        if precursor_id is None:
+            for iid, meta in ing_meta.items():
+                types_str = " ".join(meta["types"])
+                lbl = meta["label"]
+                if "GiftItem" not in types_str and not lbl.lower().startswith("gift of") and "tribute" not in lbl.lower():
+                    precursor_id = iid
+                    precursor_name = lbl
+                    break
+
+        if precursor_id is None:
+            if target_item_id == self.TWILIGHT_ID:
+                precursor_id = self.DUSK_ID
+                precursor_name = "Dusk"
+            elif target_item_id in GEN1_WEAPONS:
+                precursor_id = GEN1_WEAPONS[target_item_id]["precursor_id"]
+                precursor_name = GEN1_WEAPONS[target_item_id].get("precursor_name", PRECURSOR_NAMES.get(precursor_id, "Precursor"))
+            elif target_item_id in GEN2_WEAPONS:
+                precursor_id = GEN2_WEAPONS[target_item_id]["precursor_id"]
+                precursor_name = GEN2_WEAPONS[target_item_id].get("precursor_name", PRECURSOR_NAMES.get(precursor_id, "Precursor"))
+            else:
+                precursor_id = self.DUSK_ID
+                precursor_name = "Precursor"
+
+        # B. Identify Tribute / Fortune Gift dynamically (any top-level ingredient requiring Mystic Clover 19675 or Fortune/Tribute)
+        tribute_id: Optional[int] = None
+        tribute_name: str = ""
+        for iid, meta in ing_meta.items():
+            if iid == precursor_id:
+                continue
+            lbl_low = meta["label"].lower()
+            if iid in (19626, 71820, 96137) or "fortune" in lbl_low or "tribute" in lbl_low or (self.MYSTIC_CLOVER_ID in meta["depends_on"]):
+                tribute_id = iid
+                tribute_name = meta["label"]
+                break
+        if tribute_id is None:
+            tribute_id = self.GIFT_OF_FORTUNE_ID if generation == "GEN1" else (71820 if generation == "GEN2" else 96137)
+            tribute_name = "Gift of Fortune" if generation == "GEN1" else ("Mystic Tribute" if generation == "GEN2" else "Draconic Tribute")
+
+        # C. Identify Mastery Gift dynamically
+        mastery_id: Optional[int] = None
+        mastery_name: str = ""
+        for iid, meta in ing_meta.items():
+            if iid in (precursor_id, tribute_id):
+                continue
+            lbl_low = meta["label"].lower()
+            if (
+                iid in (19674, 75498, 86068, 96033, 97096, 97655)
+                or "mastery" in lbl_low
+                or "cantha" in lbl_low
+                or "exploration" in lbl_low
+                or (19677 in meta["depends_on"] or 75919 in meta["depends_on"] or 97096 in meta["depends_on"])
+            ):
+                mastery_id = iid
+                mastery_name = meta["label"]
+                break
+        if mastery_id is None:
+            mastery_id = self.GIFT_OF_MASTERY_ID if generation == "GEN1" else (75498 if generation == "GEN2" else 96033)
+            mastery_name = "Gift of Mastery" if generation == "GEN1" else ("Gift of Maguuma Mastery" if generation == "GEN2" else "Gift of Jade Mastery")
+
+        # D. Identify Weapon-Specific Gift dynamically
+        specific_id: Optional[int] = None
+        specific_name: str = ""
+        for iid, meta in ing_meta.items():
+            if iid not in (precursor_id, tribute_id, mastery_id):
+                specific_id = iid
+                specific_name = meta["label"]
+                break
+        if specific_id is None:
+            specific_id = 19648 if target_item_id == self.TWILIGHT_ID else 19648
+            specific_name = f"Gift of {target_name}"
+
+        # 3. Compute exact Mystic Clover and T6 Fine Material counts from the weapon's BOM
+        def _sum_bom_item(node: Any, target_ids: Set[int]) -> int:
+            if not node:
+                return 0
+            total = node.required_quantity if node.item_id in target_ids else 0
+            for child in getattr(node, "sub_requirements", []):
+                total += _sum_bom_item(child, target_ids)
+            return total
+
+        tribute_node = sub_nodes_by_id.get(tribute_id) if tribute_id else None
+        search_root = tribute_node if tribute_node else (diff_report.root_node if diff_report else None)
+
+        required_clovers = _sum_bom_item(search_root, {self.MYSTIC_CLOVER_ID})
+        if required_clovers <= 0:
+            required_clovers = 38 if generation == "GEN3" else 77
+
+        t6_set = set(self.T6_MATERIAL_IDS + self.LEGACY_T6_MATERIAL_IDS)
+        required_t6_total = _sum_bom_item(search_root, t6_set)
+        if required_t6_total <= 0:
+            required_t6_total = 800 if generation == "GEN3" else (1600 if generation == "GEN2" else 2000)
+        required_t6_per_type = max(1, required_t6_total // 8)
+
+        # 4. Inspect Specific Gift Sub-Components (Dungeon Gift, Lodestone, Runestone, Sub-Gifts)
+        spec_node = sub_nodes_by_id.get(specific_id) if specific_id else None
+        spec_sub_ids = _subtree_ids(spec_node) if spec_node else (ing_meta.get(specific_id, {}).get("depends_on", set()) if specific_id else set())
+
+        # Dungeon gift detection from ontology (19664..19671)
+        dungeon_gift_id: Optional[int] = None
+        dungeon_gift_name: str = "Gift of Ascalon"
+        dungeon_zone_name: str = "Ascalonian Catacombs"
+        dungeon_waypoint: str = "[&BIcBAAA=]"
+        for did in range(19664, 19672):
+            if did in spec_sub_ids:
+                dungeon_gift_id = did
+                break
+        if dungeon_gift_id is None and generation == "GEN1":
+            dungeon_gift_id = self.GIFT_OF_ASCALON_ID
+        if dungeon_gift_id and self.store:
+            q_dg = """
+            SELECT ?label WHERE { ?item priory:gw2Id ?id ; rdfs:label ?label } LIMIT 1
+            """
+            dg_res = self.store.query(q_dg, init_bindings={"id": Literal(dungeon_gift_id)})
+            if dg_res:
+                dungeon_gift_name = str(dg_res[0]["label"])
+
+        # 5. Extract Time Gates dynamically from RDF Graph (`priory:dailyCraftingLimit`, `priory:weeklyVendorLimit`)
+        time_gates: List[Dict[str, Any]] = []
+        if self.store:
+            q_tg = """
+            SELECT ?entity ?label ?dailyLimit ?weeklyLimit ?note ?npc ?zone ?wp WHERE {
+                ?entity rdfs:label ?label .
+                { ?entity priory:dailyCraftingLimit ?dailyLimit }
+                UNION
+                { ?entity priory:weeklyVendorLimit ?weeklyLimit }
+                OPTIONAL { ?entity priory:cooldownNote ?note }
+                OPTIONAL { ?entity skos:definition ?note }
+                OPTIONAL { ?entity priory:vendorNPC ?npc }
+                OPTIONAL { ?entity priory:zoneName ?zone }
+                OPTIONAL { ?entity priory:nearestWaypoint ?wp }
+            }
+            """
+            seen_tg = set()
+            for r in self.store.query(q_tg):
+                lbl = str(r.get("label", ""))
+                if lbl in seen_tg:
+                    continue
+                if generation == "GEN1" and ("Summoning Stone" in lbl or "Provisioner" in lbl):
+                    continue
+                if generation == "GEN2" and "Summoning Stone" in lbl:
+                    continue
+                if generation == "GEN3" and "Provisioner" in lbl:
+                    continue
+                seen_tg.add(lbl)
+                note_str = str(r.get("note", ""))
+                display_lbl = lbl
+                if "Spiritwood Plank" in note_str and "Spiritwood" not in display_lbl:
+                    display_lbl = f"{lbl} (Spiritwood Plank)"
+                elif "Deldrimor Steel Ingot" in note_str and "Deldrimor" not in display_lbl:
+                    display_lbl = f"{lbl} (Deldrimor Steel Ingot)"
+                time_gates.append({
+                    "name": display_lbl,
+                    "daily_limit": int(r["dailyLimit"]) if r.get("dailyLimit") is not None else None,
+                    "weekly_limit": int(r["weeklyLimit"]) if r.get("weeklyLimit") is not None else None,
+                    "note": note_str,
+                    "npc": str(r["npc"]) if r.get("npc") else None,
+                    "zone": str(r["zone"]) if r.get("zone") else None,
+                    "waypoint": str(r["wp"]) if r.get("wp") else None,
+                })
+        # Always include BUY-2046 daily fractal clovers time-gate
+        time_gates.append({
+            "name": "BUY-2046 Daily Fractal Mystic Clovers",
+            "daily_limit": 2,
+            "weekly_limit": None,
+            "note": f"2 Mystic Clovers/day from BUY-2046 at Mistlock Observatory [&DYEFAAA=] towards {required_clovers} required.",
+            "npc": "BUY-2046",
+            "zone": "Mistlock Observatory",
+            "waypoint": "[&DYEFAAA=]",
+        })
+
+        return {
+            "target_item_id": target_item_id,
+            "target_item_name": target_name,
+            "generation": generation,
+            "precursor_type_uri": prec_type_uri,
+            "precursor_id": precursor_id,
+            "precursor_name": precursor_name,
+            "tribute_gift_id": tribute_id,
+            "tribute_gift_name": tribute_name,
+            "mastery_gift_id": mastery_id,
+            "mastery_gift_name": mastery_name,
+            "specific_gift_id": specific_id,
+            "specific_gift_name": specific_name,
+            "required_clovers": required_clovers,
+            "required_t6_per_type": required_t6_per_type,
+            "required_t6_total": required_t6_total,
+            "dungeon_gift_id": dungeon_gift_id,
+            "dungeon_gift_name": dungeon_gift_name,
+            "dungeon_zone_name": dungeon_zone_name,
+            "dungeon_waypoint": dungeon_waypoint,
+            "time_gates": time_gates,
+        }
 
     def solve_twilight_journey(
         self,
-        diff_report: AccountDiffReport,
-        account: AccountState,
+        diff_report: Optional[AccountDiffReport] = None,
+        account: Optional[AccountState] = None,
         tp_prices: Optional[Dict[int, float]] = None,
         time_budget_minutes: Optional[int] = None,
         wizards_vault_exhausted: bool = False,
         optimize_for_cost: bool = True,
         excluded_modes: Optional[List[str]] = None,
         exhausted_sources: Optional[List[str]] = None,
-        prefer_cheap: bool = False
+        prefer_cheap: bool = False,
+        target_item_id: Optional[int] = None,
+        daily_time_budget_minutes: Optional[int] = None,
+        preferred_modes: Optional[List[str]] = None,
+        **kwargs
     ) -> TwilightJourneyPlan:
-        """Solves the multi-criteria progression plan for Twilight acquisition."""
+        """Solves the multi-criteria progression plan for any Legendary Weapon acquisition (defaults to Twilight 30704)."""
         return self.build_journey_plan(
             diff_report=diff_report,
             account=account,
             tp_prices=tp_prices,
-            time_budget_minutes=time_budget_minutes,
+            time_budget_minutes=daily_time_budget_minutes or time_budget_minutes,
             wizards_vault_exhausted=wizards_vault_exhausted,
             optimize_for_cost=optimize_for_cost,
             excluded_modes=excluded_modes,
             exhausted_sources=exhausted_sources,
-            prefer_cheap=prefer_cheap
+            prefer_cheap=prefer_cheap,
+            target_item_id=target_item_id,
+            preferred_modes=preferred_modes,
+            **kwargs
         )
 
-    def build_journey_plan(
+    def solve_legendary_journey(
         self,
-        diff_report: AccountDiffReport,
-        account: AccountState,
+        diff_report: Optional[AccountDiffReport] = None,
+        account: Optional[AccountState] = None,
         tp_prices: Optional[Dict[int, float]] = None,
         time_budget_minutes: Optional[int] = None,
         wizards_vault_exhausted: bool = False,
         optimize_for_cost: bool = True,
         excluded_modes: Optional[List[str]] = None,
         exhausted_sources: Optional[List[str]] = None,
-        prefer_cheap: bool = False
+        prefer_cheap: bool = False,
+        target_item_id: Optional[int] = None,
+        daily_time_budget_minutes: Optional[int] = None,
+        preferred_modes: Optional[List[str]] = None,
+        **kwargs
     ) -> TwilightJourneyPlan:
-        """Constructs an end-to-end multi-criteria acquisition plan for Twilight."""
+        """Alias for solve_twilight_journey supporting any Gen 1, Gen 2, or Gen 3 Legendary Weapon."""
+        return self.solve_twilight_journey(
+            diff_report=diff_report,
+            account=account,
+            tp_prices=tp_prices,
+            time_budget_minutes=daily_time_budget_minutes or time_budget_minutes,
+            wizards_vault_exhausted=wizards_vault_exhausted,
+            optimize_for_cost=optimize_for_cost,
+            excluded_modes=excluded_modes,
+            exhausted_sources=exhausted_sources,
+            prefer_cheap=prefer_cheap,
+            target_item_id=target_item_id,
+            preferred_modes=preferred_modes,
+            **kwargs
+        )
+
+    def build_journey_plan(
+        self,
+        diff_report: Optional[AccountDiffReport] = None,
+        account: Optional[AccountState] = None,
+        tp_prices: Optional[Dict[int, float]] = None,
+        time_budget_minutes: Optional[int] = None,
+        wizards_vault_exhausted: bool = False,
+        optimize_for_cost: bool = True,
+        excluded_modes: Optional[List[str]] = None,
+        exhausted_sources: Optional[List[str]] = None,
+        prefer_cheap: bool = False,
+        target_item_id: Optional[int] = None,
+        daily_time_budget_minutes: Optional[int] = None,
+        preferred_modes: Optional[List[str]] = None,
+        **kwargs
+    ) -> TwilightJourneyPlan:
+        """Constructs an end-to-end multi-criteria acquisition plan for any Legendary Weapon."""
+        if isinstance(diff_report, AccountState) and account is None:
+            account = diff_report
+            diff_report = None
+
+        if account is None:
+            account = AccountState()
+
+        if target_item_id is None:
+            if diff_report is not None and getattr(diff_report, "goal_item_id", None):
+                target_item_id = int(diff_report.goal_item_id)
+            else:
+                target_item_id = self.TWILIGHT_ID
+
+        if diff_report is None or getattr(diff_report, "goal_item_id", None) != target_item_id:
+            if self.diff_engine is None:
+                from engine.account_diff import AccountDiffEngine
+                self.diff_engine = AccountDiffEngine(self.store)
+            diff_report = self.diff_engine.compute_diff(target_item_id, account)
+
         tp_prices = tp_prices or {}
-        time_budget = time_budget_minutes or 120
+        time_budget = daily_time_budget_minutes or time_budget_minutes or 120
         if exhausted_sources and "WizardVault" in exhausted_sources:
             wizards_vault_exhausted = True
         if prefer_cheap:
             optimize_for_cost = True
 
+        bom = self._introspect_weapon_bom(target_item_id, diff_report, account)
+
         # Evaluate the 4 Core Pillars
-        precursor_pillar = self._evaluate_precursor_pillar(account, tp_prices, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost)
-        mastery_pillar = self._evaluate_mastery_pillar(account, diff_report)
-        fortune_pillar = self._evaluate_fortune_pillar(account, diff_report, tp_prices, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost)
-        twilight_gift_pillar = self._evaluate_twilight_gift_pillar(account, diff_report, tp_prices)
+        precursor_pillar = self._evaluate_precursor_pillar(
+            account, tp_prices, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost, bom=bom
+        )
+        mastery_pillar = self._evaluate_mastery_pillar(account, diff_report, bom=bom)
+        fortune_pillar = self._evaluate_fortune_pillar(
+            account, diff_report, tp_prices, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost, bom=bom
+        )
+        twilight_gift_pillar = self._evaluate_twilight_gift_pillar(account, diff_report, tp_prices, bom=bom)
 
         pillars = [precursor_pillar, mastery_pillar, fortune_pillar, twilight_gift_pillar]
 
         # Evaluate Precursor Triage, Exploration, and Expansions
-        precursor_strategies = self._generate_precursor_strategies(account, tp_prices, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost)
-        exploration_plan = self._build_exploration_plan(account)
-        expansion_warnings = self._check_expansion_access(account)
-        
+        precursor_strategies = self._generate_precursor_strategies(
+            account, tp_prices, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost, bom=bom
+        )
+        exploration_plan = self._build_exploration_plan(account, bom=bom)
+        expansion_warnings = self._check_expansion_access(account, bom=bom)
+
         # Build 4-Chapter Master Sequencer
-        chapters = self._build_master_chapters(account, tp_prices, diff_report, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost)
-        
+        chapters = self._build_master_chapters(
+            account, tp_prices, diff_report, wizards_vault_exhausted=wizards_vault_exhausted, optimize_for_cost=optimize_for_cost, bom=bom
+        )
+
         session_itinerary = self._generate_session_itinerary(
             pillars,
             time_budget,
@@ -248,6 +669,8 @@ class TwilightJourneySolver:
             wizards_vault_exhausted=wizards_vault_exhausted,
             optimize_for_cost=optimize_for_cost,
             excluded_modes=excluded_modes,
+            preferred_modes=preferred_modes,
+            bom=bom,
         )
 
         # Calculate Overall Readiness (Weighted Average)
@@ -264,10 +687,11 @@ class TwilightJourneySolver:
 
         # Remaining Icy Runestones cost (1g each)
         owned_runestones = account.total_item_count(self.ICY_RUNESTONE_ID) + account.total_item_count(19912)
-        icy_runestone_cost = max(0, 100 - owned_runestones) * 1.0
+        runestones_needed = 100 if bom["generation"] in ("GEN1", "GEN2") else 0
+        icy_runestone_cost = max(0, runestones_needed - owned_runestones) * 1.0
 
         total_gold = precursor_cost + icy_runestone_cost + (tp_prices.get(self.ONYX_LODESTONE_ID, 0.40) * max(0, 100 - account.total_item_count(self.ONYX_LODESTONE_ID)))
-        
+
         # Calculate Remaining Hours
         exploration_hours = sum(e.estimated_hours for e in exploration_plan) if account.total_item_count(self.GIFT_OF_EXPLORATION_ID) == 0 else 0.0
         wvw_hours = 8.0 if not account.has_gift_of_battle() else 0.0
@@ -277,6 +701,20 @@ class TwilightJourneySolver:
         rec_char = self._find_best_character(account)
 
         return TwilightJourneyPlan(
+            target_item_id=bom["target_item_id"],
+            target_item_name=bom["target_item_name"],
+            generation=bom["generation"],
+            precursor_id=bom["precursor_id"],
+            precursor_name=bom["precursor_name"],
+            tribute_gift_id=bom["tribute_gift_id"],
+            tribute_gift_name=bom["tribute_gift_name"],
+            mastery_gift_id=bom["mastery_gift_id"],
+            mastery_gift_name=bom["mastery_gift_name"],
+            specific_gift_id=bom["specific_gift_id"],
+            specific_gift_name=bom["specific_gift_name"],
+            required_clovers=bom["required_clovers"],
+            required_t6_per_type=bom["required_t6_per_type"],
+            required_t6_total=bom["required_t6_total"],
             overall_readiness_pct=round(overall_pct, 1),
             estimated_total_gold=round(total_gold, 1),
             estimated_total_hours=round(total_hours, 1),
@@ -286,23 +724,59 @@ class TwilightJourneySolver:
             exploration_plan=exploration_plan,
             chapters=chapters,
             session_itinerary=session_itinerary,
+            steps=session_itinerary,
+            time_gates=bom["time_gates"],
             expansion_warnings=expansion_warnings,
             recommended_character=rec_char
         )
+
+    def _default_bom(self, account: AccountState, diff_report: Optional[AccountDiffReport] = None) -> Dict[str, Any]:
+        if diff_report is not None:
+            return self._introspect_weapon_bom(self.TWILIGHT_ID, diff_report, account)
+        return {
+            "target_item_id": self.TWILIGHT_ID,
+            "target_item_name": "Twilight",
+            "generation": "GEN1",
+            "precursor_id": self.DUSK_ID,
+            "precursor_name": "Dusk",
+            "precursor_type": "PrecursorWeapon",
+            "tribute_gift_id": 19626,
+            "tribute_gift_name": "Gift of Fortune",
+            "mastery_gift_id": 19674,
+            "mastery_gift_name": "Gift of Mastery",
+            "specific_gift_id": 19648,
+            "specific_gift_name": "Gift of Twilight",
+            "required_clovers": 77,
+            "required_t6_per_type": 250,
+            "required_t6_total": 2000,
+            "sub_gifts": [(19623, "Gift of Metal"), (19647, "Gift of Darkness")],
+            "dungeon_gift_id": 19667,
+            "dungeon_gift_name": "Gift of Ascalon",
+            "time_gates": ["Daily Fractal Mystic Clovers (BUY-2046: 2/day)"],
+        }
 
     def _evaluate_precursor_pillar(
         self,
         account: AccountState,
         tp_prices: Dict[int, float],
         wizards_vault_exhausted: bool = False,
-        optimize_for_cost: bool = True
+        optimize_for_cost: bool = True,
+        bom: Optional[Dict[str, Any]] = None,
     ) -> JourneyPillar:
-        """Evaluates Pillar 1: Precursor (Dusk)."""
-        owned_dusk = account.total_item_count(self.DUSK_ID)
-        has_twilight = account.has_legendary_unlocked(self.TWILIGHT_ID)
+        """Evaluates Pillar 1: Precursor acquisition."""
+        if bom is None:
+            bom = self._default_bom(account)
+
+        prec_id = bom["precursor_id"]
+        prec_name = bom["precursor_name"]
+        target_id = bom["target_item_id"]
+        gen = bom["generation"]
+
+        owned_prec = account.total_item_count(prec_id)
+        has_target = account.has_legendary_unlocked(target_id)
 
         starter_kit_eligible = False
-        if not wizards_vault_exhausted:
+        if gen == "GEN1" and not wizards_vault_exhausted:
             for chest_id in [100000, 100001, 100002, 100003]:
                 if account.total_item_count(chest_id) > 0:
                     starter_kit_eligible = True
@@ -312,31 +786,71 @@ class TwilightJourneySolver:
         actions = []
         sub_components = {}
 
-        if owned_dusk > 0 or has_twilight:
+        if owned_prec > 0 or has_target:
             readiness_pct = 100.0
             status = "COMPLETED"
-            sub_components["Dusk (Precursor)"] = 100.0
+            sub_components[f"{prec_name} (Precursor)"] = 100.0
         elif starter_kit_eligible:
             readiness_pct = 95.0
             status = "IN_PROGRESS"
-            sub_components["Dusk (Precursor)"] = 95.0
+            sub_components[f"{prec_name} (Precursor)"] = 95.0
+            sub_gift_hint = bom["sub_gifts"][0][1] if bom.get("sub_gifts") else "Gift of Metal"
             actions.append(JourneyAction(
                 action_title="Open Legendary Weapon Starter Kit",
-                action_description="Withdraw your Legendary Starter Kit from the Bank and select the Dusk Package to receive Dusk and Gift of Metal for 0 gold.",
+                action_description=f"Withdraw your Legendary Starter Kit from the Bank and select the {prec_name} Package to receive {prec_name} and {sub_gift_hint} for 0 gold.",
                 estimated_minutes=2,
                 priority="CRITICAL",
                 game_mode="Account"
             ))
+        elif gen == "GEN2":
+            readiness_pct = 0.0
+            status = "NOT_STARTED"
+            sub_components[f"{prec_name} (Precursor)"] = 0.0
+            blockers.append(f"Precursor '{prec_name}' is account-bound and not yet owned.")
+            actions.append(JourneyAction(
+                action_title=f"Craft Account-Bound Precursor: {prec_name}",
+                action_description=(
+                    f"Gen 2 Precursor '{prec_name}' is account-bound and cannot be purchased on the Trading Post. "
+                    f"Complete the 4-tier Grandmaster Craftsman Hobbs collection hunt (`[&BBAEAAA=]`) in Lion's Arch and Heart of Maguuma."
+                ),
+                estimated_minutes=60,
+                priority="CRITICAL",
+                zone_name="Lion's Arch",
+                waypoint="[&BBAEAAA=]",
+                npc_name="Grandmaster Craftsman Hobbs",
+                game_mode="OpenWorld",
+                requires_expansion="HeartOfThorns",
+            ))
+        elif gen == "GEN3":
+            readiness_pct = 0.0
+            status = "NOT_STARTED"
+            sub_components[f"{prec_name} (Precursor)"] = 0.0
+            blockers.append(f"Precursor '{prec_name}' is not yet owned.")
+            prec_price = tp_prices.get(prec_id, 380.0)
+            actions.append(JourneyAction(
+                action_title=f"Acquire Gen 3 Precursor: {prec_name}",
+                action_description=(
+                    f"Purchase '{prec_name}' directly on the Trading Post (~{prec_price:.0f}g) or craft it at rank 500 using "
+                    f"Dragon's Weapon recipe from Leivas in Arborstone `[&BGUNAAA=]` (100x Memories of Aurene, 5x Antique Summoning Stones, 10x Jade Runestones, 25x Tales of Adventure)."
+                ),
+                estimated_minutes=15,
+                priority="CRITICAL",
+                zone_name="Arborstone",
+                waypoint="[&BGUNAAA=]",
+                npc_name="Leivas",
+                game_mode="OpenWorld",
+                requires_expansion="EndOfDragons",
+            ))
         else:
             readiness_pct = 0.0
             status = "NOT_STARTED"
-            sub_components["Dusk (Precursor)"] = 0.0
-            blockers.append("Precursor 'Dusk' is not yet owned.")
+            sub_components[f"{prec_name} (Precursor)"] = 0.0
+            blockers.append(f"Precursor '{prec_name}' is not yet owned.")
             if wizards_vault_exhausted:
-                dusk_price = tp_prices.get(self.DUSK_ID, 141.0)
+                prec_price = tp_prices.get(prec_id, 141.0)
                 actions.append(JourneyAction(
-                    action_title="Acquire Precursor: Dusk (Trading Post Buy)",
-                    action_description=f"Direct Trading Post purchase for Dusk (~{dusk_price:.0f}g) is cheaper and faster than Grandmaster Hobbs collection materials (~210g). Saves ~69g and ~30 hours.",
+                    action_title=f"Acquire Precursor: {prec_name} (Trading Post Buy)",
+                    action_description=f"Direct Trading Post purchase for {prec_name} (~{prec_price:.0f}g) is cheaper and faster than Grandmaster Hobbs collection materials (~210g). Saves ~69g and ~30 hours.",
                     estimated_minutes=5,
                     priority="CRITICAL",
                     zone_name="Lion's Arch",
@@ -346,7 +860,7 @@ class TwilightJourneySolver:
                 ))
             else:
                 actions.append(JourneyAction(
-                    action_title="Acquire Precursor: Dusk",
+                    action_title=f"Acquire Precursor: {prec_name}",
                     action_description="Choose an acquisition path: Buy directly from Trading Post, craft via Grandmaster Hobbs collection `[&BBAEAAA=]`, or claim from Wizard's Vault Starter Kit.",
                     estimated_minutes=15,
                     priority="CRITICAL",
@@ -357,7 +871,7 @@ class TwilightJourneySolver:
                 ))
 
         return JourneyPillar(
-            pillar_name="Precursor: Dusk",
+            pillar_name=f"Precursor: {prec_name}",
             readiness_pct=readiness_pct,
             status=status,
             key_blockers=blockers,
@@ -365,8 +879,135 @@ class TwilightJourneySolver:
             sub_components=sub_components
         )
 
-    def _evaluate_mastery_pillar(self, account: AccountState, diff_report: AccountDiffReport) -> JourneyPillar:
-        """Evaluates Pillar 2: Gift of Mastery (Exploration, WvW, Obsidian, Spirit Shards)."""
+    def _evaluate_mastery_pillar(
+        self,
+        account: AccountState,
+        diff_report: AccountDiffReport,
+        bom: Optional[Dict[str, Any]] = None,
+    ) -> JourneyPillar:
+        """Evaluates Pillar 2: Regional Mastery Gift (Gift of Mastery, Gift of Maguuma Mastery, or Gift of Jade Mastery)."""
+        if bom is None:
+            bom = self._default_bom(account, diff_report)
+
+        gen = bom["generation"]
+        mastery_name = bom["mastery_gift_name"]
+
+        if gen == "GEN2":
+            has_maguuma_gift = account.total_item_count(71333) > 0 or account.total_item_count(bom["mastery_gift_id"]) > 0
+            has_battle = account.has_gift_of_battle()
+            obsidian_count = account.total_item_count(self.OBSIDIAN_SHARD_ID)
+            bloodstone_count = 1 if account.has_bloodstone_shard() else 0
+            spirit_shards = account.spirit_shards_count()
+
+            exp_pct = 100.0 if has_maguuma_gift else 0.0
+            battle_pct = 100.0 if has_battle else 0.0
+            obsidian_pct = min(100.0, (obsidian_count / 250.0) * 100.0)
+            bloodstone_pct = 100.0 if (bloodstone_count > 0 or spirit_shards >= 200) else min(100.0, (spirit_shards / 200.0) * 100.0)
+
+            sub_components = {
+                "Gift of Maguuma (HoT Map Completion + 400 Crystalline Ingots)": exp_pct,
+                "Gift of Battle (WvW Reward Track)": battle_pct,
+                "250x Obsidian Shards": obsidian_pct,
+                "Bloodstone Shard (200 Spirit Shards)": bloodstone_pct,
+            }
+            readiness_pct = exp_pct * 0.40 + battle_pct * 0.30 + obsidian_pct * 0.20 + bloodstone_pct * 0.10
+            blockers = []
+            actions = []
+            if not has_maguuma_gift:
+                blockers.append("Heart of Maguuma map completion (Verdant Brink, Auric Basin, Tangled Depths, Dragon's Stand) and 250x Crystalline Ingots required.")
+                actions.append(JourneyAction(
+                    action_title="Complete Heart of Maguuma Maps & Meta Currencies",
+                    action_description="Complete 100% map exploration in Verdant Brink, Auric Basin, Tangled Depths, and Dragon's Stand, and farm 250x Crystalline Ore from Dragon's Stand pods.",
+                    estimated_minutes=60,
+                    priority="HIGH",
+                    zone_name="Dragon's Stand",
+                    waypoint="[&BBAIAAA=]",
+                    game_mode="OpenWorld",
+                    requires_expansion="HeartOfThorns",
+                ))
+            if not has_battle:
+                blockers.append("Gift of Battle WvW Reward Track required.")
+                actions.append(JourneyAction(
+                    action_title="Progress Gift of Battle WvW Track",
+                    action_description="Activate the Gift of Battle Reward Track in WvW. Stack Experience Booster + Heroic Booster + Guild Tavern WvW buff to finish in ~4.5h.",
+                    estimated_minutes=45,
+                    priority="HIGH",
+                    game_mode="WvW",
+                ))
+            if obsidian_pct < 100.0:
+                needed_obsidian = 250 - obsidian_count
+                blockers.append(f"Need {needed_obsidian} more Obsidian Shards.")
+                actions.append(JourneyAction(
+                    action_title="Buy Obsidian Shards at Temple of Balthazar or Ley-Energy Converter",
+                    action_description=f"Acquire {needed_obsidian} Obsidian Shards via Tactician Deathspark `[&BO4CAAA=]` or HoT Ley-Energy Matter Converter.",
+                    estimated_minutes=15,
+                    priority="MEDIUM",
+                    zone_name="Straits of Devastation",
+                    waypoint="[&BO4CAAA=]",
+                    npc_name="Tactician Deathspark",
+                    game_mode="OpenWorld",
+                ))
+            status = "COMPLETED" if readiness_pct >= 100.0 else ("IN_PROGRESS" if readiness_pct > 0 else "NOT_STARTED")
+            return JourneyPillar(
+                pillar_name=mastery_name,
+                readiness_pct=round(readiness_pct, 1),
+                status=status,
+                key_blockers=blockers,
+                recommended_actions=actions,
+                sub_components=sub_components,
+            )
+
+        if gen == "GEN3":
+            has_cantha_gift = account.total_item_count(97096) > 0 or account.total_item_count(bom["mastery_gift_id"]) > 0
+            spirit_shards = account.spirit_shards_count()
+            imperial_favor = account.wallet.get(68, 0)
+            exp_pct = 100.0 if has_cantha_gift else 0.0
+            favor_pct = min(100.0, (imperial_favor / 2500.0) * 100.0)
+            bloodstone_pct = 100.0 if (account.has_bloodstone_shard() or spirit_shards >= 200) else min(100.0, (spirit_shards / 200.0) * 100.0)
+
+            sub_components = {
+                "Gift of Cantha (4 EoD Map Completions / Lanterns)": exp_pct,
+                "2,500x Imperial Favor (Cantha Metas)": favor_pct,
+                "Bloodstone Shard & Gift of the Dragon Empire (300 Spirit Shards)": bloodstone_pct,
+            }
+            readiness_pct = exp_pct * 0.45 + favor_pct * 0.35 + bloodstone_pct * 0.20
+            blockers = []
+            actions = []
+            if not has_cantha_gift:
+                blockers.append("Gift of Cantha required (Seitung Province, New Kaineng City, The Echovald Wilds, Dragon's End completion or Lantern Lighting).")
+                actions.append(JourneyAction(
+                    action_title="Complete Cantha Maps or Light Imperial Lanterns for Gift of Cantha",
+                    action_description="Explore Seitung Province, New Kaineng City, Echovald Wilds, and Dragon's End (or light map lanterns after first completion) to earn Gift of Cantha.",
+                    estimated_minutes=60,
+                    priority="HIGH",
+                    zone_name="Seitung Province",
+                    waypoint="[&BGUNAAA=]",
+                    game_mode="OpenWorld",
+                    requires_expansion="EndOfDragons",
+                ))
+            if favor_pct < 100.0:
+                needed_favor = 2500 - imperial_favor
+                blockers.append(f"Need {needed_favor} more Imperial Favor for Gift of the Dragon Empire and Jade Mastery.")
+                actions.append(JourneyAction(
+                    action_title="Farm Imperial Favor via Cantha Meta Events",
+                    action_description=f"Run Aetherblade Assault (Seitung), Kaineng Blackout, Gang War (Echovald), and Battle for the Jade Sea to earn {needed_favor} Imperial Favor.",
+                    estimated_minutes=45,
+                    priority="HIGH",
+                    zone_name="Arborstone",
+                    waypoint="[&BGUNAAA=]",
+                    game_mode="OpenWorld",
+                    requires_expansion="EndOfDragons",
+                ))
+            status = "COMPLETED" if readiness_pct >= 100.0 else ("IN_PROGRESS" if readiness_pct > 0 else "NOT_STARTED")
+            return JourneyPillar(
+                pillar_name=mastery_name,
+                readiness_pct=round(readiness_pct, 1),
+                status=status,
+                key_blockers=blockers,
+                recommended_actions=actions,
+                sub_components=sub_components,
+            )
+
         has_exploration = account.total_item_count(self.GIFT_OF_EXPLORATION_ID) > 0
         has_battle = account.has_gift_of_battle()
         obsidian_count = account.total_item_count(self.OBSIDIAN_SHARD_ID)
@@ -447,7 +1088,7 @@ class TwilightJourneySolver:
         status = "COMPLETED" if readiness_pct >= 100.0 else ("IN_PROGRESS" if readiness_pct > 0 else "NOT_STARTED")
 
         return JourneyPillar(
-            pillar_name="Gift of Mastery",
+            pillar_name=mastery_name,
             readiness_pct=round(readiness_pct, 1),
             status=status,
             key_blockers=blockers,
@@ -461,23 +1102,29 @@ class TwilightJourneySolver:
         diff_report: AccountDiffReport,
         tp_prices: Dict[int, float],
         wizards_vault_exhausted: bool = False,
-        optimize_for_cost: bool = True
+        optimize_for_cost: bool = True,
+        bom: Optional[Dict[str, Any]] = None,
     ) -> JourneyPillar:
-        """Evaluates Pillar 3: Gift of Fortune (Mystic Clovers, Ectoplasm, T6 Fine Materials)."""
+        """Evaluates Pillar 3: Economic Tribute (Gift of Fortune, Mystic Tribute, or Draconic Tribute)."""
+        if bom is None:
+            bom = self._default_bom(account, diff_report)
+
+        tribute_name = bom["tribute_gift_name"]
+        req_clovers = int(bom["required_clovers"])
+        t6_total_needed = int(bom["required_t6_total"])
+
         clover_count = account.total_item_count(self.MYSTIC_CLOVER_ID)
         ecto_count = account.total_item_count(self.GLOB_OF_ECTOPLASM_ID)
-
-        t6_total_needed = 8 * 250
         t6_owned = sum(account.total_item_count(mat_id) for mat_id in set(self.T6_MATERIAL_IDS + self.LEGACY_T6_MATERIAL_IDS))
 
-        clover_pct = min(100.0, (clover_count / 77.0) * 100.0)
+        clover_pct = min(100.0, (clover_count / float(req_clovers)) * 100.0)
         ecto_pct = min(100.0, (ecto_count / 250.0) * 100.0)
         t6_pct = min(100.0, (t6_owned / float(t6_total_needed)) * 100.0)
 
         sub_components = {
-            "77x Mystic Clovers": clover_pct,
+            f"{req_clovers}x Mystic Clovers": clover_pct,
             "250x Globs of Ectoplasm": ecto_pct,
-            "T6 Fine Crafting Materials (2,000 total)": t6_pct
+            f"T6 Fine Crafting Materials ({t6_total_needed:,} total)": t6_pct
         }
 
         readiness_pct = (
@@ -490,7 +1137,7 @@ class TwilightJourneySolver:
         actions = []
 
         if clover_pct < 100.0:
-            needed_clovers = 77 - clover_count
+            needed_clovers = req_clovers - clover_count
             blockers.append(f"Need {needed_clovers} more Mystic Clovers.")
             if wizards_vault_exhausted:
                 actions.append(JourneyAction(
@@ -550,10 +1197,27 @@ class TwilightJourneySolver:
                     game_mode="Account"
                 ))
 
+        if bom["generation"] == "GEN3":
+            ass_count = account.total_item_count(96978)
+            if ass_count < 100:
+                needed_ass = 100 - ass_count
+                blockers.append(f"Need {needed_ass} more Antique Summoning Stones (weekly vendor cap from Leivas in Arborstone).")
+                actions.append(JourneyAction(
+                    action_title="Purchase Weekly Antique Summoning Stones from Leivas",
+                    action_description="Visit Leivas in Arborstone `[&BGUNAAA=]` weekly to exchange Imperial Favor, Karma, Gold, and Unusual Coins for 5x Antique Summoning Stones (time-gated weekly).",
+                    estimated_minutes=5,
+                    priority="HIGH",
+                    zone_name="Arborstone",
+                    waypoint="[&BGUNAAA=]",
+                    npc_name="Leivas",
+                    game_mode="Account",
+                    requires_expansion="EndOfDragons",
+                ))
+
         status = "COMPLETED" if readiness_pct >= 100.0 else ("IN_PROGRESS" if readiness_pct > 0 else "NOT_STARTED")
 
         return JourneyPillar(
-            pillar_name="Gift of Fortune",
+            pillar_name=tribute_name,
             readiness_pct=round(readiness_pct, 1),
             status=status,
             key_blockers=blockers,
@@ -565,9 +1229,16 @@ class TwilightJourneySolver:
         self,
         account: AccountState,
         diff_report: AccountDiffReport,
-        tp_prices: Dict[int, float]
+        tp_prices: Dict[int, float],
+        bom: Optional[Dict[str, Any]] = None,
     ) -> JourneyPillar:
-        """Evaluates Pillar 4: Gift of Twilight (Disciplines, Icy Runestones, Onyx Lodestones, Sigil)."""
+        """Evaluates Pillar 4: Weapon-Specific Gift (e.g. Gift of Twilight, Gift of Sunrise, Gift of Bolt, Gift of Nevermore, Gift of Aurene's Bite)."""
+        if bom is None:
+            bom = self._default_bom(account, diff_report)
+
+        if bom["target_item_id"] != self.TWILIGHT_ID:
+            return self._evaluate_specific_gift_pillar_generic(account, diff_report, tp_prices, bom)
+
         weaponsmith_level = account.max_discipline_rating("weaponsmith")
         armorsmith_level = account.max_discipline_rating("armorsmith")
         runestone_count = account.total_item_count(self.ICY_RUNESTONE_ID) + account.total_item_count(19912)
@@ -704,8 +1375,125 @@ class TwilightJourneySolver:
             sub_components=sub_components
         )
 
-    def _build_exploration_plan(self, account: AccountState) -> List[ExplorationPlan]:
-        """Builds mount-aware regional map completion strategy for Core Tyria."""
+    def _evaluate_specific_gift_pillar_generic(
+        self,
+        account: AccountState,
+        diff_report: AccountDiffReport,
+        tp_prices: Dict[int, float],
+        bom: Dict[str, Any],
+    ) -> JourneyPillar:
+        """Ontology-driven evaluation for Pillar 4 for any non-Twilight legendary weapon."""
+        specific_name = bom["specific_gift_name"]
+        gen = bom["generation"]
+        sub_gifts = bom.get("sub_gifts", [])
+        dungeon_name = bom.get("dungeon_gift_name")
+
+        blockers: List[str] = []
+        actions: List[JourneyAction] = []
+        sub_components: Dict[str, float] = {}
+
+        if gen in ("GEN1", "GEN2"):
+            runestone_count = account.total_item_count(self.ICY_RUNESTONE_ID) + account.total_item_count(19912)
+            runestone_pct = min(100.0, (runestone_count / 100.0) * 100.0)
+            sub_components["100x Icy Runestones (100g flat)"] = runestone_pct
+            if runestone_pct < 100.0:
+                needed_runes = 100 - runestone_count
+                blockers.append(f"Need {needed_runes} more Icy Runestones ({needed_runes} gold).")
+                actions.append(JourneyAction(
+                    action_title="Purchase Icy Runestones from Rojan",
+                    action_description=f"Teleport to Earthshake Waypoint `[&BHsBAAA=]` in Frostgorge Sound and buy {needed_runes} Icy Runestones from Rojan the Penitent for {needed_runes} gold.",
+                    estimated_minutes=5,
+                    priority="MEDIUM",
+                    zone_name="Frostgorge Sound",
+                    waypoint="[&BHsBAAA=]",
+                    npc_name="Rojan the Penitent",
+                    game_mode="OpenWorld"
+                ))
+        elif gen == "GEN3":
+            jade_runestones = account.total_item_count(96722)
+            ambergris = account.total_item_count(96347)
+            jr_pct = min(100.0, (jade_runestones / 100.0) * 100.0)
+            amb_pct = min(100.0, (ambergris / 100.0) * 100.0)
+            sub_components["100x Jade Runestones"] = jr_pct
+            sub_components["100x Chunk of Ancient Ambergris"] = amb_pct
+            if jr_pct < 100.0:
+                needed_jr = 100 - jade_runestones
+                blockers.append(f"Need {needed_jr} more Jade Runestones.")
+                actions.append(JourneyAction(
+                    action_title="Farm Jade Runestones in Kaineng & Echovald",
+                    action_description=f"Open daily Magnificent Chests in New Kaineng City, Echovald Wilds, and Seitung Province (or buy from TP) for {needed_jr} Jade Runestones.",
+                    estimated_minutes=25,
+                    priority="HIGH",
+                    zone_name="New Kaineng City",
+                    waypoint="[&BGUNAAA=]",
+                    game_mode="OpenWorld",
+                    requires_expansion="EndOfDragons",
+                ))
+            if amb_pct < 100.0:
+                needed_amb = 100 - ambergris
+                blockers.append(f"Need {needed_amb} more Chunks of Ancient Ambergris.")
+                actions.append(JourneyAction(
+                    action_title="Acquire Chunks of Ancient Ambergris (Fishing / Leviathan Farm)",
+                    action_description=f"Farm Seitung/Kaineng Leviathan events, complete daily EoD fishing catch quests in Arborstone `[&BGUNAAA=]`, or purchase {needed_amb} Ancient Ambergris on the Trading Post.",
+                    estimated_minutes=30,
+                    priority="HIGH",
+                    zone_name="Seitung Province",
+                    waypoint="[&BGUNAAA=]",
+                    game_mode="OpenWorld",
+                    requires_expansion="EndOfDragons",
+                ))
+
+        for sg_id, sg_name in sub_gifts:
+            has_sg = account.total_item_count(sg_id) > 0
+            sub_components[sg_name] = 100.0 if has_sg else 0.0
+            if not has_sg:
+                blockers.append(f"Sub-gift '{sg_name}' required for {specific_name}.")
+                actions.append(JourneyAction(
+                    action_title=f"Craft {sg_name}",
+                    action_description=f"Craft '{sg_name}' at your crafting station (400/500 rating) or Mystic Forge for {specific_name}.",
+                    estimated_minutes=15,
+                    priority="HIGH",
+                    zone_name="Lion's Arch",
+                    waypoint="[&BBAEAAA=]",
+                    game_mode="Crafting",
+                ))
+
+        if dungeon_name:
+            tales = account.dungeon_tales_count()
+            has_dg = bom.get("dungeon_gift_id") and account.total_item_count(bom["dungeon_gift_id"]) > 0
+            dg_pct = 100.0 if has_dg else min(100.0, (tales / 500.0) * 100.0)
+            sub_components[f"{dungeon_name} (500 Tales of Dungeon Delving)"] = dg_pct
+            if dg_pct < 100.0:
+                actions.append(JourneyAction(
+                    action_title=f"Acquire {dungeon_name} (Dungeon Vendor)",
+                    action_description=f"Run explorable dungeon paths to earn 500 Tales of Dungeon Delving (currently {tales}/500) and purchase {dungeon_name} in Lion's Arch `[&BBAEAAA=]`.",
+                    estimated_minutes=35,
+                    priority="HIGH",
+                    zone_name="Lion's Arch",
+                    waypoint="[&BBAEAAA=]",
+                    game_mode="Dungeon",
+                ))
+
+        readiness_pct = sum(sub_components.values()) / max(1, len(sub_components))
+        status = "COMPLETED" if readiness_pct >= 100.0 else ("IN_PROGRESS" if readiness_pct > 0 else "NOT_STARTED")
+        return JourneyPillar(
+            pillar_name=specific_name,
+            readiness_pct=round(readiness_pct, 1),
+            status=status,
+            key_blockers=blockers,
+            recommended_actions=actions,
+            sub_components=sub_components,
+        )
+
+    def _build_exploration_plan(
+        self,
+        account: AccountState,
+        bom: Optional[Dict[str, Any]] = None,
+    ) -> List[ExplorationPlan]:
+        """Builds mount-aware regional map completion strategy based on weapon generation."""
+        if bom is None:
+            bom = self._default_bom(account)
+
         has_skyscale = account.has_mount("skyscale")
         has_raptor = account.has_mount("raptor")
         has_springer = account.has_mount("springer")
@@ -716,6 +1504,86 @@ class TwilightJourneySolver:
             speed_factor = 0.75
         else:
             speed_factor = 1.0
+
+        gen = bom["generation"]
+        if gen == "GEN2":
+            return [
+                ExplorationPlan(
+                    region_name="Verdant Brink",
+                    zone_count=1,
+                    estimated_hours=round(1.5 * speed_factor, 1),
+                    difficulty="Moderate",
+                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
+                    strategy_notes="Canopy and floor tiers. Use Skyscale/Updrafts for canopy Hero Points and vistas.",
+                    starting_waypoint="[&BAgIAAA=]",
+                ),
+                ExplorationPlan(
+                    region_name="Auric Basin",
+                    zone_count=1,
+                    estimated_hours=round(1.5 * speed_factor, 1),
+                    difficulty="Easy",
+                    recommended_mount="Raptor" if has_raptor else None,
+                    strategy_notes="Complete Tarir Octovine meta to unlock inner chambers and Exalted chests.",
+                    starting_waypoint="[&BGwIAAA=]",
+                ),
+                ExplorationPlan(
+                    region_name="Tangled Depths",
+                    zone_count=1,
+                    estimated_hours=round(2.5 * speed_factor, 1),
+                    difficulty="Hard",
+                    recommended_mount="Skyscale" if has_skyscale else None,
+                    strategy_notes="Multi-layer subterranean tunnels (Ogre, Nuhoch, Rata Novus, SCAR lanes).",
+                    starting_waypoint="[&BPUHAAA=]",
+                ),
+                ExplorationPlan(
+                    region_name="Dragon's Stand",
+                    zone_count=1,
+                    estimated_hours=round(2.0 * speed_factor, 1),
+                    difficulty="Moderate",
+                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
+                    strategy_notes="Requires active Mouth of Mordremoth meta completion to access final POIs and farm 250x Crystalline Ore.",
+                    starting_waypoint="[&BBAIAAA=]",
+                ),
+            ]
+        elif gen == "GEN3":
+            return [
+                ExplorationPlan(
+                    region_name="Seitung Province",
+                    zone_count=1,
+                    estimated_hours=round(1.2 * speed_factor, 1),
+                    difficulty="Easy",
+                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
+                    strategy_notes="Coastal Canthan island. Complete map or light Imperial Lanterns for Gift of Seitung Province.",
+                    starting_waypoint="[&BGUNAAA=]",
+                ),
+                ExplorationPlan(
+                    region_name="New Kaineng City",
+                    zone_count=1,
+                    estimated_hours=round(1.5 * speed_factor, 1),
+                    difficulty="Moderate",
+                    recommended_mount="Skyscale" if has_skyscale else ("Springer" if has_springer else None),
+                    strategy_notes="High verticality Jade-tech metropolis. Use Skyscale and Jade Bot Zip Lines.",
+                    starting_waypoint="[&BGUNAAA=]",
+                ),
+                ExplorationPlan(
+                    region_name="The Echovald Wilds",
+                    zone_count=1,
+                    estimated_hours=round(1.5 * speed_factor, 1),
+                    difficulty="Moderate",
+                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
+                    strategy_notes="Petrified forest cathedral canopy. Combine with Gang War meta for Imperial Favor.",
+                    starting_waypoint="[&BGUNAAA=]",
+                ),
+                ExplorationPlan(
+                    region_name="Dragon's End",
+                    zone_count=1,
+                    estimated_hours=round(1.5 * speed_factor, 1),
+                    difficulty="Moderate",
+                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
+                    strategy_notes="Jade Sea quarry map. Complete exploration or lantern lighting for Gift of Dragon's End.",
+                    starting_waypoint="[&BGUNAAA=]",
+                ),
+            ]
 
         return [
             ExplorationPlan(
@@ -770,19 +1638,81 @@ class TwilightJourneySolver:
         account: AccountState,
         tp_prices: Dict[int, float],
         wizards_vault_exhausted: bool = False,
-        optimize_for_cost: bool = True
+        optimize_for_cost: bool = True,
+        bom: Optional[Dict[str, Any]] = None,
     ) -> List[PrecursorStrategy]:
-        """Generates comparative triage for all 4 Dusk precursor acquisition pathways."""
-        dusk_price = tp_prices.get(self.DUSK_ID, 141.0 if (optimize_for_cost or wizards_vault_exhausted) else 320.0)
+        """Generates comparative triage for precursor acquisition pathways based on ontology precursor class."""
+        if bom is None:
+            bom = self._default_bom(account)
 
+        prec_id = bom["precursor_id"]
+        prec_name = bom["precursor_name"]
+        target_name = bom["target_item_name"]
+        gen = bom["generation"]
+
+        if gen == "GEN2":
+            return [
+                PrecursorStrategy(
+                    strategy_name=f"Grandmaster Hobbs 4-Tier Collection ({target_name} I, II, III, IV -> {prec_name})",
+                    estimated_gold_cost=340.0,
+                    estimated_hours=24.0,
+                    pros=[
+                        f"Only acquisition method for account-bound Gen 2 precursor {prec_name}",
+                        f"Guaranteed progression through {target_name} I-IV collection tiers",
+                    ],
+                    cons=[
+                        "Account-bound (cannot be bought on Trading Post or from Wizard's Vault Starter Kit)",
+                        "Requires Heart of Thorns Mastery and Spiritwood / Deldrimor / Elonian time-gated materials",
+                    ],
+                    is_recommended=True,
+                    requires_expansion="HeartOfThorns",
+                    vendor_npc="Grandmaster Craftsman Hobbs",
+                    waypoint="[&BBAEAAA=]",
+                )
+            ]
+
+        if gen == "GEN3":
+            prec_price = tp_prices.get(prec_id, 380.0)
+            return [
+                PrecursorStrategy(
+                    strategy_name=f"Trading Post Direct Purchase ({prec_name})",
+                    estimated_gold_cost=prec_price,
+                    estimated_hours=0.1,
+                    pros=[
+                        f"Instant acquisition (~{int(prec_price)}g)",
+                        "Saves 5x Antique Summoning Stones and 100x Memories of Aurene for Draconic Tribute",
+                    ],
+                    cons=[f"Upfront gold investment (~{int(prec_price)}g)"],
+                    is_recommended=True,
+                    waypoint="[&BBAEAAA=]",
+                ),
+                PrecursorStrategy(
+                    strategy_name=f"Arborstone Leivas Crafting ({prec_name})",
+                    estimated_gold_cost=350.0,
+                    estimated_hours=6.0,
+                    pros=[
+                        "Craft directly at rank 500 using Cantha materials and Memories of Aurene",
+                    ],
+                    cons=[
+                        "Consumes 5x Antique Summoning Stones (weekly time-gate) and 25x Tales of Adventure",
+                    ],
+                    is_recommended=False,
+                    requires_expansion="EndOfDragons",
+                    vendor_npc="Leivas",
+                    waypoint="[&BGUNAAA=]",
+                ),
+            ]
+
+        prec_price = tp_prices.get(prec_id, 141.0 if (optimize_for_cost or wizards_vault_exhausted) else 320.0)
         starter_kit_in_bank = any(account.total_item_count(cid) > 0 for cid in [100000, 100001, 100002, 100003])
+        sub_gift_hint = bom["sub_gifts"][0][1] if bom.get("sub_gifts") else "Gift of Metal"
 
         strats = [
             PrecursorStrategy(
                 strategy_name="Wizard's Vault Legendary Starter Kit",
                 estimated_gold_cost=0.0,
                 estimated_hours=0.1,
-                pros=["0 gold cost", "Also grants Gift of Metal and crafting materials", "Guaranteed unlock"],
+                pros=["0 gold cost", f"Also grants {sub_gift_hint} and crafting materials", "Guaranteed unlock"],
                 cons=["Wizard's Vault seasonal Starter Kit is exhausted / already claimed"] if wizards_vault_exhausted else ["Requires active seasonal kit selection (1,200 Astral Acclaim)"],
                 is_recommended=(not wizards_vault_exhausted) and (starter_kit_in_bank or account.has_expansion("SecretsOfTheObscure")),
                 requires_expansion="SecretsOfTheObscure",
@@ -790,19 +1720,19 @@ class TwilightJourneySolver:
             ),
             PrecursorStrategy(
                 strategy_name="Trading Post Direct Purchase",
-                estimated_gold_cost=dusk_price,
+                estimated_gold_cost=prec_price,
                 estimated_hours=0.1,
                 pros=[
-                    f"Instant acquisition (~{int(dusk_price)}g)",
+                    f"Instant acquisition (~{int(prec_price)}g)",
                     "Cheaper than Grandmaster Hobbs collection materials (~210g)",
                     "Zero crafting or collection time (saves ~30 hours)"
                 ],
-                cons=[f"High gold investment (~{int(dusk_price)}g)"],
+                cons=[f"High gold investment (~{int(prec_price)}g)"],
                 is_recommended=wizards_vault_exhausted or (not starter_kit_in_bank and not account.has_expansion("SecretsOfTheObscure")),
                 waypoint="[&BBAEAAA=]"
             ),
             PrecursorStrategy(
-                strategy_name="Grandmaster Hobbs Collection (Dusk I, II, III)",
+                strategy_name=f"Grandmaster Hobbs Collection ({prec_name} I, II, III)",
                 estimated_gold_cost=210.0,
                 estimated_hours=30.0,
                 pros=[
@@ -821,7 +1751,7 @@ class TwilightJourneySolver:
                 waypoint="[&BBAEAAA=]"
             ),
             PrecursorStrategy(
-                strategy_name="Mystic Forge Rare Greatsword Promotion",
+                strategy_name="Mystic Forge Rare Greatsword Promotion" if bom["target_item_id"] == self.TWILIGHT_ID else f"Mystic Forge Rare Weapon Promotion ({prec_name})",
                 estimated_gold_cost=250.0,
                 estimated_hours=1.0,
                 pros=["Small chance of instant jackpot"],
@@ -874,9 +1804,14 @@ class TwilightJourneySolver:
         account: AccountState,
         wizards_vault_exhausted: bool = False,
         optimize_for_cost: bool = True,
-        excluded_modes: Optional[List[str]] = None
+        excluded_modes: Optional[List[str]] = None,
+        preferred_modes: Optional[List[str]] = None,
+        bom: Optional[Dict[str, Any]] = None,
     ) -> List[JourneyAction]:
         """Prioritizes and fits concrete progression actions into the player's time budget."""
+        if bom is None:
+            bom = self._default_bom(account)
+
         excluded_set = set()
         if excluded_modes:
             for m in excluded_modes:
@@ -894,7 +1829,7 @@ class TwilightJourneySolver:
                 return False
             return action_mode.lower().strip() in excluded_set
 
-        if optimize_for_cost or wizards_vault_exhausted:
+        if (optimize_for_cost or wizards_vault_exhausted) and bom["target_item_id"] == self.TWILIGHT_ID:
             mobility_char = self._find_mobility_character_name(account)
             if account.has_mount("skyscale"):
                 mount_str: Optional[str] = "Skyscale"
@@ -928,7 +1863,7 @@ class TwilightJourneySolver:
                 ),
                 JourneyAction(
                     action_title="Onyx Core Mystic Forge Promotion [&BBAEAAA=]",
-                    action_description="Promote Onyx Cores into Onyx Lodestones at Miyani [&BBAEAAA=] in Lion's Arch (2x Cores + 1x Crystalline Dust + 1x Philosopher's Stone + 1x Wine), saving ~19.6g over buying lodestones directly.",
+                    action_description="Promote Onyx Cores into Onyx Lodestones at Miyani [&BBAEAAA=] in Lion's Arch (2x Cores + 1x Crystalline Dust + 1x Philosopher's Stone + 1x Bottle of Elonian Wine), saving ~19.6g over buying lodestones directly.",
                     estimated_minutes=10,
                     priority="HIGH",
                     zone_name="Lion's Arch",
@@ -975,8 +1910,14 @@ class TwilightJourneySolver:
                 if not _is_mode_excluded(act.game_mode):
                     all_actions.append(act)
 
+        preferred_set = {m.lower().strip() for m in (preferred_modes or [])}
         priority_rank = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
-        all_actions.sort(key=lambda a: priority_rank.get(a.priority, 99))
+        all_actions.sort(
+            key=lambda a: (
+                0 if (a.game_mode and a.game_mode.lower().strip() in preferred_set) else 1,
+                priority_rank.get(a.priority, 99),
+            )
+        )
 
         itinerary = []
         budget_remaining = time_budget_minutes
@@ -987,16 +1928,26 @@ class TwilightJourneySolver:
             if action.estimated_minutes <= budget_remaining:
                 itinerary.append(action)
                 budget_remaining -= action.estimated_minutes
-            elif budget_remaining >= 15:
+            elif budget_remaining >= 5:
                 partial_action = action.model_copy(update={"estimated_minutes": budget_remaining})
                 itinerary.append(partial_action)
                 budget_remaining = 0
 
         return itinerary
 
-    def _check_expansion_access(self, account: AccountState) -> List[str]:
+    def _check_expansion_access(
+        self,
+        account: AccountState,
+        bom: Optional[Dict[str, Any]] = None,
+    ) -> List[str]:
         """Identifies locked shortcuts and warnings based on account expansion ownership."""
+        if bom is None:
+            bom = self._default_bom(account)
         warnings = []
+        if bom["generation"] == "GEN2" and not account.has_expansion("HeartOfThorns"):
+            warnings.append("⚠️ **Heart of Thorns Required:** Gen 2 Legendary Weapons require Heart of Thorns Masteries and Maguuma Map Completion.")
+        if bom["generation"] == "GEN3" and not account.has_expansion("EndOfDragons"):
+            warnings.append("⚠️ **End of Dragons Required:** Gen 3 Aurene Legendary Weapons require End of Dragons Masteries, Arborstone, and Cantha Map Completion.")
         if not account.has_expansion("PathOfFire") and not account.has_expansion("EndOfDragons"):
             warnings.append("⚠️ **No Mount Access (PathOfFire / EndOfDragons missing):** Core Tyria map completion will take ~18-21h on foot vs ~8-10h with mounts.")
         if not account.has_expansion("LivingWorldSeason4"):
@@ -1057,9 +2008,23 @@ class TwilightJourneySolver:
         tp_prices: Dict[int, float],
         diff_report: AccountDiffReport,
         wizards_vault_exhausted: bool = False,
-        optimize_for_cost: bool = True
+        optimize_for_cost: bool = True,
+        bom: Optional[Dict[str, Any]] = None,
     ) -> List[JourneyChapter]:
-        """Builds the 4-Chapter Master Sequencer for the Twilight Journey."""
+        """Builds the 4-Chapter Master Sequencer for the Legendary Journey."""
+        if bom is None:
+            bom = self._default_bom(account, diff_report)
+
+        if bom["target_item_id"] != self.TWILIGHT_ID:
+            return self._build_master_chapters_generic(
+                account=account,
+                tp_prices=tp_prices,
+                diff_report=diff_report,
+                wizards_vault_exhausted=wizards_vault_exhausted,
+                optimize_for_cost=optimize_for_cost,
+                bom=bom,
+            )
+
         chapters = []
         
         # --- Chapter 1: The Precursor Decision (Dusk) ---
@@ -2078,3 +3043,301 @@ class TwilightJourneySolver:
         ))
 
         return chapters
+
+    def _build_master_chapters_generic(
+        self,
+        account: AccountState,
+        tp_prices: Dict[int, float],
+        diff_report: AccountDiffReport,
+        wizards_vault_exhausted: bool,
+        optimize_for_cost: bool,
+        bom: Dict[str, Any],
+    ) -> List[JourneyChapter]:
+        """Builds the 4-Chapter Master Sequencer dynamically for any Gen 1, Gen 2, or Gen 3 Legendary Weapon."""
+        target_id = bom["target_item_id"]
+        target_name = bom["target_item_name"]
+        gen = bom["generation"]
+        prec_id = bom["precursor_id"]
+        prec_name = bom["precursor_name"]
+        tribute_name = bom["tribute_gift_name"]
+        mastery_name = bom["mastery_gift_name"]
+        specific_name = bom["specific_gift_name"]
+        req_clovers = int(bom["required_clovers"])
+        req_t6_total = int(bom["required_t6_total"])
+        sub_gifts = bom.get("sub_gifts", [])
+
+        owned_prec = account.total_item_count(prec_id)
+        has_target = account.has_legendary_unlocked(target_id)
+
+        # Chapter 1: Precursor Decision
+        c1_actions: List[JourneyAction] = []
+        if owned_prec > 0 or has_target:
+            c1_status = "COMPLETED"
+            c1_readiness = 100.0
+        else:
+            c1_status = "NOT_STARTED"
+            c1_readiness = 0.0
+            if gen == "GEN2":
+                c1_actions.append(JourneyAction(
+                    action_title=f"Complete 4-Tier Collection Hunt for {prec_name}",
+                    action_description=(
+                        f"Begin '{target_name} I-IV' with Grandmaster Craftsman Hobbs `[&BBAEAAA=]` in Lion's Arch. "
+                        f"Gen 2 precursor '{prec_name}' is account-bound and crafted via Heart of Maguuma collections and daily Spiritwood/Deldrimor materials."
+                    ),
+                    estimated_minutes=60,
+                    priority="CRITICAL",
+                    zone_name="Lion's Arch",
+                    waypoint="[&BBAEAAA=]",
+                    npc_name="Grandmaster Craftsman Hobbs",
+                    game_mode="OpenWorld",
+                    requires_expansion="HeartOfThorns",
+                ))
+            elif gen == "GEN3":
+                prec_price = tp_prices.get(prec_id, 380.0)
+                c1_actions.append(JourneyAction(
+                    action_title=f"Acquire {prec_name} (Trading Post vs Arborstone Crafting)",
+                    action_description=(
+                        f"Purchase {prec_name} on the Trading Post (~{prec_price:.0f}g) or craft via Leivas `[&BGUNAAA=]` in Arborstone "
+                        f"(requires 100x Memories of Aurene, 5x Antique Summoning Stones, 10x Jade Runestones, 25x Tales of Adventure)."
+                    ),
+                    estimated_minutes=15,
+                    priority="CRITICAL",
+                    zone_name="Arborstone",
+                    waypoint="[&BGUNAAA=]",
+                    npc_name="Leivas",
+                    game_mode="OpenWorld",
+                    requires_expansion="EndOfDragons",
+                ))
+            else:
+                prec_price = tp_prices.get(prec_id, 180.0)
+                c1_actions.append(JourneyAction(
+                    action_title=f"Acquire Precursor: {prec_name}",
+                    action_description=(
+                        f"Acquire {prec_name} via Wizard's Vault Starter Kit (0g if available), Trading Post Direct Purchase (~{prec_price:.0f}g), "
+                        f"or Grandmaster Hobbs Collection ({prec_name} I, II, III) at `[&BBAEAAA=]`."
+                    ),
+                    estimated_minutes=15,
+                    priority="CRITICAL",
+                    zone_name="Lion's Arch",
+                    waypoint="[&BBAEAAA=]",
+                    npc_name="Grandmaster Craftsman Hobbs",
+                    game_mode="OpenWorld",
+                ))
+
+        ch1 = JourneyChapter(
+            chapter_number=1,
+            chapter_title=f"The Precursor Decision ({prec_name})",
+            chapter_summary=f"Evaluate acquisition methods for {prec_name} ({gen} precursor to {target_name}).",
+            actions=c1_actions,
+            completion_status=c1_status,
+            readiness_pct=c1_readiness,
+        )
+
+        # Chapter 2: Regional Exploration & Mastery
+        mobility_char = self._find_mobility_character_name(account)
+        c2_actions: List[JourneyAction] = []
+        if gen == "GEN2":
+            ch2_title = f"The Heart of Maguuma Expedition ({mastery_name})"
+            ch2_summary = "Complete Verdant Brink, Auric Basin, Tangled Depths, and Dragon's Stand + 250x Crystalline Ingots."
+            c2_actions.append(JourneyAction(
+                action_title="Complete Heart of Maguuma Map Completion & Dragon's Stand Meta",
+                action_description=f"Explore all 4 Heart of Thorns maps on {mobility_char} and farm 250x Crystalline Ore from Dragon's Stand `[&BBAIAAA=]` for {mastery_name}.",
+                estimated_minutes=180,
+                priority="HIGH",
+                zone_name="Dragon's Stand",
+                waypoint="[&BBAIAAA=]",
+                game_mode="OpenWorld",
+                assigned_character=mobility_char,
+                requires_expansion="HeartOfThorns",
+            ))
+            c2_readiness = 50.0
+        elif gen == "GEN3":
+            ch2_title = f"The Canthan Expedition ({mastery_name})"
+            ch2_summary = "Complete Seitung Province, New Kaineng City, The Echovald Wilds, and Dragon's End (or Imperial Lanterns) for Gift of Cantha."
+            c2_actions.append(JourneyAction(
+                action_title="Complete Cantha Maps or Light Imperial Lanterns for Gift of Cantha",
+                action_description=f"Complete all 4 End of Dragons maps on {mobility_char} and earn 2,500 Imperial Favor for {mastery_name}.",
+                estimated_minutes=150,
+                priority="HIGH",
+                zone_name="Seitung Province",
+                waypoint="[&BGUNAAA=]",
+                game_mode="OpenWorld",
+                assigned_character=mobility_char,
+                requires_expansion="EndOfDragons",
+            ))
+            c2_readiness = 50.0
+        else:
+            has_exp = account.total_item_count(self.GIFT_OF_EXPLORATION_ID) > 0
+            ch2_title = "The Core Tyria Expedition (The World Tour)"
+            ch2_summary = f"5-region geographical route for Gift of Exploration (satisfying {target_name} and providing a spare for your next Gen 1 legendary)."
+            if not has_exp:
+                c2_actions.append(JourneyAction(
+                    action_title="Core Tyria Map Completion (2x Gifts of Exploration)",
+                    action_description=f"Complete 100% Core Tyria Map Completion on {mobility_char} to earn 2x Gifts of Exploration for {target_name}.",
+                    estimated_minutes=180,
+                    priority="HIGH",
+                    game_mode="OpenWorld",
+                    assigned_character=mobility_char,
+                ))
+            c2_readiness = 100.0 if has_exp else 50.0
+
+        ch2 = JourneyChapter(
+            chapter_number=2,
+            chapter_title=ch2_title,
+            chapter_summary=ch2_summary,
+            actions=c2_actions,
+            completion_status="COMPLETED" if c2_readiness >= 100.0 else "IN_PROGRESS",
+            readiness_pct=c2_readiness,
+        )
+
+        # Chapter 3: Tribute, Currencies & Time-Gates
+        clover_count = account.total_item_count(self.MYSTIC_CLOVER_ID)
+        needed_clovers = max(0, req_clovers - clover_count)
+        t6_owned = sum(account.total_item_count(mat_id) for mat_id in set(self.T6_MATERIAL_IDS + self.LEGACY_T6_MATERIAL_IDS))
+        needed_t6 = max(0, req_t6_total - t6_owned)
+
+        c3_actions: List[JourneyAction] = [
+            JourneyAction(
+                action_title=f"Acquire {req_clovers}x Mystic Clovers for {tribute_name}",
+                action_description=f"You have {clover_count}/{req_clovers} Mystic Clovers (need {needed_clovers} more) for {tribute_name}. Purchase 2/day from BUY-2046 `[&DYEFAAA=]` or claim from Wizard's Vault.",
+                estimated_minutes=10,
+                priority="CRITICAL",
+                zone_name="Mistlock Observatory",
+                waypoint="[&DYEFAAA=]",
+                npc_name="BUY-2046",
+                game_mode="Account",
+            ),
+            JourneyAction(
+                action_title=f"Gather T6 Fine Materials ({req_t6_total:,} total for {tribute_name})",
+                action_description=f"Acquire {bom['required_t6_per_type']}x of each Tier 6 fine material ({req_t6_total:,} total; need {needed_t6} more) via Volatile Magic Trophy Shipments `[&BNoLAAA=]` or Laurel Heavy Crafting Bags `[&BBAEAAA=]`.",
+                estimated_minutes=25,
+                priority="HIGH",
+                zone_name="Lion's Arch",
+                waypoint="[&BBAEAAA=]",
+                game_mode="Account",
+            ),
+        ]
+        if bom.get("dungeon_gift_name"):
+            dg_name = bom["dungeon_gift_name"]
+            c3_actions.append(JourneyAction(
+                action_title=f"Acquire {dg_name} (500 Tales of Dungeon Delving)",
+                action_description=f"Run explorable dungeon paths to earn 500 Tales of Dungeon Delving and purchase {dg_name} from the Dungeon Vendor in Lion's Arch `[&BBAEAAA=]`.",
+                estimated_minutes=35,
+                priority="HIGH",
+                zone_name="Lion's Arch",
+                waypoint="[&BBAEAAA=]",
+                game_mode="Dungeon",
+            ))
+        for gate in bom.get("time_gates", []):
+            if "Clover" not in gate:
+                c3_actions.append(JourneyAction(
+                    action_title=f"⏳ Time-Gate Cadence: {gate}",
+                    action_description=f"Maintain daily/weekly cadence for {gate} required by {target_name}.",
+                    estimated_minutes=10,
+                    priority="HIGH",
+                    zone_name="Lion's Arch",
+                    waypoint="[&BBAEAAA=]",
+                    game_mode="Crafting",
+                ))
+
+        ch3 = JourneyChapter(
+            chapter_number=3,
+            chapter_title=f"{tribute_name}, Currencies & Time-Gated Rituals",
+            chapter_summary=f"Complete {tribute_name} ({req_clovers}x Mystic Clovers, {req_t6_total:,}x T6 materials) and time-gated components.",
+            actions=c3_actions,
+            completion_status="IN_PROGRESS",
+            readiness_pct=round(min(100.0, (clover_count / float(req_clovers)) * 50.0 + (t6_owned / float(req_t6_total)) * 50.0), 1),
+        )
+
+        # Chapter 4: The Forge Ceremony
+        sub_gift_names = ", ".join(sg[1] for sg in sub_gifts) if sub_gifts else specific_name
+        c4_actions = [
+            JourneyAction(
+                action_title=f"Craft {specific_name}",
+                action_description=f"Combine {sub_gift_names} at the Mystic Forge `[&BBAEAAA=]` to create {specific_name}.",
+                estimated_minutes=10,
+                priority="CRITICAL",
+                zone_name="Lion's Arch",
+                waypoint="[&BBAEAAA=]",
+                npc_name="Miyani",
+                game_mode="Crafting",
+            ),
+            JourneyAction(
+                action_title=f"Final Forge Assembly: {target_name}",
+                action_description=f"Combine {prec_name}, {specific_name}, {mastery_name}, and {tribute_name} in the Mystic Forge at Miyani `[&BBAEAAA=]` to forge {target_name}!",
+                estimated_minutes=10,
+                priority="CRITICAL",
+                zone_name="Lion's Arch",
+                waypoint="[&BBAEAAA=]",
+                npc_name="Miyani",
+                game_mode="Crafting",
+            ),
+        ]
+        ch4 = JourneyChapter(
+            chapter_number=4,
+            chapter_title=f"The Forge Ceremony ({target_name})",
+            chapter_summary=f"Stage {prec_name}, {specific_name}, {mastery_name}, and {tribute_name} and assemble {target_name} at the Mystic Forge.",
+            actions=c4_actions,
+            completion_status="COMPLETED" if has_target else "IN_PROGRESS",
+            readiness_pct=100.0 if has_target else 25.0,
+        )
+
+        return [ch1, ch2, ch3, ch4]
+
+
+# Generalized aliases & module-level convenience functions
+LegendaryJourneySolver = TwilightJourneySolver
+
+
+def solve_twilight_journey(
+    account: Optional[AccountState] = None,
+    store: Optional[PrioryGraphStore] = None,
+    tp_prices: Optional[Dict[int, float]] = None,
+    time_budget_minutes: int = 90,
+    wizards_vault_exhausted: bool = False,
+    optimize_for_cost: bool = True,
+    excluded_modes: Optional[List[str]] = None,
+    preferred_modes: Optional[List[str]] = None,
+    target_item_id: int = TWILIGHT_ITEM_ID,
+) -> TwilightJourneyPlan:
+    """Module-level helper to solve a legendary weapon journey (defaults to Twilight 30704)."""
+    if store is None:
+        store = PrioryGraphStore()
+        store.load_default_ontology()
+    solver = TwilightJourneySolver(store)
+    return solver.solve_twilight_journey(
+        account=account,
+        tp_prices=tp_prices,
+        time_budget_minutes=time_budget_minutes,
+        wizards_vault_exhausted=wizards_vault_exhausted,
+        optimize_for_cost=optimize_for_cost,
+        excluded_modes=excluded_modes,
+        preferred_modes=preferred_modes,
+        target_item_id=target_item_id,
+    )
+
+
+def solve_legendary_journey(
+    target_item_id: int = TWILIGHT_ITEM_ID,
+    account: Optional[AccountState] = None,
+    store: Optional[PrioryGraphStore] = None,
+    tp_prices: Optional[Dict[int, float]] = None,
+    time_budget_minutes: int = 90,
+    wizards_vault_exhausted: bool = False,
+    optimize_for_cost: bool = True,
+    excluded_modes: Optional[List[str]] = None,
+    preferred_modes: Optional[List[str]] = None,
+) -> TwilightJourneyPlan:
+    """Module-level helper to solve any Gen 1, Gen 2, or Gen 3 legendary weapon journey."""
+    return solve_twilight_journey(
+        account=account,
+        store=store,
+        tp_prices=tp_prices,
+        time_budget_minutes=time_budget_minutes,
+        wizards_vault_exhausted=wizards_vault_exhausted,
+        optimize_for_cost=optimize_for_cost,
+        excluded_modes=excluded_modes,
+        preferred_modes=preferred_modes,
+        target_item_id=target_item_id,
+    )
+

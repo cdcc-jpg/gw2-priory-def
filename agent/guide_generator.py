@@ -28,17 +28,18 @@ class PersonalizedGuide(BaseModel):
     """The final synthesized progression guide."""
     goal_name: str
     target_quantity: int = 1
-    chat_code: Optional[str]
-    readiness_percentage: Union[int, float]
-    executive_summary: str
-    strategic_recommendations: List[str]
+    chat_code: Optional[str] = None
+    readiness_percentage: Union[int, float] = 0
+    executive_summary: str = ""
+    strategic_recommendations: List[str] = Field(default_factory=list)
     character_recommendations: List[str] = Field(default_factory=list)
     master_roadmap_phases: List[str] = Field(default_factory=list)
-    session_checklist: List[ActionStep]
-    missing_materials_summary: Dict[str, int]
-    missing_disciplines_summary: List[str]
-    motivational_tip: str
+    session_checklist: List[ActionStep] = Field(default_factory=list)
+    missing_materials_summary: Dict[str, int] = Field(default_factory=dict)
+    missing_disciplines_summary: List[str] = Field(default_factory=list)
+    motivational_tip: str = ""
     vip_lounge_callout: Optional[str] = None
+    twilight_journey_plan: Optional[Any] = None
 
 
 class GuideGenerator:
@@ -46,6 +47,54 @@ class GuideGenerator:
 
     def __init__(self, llm_client: Optional[BaseLLMClient] = None):
         self.llm = llm_client or get_default_llm_client()
+
+    def generate_twilight_journey_guide(
+        self,
+        journey_plan: Any,
+        goal: Optional[ResolvedGoal] = None,
+        diff_report: Optional[AccountDiffReport] = None,
+        account_state: Optional[Any] = None,
+    ) -> PersonalizedGuide:
+        """Synthesizes a PersonalizedGuide directly from a TwilightJourneyPlan / LegendaryJourneyPlan."""
+        from agent.intent_parser import PlayerGoalIntent
+
+        target_id = getattr(journey_plan, "target_item_id", 30704)
+        target_name = getattr(journey_plan, "target_item_name", "Twilight")
+        if goal is None:
+            goal = ResolvedGoal(
+                intent=PlayerGoalIntent(target_item_name=target_name, time_budget_minutes=90),
+                resolved_item_id=target_id,
+                resolved_item_name=target_name,
+            )
+        if diff_report is None:
+            from engine.account_diff import ItemRequirementNode
+
+            is_sat = getattr(journey_plan, "overall_readiness_pct", 0.0) >= 100.0
+            diff_report = AccountDiffReport(
+                goal_item_id=target_id,
+                goal_item_name=target_name,
+                target_quantity=1,
+                overall_readiness_pct=getattr(journey_plan, "overall_readiness_pct", 0.0),
+                is_fully_satisfied=is_sat,
+                root_node=ItemRequirementNode(
+                    item_id=target_id,
+                    label=target_name,
+                    required_quantity=1,
+                    owned_quantity=1 if is_sat else 0,
+                    missing_quantity=0 if is_sat else 1,
+                    is_satisfied=is_sat,
+                    is_account_bound=False,
+                ),
+            )
+        return self.generate_guide(
+            goal=goal,
+            diff_report=diff_report,
+            semantic_context="",
+            optimal_plan=journey_plan,
+            account_state=account_state,
+        )
+
+    generate_legendary_journey_guide = generate_twilight_journey_guide
 
     def generate_guide(
         self,
@@ -90,7 +139,8 @@ class GuideGenerator:
                 ],
                 missing_materials_summary={},
                 missing_disciplines_summary=[],
-                motivational_tip="🌟 **Priory Tip:** Legendary items unlocked in your Armory can be customized with free stat-swapping across every character on your account!"
+                motivational_tip="🌟 **Priory Tip:** Legendary items unlocked in your Armory can be customized with free stat-swapping across every character on your account!",
+                twilight_journey_plan=optimal_plan if getattr(optimal_plan, "pillars", None) is not None else None,
             )
 
         if diff_report.is_fully_satisfied:
@@ -115,7 +165,8 @@ class GuideGenerator:
                 ],
                 missing_materials_summary={},
                 missing_disciplines_summary=[],
-                motivational_tip="🌟 **Priory Tip:** Legendary items in your Armory can be equipped across all characters simultaneously!"
+                motivational_tip="🌟 **Priory Tip:** Legendary items in your Armory can be equipped across all characters simultaneously!",
+                twilight_journey_plan=optimal_plan if getattr(optimal_plan, "pillars", None) is not None else None,
             )
 
         # Case 2: Partially missing materials
@@ -218,13 +269,25 @@ class GuideGenerator:
                 recommendations.append(exhausted_clover_msg)
 
         # Cheapest Crafting Strategy comparison
-        if goal.resolved_item_id == 30704 or getattr(goal, "prefer_cheap", False) or getattr(intent, "prefer_cheap", False) or is_vault_exhausted:
+        if goal.resolved_item_id == 30704:
             cheap_strat = [
                 "💰 **Cheapest Crafting Strategy:**",
                 "   • **Dusk:** TP buy (~141g) vs Hobbs (~210g materials) -> TP buy saves ~69g.",
                 "   • **Onyx Lodestones:** Forge promotion of 196 Cores saves ~19.6g.",
                 "   • **Clovers:** BUY-2046 saves ~170g over direct forge rolls.",
                 "   • **Obsidian:** 0g via Temple of Balthazar Karma."
+            ]
+            for line in cheap_strat:
+                if line not in recommendations:
+                    recommendations.append(line)
+        elif getattr(goal, "prefer_cheap", False) or getattr(intent, "prefer_cheap", False) or is_vault_exhausted:
+            prec_label = getattr(optimal_plan, "precursor_name", "Precursor")
+            req_clovers = getattr(optimal_plan, "required_clovers", 77)
+            cheap_strat = [
+                f"💰 **Cheapest Crafting Strategy for {goal_display}:**",
+                f"   • **{prec_label}:** Evaluate TP buy order vs Grandmaster Hobbs / Vendor crafting.",
+                f"   • **Mystic Clovers ({req_clovers}x):** BUY-2046 daily Fractal exchange saves gold over direct Mystic Forge rolls.",
+                "   • **Obsidian Shards:** 0g via Temple of Balthazar Karma or Ley-Energy Matter Converter."
             ]
             for line in cheap_strat:
                 if line not in recommendations:
@@ -360,12 +423,24 @@ class GuideGenerator:
                     master_roadmap_formatted.append(f"   [{j}] **{s.action_title}**{npc_str}{char_str}{wp_str}: {s.action_description}")
 
         if optimal_plan and getattr(optimal_plan, "chapters", None):
-            summary = (
-                f"Welcome to your 4-Chapter Master Journey for **{goal_display}**. "
-                f"This progression plan is precisely tailored to your {intent.time_budget_minutes}-minute playtime, "
-                f"guiding you through Precursor Triage, the Core Tyria World Tour, Daily Currencies & Arbitrage (Spirit Shards, WvW Boosters, Onyx Promotion), "
-                f"and Character-Assigned Crafting at the Mystic Forge."
-            )
+            if goal.resolved_item_id == 30704:
+                summary = (
+                    f"Welcome to your 4-Chapter Master Journey for **{goal_display}**. "
+                    f"This progression plan is precisely tailored to your {intent.time_budget_minutes}-minute playtime, "
+                    f"guiding you through Precursor Triage, the Core Tyria World Tour, Daily Currencies & Arbitrage (Spirit Shards, WvW Boosters, Onyx Promotion), "
+                    f"and Character-Assigned Crafting at the Mystic Forge."
+                )
+            else:
+                prec_label = getattr(optimal_plan, "precursor_name", "Precursor")
+                mast_label = getattr(optimal_plan, "mastery_gift_name", "Gift of Mastery")
+                trib_label = getattr(optimal_plan, "tribute_gift_name", "Gift of Fortune")
+                spec_label = getattr(optimal_plan, "specific_gift_name", f"Gift of {goal_display}")
+                summary = (
+                    f"Welcome to your 4-Chapter Master Journey for **{goal_display}**. "
+                    f"This progression plan is precisely tailored to your {intent.time_budget_minutes}-minute playtime, "
+                    f"guiding you through Precursor Triage ({prec_label}), {mast_label}, {trib_label}, "
+                    f"and {spec_label} assembly at the Mystic Forge."
+                )
         else:
             summary = (
                 f"Here is your personalized progression plan for **{goal_display}** "
@@ -448,12 +523,19 @@ class GuideGenerator:
                         char_recs.append(f"👤 *[Character: {s.assigned_character}]* Crafting **{s.title}**")
 
         # Exploration & 2x Gift of Exploration guidance in strategic recommendations
-        if optimal_plan and getattr(optimal_plan, "chapters", None):
-            map_comp_rec = (
-                "🏆 **Core Tyria Map Completion Payoff:** 100% Core Tyria map completion yields **2x Gift of Exploration** "
-                "(supplying enough for Twilight + a 2nd Gen 1 legendary like Sunrise/Eternity). "
-                "Dedicate a single high-mobility character from your roster with mounts (Skyscale/Raptor) to complete all 5 regions sequentially."
-            )
+        if optimal_plan and getattr(optimal_plan, "chapters", None) and getattr(optimal_plan, "generation", "GEN1") == "GEN1":
+            if goal.resolved_item_id == 30704:
+                map_comp_rec = (
+                    "🏆 **Core Tyria Map Completion Payoff:** 100% Core Tyria map completion yields **2x Gift of Exploration** "
+                    "(supplying enough for Twilight + a 2nd Gen 1 legendary like Sunrise/Eternity). "
+                    "Dedicate a single high-mobility character from your roster with mounts (Skyscale/Raptor) to complete all 5 regions sequentially."
+                )
+            else:
+                map_comp_rec = (
+                    f"🏆 **Core Tyria Map Completion Payoff:** 100% Core Tyria map completion yields **2x Gift of Exploration** "
+                    f"(supplying enough for {goal_display} + a 2nd Gen 1 legendary). "
+                    "Dedicate a single high-mobility character from your roster with mounts (Skyscale/Raptor) to complete all 5 regions sequentially."
+                )
             if map_comp_rec not in recommendations:
                 recommendations.append(map_comp_rec)
 
@@ -552,10 +634,11 @@ class GuideGenerator:
                 recommendations.append(booster_rec)
 
         # Practical player tips for Invisible Bag staging and 250-stack ingot batching
+        prec_staging_name = "Dusk" if goal.resolved_item_id == 30704 else getattr(optimal_plan, "precursor_name", "Dusk")
         bag_staging_rec = (
             "🎒 **Inventory & Bag Overflow Management:**\n"
             "   • **Invisible Bag Staging:** Equip an **Invisible / Safe Bag** (e.g. 20-Slot Invisible Bag `[&AgG5VAAA]`) in your bottom-most inventory slot. "
-            "Store high-value precursor weapons (*Dusk*), Gifts, Mystic Clovers, lodestones, and Bloodstone Shards inside to prevent accidental merchant sale, material deposit, or salvage.\n"
+            f"Store high-value precursor weapons (*{prec_staging_name}*), Gifts, Mystic Clovers, lodestones, and Bloodstone Shards inside to prevent accidental merchant sale, material deposit, or salvage.\n"
             "   • **250-Stack Ingot Batching:** When refining metal ingots for the Gift of Metal & Gift of Darkness (250x Orichalcum, 250x Mithril, 250x Darksteel, 250x Platinum), "
             "batch refine in exact 250-count stacks and immediately craft the intermediate Gifts at the station rather than cluttering open inventory slots."
         )
@@ -575,7 +658,8 @@ class GuideGenerator:
             missing_materials_summary=missing_mats,
             missing_disciplines_summary=missing_discs,
             motivational_tip=tip,
-            vip_lounge_callout=lounge_callout
+            vip_lounge_callout=lounge_callout,
+            twilight_journey_plan=optimal_plan if getattr(optimal_plan, "pillars", None) is not None else None,
         )
 
     def generate_ranking_guide(

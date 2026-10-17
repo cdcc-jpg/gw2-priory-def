@@ -2140,6 +2140,103 @@ class PathSolver:
             summary=summary
         )
 
+    def _evaluate_precursor_buy_vs_craft(
+        self,
+        precursor_id: int,
+        account_state: Optional[AccountState] = None,
+        live_prices: Optional[Dict[int, Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        """Evaluates buy vs craft vs Wizard's Vault Starter Kit for any precursor item ID."""
+        account = account_state or AccountState()
+        name_q = """
+        SELECT ?label ?isBound WHERE {
+            ?item priory:gw2Id ?gw2Id ;
+                  rdfs:label ?label .
+            OPTIONAL { ?item priory:isAccountBound ?isBound }
+        } LIMIT 1
+        """
+        res = self.store.query(name_q, init_bindings={"gw2Id": Literal(precursor_id)})
+        prec_name = str(res[0]["label"]) if res else PRECURSOR_NAMES.get(precursor_id, f"Precursor {precursor_id}")
+        is_bound = str(res[0].get("isBound", "")).lower() == "true" if res else (precursor_id in GEN2_PRECURSOR_IDS)
+
+        if live_prices is None:
+            live_prices = get_live_market_prices([precursor_id])
+
+        instant_buy = self._get_price_copper(precursor_id, live_prices, "sells") if not is_bound else 0
+        buy_order = self._get_price_copper(precursor_id, live_prices, "buys") if not is_bound else 0
+
+        # Estimate collection craft cost from ontology/diff engine if recipe exists, else standard tier cost
+        craft_cost = 2100000 if not is_bound else 3400000
+        if self.diff_engine:
+            try:
+                empty_acc = AccountState()
+                diff = self.diff_engine.compute_diff(precursor_id, empty_acc)
+                leaves = self._collect_leaf_missing(diff.root_node)
+                if leaves and not (len(leaves) == 1 and leaves[0][0] == precursor_id):
+                    calc = sum(self._get_price_copper(m_id, live_prices, "sells") * m_qty for m_id, _, m_qty in leaves)
+                    if calc > 0:
+                        craft_cost = calc
+            except Exception:
+                pass
+
+        sk_q = """
+        SELECT ?kit WHERE {
+            ?kit a priory:LegendaryStarterKit ;
+                 priory:unpacksInto ?prec .
+            ?prec priory:gw2Id ?precId .
+        } LIMIT 1
+        """
+        sk_res = self.store.query(sk_q, init_bindings={"precId": Literal(precursor_id)})
+        is_starter_kit_candidate = bool(sk_res) or (precursor_id in STARTER_KIT_PRECURSORS)
+        already_owned = account.total_item_count(precursor_id) > 0
+
+        if is_bound:
+            rec = "HOBBS_COLLECTION"
+        elif is_starter_kit_candidate and account.astral_acclaim_count() >= 1000:
+            rec = "WIZARDS_VAULT"
+        elif buy_order > 0 and buy_order <= craft_cost:
+            rec = "BUY_ORDER"
+        else:
+            rec = "HOBBS_COLLECTION"
+
+        return {
+            "precursor_id": precursor_id,
+            "precursor_name": prec_name,
+            "is_account_bound": is_bound,
+            "already_owned": already_owned,
+            "instant_buy_copper": instant_buy,
+            "buy_order_copper": buy_order,
+            "craft_cost_copper": craft_cost,
+            "wizards_vault_available": is_starter_kit_candidate,
+            "recommended_option": rec,
+        }
+
+    def solve_journey_plan(
+        self,
+        target_item_id: int = 30704,
+        account: Optional[AccountState] = None,
+        tp_prices: Optional[Dict[int, float]] = None,
+        time_budget_minutes: int = 90,
+        wizards_vault_exhausted: bool = False,
+        optimize_for_cost: bool = True,
+        excluded_modes: Optional[List[str]] = None,
+        preferred_modes: Optional[List[str]] = None,
+    ):
+        """Solves the complete 4-pillar, 4-chapter Legendary Journey Plan for any Legendary Weapon in the ontology."""
+        from engine.twilight_journey_solver import LegendaryJourneySolver
+
+        journey_solver = LegendaryJourneySolver(self.store, self.diff_engine, self)
+        return journey_solver.solve_legendary_journey(
+            target_item_id=target_item_id,
+            account=account,
+            tp_prices=tp_prices,
+            time_budget_minutes=time_budget_minutes,
+            wizards_vault_exhausted=wizards_vault_exhausted,
+            optimize_for_cost=optimize_for_cost,
+            excluded_modes=excluded_modes,
+            preferred_modes=preferred_modes,
+        )
+
 
 def schedule_daily_session_itinerary(
     goal_item_id: Optional[int] = None,
@@ -2182,4 +2279,5 @@ def solve_buy_vs_craft_vs_vault(
         live_prices=live_prices,
         account_state=account_state
     )
+
 

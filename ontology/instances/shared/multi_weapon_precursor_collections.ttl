@@ -1,0 +1,1667 @@
+@prefix discipline: <https://priory.gw2/ref/discipline/> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix priory: <https://priory.gw2/def/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix recipe: <https://priory.gw2/id/recipe/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix weapon: <https://priory.gw2/ref/weapon/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+priory:hasAcquisitionPath a owl:ObjectProperty .
+
+priory:hasCollectionStep a owl:ObjectProperty .
+
+priory:hasQuantity a owl:DatatypeProperty .
+
+priory:precursorTo a owl:ObjectProperty .
+
+priory:requiresCraftingDiscipline a owl:ObjectProperty .
+
+priory:requiresDisciplineRating a owl:DatatypeProperty .
+
+priory:stepIndex a owl:DatatypeProperty .
+
+priory:stepObjective a owl:DatatypeProperty .
+
+priory:col_astralaria_vol1_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Astralaria I: The Device via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 1 of the The Mechanism (Astralaria) precursor journey."@en .
+
+priory:col_astralaria_vol1_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Experimental Axe"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Astralaria I: The Device."@en .
+
+priory:col_astralaria_vol1_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Experimental Axe (Weaponsmith 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_experimental_axe to craft The Experimental Axe."@en .
+
+priory:col_astralaria_vol2_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Astralaria II: The Apparatus via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 2 of the The Mechanism (Astralaria) precursor journey."@en .
+
+priory:col_astralaria_vol2_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Apparatus"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Astralaria II: The Apparatus."@en .
+
+priory:col_astralaria_vol2_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Apparatus (Weaponsmith 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_apparatus to craft The Apparatus."@en .
+
+priory:col_astralaria_vol3_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Astralaria III: The Mechanism via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 3 of the The Mechanism (Astralaria) precursor journey."@en .
+
+priory:col_astralaria_vol3_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Device"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Astralaria III: The Mechanism."@en .
+
+priory:col_astralaria_vol3_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Device (Weaponsmith 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_device to craft The Device."@en .
+
+priory:col_astralaria_vol4_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Astralaria IV: The Cosmos via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 4 of the The Mechanism (Astralaria) precursor journey."@en .
+
+priory:col_astralaria_vol4_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Mechanism"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Astralaria IV: The Cosmos."@en .
+
+priory:col_astralaria_vol4_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Mechanism (Weaponsmith 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_mechanism to craft The Mechanism."@en .
+
+priory:col_dawn_vol1_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Dawn I: The Experimental Daysword via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 1 of the Dawn (Sunrise) precursor journey."@en .
+
+priory:col_dawn_vol1_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Experimental Daysword"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Dawn I: The Experimental Daysword."@en .
+
+priory:col_dawn_vol1_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Experimental Daysword (Weaponsmith 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_experimental_daysword to craft Experimental Daysword."@en .
+
+priory:col_dawn_vol2_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Dawn II: The Perfected Daysword via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 2 of the Dawn (Sunrise) precursor journey."@en .
+
+priory:col_dawn_vol2_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Perfected Daysword"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Dawn II: The Perfected Daysword."@en .
+
+priory:col_dawn_vol2_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Perfected Daysword (Weaponsmith 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_perfected_daysword to craft Perfected Daysword."@en .
+
+priory:col_dawn_vol3_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Dawn III: Dawn via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 3 of the Dawn (Sunrise) precursor journey."@en .
+
+priory:col_dawn_vol3_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Dawn"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Dawn III: Dawn."@en .
+
+priory:col_dawn_vol3_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Dawn (Weaponsmith 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_dawn_tier3 to craft Dawn."@en .
+
+priory:col_hope_vol1_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock HOPE I: Research via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 1 of the Prototype (HOPE) precursor journey."@en .
+
+priory:col_hope_vol1_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Experimental Pistol"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for HOPE I: Research."@en .
+
+priory:col_hope_vol1_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Experimental Pistol (Huntsman 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_experimental_pistol to craft Experimental Pistol."@en .
+
+priory:col_hope_vol2_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock HOPE II: Development via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 2 of the Prototype (HOPE) precursor journey."@en .
+
+priory:col_hope_vol2_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Research"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for HOPE II: Development."@en .
+
+priory:col_hope_vol2_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Research (Huntsman 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_research_pistol to craft Research."@en .
+
+priory:col_hope_vol3_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock HOPE III: Prototype via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 3 of the Prototype (HOPE) precursor journey."@en .
+
+priory:col_hope_vol3_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Development"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for HOPE III: Prototype."@en .
+
+priory:col_hope_vol3_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Development (Huntsman 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_development_pistol to craft Development."@en .
+
+priory:col_hope_vol4_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock HOPE IV: The Catalyst via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 4 of the Prototype (HOPE) precursor journey."@en .
+
+priory:col_hope_vol4_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Prototype"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for HOPE IV: The Catalyst."@en .
+
+priory:col_hope_vol4_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Prototype (Huntsman 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_prototype_pistol to craft Prototype."@en .
+
+priory:col_nevermore_vol1_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Nevermore I: Ravenswood Branch via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 1 of the The Living Ravens (Nevermore) precursor journey."@en .
+
+priory:col_nevermore_vol1_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Ravenswood Branch"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Nevermore I: Ravenswood Branch."@en .
+
+priory:col_nevermore_vol1_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Ravenswood Branch (Artificer 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_ravenswood_branch to craft Ravenswood Branch."@en .
+
+priory:col_nevermore_vol2_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Nevermore II: Ravenswood Staff via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 2 of the The Living Ravens (Nevermore) precursor journey."@en .
+
+priory:col_nevermore_vol2_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Ravenswood Staff"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Nevermore II: Ravenswood Staff."@en .
+
+priory:col_nevermore_vol2_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Ravenswood Staff (Artificer 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_ravenswood_staff to craft Ravenswood Staff."@en .
+
+priory:col_nevermore_vol3_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Nevermore III: The Raven Spirit via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 3 of the The Living Ravens (Nevermore) precursor journey."@en .
+
+priory:col_nevermore_vol3_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Raven Spirit"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Nevermore III: The Raven Spirit."@en .
+
+priory:col_nevermore_vol3_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Raven Spirit (Artificer 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_raven_spirit to craft The Raven Spirit."@en .
+
+priory:col_nevermore_vol4_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Nevermore IV: The Ravenspirit via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 4 of the The Living Ravens (Nevermore) precursor journey."@en .
+
+priory:col_nevermore_vol4_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Living Ravens"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Nevermore IV: The Ravenspirit."@en .
+
+priory:col_nevermore_vol4_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Living Ravens (Artificer 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_living_ravens to craft The Living Ravens."@en .
+
+priory:col_the_legend_vol1_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock The Legend I: The Experimental Staff via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 1 of the The Legend (The Bifrost) precursor journey."@en .
+
+priory:col_the_legend_vol1_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Experimental Staff"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for The Legend I: The Experimental Staff."@en .
+
+priory:col_the_legend_vol1_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Experimental Staff (Artificer 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_experimental_staff to craft Experimental Staff."@en .
+
+priory:col_the_legend_vol2_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock The Legend II: The Perfected Staff via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 2 of the The Legend (The Bifrost) precursor journey."@en .
+
+priory:col_the_legend_vol2_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Perfected Staff"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for The Legend II: The Perfected Staff."@en .
+
+priory:col_the_legend_vol2_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Perfected Staff (Artificer 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_perfected_staff to craft Perfected Staff."@en .
+
+priory:col_the_legend_vol3_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock The Legend III: The Legend via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 3 of the The Legend (The Bifrost) precursor journey."@en .
+
+priory:col_the_legend_vol3_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for The Legend"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for The Legend III: The Legend."@en .
+
+priory:col_the_legend_vol3_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft The Legend (Artificer 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_the_legend_tier3 to craft The Legend."@en .
+
+priory:col_zap_vol1_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Zap I: The Experimental Sword via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 1 of the Zap (Bolt) precursor journey."@en .
+
+priory:col_zap_vol1_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Experimental Rapier"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Zap I: The Experimental Sword."@en .
+
+priory:col_zap_vol1_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Experimental Rapier (Weaponsmith 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_experimental_rapier to craft Experimental Rapier."@en .
+
+priory:col_zap_vol2_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Zap II: The Perfected Sword via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 2 of the Zap (Bolt) precursor journey."@en .
+
+priory:col_zap_vol2_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Perfected Rapier"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Zap II: The Perfected Sword."@en .
+
+priory:col_zap_vol2_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Perfected Rapier (Weaponsmith 450)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_perfected_rapier to craft Perfected Rapier."@en .
+
+priory:col_zap_vol3_step1 a owl:NamedIndividual ;
+    rdfs:label "Unlock Zap III: Zap via Grandmaster Hobbs in Lion's Arch"@en ;
+    priory:stepIndex 1 ;
+    priory:stepObjective "Speak with Grandmaster Hobbs to begin Volume 3 of the Zap (Bolt) precursor journey."@en .
+
+priory:col_zap_vol3_step2 a owl:NamedIndividual ;
+    rdfs:label "Complete Tyrian field research for Zap"@en ;
+    priory:stepIndex 2 ;
+    priory:stepObjective "Gather all collection trophies and mastery tokens for Zap III: Zap."@en .
+
+priory:col_zap_vol3_step3 a owl:NamedIndividual ;
+    rdfs:label "Craft Zap (Weaponsmith 500)"@en ;
+    priory:stepIndex 3 ;
+    priory:stepObjective "Use unlocked recipe craft_zap_tier3 to craft Zap."@en .
+
+item:29169 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Dawn"@en ;
+    priory:acquiredVia priory:col_dawn_vol3,
+        recipe:craft_dawn_tier3 ;
+    priory:gw2Id 29169 ;
+    priory:hasAcquisitionPath priory:col_dawn_vol3,
+        recipe:craft_dawn_tier3 ;
+    priory:hasPrecursorTier 3 ;
+    priory:hasPrecursorType priory:TradablePrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound false ;
+    priory:isPrecursorOf item:30703 ;
+    priory:precursorTo item:30703 ;
+    priory:producedBy recipe:craft_dawn_tier3 .
+
+item:29180 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Legend"@en ;
+    priory:acquiredVia priory:col_the_legend_vol3,
+        recipe:craft_the_legend_tier3 ;
+    priory:gw2Id 29180 ;
+    priory:hasAcquisitionPath priory:col_the_legend_vol3,
+        recipe:craft_the_legend_tier3 ;
+    priory:hasPrecursorTier 3 ;
+    priory:hasPrecursorType priory:TradablePrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound false ;
+    priory:isPrecursorOf item:30698 ;
+    priory:precursorTo item:30698 ;
+    priory:producedBy recipe:craft_the_legend_tier3 .
+
+item:29181 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Zap"@en ;
+    priory:acquiredVia priory:col_zap_vol3,
+        recipe:craft_zap_tier3 ;
+    priory:gw2Id 29181 ;
+    priory:hasAcquisitionPath priory:col_zap_vol3,
+        recipe:craft_zap_tier3 ;
+    priory:hasPrecursorTier 3 ;
+    priory:hasPrecursorType priory:TradablePrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Sword ;
+    priory:isAccountBound false ;
+    priory:isPrecursorOf item:30699 ;
+    priory:precursorTo item:30699 ;
+    priory:producedBy recipe:craft_zap_tier3 .
+
+item:71436 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Living Ravens"@en ;
+    priory:acquiredVia priory:col_nevermore_vol4,
+        recipe:craft_the_living_ravens ;
+    priory:gw2Id 71436 ;
+    priory:hasAcquisitionPath priory:col_nevermore_vol4,
+        recipe:craft_the_living_ravens ;
+    priory:hasPrecursorTier 4 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:isPrecursorOf item:71383 ;
+    priory:precursorTo item:71383 ;
+    priory:producedBy recipe:craft_the_living_ravens .
+
+item:71950 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Prototype"@en ;
+    priory:acquiredVia priory:col_hope_vol4,
+        recipe:craft_prototype_pistol ;
+    priory:gw2Id 71950 ;
+    priory:hasAcquisitionPath priory:col_hope_vol4,
+        recipe:craft_prototype_pistol ;
+    priory:hasPrecursorTier 4 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Pistol ;
+    priory:isAccountBound true ;
+    priory:isPrecursorOf item:72713 ;
+    priory:precursorTo item:72713 ;
+    priory:producedBy recipe:craft_prototype_pistol .
+
+item:76688 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Mechanism"@en ;
+    priory:acquiredVia priory:col_astralaria_vol4,
+        recipe:craft_the_mechanism ;
+    priory:gw2Id 76688 ;
+    priory:hasAcquisitionPath priory:col_astralaria_vol4,
+        recipe:craft_the_mechanism ;
+    priory:hasPrecursorTier 4 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true ;
+    priory:isPrecursorOf item:76158 ;
+    priory:precursorTo item:76158 ;
+    priory:producedBy recipe:craft_the_mechanism .
+
+recipe:req_craft_dawn_tier3_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_dawn_tier3_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 45 ;
+    priory:requiredQuantity 45 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_dawn_tier3_73433 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:73433 .
+
+recipe:req_craft_dawn_tier3_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 100 ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_development_pistol_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_development_pistol_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_development_pistol_75209 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:75209 .
+
+recipe:req_craft_experimental_daysword_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 5 ;
+    priory:requiredQuantity 5 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_experimental_daysword_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_experimental_daysword_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_experimental_pistol_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_experimental_pistol_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 5 ;
+    priory:requiredQuantity 5 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_experimental_pistol_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_experimental_rapier_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_experimental_rapier_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 5 ;
+    priory:requiredQuantity 5 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_experimental_rapier_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_experimental_staff_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_experimental_staff_46741 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 5 ;
+    priory:requiredQuantity 5 ;
+    priory:requiresItem item:46741 .
+
+recipe:req_craft_experimental_staff_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_perfected_daysword_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_perfected_daysword_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_perfected_daysword_71423 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:71423 .
+
+recipe:req_craft_perfected_rapier_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_perfected_rapier_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_perfected_rapier_76664 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:76664 .
+
+recipe:req_craft_perfected_staff_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_perfected_staff_46741 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46741 .
+
+recipe:req_craft_perfected_staff_74561 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:74561 .
+
+recipe:req_craft_prototype_pistol_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_prototype_pistol_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_prototype_pistol_75657 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:75657 .
+
+recipe:req_craft_prototype_pistol_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 100 ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_ravenswood_branch_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_ravenswood_branch_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 5 ;
+    priory:requiredQuantity 5 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_ravenswood_branch_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_ravenswood_staff_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 20 ;
+    priory:requiredQuantity 20 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_ravenswood_staff_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_ravenswood_staff_71385 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:71385 .
+
+recipe:req_craft_research_pistol_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 20 ;
+    priory:requiredQuantity 20 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_research_pistol_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_research_pistol_74155 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:74155 .
+
+recipe:req_craft_the_apparatus_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_apparatus_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 20 ;
+    priory:requiredQuantity 20 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_the_apparatus_75948 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:75948 .
+
+recipe:req_craft_the_device_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_device_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_the_device_72094 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:72094 .
+
+recipe:req_craft_the_experimental_axe_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 5 ;
+    priory:requiredQuantity 5 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_experimental_axe_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_the_experimental_axe_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 25 ;
+    priory:requiredQuantity 25 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_the_legend_tier3_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 45 ;
+    priory:requiredQuantity 45 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_legend_tier3_46741 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46741 .
+
+recipe:req_craft_the_legend_tier3_73566 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:73566 .
+
+recipe:req_craft_the_legend_tier3_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 100 ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_the_living_ravens_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_living_ravens_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_the_living_ravens_74678 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:74678 .
+
+recipe:req_craft_the_living_ravens_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 100 ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_the_mechanism_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_mechanism_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_the_mechanism_73194 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:73194 .
+
+recipe:req_craft_the_mechanism_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 100 ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79418 .
+
+recipe:req_craft_the_raven_spirit_46736 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 30 ;
+    priory:requiredQuantity 30 ;
+    priory:requiresItem item:46736 .
+
+recipe:req_craft_the_raven_spirit_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 10 ;
+    priory:requiredQuantity 10 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_the_raven_spirit_76363 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:76363 .
+
+recipe:req_craft_zap_tier3_46738 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 40 ;
+    priory:requiredQuantity 40 ;
+    priory:requiresItem item:46738 .
+
+recipe:req_craft_zap_tier3_46739 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 15 ;
+    priory:requiredQuantity 15 ;
+    priory:requiresItem item:46739 .
+
+recipe:req_craft_zap_tier3_76416 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 1 ;
+    priory:requiredQuantity 1 ;
+    priory:requiresItem item:76416 .
+
+recipe:req_craft_zap_tier3_79418 a owl:NamedIndividual,
+        priory:IngredientRequirement ;
+    priory:hasQuantity 100 ;
+    priory:requiredQuantity 100 ;
+    priory:requiresItem item:79418 .
+
+priory:col_astralaria_vol4 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Astralaria IV: The Cosmos"@en ;
+    priory:hasCollectionStep priory:col_astralaria_vol4_step1,
+        priory:col_astralaria_vol4_step2,
+        priory:col_astralaria_vol4_step3 ;
+    priory:requiresCollection priory:col_astralaria_vol3 ;
+    priory:unlocksRecipe recipe:craft_the_mechanism .
+
+priory:col_dawn_vol3 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Dawn III: Dawn"@en ;
+    priory:hasCollectionStep priory:col_dawn_vol3_step1,
+        priory:col_dawn_vol3_step2,
+        priory:col_dawn_vol3_step3 ;
+    priory:requiresCollection priory:col_dawn_vol2 ;
+    priory:unlocksRecipe recipe:craft_dawn_tier3 .
+
+priory:col_hope_vol4 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "HOPE IV: The Catalyst"@en ;
+    priory:hasCollectionStep priory:col_hope_vol4_step1,
+        priory:col_hope_vol4_step2,
+        priory:col_hope_vol4_step3 ;
+    priory:requiresCollection priory:col_hope_vol3 ;
+    priory:unlocksRecipe recipe:craft_prototype_pistol .
+
+priory:col_nevermore_vol4 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Nevermore IV: The Ravenspirit"@en ;
+    priory:hasCollectionStep priory:col_nevermore_vol4_step1,
+        priory:col_nevermore_vol4_step2,
+        priory:col_nevermore_vol4_step3 ;
+    priory:requiresCollection priory:col_nevermore_vol3 ;
+    priory:unlocksRecipe recipe:craft_the_living_ravens .
+
+priory:col_the_legend_vol3 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "The Legend III: The Legend"@en ;
+    priory:hasCollectionStep priory:col_the_legend_vol3_step1,
+        priory:col_the_legend_vol3_step2,
+        priory:col_the_legend_vol3_step3 ;
+    priory:requiresCollection priory:col_the_legend_vol2 ;
+    priory:unlocksRecipe recipe:craft_the_legend_tier3 .
+
+priory:col_zap_vol3 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Zap III: Zap"@en ;
+    priory:hasCollectionStep priory:col_zap_vol3_step1,
+        priory:col_zap_vol3_step2,
+        priory:col_zap_vol3_step3 ;
+    priory:requiresCollection priory:col_zap_vol2 ;
+    priory:unlocksRecipe recipe:craft_zap_tier3 .
+
+item:30698 a owl:NamedIndividual,
+        priory:Item,
+        priory:LegendaryWeapon ;
+    priory:gw2Id 30698 .
+
+item:30699 a owl:NamedIndividual,
+        priory:Item,
+        priory:LegendaryWeapon ;
+    priory:gw2Id 30699 .
+
+item:30703 a owl:NamedIndividual,
+        priory:Item,
+        priory:LegendaryWeapon ;
+    priory:gw2Id 30703 .
+
+item:71383 a owl:NamedIndividual,
+        priory:Item,
+        priory:LegendaryWeapon ;
+    priory:gw2Id 71383 .
+
+item:71385 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Ravenswood Branch"@en ;
+    priory:acquiredVia priory:col_nevermore_vol1,
+        recipe:craft_ravenswood_branch ;
+    priory:gw2Id 71385 ;
+    priory:hasAcquisitionPath priory:col_nevermore_vol1,
+        recipe:craft_ravenswood_branch ;
+    priory:hasPrecursorTier 1 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_ravenswood_branch .
+
+item:71423 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Experimental Daysword"@en ;
+    priory:acquiredVia priory:col_dawn_vol1,
+        recipe:craft_experimental_daysword ;
+    priory:gw2Id 71423 ;
+    priory:hasAcquisitionPath priory:col_dawn_vol1,
+        recipe:craft_experimental_daysword ;
+    priory:hasPrecursorTier 1 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_experimental_daysword .
+
+item:72094 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Apparatus"@en ;
+    priory:acquiredVia priory:col_astralaria_vol2,
+        recipe:craft_the_apparatus ;
+    priory:gw2Id 72094 ;
+    priory:hasAcquisitionPath priory:col_astralaria_vol2,
+        recipe:craft_the_apparatus ;
+    priory:hasPrecursorTier 2 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_the_apparatus .
+
+item:72713 a owl:NamedIndividual,
+        priory:Item,
+        priory:LegendaryWeapon ;
+    priory:gw2Id 72713 .
+
+item:73194 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Device"@en ;
+    priory:acquiredVia priory:col_astralaria_vol3,
+        recipe:craft_the_device ;
+    priory:gw2Id 73194 ;
+    priory:hasAcquisitionPath priory:col_astralaria_vol3,
+        recipe:craft_the_device ;
+    priory:hasPrecursorTier 3 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_the_device .
+
+item:73433 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Perfected Daysword"@en ;
+    priory:acquiredVia priory:col_dawn_vol2,
+        recipe:craft_perfected_daysword ;
+    priory:gw2Id 73433 ;
+    priory:hasAcquisitionPath priory:col_dawn_vol2,
+        recipe:craft_perfected_daysword ;
+    priory:hasPrecursorTier 2 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Greatsword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_perfected_daysword .
+
+item:73566 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Perfected Staff"@en ;
+    priory:acquiredVia priory:col_the_legend_vol2,
+        recipe:craft_perfected_staff ;
+    priory:gw2Id 73566 ;
+    priory:hasAcquisitionPath priory:col_the_legend_vol2,
+        recipe:craft_perfected_staff ;
+    priory:hasPrecursorTier 2 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_perfected_staff .
+
+item:74155 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    skos:altLabel "Experimental Pistol"@en ;
+    priory:acquiredVia priory:col_hope_vol1,
+        recipe:craft_experimental_pistol ;
+    priory:gw2Id 74155 ;
+    priory:hasAcquisitionPath priory:col_hope_vol1,
+        recipe:craft_experimental_pistol ;
+    priory:hasPrecursorTier 1 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasWeaponType weapon:Pistol .
+
+item:74561 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Experimental Staff"@en ;
+    priory:acquiredVia priory:col_the_legend_vol1,
+        recipe:craft_experimental_staff ;
+    priory:gw2Id 74561 ;
+    priory:hasAcquisitionPath priory:col_the_legend_vol1,
+        recipe:craft_experimental_staff ;
+    priory:hasPrecursorTier 1 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_experimental_staff .
+
+item:74678 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Raven Spirit"@en ;
+    priory:acquiredVia priory:col_nevermore_vol3,
+        recipe:craft_the_raven_spirit ;
+    priory:gw2Id 74678 ;
+    priory:hasAcquisitionPath priory:col_nevermore_vol3,
+        recipe:craft_the_raven_spirit ;
+    priory:hasPrecursorTier 3 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_the_raven_spirit .
+
+item:75209 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Research"@en ;
+    priory:acquiredVia priory:col_hope_vol2,
+        recipe:craft_research_pistol ;
+    priory:gw2Id 75209 ;
+    priory:hasAcquisitionPath priory:col_hope_vol2,
+        recipe:craft_research_pistol ;
+    priory:hasPrecursorTier 2 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Pistol ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_research_pistol .
+
+item:75657 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Development"@en ;
+    priory:acquiredVia priory:col_hope_vol3,
+        recipe:craft_development_pistol ;
+    priory:gw2Id 75657 ;
+    priory:hasAcquisitionPath priory:col_hope_vol3,
+        recipe:craft_development_pistol ;
+    priory:hasPrecursorTier 3 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Pistol ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_development_pistol .
+
+item:75948 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "The Experimental Axe"@en ;
+    priory:acquiredVia priory:col_astralaria_vol1,
+        recipe:craft_the_experimental_axe ;
+    priory:gw2Id 75948 ;
+    priory:hasAcquisitionPath priory:col_astralaria_vol1,
+        recipe:craft_the_experimental_axe ;
+    priory:hasPrecursorTier 1 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Axe ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_the_experimental_axe .
+
+item:76158 a owl:NamedIndividual,
+        priory:Item,
+        priory:LegendaryWeapon ;
+    priory:gw2Id 76158 .
+
+item:76363 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Ravenswood Staff"@en ;
+    priory:acquiredVia priory:col_nevermore_vol2,
+        recipe:craft_ravenswood_staff ;
+    priory:gw2Id 76363 ;
+    priory:hasAcquisitionPath priory:col_nevermore_vol2,
+        recipe:craft_ravenswood_staff ;
+    priory:hasPrecursorTier 2 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Staff ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_ravenswood_staff .
+
+item:76416 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Perfected Rapier"@en ;
+    priory:acquiredVia priory:col_zap_vol2,
+        recipe:craft_perfected_rapier ;
+    priory:gw2Id 76416 ;
+    priory:hasAcquisitionPath priory:col_zap_vol2,
+        recipe:craft_perfected_rapier ;
+    priory:hasPrecursorTier 2 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Sword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_perfected_rapier .
+
+item:76664 a owl:NamedIndividual,
+        priory:Item,
+        priory:PrecursorWeapon ;
+    rdfs:label "Experimental Rapier"@en ;
+    priory:acquiredVia priory:col_zap_vol1,
+        recipe:craft_experimental_rapier ;
+    priory:gw2Id 76664 ;
+    priory:hasAcquisitionPath priory:col_zap_vol1,
+        recipe:craft_experimental_rapier ;
+    priory:hasPrecursorTier 1 ;
+    priory:hasPrecursorType priory:CollectionPrecursor ;
+    priory:hasRarity rarity:Exotic ;
+    priory:hasWeaponType weapon:Sword ;
+    priory:isAccountBound true ;
+    priory:producedBy recipe:craft_experimental_rapier .
+
+priory:col_astralaria_vol1 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Astralaria I: The Device"@en ;
+    priory:hasCollectionStep priory:col_astralaria_vol1_step1,
+        priory:col_astralaria_vol1_step2,
+        priory:col_astralaria_vol1_step3 ;
+    priory:unlocksRecipe recipe:craft_the_experimental_axe .
+
+priory:col_astralaria_vol2 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Astralaria II: The Apparatus"@en ;
+    priory:hasCollectionStep priory:col_astralaria_vol2_step1,
+        priory:col_astralaria_vol2_step2,
+        priory:col_astralaria_vol2_step3 ;
+    priory:requiresCollection priory:col_astralaria_vol1 ;
+    priory:unlocksRecipe recipe:craft_the_apparatus .
+
+priory:col_astralaria_vol3 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Astralaria III: The Mechanism"@en ;
+    priory:hasCollectionStep priory:col_astralaria_vol3_step1,
+        priory:col_astralaria_vol3_step2,
+        priory:col_astralaria_vol3_step3 ;
+    priory:requiresCollection priory:col_astralaria_vol2 ;
+    priory:unlocksRecipe recipe:craft_the_device .
+
+priory:col_dawn_vol1 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Dawn I: The Experimental Daysword"@en ;
+    priory:hasCollectionStep priory:col_dawn_vol1_step1,
+        priory:col_dawn_vol1_step2,
+        priory:col_dawn_vol1_step3 ;
+    priory:unlocksRecipe recipe:craft_experimental_daysword .
+
+priory:col_dawn_vol2 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Dawn II: The Perfected Daysword"@en ;
+    priory:hasCollectionStep priory:col_dawn_vol2_step1,
+        priory:col_dawn_vol2_step2,
+        priory:col_dawn_vol2_step3 ;
+    priory:requiresCollection priory:col_dawn_vol1 ;
+    priory:unlocksRecipe recipe:craft_perfected_daysword .
+
+priory:col_hope_vol1 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "HOPE I: Research"@en ;
+    priory:hasCollectionStep priory:col_hope_vol1_step1,
+        priory:col_hope_vol1_step2,
+        priory:col_hope_vol1_step3 ;
+    priory:unlocksRecipe recipe:craft_experimental_pistol .
+
+priory:col_hope_vol2 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "HOPE II: Development"@en ;
+    priory:hasCollectionStep priory:col_hope_vol2_step1,
+        priory:col_hope_vol2_step2,
+        priory:col_hope_vol2_step3 ;
+    priory:requiresCollection priory:col_hope_vol1 ;
+    priory:unlocksRecipe recipe:craft_research_pistol .
+
+priory:col_hope_vol3 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "HOPE III: Prototype"@en ;
+    priory:hasCollectionStep priory:col_hope_vol3_step1,
+        priory:col_hope_vol3_step2,
+        priory:col_hope_vol3_step3 ;
+    priory:requiresCollection priory:col_hope_vol2 ;
+    priory:unlocksRecipe recipe:craft_development_pistol .
+
+priory:col_nevermore_vol1 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Nevermore I: Ravenswood Branch"@en ;
+    priory:hasCollectionStep priory:col_nevermore_vol1_step1,
+        priory:col_nevermore_vol1_step2,
+        priory:col_nevermore_vol1_step3 ;
+    priory:unlocksRecipe recipe:craft_ravenswood_branch .
+
+priory:col_nevermore_vol2 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Nevermore II: Ravenswood Staff"@en ;
+    priory:hasCollectionStep priory:col_nevermore_vol2_step1,
+        priory:col_nevermore_vol2_step2,
+        priory:col_nevermore_vol2_step3 ;
+    priory:requiresCollection priory:col_nevermore_vol1 ;
+    priory:unlocksRecipe recipe:craft_ravenswood_staff .
+
+priory:col_nevermore_vol3 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Nevermore III: The Raven Spirit"@en ;
+    priory:hasCollectionStep priory:col_nevermore_vol3_step1,
+        priory:col_nevermore_vol3_step2,
+        priory:col_nevermore_vol3_step3 ;
+    priory:requiresCollection priory:col_nevermore_vol2 ;
+    priory:unlocksRecipe recipe:craft_the_raven_spirit .
+
+priory:col_the_legend_vol1 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "The Legend I: The Experimental Staff"@en ;
+    priory:hasCollectionStep priory:col_the_legend_vol1_step1,
+        priory:col_the_legend_vol1_step2,
+        priory:col_the_legend_vol1_step3 ;
+    priory:unlocksRecipe recipe:craft_experimental_staff .
+
+priory:col_the_legend_vol2 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "The Legend II: The Perfected Staff"@en ;
+    priory:hasCollectionStep priory:col_the_legend_vol2_step1,
+        priory:col_the_legend_vol2_step2,
+        priory:col_the_legend_vol2_step3 ;
+    priory:requiresCollection priory:col_the_legend_vol1 ;
+    priory:unlocksRecipe recipe:craft_perfected_staff .
+
+priory:col_zap_vol1 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Zap I: The Experimental Sword"@en ;
+    priory:hasCollectionStep priory:col_zap_vol1_step1,
+        priory:col_zap_vol1_step2,
+        priory:col_zap_vol1_step3 ;
+    priory:unlocksRecipe recipe:craft_experimental_rapier .
+
+priory:col_zap_vol2 a owl:NamedIndividual,
+        priory:AchievementCollectionPath ;
+    rdfs:label "Zap II: The Perfected Sword"@en ;
+    priory:hasCollectionStep priory:col_zap_vol2_step1,
+        priory:col_zap_vol2_step2,
+        priory:col_zap_vol2_step3 ;
+    priory:requiresCollection priory:col_zap_vol1 ;
+    priory:unlocksRecipe recipe:craft_perfected_rapier .
+
+item:46741 a owl:NamedIndividual,
+        priory:AscendedMaterial,
+        priory:CraftingMaterial,
+        priory:Item ;
+    rdfs:label "Bolt of Damask"@en ;
+    priory:gw2Id 46741 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound false .
+
+recipe:craft_experimental_pistol a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Experimental Pistol"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_experimental_pistol_46738,
+        recipe:req_craft_experimental_pistol_46739,
+        recipe:req_craft_experimental_pistol_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:74155 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Huntsman ;
+    priory:requiresDiscipline discipline:Huntsman ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_dawn_tier3 a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Dawn"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_dawn_tier3_46736,
+        recipe:req_craft_dawn_tier3_46738,
+        recipe:req_craft_dawn_tier3_73433,
+        recipe:req_craft_dawn_tier3_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:29169 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_development_pistol a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Development"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_development_pistol_46738,
+        recipe:req_craft_development_pistol_46739,
+        recipe:req_craft_development_pistol_75209 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:75657 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Huntsman ;
+    priory:requiresDiscipline discipline:Huntsman ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_experimental_daysword a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Experimental Daysword"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_experimental_daysword_46736,
+        recipe:req_craft_experimental_daysword_46738,
+        recipe:req_craft_experimental_daysword_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:71423 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_experimental_rapier a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Experimental Rapier"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_experimental_rapier_46738,
+        recipe:req_craft_experimental_rapier_46739,
+        recipe:req_craft_experimental_rapier_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:76664 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_experimental_staff a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Experimental Staff"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_experimental_staff_46736,
+        recipe:req_craft_experimental_staff_46741,
+        recipe:req_craft_experimental_staff_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:74561 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_perfected_daysword a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Perfected Daysword"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_perfected_daysword_46736,
+        recipe:req_craft_perfected_daysword_46738,
+        recipe:req_craft_perfected_daysword_71423 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:73433 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_perfected_rapier a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Perfected Rapier"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_perfected_rapier_46738,
+        recipe:req_craft_perfected_rapier_46739,
+        recipe:req_craft_perfected_rapier_76664 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:76416 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_perfected_staff a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Perfected Staff"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_perfected_staff_46736,
+        recipe:req_craft_perfected_staff_46741,
+        recipe:req_craft_perfected_staff_74561 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:73566 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_prototype_pistol a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Prototype"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_prototype_pistol_46738,
+        recipe:req_craft_prototype_pistol_46739,
+        recipe:req_craft_prototype_pistol_75657,
+        recipe:req_craft_prototype_pistol_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:71950 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Huntsman ;
+    priory:requiresDiscipline discipline:Huntsman ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_ravenswood_branch a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Ravenswood Branch"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_ravenswood_branch_46736,
+        recipe:req_craft_ravenswood_branch_46739,
+        recipe:req_craft_ravenswood_branch_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:71385 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_ravenswood_staff a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Ravenswood Staff"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_ravenswood_staff_46736,
+        recipe:req_craft_ravenswood_staff_46739,
+        recipe:req_craft_ravenswood_staff_71385 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:76363 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_research_pistol a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Research"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_research_pistol_46738,
+        recipe:req_craft_research_pistol_46739,
+        recipe:req_craft_research_pistol_74155 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:75209 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Huntsman ;
+    priory:requiresDiscipline discipline:Huntsman ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_the_apparatus a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Apparatus"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_apparatus_46736,
+        recipe:req_craft_the_apparatus_46738,
+        recipe:req_craft_the_apparatus_75948 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:72094 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_the_device a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Device"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_device_46736,
+        recipe:req_craft_the_device_46738,
+        recipe:req_craft_the_device_72094 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:73194 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_the_experimental_axe a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Experimental Axe"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_experimental_axe_46736,
+        recipe:req_craft_the_experimental_axe_46738,
+        recipe:req_craft_the_experimental_axe_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:75948 ;
+    priory:requiredRating 450 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 450 .
+
+recipe:craft_the_legend_tier3 a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Legend"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_legend_tier3_46736,
+        recipe:req_craft_the_legend_tier3_46741,
+        recipe:req_craft_the_legend_tier3_73566,
+        recipe:req_craft_the_legend_tier3_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:29180 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_the_living_ravens a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Living Ravens"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_living_ravens_46736,
+        recipe:req_craft_the_living_ravens_46739,
+        recipe:req_craft_the_living_ravens_74678,
+        recipe:req_craft_the_living_ravens_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:71436 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_the_mechanism a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Mechanism"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_mechanism_46736,
+        recipe:req_craft_the_mechanism_46738,
+        recipe:req_craft_the_mechanism_73194,
+        recipe:req_craft_the_mechanism_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:76688 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_the_raven_spirit a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: The Raven Spirit"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_the_raven_spirit_46736,
+        recipe:req_craft_the_raven_spirit_46739,
+        recipe:req_craft_the_raven_spirit_76363 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:74678 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Artificer ;
+    priory:requiresDiscipline discipline:Artificer ;
+    priory:requiresDisciplineRating 500 .
+
+recipe:craft_zap_tier3 a owl:NamedIndividual,
+        priory:DisciplineRecipe,
+        priory:Recipe ;
+    rdfs:label "Recipe: Zap"@en ;
+    priory:hasIngredientRequirement recipe:req_craft_zap_tier3_46738,
+        recipe:req_craft_zap_tier3_46739,
+        recipe:req_craft_zap_tier3_76416,
+        recipe:req_craft_zap_tier3_79418 ;
+    priory:outputQuantity 1 ;
+    priory:producesItem item:29181 ;
+    priory:requiredRating 500 ;
+    priory:requiresCraftingDiscipline discipline:Weaponsmith ;
+    priory:requiresDiscipline discipline:Weaponsmith ;
+    priory:requiresDisciplineRating 500 .
+
+discipline:Huntsman a owl:NamedIndividual,
+        priory:CraftingDiscipline .
+
+item:46739 a owl:NamedIndividual,
+        priory:AscendedMaterial,
+        priory:CraftingMaterial,
+        priory:Item ;
+    rdfs:label "Elonian Leather Square"@en ;
+    priory:gw2Id 46739 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound false .
+
+item:79418 a owl:NamedIndividual,
+        priory:CraftingMaterial,
+        priory:Item ;
+    rdfs:label "Memory of Battle"@en ;
+    priory:gw2Id 79418 ;
+    priory:hasRarity rarity:Fine ;
+    priory:isAccountBound false .
+
+item:46736 a owl:NamedIndividual,
+        priory:AscendedMaterial,
+        priory:CraftingMaterial,
+        priory:Item ;
+    rdfs:label "Spiritwood Plank"@en ;
+    priory:gw2Id 46736 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound false .
+
+item:46738 a owl:NamedIndividual,
+        priory:AscendedMaterial,
+        priory:CraftingMaterial,
+        priory:Item ;
+    rdfs:label "Deldrimor Steel Ingot"@en ;
+    priory:gw2Id 46738 ;
+    priory:hasRarity rarity:Ascended ;
+    priory:isAccountBound false .
+
+discipline:Artificer a owl:NamedIndividual,
+        priory:CraftingDiscipline .
+
+discipline:Weaponsmith a owl:NamedIndividual,
+        priory:CraftingDiscipline .
+
