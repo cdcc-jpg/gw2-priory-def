@@ -990,6 +990,11 @@ class AccountState:
             eligible = [name for name in DEFAULT_ACCOUNT_ROSTER if not self.is_character_map_completed(name)]
         return eligible
 
+    def recommended_exploration_character(self) -> Optional[str]:
+        """Returns the first eligible roster character for world exploration, or None for blank accounts."""
+        eligible = self.eligible_exploration_characters()
+        return eligible[0] if eligible else None
+
     def owned_boosters(self) -> Dict[int, int]:
         """Detects owned boosters, gobblers, and tomes across materials, bank, and inventory."""
         booster_ids = [
@@ -1290,6 +1295,8 @@ class AccountDiffEngine:
 
     def __init__(self, graph_store: Optional[PrioryGraphStore] = None):
         self.store = graph_store
+        if graph_store is not None:
+            _hydrate_catalogs_from_graph(graph_store)
         # Memoization cache for intermediate sub-recipe DAG diffs across multi-item evaluations:
         # Key: (item_id, multiplier, id(account))
         # Value: (ItemRequirementNode, summary_missing, missing_currencies, used_recipes)
@@ -2146,15 +2153,19 @@ class AccountDiffEngine:
         if collection_key in HOBBS_COLLECTIONS:
             tiers = HOBBS_COLLECTIONS[collection_key]
             last_tier = tiers[-1]
+            legacy_prec_ids: Tuple[int, ...] = ()
             if goal_item_id in GEN1_WEAPONS:
                 precursor_id = GEN1_WEAPONS[goal_item_id]["precursor_id"]
+                legacy_prec_ids = tuple(GEN1_WEAPONS[goal_item_id].get("legacy_precursor_ids", ()))
             elif goal_item_id in GEN2_WEAPONS:
                 precursor_id = GEN2_WEAPONS[goal_item_id]["precursor_id"]
+                legacy_prec_ids = tuple(GEN2_WEAPONS[goal_item_id].get("legacy_precursor_ids", ()))
             else:
                 precursor_id = collection_key
 
             has_precursor = (
                 account_state.total_item_count(precursor_id) > 0
+                or any(account_state.total_item_count(lid) > 0 for lid in legacy_prec_ids)
                 or account_state.total_item_count(goal_item_id) > 0
                 or account_state.has_legendary_unlocked(goal_item_id)
             )
@@ -2241,59 +2252,107 @@ class AccountDiffEngine:
 # ==============================================================================
 
 GEN1_WEAPONS: Dict[int, Dict[str, Any]] = {
-    30704: {"name": "Twilight", "precursor_id": 29185, "precursor_name": "Dusk", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30703: {"name": "Sunrise", "precursor_id": 29184, "precursor_name": "Dawn", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30689: {"name": "Eternity", "precursor_id": 30704, "precursor_name": "Twilight", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30699: {"name": "Bolt", "precursor_id": 29167, "precursor_name": "Zap", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30684: {"name": "Frostfang", "precursor_id": 29169, "precursor_name": "Tooth of Frostfang", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30687: {"name": "Incinerator", "precursor_id": 29165, "precursor_name": "Spark", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30690: {"name": "The Juggernaut", "precursor_id": 29172, "precursor_name": "The Colossus", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30692: {"name": "The Moot", "precursor_id": 29166, "precursor_name": "The Energizer", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30696: {"name": "The Flameseeker Prophecies", "precursor_id": 29177, "precursor_name": "The Chosen", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30691: {"name": "Kamohoali'i Kotaki", "precursor_id": 29183, "precursor_name": "Carcharias", "type": "Spear", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    30685: {"name": "Kudzu", "precursor_id": 29171, "precursor_name": "Leaf of Kudzu", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    30686: {"name": "The Dreamer", "precursor_id": 29175, "precursor_name": "The Lover", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    30694: {"name": "The Predator", "precursor_id": 29173, "precursor_name": "The Hunter", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
-    30693: {"name": "Quip", "precursor_id": 29168, "precursor_name": "Chaos Gun", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
-    30700: {"name": "Rodgort", "precursor_id": 29179, "precursor_name": "Rodgort's Flame", "type": "Torch", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    30702: {"name": "Howler", "precursor_id": 29180, "precursor_name": "Howl", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    30697: {"name": "Frenzy", "precursor_id": 29181, "precursor_name": "Rage", "type": "HarpoonGun", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
-    30698: {"name": "The Bifrost", "precursor_id": 29174, "precursor_name": "The Legend", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    30695: {"name": "Meteorlogicus", "precursor_id": 29170, "precursor_name": "Storm", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    30688: {"name": "The Minstrel", "precursor_id": 29178, "precursor_name": "The Bard", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    30701: {"name": "Kraitkin", "precursor_id": 29182, "precursor_name": "Venom", "type": "Trident", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
+    30704: {"name": "Twilight", "precursor_id": 29185, "precursor_name": "Dusk", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29185,)},
+    30703: {"name": "Sunrise", "precursor_id": 29169, "precursor_name": "Dawn", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29184,)},
+    30689: {"name": "Eternity", "precursor_id": 30704, "precursor_name": "Twilight", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (30703, 30704)},
+    30699: {"name": "Bolt", "precursor_id": 29181, "precursor_name": "Zap", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29167,)},
+    30684: {"name": "Frostfang", "precursor_id": 29167, "precursor_name": "Tooth of Frostfang", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29169,)},
+    30687: {"name": "Incinerator", "precursor_id": 29177, "precursor_name": "Spark", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29165,)},
+    30690: {"name": "The Juggernaut", "precursor_id": 29179, "precursor_name": "The Colossus", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29172,)},
+    30692: {"name": "The Moot", "precursor_id": 29166, "precursor_name": "The Energizer", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29173,)},
+    30696: {"name": "The Flameseeker Prophecies", "precursor_id": 29170, "precursor_name": "The Chosen", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29177,)},
+    30691: {"name": "Kamohoali'i Kotaki", "precursor_id": 29173, "precursor_name": "Carcharias", "type": "Spear", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29183,)},
+    30685: {"name": "Kudzu", "precursor_id": 29172, "precursor_name": "Leaf of Kudzu", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29171,)},
+    30686: {"name": "The Dreamer", "precursor_id": 29178, "precursor_name": "The Lover", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29175,)},
+    30694: {"name": "The Predator", "precursor_id": 29175, "precursor_name": "The Hunter", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (29173,)},
+    30693: {"name": "Quip", "precursor_id": 29168, "precursor_name": "Chaos Gun", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (29168,)},
+    30700: {"name": "Rodgort", "precursor_id": 29176, "precursor_name": "Rodgort's Flame", "type": "Torch", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29179,)},
+    30702: {"name": "Howler", "precursor_id": 29184, "precursor_name": "Howl", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29180,)},
+    30697: {"name": "Frenzy", "precursor_id": 29182, "precursor_name": "Rage", "type": "HarpoonGun", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (29181,)},
+    30698: {"name": "The Bifrost", "precursor_id": 29180, "precursor_name": "The Legend", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29174,)},
+    30695: {"name": "Meteorlogicus", "precursor_id": 29171, "precursor_name": "Storm", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29170,)},
+    30688: {"name": "The Minstrel", "precursor_id": 29174, "precursor_name": "The Bard", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29178,)},
+    30701: {"name": "Kraitkin", "precursor_id": 29183, "precursor_name": "Venom", "type": "Trident", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29182,)},
 }
 
 GEN2_WEAPONS: Dict[int, Dict[str, Any]] = {
-    71383: {"name": "Nevermore", "precursor_id": 71384, "precursor_name": "The Raven Staff", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    76158: {"name": "Astralaria", "precursor_id": 76159, "precursor_name": "The Mechanism", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    75207: {"name": "HOPE", "precursor_id": 75208, "precursor_name": "Prototype", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    71383: {"name": "Nevermore", "precursor_id": 71384, "precursor_name": "The Raven Staff", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (71436,)},
+    76158: {"name": "Astralaria", "precursor_id": 76159, "precursor_name": "The Mechanism", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (76688,)},
+    72713: {"name": "HOPE", "precursor_id": 75208, "precursor_name": "Prototype", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (71950,)},
+    75207: {"name": "HOPE", "precursor_id": 75208, "precursor_name": "Prototype", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (71950,)},
+    78556: {"name": "Chuka and Champawat", "precursor_id": 78053, "precursor_name": "Tigris", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
     78052: {"name": "Chuka and Champawat", "precursor_id": 78053, "precursor_name": "Tigris", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    79562: {"name": "Shooshadoo", "precursor_id": 79563, "precursor_name": "Friendship", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    79802: {"name": "Eureka", "precursor_id": 79803, "precursor_name": "Endeavor", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    81206: {"name": "The Shining Blade", "precursor_id": 81207, "precursor_name": "Save the Queen", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    82791: {"name": "Sharur", "precursor_id": 82792, "precursor_name": "The Call", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    86303: {"name": "The HMS Divinity", "precursor_id": 86304, "precursor_name": "The Ambition", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400)},
+    79562: {"name": "Eureka", "precursor_id": 79570, "precursor_name": "Endeavor", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (79563, 79803)},
+    79802: {"name": "Shooshadoo", "precursor_id": 79563, "precursor_name": "Friendship", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (79803,)},
+    80488: {"name": "The HMS Divinity", "precursor_id": 89036, "precursor_name": "The Ambition", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (86304,)},
+    86303: {"name": "The HMS Divinity", "precursor_id": 86304, "precursor_name": "The Ambition", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (89036,)},
+    81206: {"name": "Flames of War", "precursor_id": 81780, "precursor_name": "Liturgy", "type": "Torch", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (81207,)},
+    81957: {"name": "The Shining Blade", "precursor_id": 81207, "precursor_name": "Save the Queen", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    81839: {"name": "Sharur", "precursor_id": 81634, "precursor_name": "The Call", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (82792,)},
+    82791: {"name": "Sharur", "precursor_id": 82792, "precursor_name": "The Call", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (81634,)},
+    86098: {"name": "The Binding of Ipos", "precursor_id": 86676, "precursor_name": "Ars Goetia", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
     86675: {"name": "The Binding of Ipos", "precursor_id": 86676, "precursor_name": "Ars Goetia", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    87687: {"name": "Claw of the Khan-Ur", "precursor_id": 87688, "precursor_name": "Touch of the Khan-Ur", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    87109: {"name": "Claw of the Khan-Ur", "precursor_id": 87688, "precursor_name": "Touch of the Khan-Ur", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
+    87687: {"name": "Verdarach", "precursor_id": 87764, "precursor_name": "Call to Arms", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (87688, 91877)},
+    91876: {"name": "Verdarach", "precursor_id": 91877, "precursor_name": "Call to Arms", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (87764,)},
+    88576: {"name": "Xiuquatl", "precursor_id": 88956, "precursor_name": "Tlehco", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
     88955: {"name": "Xiuquatl", "precursor_id": 88956, "precursor_name": "Tlehco", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
     89854: {"name": "Pharus", "precursor_id": 89855, "precursor_name": "Spero", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    90551: {"name": "Exordium", "precursor_id": 90552, "precursor_name": "Epitaph", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    91876: {"name": "Verdarach", "precursor_id": 91877, "precursor_name": "Call to Arms", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
+    90551: {"name": "Exordium", "precursor_id": 90883, "precursor_name": "Epitaph", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (90552,)},
 }
 
 GEN3_WEAPON_NAMES: Dict[int, str] = {
-    96203: "Aurene's Bite", 96937: "Aurene's Claw", 96652: "Aurene's Fang", 97165: "Aurene's Tail",
-    97077: "Aurene's Rending", 96228: "Aurene's Voice", 96841: "Aurene's Argument", 96603: "Aurene's Scale",
-    96356: "Aurene's Gaze", 97594: "Aurene's Insight", 95684: "Aurene's Flight", 96376: "Aurene's Persuasion",
-    97141: "Aurene's Breath", 96613: "Aurene's Wisdom", 95675: "Aurene's Wing", 95612: "Aurene's Weight"
+    96356: "Aurene's Bite",
+    96203: "Aurene's Claw",
+    95675: "Aurene's Fang",
+    95612: "Aurene's Tail",
+    96937: "Aurene's Rending",
+    97783: "Aurene's Voice",
+    95808: "Aurene's Argument",
+    96028: "Aurene's Scale",
+    97165: "Aurene's Gaze",
+    96652: "Aurene's Insight",
+    97590: "Aurene's Flight",
+    97377: "Aurene's Persuasion",
+    97099: "Aurene's Breath",
+    96221: "Aurene's Wisdom",
+    97077: "Aurene's Wing",
+    95684: "Aurene's Weight",
+    # Legacy alias IDs
+    96228: "Aurene's Voice",
+    96841: "Aurene's Argument",
+    96603: "Aurene's Scale",
+    97594: "Aurene's Insight",
+    96376: "Aurene's Persuasion",
+    97141: "Aurene's Breath",
+    96613: "Aurene's Wisdom",
 }
 
 GEN3_WEAPON_DISCIPLINES: Dict[int, Tuple[str, int]] = {
-    96203: ("weaponsmith", 500), 96937: ("weaponsmith", 500), 96652: ("weaponsmith", 500), 97165: ("weaponsmith", 500),
-    97077: ("weaponsmith", 500), 96228: ("huntsman", 500), 96841: ("huntsman", 500), 96603: ("weaponsmith", 500),
-    96356: ("artificer", 500), 97594: ("artificer", 500), 95684: ("huntsman", 500), 96376: ("huntsman", 500),
-    97141: ("huntsman", 500), 96613: ("artificer", 500), 95675: ("huntsman", 500), 95612: ("weaponsmith", 500)
+    96356: ("weaponsmith", 500),  # Aurene's Bite (Greatsword)
+    96203: ("weaponsmith", 500),  # Aurene's Claw (Dagger)
+    95675: ("weaponsmith", 500),  # Aurene's Fang (Sword)
+    95612: ("weaponsmith", 500),  # Aurene's Tail (Mace)
+    96937: ("weaponsmith", 500),  # Aurene's Rending (Axe)
+    97783: ("huntsman", 500),     # Aurene's Voice (Warhorn)
+    95808: ("huntsman", 500),     # Aurene's Argument (Pistol)
+    96028: ("weaponsmith", 500),  # Aurene's Scale (Shield)
+    97165: ("artificer", 500),    # Aurene's Gaze (Focus)
+    96652: ("artificer", 500),    # Aurene's Insight (Staff)
+    97590: ("huntsman", 500),     # Aurene's Flight (Longbow)
+    97377: ("huntsman", 500),     # Aurene's Persuasion (Rifle)
+    97099: ("huntsman", 500),     # Aurene's Breath (Torch)
+    96221: ("artificer", 500),    # Aurene's Wisdom (Scepter)
+    97077: ("huntsman", 500),     # Aurene's Wing (ShortBow)
+    95684: ("weaponsmith", 500),  # Aurene's Weight (Hammer)
+    # Legacy alias IDs
+    96228: ("huntsman", 500),
+    96841: ("huntsman", 500),
+    96603: ("weaponsmith", 500),
+    97594: ("artificer", 500),
+    96376: ("huntsman", 500),
+    97141: ("huntsman", 500),
+    96613: ("artificer", 500),
 }
 
 ARMOR_NAMES: Dict[int, str] = {
@@ -2326,25 +2385,68 @@ LEGENDARY_ARMOR_DISCIPLINES: Dict[int, Tuple[str, int]] = {
 }
 
 PRECURSOR_NAMES: Dict[int, str] = {
-    29185: "Dusk", 29184: "Dawn", 29167: "Zap", 29169: "Tooth of Frostfang", 29171: "Leaf of Kudzu",
-    29175: "The Lover", 29165: "Spark", 29178: "The Bard", 29172: "The Colossus", 29166: "The Energizer",
-    29177: "The Chosen", 29183: "Carcharias", 29168: "Chaos Gun", 29173: "The Hunter", 29170: "Storm",
-    29181: "Rage", 29174: "The Legend", 29179: "Rodgort's Flame", 29182: "Venom", 29180: "Howl",
-    71384: "The Raven Staff", 76159: "The Mechanism", 75208: "Prototype", 78053: "Tigris"
+    29185: "Dusk",
+    29169: "Dawn",
+    29181: "Zap",
+    29167: "Tooth of Frostfang",
+    29172: "Leaf of Kudzu",
+    29178: "The Lover",
+    29177: "Spark",
+    29165: "Spark",
+    29174: "The Bard",
+    29179: "The Colossus",
+    29166: "The Energizer",
+    29170: "The Chosen",
+    29173: "Carcharias",
+    29168: "Chaos Gun",
+    29175: "The Hunter",
+    29171: "Storm",
+    29182: "Rage",
+    29180: "The Legend",
+    29176: "Rodgort's Flame",
+    29183: "Venom",
+    29184: "Howl",
+    71384: "The Raven Staff",
+    71436: "The Living Ravens",
+    76159: "The Mechanism",
+    76688: "The Mechanism",
+    75208: "Prototype",
+    71950: "Prototype",
+    78053: "Tigris",
+    79563: "Friendship",
+    79570: "Endeavor",
+    79803: "Endeavor",
+    81207: "Save the Queen",
+    81634: "The Call",
+    82792: "The Call",
+    86304: "The Ambition",
+    89036: "The Ambition",
+    86676: "Ars Goetia",
+    87688: "Touch of the Khan-Ur",
+    88956: "Tlehco",
+    89855: "Spero",
+    90552: "Epitaph",
+    90883: "Epitaph",
+    87764: "Call to Arms",
+    91877: "Call to Arms",
+    81780: "Liturgy",
 }
 
 GEN1_WEAPON_IDS: Set[int] = set(GEN1_WEAPONS.keys())
-GEN1_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN1_WEAPONS.values()}
+GEN1_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN1_WEAPONS.values()} | {29165}
 GEN2_WEAPON_IDS: Set[int] = set(GEN2_WEAPONS.keys())
-GEN2_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN2_WEAPONS.values()}
+GEN2_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN2_WEAPONS.values()} | {71436, 76688, 71950, 79803, 82792, 86304, 90552, 91877}
 GEN3_WEAPON_IDS: Set[int] = set(GEN3_WEAPON_NAMES.keys())
 LEGENDARY_ARMOR_IDS: Set[int] = set(ARMOR_NAMES.keys())
 
-PRECURSOR_TO_WEAPON: Dict[int, int] = {}
+PRECURSOR_TO_WEAPON: Dict[int, int] = {29165: 30687}
 for _w_id, _w_info in GEN1_WEAPONS.items():
     PRECURSOR_TO_WEAPON[_w_info["precursor_id"]] = _w_id
 for _w_id, _w_info in GEN2_WEAPONS.items():
     PRECURSOR_TO_WEAPON[_w_info["precursor_id"]] = _w_id
+    for _l_prec in _w_info.get("legacy_precursor_ids", ()):
+        if _l_prec not in PRECURSOR_TO_WEAPON:
+            PRECURSOR_TO_WEAPON[_l_prec] = _w_id
 
 HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {
     29185: [
@@ -2352,42 +2454,47 @@ HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {
         {"tier": 2, "name": "Dusk II: The Perfected Nightsword", "ach_ids": [2184, 2455, 2382], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Dusk III: Dusk", "ach_ids": [2183, 2380], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29184: [
+    29169: [
         {"tier": 1, "name": "Sunrise I: The Experimental Daysword", "ach_ids": [2253], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Sunrise II: The Perfected Daysword", "ach_ids": [2278], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Sunrise III: Dawn", "ach_ids": [2630], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29167: [
+    29181: [
         {"tier": 1, "name": "Bolt I: The Experimental Sword", "ach_ids": [2355], "bits_total": 21, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Bolt II: The Perfected Sword", "ach_ids": [2356], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Bolt III: Zap", "ach_ids": [2480], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29169: [
+    29167: [
         {"tier": 1, "name": "Frostfang I: The Experimental Axe", "ach_ids": [2478], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Frostfang II: The Perfected Axe", "ach_ids": [2606], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Frostfang III: Tooth of Frostfang", "ach_ids": [2393], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29171: [
+    29172: [
         {"tier": 1, "name": "Kudzu I: The Experimental Longbow", "ach_ids": [2193], "bits_total": 13, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Kudzu II: The Perfected Longbow", "ach_ids": [2311], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Kudzu III: Leaf of Kudzu", "ach_ids": [2383], "bits_total": 29, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29175: [
+    29178: [
         {"tier": 1, "name": "The Dreamer I: The Experimental Short Bow", "ach_ids": [2481], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "The Dreamer II: The Perfected Short Bow", "ach_ids": [2610], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "The Dreamer III: The Lover", "ach_ids": [2428], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+    ],
+    29177: [
+        {"tier": 1, "name": "Incinerator I: The Experimental Dagger", "ach_ids": [2564], "bits_total": 18, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Incinerator II: The Perfected Dagger", "ach_ids": [2458], "bits_total": 15, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Incinerator III: Spark", "ach_ids": [2502], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
     29165: [
         {"tier": 1, "name": "Incinerator I: The Experimental Dagger", "ach_ids": [2564], "bits_total": 18, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Incinerator II: The Perfected Dagger", "ach_ids": [2458], "bits_total": 15, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Incinerator III: Spark", "ach_ids": [2502], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29178: [
+    29174: [
         {"tier": 1, "name": "The Minstrel I: The Experimental Focus", "ach_ids": [2313], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "The Minstrel II: The Perfected Focus", "ach_ids": [2213], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "The Minstrel III: The Bard", "ach_ids": [2242], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29172: [
+    29179: [
         {"tier": 1, "name": "The Juggernaut I: The Experimental Hammer", "ach_ids": [2438], "bits_total": 32, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "The Juggernaut II: The Perfected Hammer", "ach_ids": [2241], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "The Juggernaut III: The Colossus", "ach_ids": [2468], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
@@ -2402,52 +2509,58 @@ HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {
         {"tier": 2, "name": "Quip II: The Perfected Pistol", "ach_ids": [2498], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Quip III: Chaos Gun", "ach_ids": [2524], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29173: [
+    29175: [
         {"tier": 1, "name": "The Predator I: The Experimental Rifle", "ach_ids": [2534], "bits_total": 17, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "The Predator II: The Perfected Rifle", "ach_ids": [2503], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "The Predator III: The Hunter", "ach_ids": [2280], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29170: [
+    29171: [
         {"tier": 1, "name": "Meteorlogicus I: The Experimental Scepter", "ach_ids": [2441], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Meteorlogicus II: The Perfected Scepter", "ach_ids": [2391], "bits_total": 11, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Meteorlogicus III: Storm", "ach_ids": [2449], "bits_total": 29, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29177: [
+    29170: [
         {"tier": 1, "name": "The Flameseeker Prophecies I: The Experimental Shield", "ach_ids": [2479], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "The Flameseeker Prophecies II: The Perfected Shield", "ach_ids": [2390], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "The Flameseeker Prophecies III: The Chosen", "ach_ids": [2536], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29181: [
+    29182: [
         {"tier": 1, "name": "Frenzy I: The Experimental Harpoon Gun", "ach_ids": [2637], "bits_total": 6, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Frenzy II: The Perfected Harpoon Gun", "ach_ids": [2232], "bits_total": 7, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Frenzy III: Rage", "ach_ids": [2409], "bits_total": 18, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29174: [
+    29180: [
         {"tier": 1, "name": "The Bifrost I: The Experimental Staff", "ach_ids": [2530], "bits_total": 16, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "The Bifrost II: The Perfected Staff", "ach_ids": [2500], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "The Bifrost III: The Legend", "ach_ids": [2187], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29179: [
+    29176: [
         {"tier": 1, "name": "Rodgort I: The Experimental Torch", "ach_ids": [2180], "bits_total": 11, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Rodgort II: The Perfected Torch", "ach_ids": [2596], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Rodgort III: Rodgort's Flame", "ach_ids": [2388], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29182: [
+    29183: [
         {"tier": 1, "name": "Kraitkin I: The Experimental Trident", "ach_ids": [2483], "bits_total": 7, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Kraitkin II: The Perfected Trident", "ach_ids": [2522], "bits_total": 9, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Kraitkin III: Venom", "ach_ids": [2296], "bits_total": 21, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29180: [
+    29184: [
         {"tier": 1, "name": "Howler I: The Experimental Warhorn", "ach_ids": [2270], "bits_total": 22, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Howler II: The Perfected Warhorn", "ach_ids": [2588], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Howler III: Howl", "ach_ids": [2260], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
-    29183: [
+    29173: [
         {"tier": 1, "name": "Kamohoali'i Kotaki I: The Experimental Spear", "ach_ids": [2642], "bits_total": 6, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Kamohoali'i Kotaki II: The Perfected Spear", "ach_ids": [2306], "bits_total": 7, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Kamohoali'i Kotaki III: Carcharias", "ach_ids": [2535], "bits_total": 28, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
     ],
     71384: [
+        {"tier": 1, "name": "Nevermore I: Ravenswood Branch", "ach_ids": [2528], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Nevermore II: Ravenswood Staff", "ach_ids": [2288], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Nevermore III: The Raven Staff", "ach_ids": [2336], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "Nevermore IV: The Raven Spirit", "ach_ids": [2550], "bits_total": 63, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ],
+    71436: [
         {"tier": 1, "name": "Nevermore I: Ravenswood Branch", "ach_ids": [2528], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "Nevermore II: Ravenswood Staff", "ach_ids": [2288], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "Nevermore III: The Raven Staff", "ach_ids": [2336], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
@@ -2459,7 +2572,19 @@ HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {
         {"tier": 3, "name": "Astralaria III: The Mechanism", "ach_ids": [2433], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
         {"tier": 4, "name": "Astralaria IV: The Cosmos", "ach_ids": [2268], "bits_total": 54, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
     ],
+    76688: [
+        {"tier": 1, "name": "Astralaria I: The Device", "ach_ids": [2571], "bits_total": 19, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "Astralaria II: The Apparatus", "ach_ids": [2447], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "Astralaria III: The Mechanism", "ach_ids": [2433], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "Astralaria IV: The Cosmos", "ach_ids": [2268], "bits_total": 54, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ],
     75208: [
+        {"tier": 1, "name": "HOPE I: Research", "ach_ids": [2450], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
+        {"tier": 2, "name": "HOPE II: Development", "ach_ids": [2354], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
+        {"tier": 3, "name": "HOPE III: Prototype", "ach_ids": [2556], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
+        {"tier": 4, "name": "HOPE IV: The Catalyst", "ach_ids": [2250], "bits_total": 59, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
+    ],
+    71950: [
         {"tier": 1, "name": "HOPE I: Research", "ach_ids": [2450], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
         {"tier": 2, "name": "HOPE II: Development", "ach_ids": [2354], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
         {"tier": 3, "name": "HOPE III: Prototype", "ach_ids": [2556], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
@@ -2478,6 +2603,176 @@ for _p_id, _tiers in list(HOBBS_COLLECTIONS.items()):
     _w_id = PRECURSOR_TO_WEAPON.get(_p_id)
     if _w_id and _w_id not in HOBBS_COLLECTIONS:
         HOBBS_COLLECTIONS[_w_id] = _tiers
+HOBBS_COLLECTIONS[75207] = HOBBS_COLLECTIONS[75208]
+HOBBS_COLLECTIONS[72713] = HOBBS_COLLECTIONS[75208]
+HOBBS_COLLECTIONS[78052] = HOBBS_COLLECTIONS[78053]
+HOBBS_COLLECTIONS[78556] = HOBBS_COLLECTIONS[78053]
+
+_WEAPON_TYPE_DISCIPLINES: Dict[str, Tuple[Tuple[str, int], Tuple[str, int]]] = {
+    "greatsword": (("weaponsmith", 500), ("armorsmith", 400)),
+    "sword": (("weaponsmith", 500), ("armorsmith", 400)),
+    "axe": (("weaponsmith", 500), ("armorsmith", 400)),
+    "dagger": (("weaponsmith", 500), ("armorsmith", 400)),
+    "hammer": (("weaponsmith", 500), ("armorsmith", 400)),
+    "mace": (("weaponsmith", 500), ("armorsmith", 400)),
+    "shield": (("weaponsmith", 500), ("armorsmith", 400)),
+    "spear": (("weaponsmith", 500), ("armorsmith", 400)),
+    "longbow": (("huntsman", 500), ("leatherworker", 400)),
+    "shortbow": (("huntsman", 500), ("leatherworker", 400)),
+    "rifle": (("huntsman", 500), ("weaponsmith", 400)),
+    "pistol": (("huntsman", 500), ("weaponsmith", 400)),
+    "torch": (("huntsman", 500), ("leatherworker", 400)),
+    "warhorn": (("huntsman", 500), ("leatherworker", 400)),
+    "harpoongun": (("huntsman", 500), ("weaponsmith", 400)),
+    "staff": (("artificer", 500), ("tailor", 400)),
+    "scepter": (("artificer", 500), ("tailor", 400)),
+    "focus": (("artificer", 500), ("tailor", 400)),
+    "trident": (("artificer", 500), ("tailor", 400)),
+}
+
+_HYDRATED_GRAPH_SIGNATURES: Set[Tuple[int, int]] = set()
+
+
+def _hydrate_catalogs_from_graph(store: Optional[PrioryGraphStore] = None) -> None:
+    """Dynamically hydrates module-level weapon, precursor, armor, lounge, and convenience catalogs in-place from RDF."""
+    if store is None:
+        return
+    if len(store.graph) == 0:
+        return
+
+    sig = (id(store), len(store.graph))
+    if sig in _HYDRATED_GRAPH_SIGNATURES:
+        return
+    _HYDRATED_GRAPH_SIGNATURES.add(sig)
+
+    # 1. Hydrate Legendary Weapons & Precursors from RDF
+    weapon_sparql = """
+    SELECT DISTINCT ?wId ?wLabel ?wType ?gen ?facet ?precId ?precLabel WHERE {
+        ?w a priory:LegendaryWeapon ;
+           priory:gw2Id ?wId ;
+           rdfs:label ?wLabel .
+        OPTIONAL { ?w priory:hasWeaponType ?wType }
+        OPTIONAL { ?w priory:generation ?gen }
+        OPTIONAL { ?w priory:hasDragonFacet ?facet }
+        OPTIONAL {
+            { ?w priory:hasPrecursor ?prec }
+            UNION { ?prec priory:precursorTo ?w }
+            UNION { ?prec priory:isPrecursorOf ?w }
+            ?prec priory:gw2Id ?precId ;
+                  rdfs:label ?precLabel .
+        }
+    }
+    """
+    for row in store.query(weapon_sparql):
+        if row.get("facet"):
+            continue  # Skip Gen 3 Elder Dragon cosmetic skin variants
+        w_id = int(row["wId"])
+        w_label = str(row["wLabel"])
+        w_type_uri = str(row.get("wType", ""))
+        w_type = w_type_uri.rstrip("/").split("/")[-1] if w_type_uri else "Greatsword"
+        disc_pair = _WEAPON_TYPE_DISCIPLINES.get(w_type.lower(), (("weaponsmith", 500), ("armorsmith", 400)))
+        gen_str = str(row.get("gen", ""))
+
+        if w_id in GEN1_WEAPONS or "1" in gen_str or (30680 <= w_id <= 30705):
+            if w_id not in GEN1_WEAPONS and row.get("precId") is not None:
+                p_id = int(row["precId"])
+                p_label = str(row.get("precLabel", f"Precursor {p_id}"))
+                GEN1_WEAPONS[w_id] = {
+                    "name": w_label,
+                    "precursor_id": p_id,
+                    "precursor_name": p_label,
+                    "type": w_type,
+                    "disc": disc_pair[0],
+                    "sec_disc": disc_pair[1],
+                }
+                PRECURSOR_NAMES.setdefault(p_id, p_label)
+                PRECURSOR_TO_WEAPON.setdefault(p_id, w_id)
+        elif w_id in GEN2_WEAPONS or "2" in gen_str or (70000 <= w_id < 95000):
+            if w_id not in GEN2_WEAPONS:
+                p_id = int(row["precId"]) if row.get("precId") is not None else 0
+                p_label = str(row.get("precLabel", f"Precursor {p_id}")) if p_id else "Precursor"
+                GEN2_WEAPONS[w_id] = {
+                    "name": w_label,
+                    "precursor_id": p_id,
+                    "precursor_name": p_label,
+                    "type": w_type,
+                    "disc": disc_pair[0],
+                    "sec_disc": disc_pair[1],
+                }
+                if p_id:
+                    PRECURSOR_NAMES.setdefault(p_id, p_label)
+                    PRECURSOR_TO_WEAPON.setdefault(p_id, w_id)
+        elif w_id in GEN3_WEAPON_NAMES or "3" in gen_str or w_id >= 95000:
+            GEN3_WEAPON_NAMES[w_id] = w_label
+            GEN3_WEAPON_DISCIPLINES[w_id] = disc_pair[0]
+
+    # 2. Hydrate Precursor Weapons from RDF
+    prec_sparql = """
+    SELECT DISTINCT ?pId ?pLabel WHERE {
+        ?p a priory:PrecursorWeapon ;
+           priory:gw2Id ?pId ;
+           rdfs:label ?pLabel .
+    }
+    """
+    for row in store.query(prec_sparql):
+        p_id = int(row["pId"])
+        if p_id not in PRECURSOR_NAMES:
+            PRECURSOR_NAMES[p_id] = str(row["pLabel"])
+
+    # 3. Hydrate Legendary Armor from RDF
+    armor_sparql = """
+    SELECT DISTINCT ?aId ?aLabel ?weightClass WHERE {
+        ?a a priory:LegendaryArmor ;
+           priory:gw2Id ?aId ;
+           rdfs:label ?aLabel .
+        OPTIONAL { ?a priory:hasArmorWeight ?weightClass }
+        OPTIONAL { ?a priory:hasWeightClass ?weightClass }
+    }
+    """
+    for row in store.query(armor_sparql):
+        a_id = int(row["aId"])
+        a_label = str(row["aLabel"])
+        ARMOR_NAMES.setdefault(a_id, a_label)
+        if a_id not in LEGENDARY_ARMOR_DISCIPLINES:
+            w_cls = str(row.get("weightClass", "")).lower()
+            if "light" in w_cls:
+                LEGENDARY_ARMOR_DISCIPLINES[a_id] = ("tailor", 500)
+            elif "medium" in w_cls:
+                LEGENDARY_ARMOR_DISCIPLINES[a_id] = ("leatherworker", 500)
+            else:
+                LEGENDARY_ARMOR_DISCIPLINES[a_id] = ("armorsmith", 500)
+
+    # 4. Hydrate VIP Lounge Passes from RDF
+    lounge_sparql = """
+    SELECT DISTINCT ?pId ?pLabel ?chatCode ?zoneName WHERE {
+        { ?p a priory:VIPLoungePass } UNION { ?p a priory:VIPPass }
+        ?p priory:gw2Id ?pId ;
+           rdfs:label ?pLabel .
+        OPTIONAL { ?p priory:chatCode ?chatCode }
+        OPTIONAL { ?p priory:zoneName ?zoneName }
+    }
+    """
+    for row in store.query(lounge_sparql):
+        p_id = int(row["pId"])
+        if p_id not in LOUNGE_PASSES:
+            LOUNGE_PASSES[p_id] = {
+                "name": str(row["pLabel"]),
+                "chat_link": str(row.get("chatCode") or encode_item_chat_link(p_id)),
+                "zone": str(row.get("zoneName") or "VIP Lounge"),
+            }
+
+    # 5. Refresh derived sets and collection mappings in-place
+    GEN1_WEAPON_IDS.update(GEN1_WEAPONS.keys())
+    GEN1_PRECURSOR_IDS.update(w["precursor_id"] for w in GEN1_WEAPONS.values() if w.get("precursor_id"))
+    GEN2_WEAPON_IDS.update(GEN2_WEAPONS.keys())
+    GEN2_PRECURSOR_IDS.update(w["precursor_id"] for w in GEN2_WEAPONS.values() if w.get("precursor_id"))
+    GEN3_WEAPON_IDS.update(GEN3_WEAPON_NAMES.keys())
+    LEGENDARY_ARMOR_IDS.update(ARMOR_NAMES.keys())
+
+    for _p_id, _tiers in list(HOBBS_COLLECTIONS.items()):
+        _w_id = PRECURSOR_TO_WEAPON.get(_p_id)
+        if _w_id and _w_id not in HOBBS_COLLECTIONS:
+            HOBBS_COLLECTIONS[_w_id] = _tiers
 
 
 def verify_legendary_prerequisites(
@@ -2488,3 +2783,4 @@ def verify_legendary_prerequisites(
     """Convenience standalone wrapper for AccountDiffEngine.verify_legendary_prerequisites."""
     engine = AccountDiffEngine(graph_store=graph_store)
     return engine.verify_legendary_prerequisites(goal_item_id, account_state)
+

@@ -84,6 +84,24 @@ priory:LegendaryWeapon a owl:Class ;
     skos:definition "A weapon that possesses Legendary rarity, binds to the account-wide Legendary Armory, and provides freely selectable attribute combinations."@en ;
     rdfs:comment "Generation 1, 2, or 3 Legendary Weapons."@en .
 
+priory:Gen1LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:LegendaryWeapon ;
+    rdfs:label "Generation 1 Legendary Weapon"@en ;
+    skos:definition "A Core Tyria Generation 1 Legendary Weapon forged from a tradable/Hobbs precursor, Gift of Mastery, Gift of Fortune, and a weapon-specific Gift."@en ;
+    rdfs:comment "Core Tyria Generation 1 Legendary Weapon."@en .
+
+priory:Gen2LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:LegendaryWeapon ;
+    rdfs:label "Generation 2 Legendary Weapon"@en ;
+    skos:definition "A Heart of Thorns or Path of Fire Generation 2 Legendary Weapon forged from an account-bound collection or shard precursor, Gift of Maguuma/Desert Mastery, Mystic Tribute, and a weapon-specific Gift."@en ;
+    rdfs:comment "Heart of Thorns / Path of Fire Generation 2 Legendary Weapon."@en .
+
+priory:Gen3LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:LegendaryWeapon ;
+    rdfs:label "Generation 3 Legendary Weapon"@en ;
+    skos:definition "An End of Dragons Aurene Generation 3 Legendary Weapon forged from a Dragon's precursor, Gift of Jade Mastery, Draconic Tribute, and a weapon-specific Gift."@en ;
+    rdfs:comment "End of Dragons Aurene Generation 3 Legendary Weapon."@en .
+
 priory:AscendedWeapon a owl:Class ;
     rdfs:subClassOf priory:Weapon ;
     owl:equivalentClass [
@@ -270,6 +288,30 @@ priory:GiftItem a owl:Class ;
     skos:definition "A game item that serves as a high-tier composite trophy or gift component in Legendary Mystic Forge and crafting recipes."@en ;
     rdfs:comment "Intermediate gift components used in high-level Mystic Forge and legendary recipes."@en .
 
+priory:LegendaryGift a owl:Class ;
+    rdfs:subClassOf priory:GiftItem ;
+    rdfs:label "Legendary Gift"@en ;
+    skos:definition "A gift component that serves as one of the primary pillar gifts required to forge a Legendary Weapon, Armor piece, or Trinket."@en ;
+    rdfs:comment "High-tier gift component used as a major pillar in Legendary synthesis."@en .
+
+priory:MasteryPillarGift a owl:Class ;
+    rdfs:subClassOf priory:LegendaryGift ;
+    rdfs:label "Mastery Pillar Gift"@en ;
+    skos:definition "A Legendary Gift representing the account mastery and map completion pillar of a Legendary Weapon recipe (Gift of Mastery, Gift of Maguuma Mastery, Gift of Desert Mastery, Gift of Jade Mastery)."@en ;
+    rdfs:comment "Account mastery and exploration pillar gift for Legendary Weapons."@en .
+
+priory:TributePillarGift a owl:Class ;
+    rdfs:subClassOf priory:LegendaryGift ;
+    rdfs:label "Tribute / Fortune Pillar Gift"@en ;
+    skos:definition "A Legendary Gift representing the economic material and Mystic Clover tribute pillar of a Legendary Weapon recipe (Gift of Fortune, Mystic Tribute, Draconic Tribute)."@en ;
+    rdfs:comment "Economic material and Mystic Clover tribute pillar gift for Legendary Weapons."@en .
+
+priory:WeaponSpecificPillarGift a owl:Class ;
+    rdfs:subClassOf priory:LegendaryGift ;
+    rdfs:label "Weapon-Specific Pillar Gift"@en ;
+    skos:definition "A Legendary Gift that is the unique thematic gift specific to a target Legendary Weapon (e.g., Gift of Twilight, Gift of Bolt, Gift of Aurene's Bite)."@en ;
+    rdfs:comment "Thematic weapon-specific pillar gift required to forge a Legendary Weapon."@en .
+
 priory:AccountWalletScalar a owl:Class ;
     rdfs:subClassOf priory:LedgerToken, iao:IAO_0000030 ;
     rdfs:label "Account Wallet Scalar"@en ;
@@ -435,6 +477,54 @@ priory:ItemBuff a owl:Class ;
     rdfs:label "Item Buff / Booster"@en ;
     skos:definition "A disposition conferred by a consumable booster, guild enhancement, or enrichment that increases experience, reward track progress, or magic find rates."@en ;
     rdfs:comment "A consumable booster, guild tavern buff, or enhancement that accelerates gameplay or reward track progression."@en .
+
+priory:ExperienceBooster a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "Experience Booster"@en ;
+    skos:definition "A consumable booster item that increases experience gain and WvW/PvP reward track progress."@en ;
+    rdfs:comment "Consumable experience and reward track booster item."@en .
+
+priory:HeroicBooster a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "Heroic Booster"@en ;
+    skos:definition "A consumable booster item that combines Experience Booster and Item Booster effects."@en ;
+    rdfs:comment "Consumable heroic booster granting both XP/reward track and item/magic find bonuses."@en .
+
+priory:KarmaBooster a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "Karma Booster"@en ;
+    skos:definition "A consumable booster item or bonfire that increases karma earned from events."@en ;
+    rdfs:comment "Consumable karma gain booster item."@en .
+
+priory:WXPBooster a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "WXP Booster"@en ;
+    skos:definition "A consumable booster item that increases World Experience (WXP) earned in World vs. World."@en ;
+    rdfs:comment "Consumable World vs. World experience booster item."@en .
+
+priory:ItemBooster a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "Item / Black Lion Booster"@en ;
+    skos:definition "A consumable booster item that increases magic find, gathering critical chance, and crafting critical experience."@en ;
+    rdfs:comment "Consumable item booster and Black Lion Booster."@en .
+
+priory:CelebrationBooster a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "Celebration / Birthday Booster"@en ;
+    skos:definition "A consumable celebration or birthday booster item that grants +100% experience, +100% magic find, +50% gold from kills, and +10% WvW/PvP reward track gain."@en ;
+    rdfs:comment "Celebration and Birthday Booster items."@en .
+
+priory:FestivalGobbler a owl:Class ;
+    rdfs:subClassOf priory:Item, priory:ItemBuff ;
+    rdfs:label "Festival Gobbler"@en ;
+    skos:definition "A reusable festival converter gizmo (Candy Corn Gobbler, Zhaitaffy Gobbler, Snowflake Gobbler) that consumes festival candies to grant experience, reward track, and karma buffs."@en ;
+    rdfs:comment "Reusable festival candy converter that grants booster enhancements."@en .
+
+priory:TomeOfKnowledge a owl:Class ;
+    rdfs:subClassOf priory:Item ;
+    rdfs:label "Tome of Knowledge"@en ;
+    skos:definition "A consumable tome item that grants one character level or one Spirit Shard when consumed by a level 80 character."@en ;
+    rdfs:comment "Consumable tome granting character levels or Spirit Shards."@en .
 
 priory:DragonFacet a owl:Class ;
     rdfs:subClassOf priory:Entity, bfo:BFO_0000020 ;
@@ -806,6 +896,52 @@ priory:requiresResource a owl:ObjectProperty ;
     rdfs:range priory:Entity ;
     rdfs:label "requires resource"@en ;
     skos:definition "An object relation that links a collection or crafting step to a material or currency resource it consumes."@en .
+
+priory:isPrecursorOf a owl:ObjectProperty ;
+    owl:inverseOf priory:hasPrecursor ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "is precursor of"@en ;
+    skos:definition "An object relation that links a Precursor Weapon or Armor item to the Legendary item it upgrades into."@en .
+
+priory:precursorTo a owl:ObjectProperty ;
+    owl:equivalentProperty priory:isPrecursorOf ;
+    owl:inverseOf priory:hasPrecursor ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "precursor to"@en ;
+    skos:definition "An object relation equivalent to isPrecursorOf that connects a precursor item to its target Legendary item."@en .
+
+priory:hasPrecursor a owl:ObjectProperty ;
+    owl:inverseOf priory:isPrecursorOf ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has precursor"@en ;
+    skos:definition "An object relation that links a Legendary item to its required Precursor item."@en .
+
+priory:hasPrecursorTier a owl:ObjectProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range priory:Entity ;
+    rdfs:label "has precursor tier"@en ;
+    skos:definition "An object relation that links a Legendary Weapon or precursor lineage to one of its Hobbs Tier 1, 2, or 3 collection stages."@en .
+
+priory:unlocksSynthesisTarget a owl:ObjectProperty ;
+    rdfs:domain priory:LegendaryWeapon ;
+    rdfs:range priory:LegendaryWeapon ;
+    rdfs:label "unlocks synthesis target"@en ;
+    skos:definition "An object relation that links a component Legendary Weapon (such as Sunrise or Twilight) to a composite Legendary Weapon (such as Eternity) that it can be combined into."@en .
+
+priory:requiresPartnerLegendary a owl:ObjectProperty ;
+    rdfs:domain priory:LegendaryWeapon ;
+    rdfs:range priory:LegendaryWeapon ;
+    rdfs:label "requires partner legendary"@en ;
+    skos:definition "An object relation that links a composite Legendary Weapon (such as Eternity) to the constituent Legendary Weapons required for its synthesis."@en .
+
+priory:promotedFromT5 a owl:ObjectProperty ;
+    rdfs:domain priory:Item ;
+    rdfs:range priory:Item ;
+    rdfs:label "promoted from Tier 5 material"@en ;
+    skos:definition "An object relation that links a Tier 6 Fine Crafting Material to the corresponding Tier 5 Fine Crafting Material from which it can be promoted in the Mystic Forge."@en .
 
 # ==============================================================================
 # Datatype Properties (Noun Phrases / Booleans)
@@ -1195,6 +1331,36 @@ priory:nearestWaypoint a owl:DatatypeProperty ;
     rdfs:range rdfs:Literal ;
     rdfs:label "Nearest In-Game Waypoint Chat Code"@en ;
     skos:definition "A literal datatype property that records the in-game waypoint name or chat link code (`[&...]`) nearest to a vendor, dungeon, or farming site."@en .
+
+priory:batchYieldQuantity a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "batch yield quantity"@en ;
+    skos:definition "An integer datatype property that specifies the number of units awarded simultaneously by a single completion of a map exploration or achievement milestone (e.g., 2 Gifts of Exploration per 100% Core Tyria world completion)."@en .
+
+priory:benchmarkUnitGold a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "benchmark unit gold price"@en ;
+    skos:definition "A decimal datatype property that records the fallback Trading Post benchmark price in gold per unit for an item."@en .
+
+priory:vendorGoldCost a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "vendor gold cost"@en ;
+    skos:definition "A decimal datatype property that specifies the fixed NPC merchant purchase cost in gold per unit (e.g., 1.0 gold per Icy Runestone)."@en .
+
+priory:inStarterKitPool a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "in Wizard's Vault Starter Kit pool"@en ;
+    skos:definition "A boolean datatype property that indicates whether a Generation 1 precursor or Legendary Weapon is eligible to appear in Wizard's Vault Legendary Weapon Starter Kits."@en .
+
+priory:trophyCategory a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "trophy material category"@en ;
+    skos:definition "A string datatype property that classifies a Tier 6 Fine Crafting Material by its canonical trophy family (Blood, Bone, Claw, Fang, Scale, Totem, Venom, Dust)."@en .
 
 # ==============================================================================
 # Controlled Vocabularies: Weapon Taxonomy (SKOS)

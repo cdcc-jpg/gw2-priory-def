@@ -87,6 +87,109 @@ priory:ObsidianArmorPrecursor a priory:PrecursorAcquisitionType, skos:Concept, o
     priory:estimatedGameplayHours 18.0 ;
     skos:definition "A precursor acquisition archetype representing Oneiros-Spun and Astral Ward armor sets unlocked in Secrets of the Obscure to forge Obsidian Legendary Armor."@en .
 
+priory:CollectionPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:PrecursorAcquisitionScheme ;
+    skos:prefLabel "Mastery Collection Precursor"@en ;
+    priory:archetypeTag "Mastery Collection — Tier 1-3 Achievement Journey"@en ;
+    priory:estimatedGameplayHours 12.0 ;
+    skos:definition "A precursor acquisition archetype representing precursors unlocked and crafted through three-tier Grandmaster Hobbs Mastery collections."@en .
+
+priory:CraftedAndTradeablePrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:PrecursorAcquisitionScheme ;
+    skos:prefLabel "Crafted & Tradeable Precursor"@en ;
+    priory:archetypeTag "Crafted & Tradeable — Hobbs Collection or Trading Post"@en ;
+    priory:estimatedGameplayHours 0.0 ;
+    skos:definition "A precursor acquisition archetype representing Generation 1 precursors that can be either crafted via Hobbs collections or traded on the Trading Post."@en .
+
+priory:CollectionBoundPrecursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:PrecursorAcquisitionScheme ;
+    skos:prefLabel "Account-Bound Collection Precursor"@en ;
+    priory:archetypeTag "Account-Bound — HoT/PoF Precursor Crafting"@en ;
+    priory:estimatedGameplayHours 20.0 ;
+    skos:definition "A precursor acquisition archetype representing Generation 2 account-bound precursors obtained via narrative collections or shard crafting."@en .
+
+priory:CraftedGen3Precursor a priory:PrecursorAcquisitionType, skos:Concept, owl:NamedIndividual ;
+    skos:inScheme priory:PrecursorAcquisitionScheme ;
+    skos:prefLabel "Crafted Generation 3 Dragon's Precursor"@en ;
+    priory:archetypeTag "Crafted Dragon's Precursor — End of Dragons"@en ;
+    priory:estimatedGameplayHours 2.0 ;
+    skos:definition "A precursor acquisition archetype representing Generation 3 Dragon's precursors crafted or purchased in End of Dragons."@en .
+
+# ------------------------------------------------------------------------------
+# 1b. OWL 2 DL Defined Classes for Weapon Generations & BOM Pillar Gifts
+# ------------------------------------------------------------------------------
+priory:Gen1LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:LegendaryWeapon ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:LegendaryWeapon
+            [
+                a owl:Class ;
+                owl:unionOf (
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:TradablePrecursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:CraftedAndTradeablePrecursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:legendaryGeneration ; owl:hasValue 1 ]
+                )
+            ]
+        )
+    ] .
+
+priory:Gen2LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:LegendaryWeapon ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:LegendaryWeapon
+            [
+                a owl:Class ;
+                owl:unionOf (
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:CollectionHuntPrecursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:ShardCraftingPrecursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:CollectionBoundPrecursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:legendaryGeneration ; owl:hasValue 2 ]
+                )
+            ]
+        )
+    ] .
+
+priory:Gen3LegendaryWeapon a owl:Class ;
+    rdfs:subClassOf priory:LegendaryWeapon ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:LegendaryWeapon
+            [
+                a owl:Class ;
+                owl:unionOf (
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:DragonVendorPrecursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:hasPrecursorType ; owl:hasValue priory:CraftedGen3Precursor ]
+                    [ a owl:Restriction ; owl:onProperty priory:legendaryGeneration ; owl:hasValue 3 ]
+                )
+            ]
+        )
+    ] .
+
+priory:WeaponSpecificPillarGift a owl:Class ;
+    rdfs:subClassOf priory:LegendaryGift ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            priory:GiftItem
+            [
+                a owl:Restriction ;
+                owl:onProperty [ owl:inverseOf priory:requiresIngredient ] ;
+                owl:someValuesFrom [
+                    a owl:Restriction ;
+                    owl:onProperty priory:producesItem ;
+                    owl:someValuesFrom priory:LegendaryWeapon
+                ]
+            ]
+            [ a owl:Class ; owl:complementOf priory:MasteryPillarGift ]
+            [ a owl:Class ; owl:complementOf priory:TributePillarGift ]
+        )
+    ] .
+
 # ------------------------------------------------------------------------------
 # 2. Time-Gate & Rate Limit Properties
 # ------------------------------------------------------------------------------

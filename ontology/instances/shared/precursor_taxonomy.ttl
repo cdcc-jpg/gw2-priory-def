@@ -51,26 +51,27 @@ item:87764 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Call to Arm
 # ------------------------------------------------------------------------------
 # Generation 1 (Tradable on Trading Post or Crafted via Hobbs Tier 1-3)
 # ------------------------------------------------------------------------------
-item:29165 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30687 . # Spark -> Incinerator (Dagger)
-item:29166 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30692 . # The Energizer -> The Moot (Mace)
-item:29167 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30699 . # Zap -> Bolt (Sword)
-item:29168 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30693 . # Chaos Gun -> Quip (Pistol)
-item:29169 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30684 . # Tooth of Frostfang -> Frostfang (Axe)
-item:29170 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30695 . # Storm -> Meteorlogicus (Scepter)
-item:29171 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30685 . # Leaf of Kudzu -> Kudzu (Longbow)
-item:29172 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30690 . # The Colossus -> The Juggernaut (Hammer)
-item:29173 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30694 . # The Hunter -> The Predator (Rifle)
-item:29174 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30698 . # The Legend -> The Bifrost (Staff)
-item:29175 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30686 . # The Lover -> The Dreamer (Short Bow)
-item:29177 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30696 . # The Chosen -> The Flameseeker Prophecies (Shield)
-item:29178 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30688 . # The Bard -> The Minstrel (Focus)
-item:29179 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30700 . # Rodgort's Flame -> Rodgort (Torch)
-item:29180 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30702 . # Howl -> Howler (Warhorn)
-item:29181 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30697 . # Rage -> Frenzy (Harpoon Gun)
-item:29182 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30701 . # Venom -> Kraitkin (Trident)
-item:29183 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30691 . # Carcharias -> Kamohoali'i Kotaki (Spear)
-item:29184 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30703 . # Dawn -> Sunrise (Greatsword)
-item:29185 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30704 . # Dusk -> Twilight (Greatsword)
+item:29165 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30687 ; priory:inStarterKitPool true . # Spark -> Incinerator (Dagger)
+item:29166 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30692 ; priory:inStarterKitPool true . # The Energizer -> The Moot (Mace)
+item:29167 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30699 ; priory:inStarterKitPool true . # Zap -> Bolt (Sword)
+item:29168 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30693 ; priory:inStarterKitPool true . # Chaos Gun -> Quip (Pistol)
+item:29169 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30684 ; priory:inStarterKitPool true . # Tooth of Frostfang -> Frostfang (Axe)
+item:29170 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30695 ; priory:inStarterKitPool true . # Storm -> Meteorlogicus (Scepter)
+item:29171 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30685 ; priory:inStarterKitPool true . # Leaf of Kudzu -> Kudzu (Longbow)
+item:29172 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30690 ; priory:inStarterKitPool true . # The Colossus -> The Juggernaut (Hammer)
+item:29173 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30694 ; priory:inStarterKitPool true . # The Hunter -> The Predator (Rifle)
+item:29174 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30698 ; priory:inStarterKitPool true . # The Legend -> The Bifrost (Staff)
+item:29175 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30686 ; priory:inStarterKitPool true . # The Lover -> The Dreamer (Short Bow)
+item:29176 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30695 ; priory:inStarterKitPool true . # Storm (Starter Kit variant) -> Meteorlogicus
+item:29177 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30696 ; priory:inStarterKitPool true . # The Chosen -> The Flameseeker Prophecies (Shield)
+item:29178 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30688 ; priory:inStarterKitPool true . # The Bard -> The Minstrel (Focus)
+item:29179 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30700 ; priory:inStarterKitPool true . # Rodgort's Flame -> Rodgort (Torch)
+item:29180 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30702 ; priory:inStarterKitPool true . # Howl -> Howler (Warhorn)
+item:29181 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30697 ; priory:inStarterKitPool true . # Rage -> Frenzy (Harpoon Gun)
+item:29182 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30701 ; priory:inStarterKitPool true . # Venom -> Kraitkin (Trident)
+item:29183 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30691 ; priory:inStarterKitPool true . # Carcharias -> Kamohoali'i Kotaki (Spear)
+item:29184 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30703 ; priory:inStarterKitPool true . # Dawn -> Sunrise (Greatsword)
+item:29185 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30704 ; priory:inStarterKitPool true . # Dusk -> Twilight (Greatsword)
 item:30684 priory:hasPrecursorType priory:TradablePrecursor . # Frostfang (Axe)
 item:30685 priory:hasPrecursorType priory:TradablePrecursor . # Kudzu (Longbow)
 item:30686 priory:hasPrecursorType priory:TradablePrecursor . # The Dreamer (Short Bow)
@@ -114,9 +115,54 @@ item:96937 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Sca
 item:97486 priory:hasPrecursorType priory:DragonVendorPrecursor . # Dragon's Persuasion (Rifle)
 
 # ------------------------------------------------------------------------------
-# Eternity (Special Double-Legendary Mystic Forge Combination)
+# Eternity (Special Double-Legendary Mystic Forge Combination & Synergy)
 # ------------------------------------------------------------------------------
-item:30689 priory:hasPrecursorType priory:TradablePrecursor . # Eternity (Combines Sunrise & Twilight)
+item:30689 priory:hasPrecursorType priory:TradablePrecursor ;
+    priory:requiresPartnerLegendary item:30704, item:30703 . # Eternity (Combines Sunrise & Twilight)
+item:30704 priory:unlocksSynthesisTarget item:30689 ;
+    priory:requiresPartnerLegendary item:30703 .
+item:30703 priory:unlocksSynthesisTarget item:30689 ;
+    priory:requiresPartnerLegendary item:30704 .
+
+# ------------------------------------------------------------------------------
+# BOM Pillar Gift Classifications & Batch Yield Quantities
+# ------------------------------------------------------------------------------
+item:19674 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Mastery"@en ;
+    priory:gw2Id 19674 .
+item:75498 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Maguuma Mastery"@en ;
+    priory:gw2Id 75498 .
+item:81743 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Desert Mastery"@en ;
+    priory:gw2Id 81743 .
+item:86036 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Desert Mastery"@en ;
+    priory:gw2Id 86036 .
+item:86069 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Desert Mastery"@en ;
+    priory:gw2Id 86069 .
+item:96033 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Jade Mastery"@en ;
+    priory:gw2Id 96033 .
+
+item:19626 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Fortune"@en ;
+    priory:gw2Id 19626 .
+item:71820 a priory:TributePillarGift, priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Mystic Tribute"@en ;
+    priory:gw2Id 71820 .
+item:71815 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Mystic Tribute"@en ;
+    priory:gw2Id 71815 .
+item:96137 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Draconic Tribute"@en ;
+    priory:gw2Id 96137 .
+item:96713 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Draconic Tribute"@en ;
+    priory:gw2Id 96713 .
+
+item:19677 priory:batchYieldQuantity 2 . # Gift of Exploration awards 2 per 100% World Completion
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------

@@ -132,22 +132,28 @@ BENCHMARK_FALLBACK_PRICES: Dict[int, float] = {
     19675: 7.420,  # Mystic Clover (crafting cost basis)
     19912: 1.000,  # Icy Runestone (legacy ID, 1 gold)
     19676: 1.000,  # Icy Runestone (canonical ID, 1 gold)
+    # Canonical T6 Fine Materials
     24295: 0.221,  # Vial of Powerful Blood (T6)
-    24294: 0.035,  # Potent Blood (T5)
-    24276: 0.189,  # Ancient Bone (T6)
-    24275: 0.025,  # Large Bone (T5)
+    24358: 0.189,  # Ancient Bone (T6)
     24351: 0.159,  # Vicious Claw (T6)
-    24350: 0.030,  # Large Claw (T5)
-    24288: 0.129,  # Vicious Fang (T6)
-    24287: 0.028,  # Large Fang (T5)
-    24283: 0.188,  # Armored Scale (T6)
-    24282: 0.025,  # Large Scale (T5)
-    24358: 0.156,  # Elaborate Totem (T6)
-    24357: 0.032,  # Intricate Totem (T5)
-    24289: 0.189,  # Powerful Venom Sac (T6)
-    24288: 0.030,  # Potent Venom Sac (T5)
+    24357: 0.129,  # Vicious Fang (T6)
+    24289: 0.188,  # Armored Scale (T6)
+    24300: 0.156,  # Elaborate Totem (T6)
+    24283: 0.189,  # Powerful Venom Sac (T6)
     24277: 0.161,  # Pile of Crystalline Dust (T6)
-    24272: 0.020,  # Pile of Incandescent Dust (T5)
+    # Canonical & Legacy T5 Fine Materials
+    24294: 0.035,  # Potent Blood (T5)
+    24341: 0.025,  # Large Bone (T5 canonical)
+    24275: 0.025,  # Large Bone (T5 legacy)
+    24350: 0.030,  # Large Claw (T5)
+    24356: 0.028,  # Large Fang (T5 canonical)
+    24287: 0.028,  # Large Fang (T5 legacy)
+    24288: 0.025,  # Large Scale (T5 canonical)
+    24299: 0.032,  # Intricate Totem (T5 canonical)
+    24282: 0.030,  # Potent Venom Sac (T5 canonical)
+    24276: 0.020,  # Pile of Incandescent Dust (T5 canonical)
+    24272: 0.020,  # Pile of Incandescent Dust (T5 legacy)
+    # Upgrades & Refined Materials
     89103: 0.056,  # Lucent Crystal
     89258: 0.045,  # Symbol of Control
     89182: 0.045,  # Symbol of Enhancement
@@ -160,12 +166,29 @@ BENCHMARK_FALLBACK_PRICES: Dict[int, float] = {
     19732: 0.150,  # Gossamer Bolt
     19735: 0.060,  # Thick Leather Section
     19737: 0.220,  # Hardened Leather Section
+    # Canonical Gen 1 Precursors
     29185: 179.9,  # Dusk
     29169: 159.5,  # Dawn
-    29166: 120.0,  # Tooth of Frostfang
-    29167: 140.0,  # Spark
-    29168: 160.0,  # Zap
+    29167: 120.0,  # Tooth of Frostfang
+    29177: 140.0,  # Spark
+    29165: 140.0,  # Spark (legacy alias)
+    29181: 160.0,  # Zap
     29180: 150.0,  # The Legend
+    29166: 95.0,   # The Energizer
+    29168: 110.0,  # Chaos Gun
+    29170: 115.0,  # The Chosen
+    29171: 115.0,  # Storm
+    29172: 125.0,  # Leaf of Kudzu
+    29173: 85.0,   # Carcharias
+    29174: 95.0,   # The Bard
+    29175: 135.0,  # The Hunter
+    29176: 105.0,  # Rodgort's Flame
+    29178: 120.0,  # The Lover
+    29179: 130.0,  # The Colossus
+    29182: 75.0,   # Rage
+    29183: 80.0,   # Venom
+    29184: 95.0,   # Howl
+    # Gen 3 Materials
     96088: 0.550,  # Memory of Aurene
     96978: 1.500,  # Antique Summoning Stone
     96347: 1.850,  # Chunk of Ancient Ambergris
@@ -181,9 +204,9 @@ T6_FINE_MATERIALS: Dict[str, Dict[str, Any]] = {
         "t5_name": "Potent Blood",
     },
     "Bone": {
-        "t6_id": 24276,
+        "t6_id": 24358,
         "t6_name": "Ancient Bone",
-        "t5_id": 24275,
+        "t5_id": 24341,
         "t5_ids": [24341, 24275],
         "t5_name": "Large Bone",
     },
@@ -195,37 +218,37 @@ T6_FINE_MATERIALS: Dict[str, Dict[str, Any]] = {
         "t5_name": "Large Claw",
     },
     "Fang": {
-        "t6_id": 24288,
+        "t6_id": 24357,
         "t6_name": "Vicious Fang",
-        "t5_id": 24287,
+        "t5_id": 24356,
         "t5_ids": [24356, 24287],
         "t5_name": "Large Fang",
     },
     "Scale": {
-        "t6_id": 24283,
+        "t6_id": 24289,
         "t6_name": "Armored Scale",
-        "t5_id": 24282,
-        "t5_ids": [24282, 24288],
+        "t5_id": 24288,
+        "t5_ids": [24288, 24282],
         "t5_name": "Large Scale",
     },
     "Totem": {
-        "t6_id": 24358,
+        "t6_id": 24300,
         "t6_name": "Elaborate Totem",
-        "t5_id": 24357,
+        "t5_id": 24299,
         "t5_ids": [24299, 24357],
         "t5_name": "Intricate Totem",
     },
     "Venom": {
-        "t6_id": 24289,
+        "t6_id": 24283,
         "t6_name": "Powerful Venom Sac",
-        "t5_id": 24288,
-        "t5_ids": [24288, 24282],
+        "t5_id": 24282,
+        "t5_ids": [24282, 24288],
         "t5_name": "Potent Venom Sac",
     },
     "Dust": {
         "t6_id": 24277,
         "t6_name": "Pile of Crystalline Dust",
-        "t5_id": 24272,
+        "t5_id": 24276,
         "t5_ids": [24276, 24272],
         "t5_name": "Pile of Incandescent Dust",
     },
@@ -235,21 +258,26 @@ T6_ID_TO_CAT: Dict[int, str] = {info["t6_id"]: cat for cat, info in T6_FINE_MATE
 
 STARTER_KIT_PRECURSORS: Set[int] = {
     29185,  # Dusk (Twilight)
-    29184,  # Dawn (Sunrise)
-    29167,  # Zap (Bolt)
-    29174,  # The Legend (The Bifrost)
-    29170,  # Storm (Meteorlogicus)
+    29169,  # Dawn (Sunrise)
+    29181,  # Zap (Bolt)
+    29180,  # The Legend (The Bifrost)
+    29171,  # Storm (Meteorlogicus)
     29168,  # Chaos Gun (Quip)
     29166,  # The Energizer (The Moot)
-    29173,  # The Hunter (The Predator)
-    29177,  # The Chosen (The Flameseeker Prophecies)
-    29179,  # Rodgort's Flame (Rodgort)
-    29181,  # Frenzy (Frenzy)
-    29180,  # Howl (Howler)
-    29165,  # Spark (Incinerator)
-    29169,  # Tooth of Frostfang (Frostfang)
-    29172,  # The Colossus (The Juggernaut)
-    29182,  # Venom (Kraitkin)
+    29175,  # The Hunter (The Predator)
+    29170,  # The Chosen (The Flameseeker Prophecies)
+    29176,  # Rodgort's Flame (Rodgort)
+    29182,  # Rage (Frenzy)
+    29184,  # Howl (Howler)
+    29177,  # Spark (Incinerator)
+    29165,  # Spark (legacy alias)
+    29167,  # Tooth of Frostfang (Frostfang)
+    29179,  # The Colossus (The Juggernaut)
+    29183,  # Venom (Kraitkin)
+    29172,  # Leaf of Kudzu (Kudzu)
+    29173,  # Carcharias (Kamohoali'i Kotaki)
+    29174,  # The Bard (The Minstrel)
+    29178,  # The Lover (The Dreamer)
 }
 
 
@@ -259,6 +287,131 @@ class PathSolver:
     def __init__(self, graph_store: Optional[PrioryGraphStore] = None):
         self.store = graph_store
         self.diff_engine = AccountDiffEngine(graph_store) if graph_store else None
+        self.benchmark_prices: Dict[int, float] = dict(BENCHMARK_FALLBACK_PRICES)
+        self.t6_materials: Dict[str, Dict[str, Any]] = {k: dict(v) for k, v in T6_FINE_MATERIALS.items()}
+        self.t6_id_to_cat: Dict[int, str] = dict(T6_ID_TO_CAT)
+        self.starter_kit_precursors: Set[int] = set(STARTER_KIT_PRECURSORS)
+        self._hydrated_store_sig: Optional[Tuple[int, int]] = None
+        if self.store is not None and len(self.store.graph) > 0:
+            self._hydrate_domain_tables()
+
+    def _hydrate_domain_tables(self) -> None:
+        """Dynamically hydrates benchmark prices, T6 material promotions, and starter kit precursors from RDF."""
+        if self.store is None or len(self.store.graph) == 0:
+            return
+        sig = (id(self.store), len(self.store.graph))
+        if self._hydrated_store_sig == sig:
+            return
+        self._hydrated_store_sig = sig
+
+        # 1. Benchmark fallback prices from graph
+        if hasattr(self.store, "get_benchmark_prices"):
+            try:
+                g_prices = self.store.get_benchmark_prices()
+                if isinstance(g_prices, dict):
+                    for k, v in g_prices.items():
+                        if float(v) > 0:
+                            self.benchmark_prices[int(k)] = float(v)
+                            BENCHMARK_FALLBACK_PRICES[int(k)] = float(v)
+            except Exception:
+                pass
+        else:
+            price_q = """
+            SELECT ?id ?gold WHERE {
+                ?item priory:gw2Id ?id ;
+                      priory:benchmarkUnitGold ?gold .
+            }
+            """
+            for row in self.store.query(price_q):
+                try:
+                    iid = int(row["id"])
+                    g_val = float(row["gold"])
+                    if g_val > 0:
+                        self.benchmark_prices[iid] = g_val
+                        BENCHMARK_FALLBACK_PRICES[iid] = g_val
+                except (ValueError, TypeError, KeyError):
+                    pass
+
+        # 2. T6 Fine Material promotions from graph
+        if hasattr(self.store, "get_t6_material_promotions"):
+            try:
+                g_t6 = self.store.get_t6_material_promotions()
+                if isinstance(g_t6, dict):
+                    for cat, info in g_t6.items():
+                        if cat in self.t6_materials and isinstance(info, dict):
+                            # Preserve t5_ids list while updating from ontology
+                            merged = dict(self.t6_materials[cat])
+                            merged.update(info)
+                            t5_id = merged.get("t5_id")
+                            t5_ids = list(merged.get("t5_ids", []))
+                            if t5_id and t5_id not in t5_ids:
+                                t5_ids.insert(0, t5_id)
+                            merged["t5_ids"] = t5_ids
+                            self.t6_materials[cat] = merged
+                            T6_FINE_MATERIALS[cat] = merged
+            except Exception:
+                pass
+        else:
+            t6_q = """
+            SELECT ?cat ?t6Id ?t6Label ?t5Id ?t5Label WHERE {
+                ?t6 priory:gw2Id ?t6Id ;
+                    rdfs:label ?t6Label ;
+                    priory:trophyCategory ?cat ;
+                    priory:promotedFromT5 ?t5 .
+                ?t5 priory:gw2Id ?t5Id ;
+                    rdfs:label ?t5Label .
+            }
+            """
+            for row in self.store.query(t6_q):
+                cat = str(row.get("cat", ""))
+                if cat in self.t6_materials:
+                    t6_id = int(row["t6Id"])
+                    t5_id = int(row["t5Id"])
+                    merged = dict(self.t6_materials[cat])
+                    merged["t6_id"] = t6_id
+                    merged["t6_name"] = str(row["t6Label"])
+                    merged["t5_id"] = t5_id
+                    merged["t5_name"] = str(row["t5Label"])
+                    t5_ids = list(merged.get("t5_ids", []))
+                    if t5_id not in t5_ids:
+                        t5_ids.insert(0, t5_id)
+                    merged["t5_ids"] = t5_ids
+                    self.t6_materials[cat] = merged
+                    T6_FINE_MATERIALS[cat] = merged
+
+        self.t6_id_to_cat = {info["t6_id"]: cat for cat, info in self.t6_materials.items()}
+        T6_ID_TO_CAT.clear()
+        T6_ID_TO_CAT.update(self.t6_id_to_cat)
+
+        # 3. Starter Kit precursors from graph
+        if hasattr(self.store, "get_starter_kit_precursor_ids"):
+            try:
+                sk_ids = self.store.get_starter_kit_precursor_ids()
+                if sk_ids:
+                    self.starter_kit_precursors.update(int(x) for x in sk_ids)
+                    STARTER_KIT_PRECURSORS.update(self.starter_kit_precursors)
+            except Exception:
+                pass
+        else:
+            sk_q = """
+            SELECT DISTINCT ?precId WHERE {
+                {
+                    ?kit a priory:LegendaryStarterKit ;
+                         priory:unpacksInto ?prec .
+                    ?prec priory:gw2Id ?precId .
+                } UNION {
+                    ?prec priory:inStarterKitPool true ;
+                          priory:gw2Id ?precId .
+                }
+            }
+            """
+            for row in self.store.query(sk_q):
+                try:
+                    pid = int(row["precId"])
+                    self.starter_kit_precursors.add(pid)
+                    STARTER_KIT_PRECURSORS.add(pid)
+                except (ValueError, TypeError, KeyError):
+                    pass
 
     def evaluate_cross_role_opportunity_cost(
         self,
@@ -398,8 +551,9 @@ class PathSolver:
                 if isinstance(p, float) and p < 1000.0:
                     return int(round(p * 10000))
                 return int(p)
-        if item_id in BENCHMARK_FALLBACK_PRICES:
-            return int(round(BENCHMARK_FALLBACK_PRICES[item_id] * 10000))
+        fallback_map = getattr(self, "benchmark_prices", BENCHMARK_FALLBACK_PRICES)
+        if item_id in fallback_map:
+            return int(round(fallback_map[item_id] * 10000))
         return 0
 
     def _collect_leaf_missing(self, node: ItemRequirementNode) -> List[Tuple[int, str, int]]:
@@ -445,8 +599,10 @@ class PathSolver:
         if self.store is None:
             self.store = PrioryGraphStore()
             self.store.load_all()
+            self._hydrate_domain_tables()
         elif len(self.store.graph) == 0:
             self.store.load_all()
+            self._hydrate_domain_tables()
         if self.diff_engine is None:
             self.diff_engine = AccountDiffEngine(self.store)
         if account_state is None:
@@ -455,7 +611,7 @@ class PathSolver:
         # Automatic live TP price resolution fallback if live_prices is empty or None
         if not live_prices:
             needed_ids: Set[int] = {goal_item_id, 19976, 19721, 24277}
-            for info in T6_FINE_MATERIALS.values():
+            for info in self.t6_materials.values():
                 needed_ids.add(info["t6_id"])
                 needed_ids.add(info.get("t5_id", info.get("t5_ids", [0])[0]))
 
@@ -569,9 +725,13 @@ class PathSolver:
         ecto_price = self._get_price_copper(19721, live_prices, "sells")
         t6_promotion_strategy: Dict[str, Dict[str, Any]] = {}
 
-        for cat, info in T6_FINE_MATERIALS.items():
+        for cat, info in self.t6_materials.items():
             t6_id = info["t6_id"]
             t5_id = info.get("t5_id", info.get("t5_ids", [0])[0])
+            for candidate_t5 in info.get("t5_ids", [t5_id]):
+                if candidate_t5 in live_prices:
+                    t5_id = candidate_t5
+                    break
             t6_name = info["t6_name"]
             t5_name = info["t5_name"]
 
@@ -680,6 +840,12 @@ class PathSolver:
         if p_res:
             prec_id = int(p_res[0]["precursorId"])
             prec_name = str(p_res[0]["label"])
+            # Prefer canonical GW2 API precursor ID from GEN1_WEAPONS unless a legacy precursor ID is explicitly in live_prices
+            if goal_item_id in GEN1_WEAPONS:
+                canonical_pid = GEN1_WEAPONS[goal_item_id]["precursor_id"]
+                if prec_id != canonical_pid and prec_id not in live_prices:
+                    prec_id = canonical_pid
+                    prec_name = GEN1_WEAPONS[goal_item_id].get("precursor_name", PRECURSOR_NAMES.get(prec_id, prec_name))
         elif goal_item_id in GEN1_WEAPONS:
             prec_id = GEN1_WEAPONS[goal_item_id]["precursor_id"]
             prec_name = GEN1_WEAPONS[goal_item_id].get("precursor_name", PRECURSOR_NAMES.get(prec_id, f"Precursor {prec_id}"))
@@ -689,6 +855,14 @@ class PathSolver:
         elif goal_item_id in GEN1_PRECURSOR_IDS or goal_item_id in GEN2_PRECURSOR_IDS:
             prec_id = goal_item_id
             prec_name = PRECURSOR_NAMES.get(prec_id, f"Precursor {prec_id}")
+
+        prec_candidate_ids: Set[int] = {prec_id} if prec_id else set()
+        if goal_item_id in GEN1_WEAPONS:
+            prec_candidate_ids.add(GEN1_WEAPONS[goal_item_id]["precursor_id"])
+            for lid in GEN1_WEAPONS[goal_item_id].get("legacy_precursor_ids", []):
+                prec_candidate_ids.add(lid)
+                if prec_id not in live_prices and lid in live_prices:
+                    prec_id = lid
 
         prec_instant = self._get_price_copper(prec_id, live_prices, "sells") if prec_id else 0
         prec_buy_order = self._get_price_copper(prec_id, live_prices, "buys") if prec_id else 0
@@ -707,7 +881,7 @@ class PathSolver:
             } LIMIT 1
             """
             sk_res = self.store.query(sk_q, init_bindings={"precId": Literal(prec_id)})
-            is_starter_kit_candidate = bool(sk_res) or (prec_id in STARTER_KIT_PRECURSORS)
+            is_starter_kit_candidate = bool(sk_res) or bool(prec_candidate_ids & self.starter_kit_precursors)
 
         has_starter_kit_chest = (
             account_state.has_starter_kit_for(goal_item_id)
@@ -715,13 +889,16 @@ class PathSolver:
             else False
         )
         if not has_starter_kit_chest and self.diff_engine and prec_id:
-            has_starter_kit_chest = bool(self.diff_engine.is_unpackable_from_account(prec_id, account_state))
+            has_starter_kit_chest = any(
+                bool(self.diff_engine.is_unpackable_from_account(pid, account_state))
+                for pid in prec_candidate_ids
+            )
 
-        already_owned_prec = account_state.total_item_count(prec_id) > 0 if prec_id else False
+        already_owned_prec = any(account_state.total_item_count(pid) > 0 for pid in prec_candidate_ids) if prec_candidate_ids else False
 
         vault_eligible = has_starter_kit_chest or (
             is_starter_kit_candidate and (
-                prec_id not in (29185, 29184) or account_state.astral_acclaim_count() >= 1000
+                prec_id not in (29185, 29169, 29184) or account_state.astral_acclaim_count() >= 1000
             )
         )
 
@@ -761,7 +938,7 @@ class PathSolver:
                     return fractal_clover_cost
                 else:
                     return forge_clover_cost
-            if prec_id and mat_id == prec_id:
+            if prec_candidate_ids and mat_id in prec_candidate_ids:
                 if not is_scratch and already_owned_prec:
                     return 0
                 if precursor_strategy["recommended_option"] == "WIZARDS_VAULT":
@@ -772,8 +949,8 @@ class PathSolver:
                     return hobbs_cost
                 else:
                     return prec_instant
-            if mat_id in T6_ID_TO_CAT:
-                cat = T6_ID_TO_CAT[mat_id]
+            if mat_id in self.t6_id_to_cat:
+                cat = self.t6_id_to_cat[mat_id]
                 strat = t6_promotion_strategy.get(cat, {})
                 if strat.get("recommended_action") == "PROMOTE_T5_FORGE":
                     return strat.get("forge_promoted_copper", self._get_price_copper(mat_id, live_prices, "sells"))
@@ -840,8 +1017,8 @@ class PathSolver:
         exhausted_sources: Optional[List[str]] = None,
         time_budget_minutes: int = 120
     ) -> OptimalCraftingPlan:
-        # Standard benchmark fallback prices (in gold) based on live API averages
-        prices = dict(BENCHMARK_FALLBACK_PRICES)
+        # Standard benchmark fallback prices (in gold) based on ontology/live API averages
+        prices = dict(getattr(self, "benchmark_prices", BENCHMARK_FALLBACK_PRICES))
         if tp_prices:
             prices.update(tp_prices)
 
@@ -2187,7 +2364,7 @@ class PathSolver:
         } LIMIT 1
         """
         sk_res = self.store.query(sk_q, init_bindings={"precId": Literal(precursor_id)})
-        is_starter_kit_candidate = bool(sk_res) or (precursor_id in STARTER_KIT_PRECURSORS)
+        is_starter_kit_candidate = bool(sk_res) or (precursor_id in getattr(self, "starter_kit_precursors", STARTER_KIT_PRECURSORS))
         already_owned = account.total_item_count(precursor_id) > 0
 
         if is_bound:

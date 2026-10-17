@@ -1,5 +1,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix currency: <https://priory.gw2/ref/currency/> .
 @prefix item: <https://priory.gw2/id/item/> .
@@ -48,3 +50,208 @@ recipe:T5ToT6Promotion a priory:MysticForgeRecipe ;
         [ a priory:IngredientRequirement ; priory:requiresItem item:24277 ; priory:requiredQuantity 5 ] ,
         [ a priory:IngredientRequirement ; priory:requiresItem item:20796 ; priory:requiredQuantity 5 ] ;
     rdfs:comment "50 T5 Fine Material + 1 T6 Fine Material + 5 Pile of Crystalline Dust + 5 Philosopher's Stones -> ~5-12 T6." .
+
+# ==============================================================================
+# Canonical T6 Fine Crafting Materials & T5 Promotion Links
+# ==============================================================================
+
+item:24295 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vial of Powerful Blood"@en ;
+    priory:gw2Id 24295 ;
+    priory:trophyCategory "Blood" ;
+    priory:promotedFromT5 item:24294 ;
+    priory:benchmarkUnitGold 0.221 .
+
+item:24358 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Ancient Bone"@en ;
+    priory:gw2Id 24358 ;
+    priory:trophyCategory "Bone" ;
+    priory:promotedFromT5 item:24341 ;
+    priory:benchmarkUnitGold 0.189 .
+
+item:24351 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vicious Claw"@en ;
+    priory:gw2Id 24351 ;
+    priory:trophyCategory "Claw" ;
+    priory:promotedFromT5 item:24350 ;
+    priory:benchmarkUnitGold 0.159 .
+
+item:24357 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vicious Fang"@en ;
+    priory:gw2Id 24357 ;
+    priory:trophyCategory "Fang" ;
+    priory:promotedFromT5 item:24356 ;
+    priory:benchmarkUnitGold 0.129 .
+
+item:24289 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Armored Scale"@en ;
+    priory:gw2Id 24289 ;
+    priory:trophyCategory "Scale" ;
+    priory:promotedFromT5 item:24288 ;
+    priory:benchmarkUnitGold 0.188 .
+
+item:24300 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Elaborate Totem"@en ;
+    priory:gw2Id 24300 ;
+    priory:trophyCategory "Totem" ;
+    priory:promotedFromT5 item:24299 ;
+    priory:benchmarkUnitGold 0.156 .
+
+item:24283 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Powerful Venom Sac"@en ;
+    priory:gw2Id 24283 ;
+    priory:trophyCategory "Venom" ;
+    priory:promotedFromT5 item:24282 ;
+    priory:benchmarkUnitGold 0.189 .
+
+item:24277 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Crystalline Dust"@en ;
+    priory:gw2Id 24277 ;
+    priory:trophyCategory "Dust" ;
+    priory:promotedFromT5 item:24276 ;
+    priory:benchmarkUnitGold 0.161 .
+
+# ==============================================================================
+# Canonical T5 Fine Crafting Materials
+# ==============================================================================
+
+item:24294 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Vial of Potent Blood"@en ;
+    priory:gw2Id 24294 ;
+    priory:benchmarkUnitGold 0.035 .
+
+item:24341 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Large Bone"@en ;
+    priory:gw2Id 24341 ;
+    priory:benchmarkUnitGold 0.025 .
+
+item:24275 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Large Bone"@en ;
+    priory:gw2Id 24275 ;
+    priory:benchmarkUnitGold 0.025 .
+
+item:24350 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Large Claw"@en ;
+    priory:gw2Id 24350 ;
+    priory:benchmarkUnitGold 0.030 .
+
+item:24356 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Large Fang"@en ;
+    priory:gw2Id 24356 ;
+    priory:benchmarkUnitGold 0.028 .
+
+item:24287 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Large Fang"@en ;
+    priory:gw2Id 24287 ;
+    priory:benchmarkUnitGold 0.028 .
+
+item:24288 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Large Scale"@en ;
+    priory:gw2Id 24288 ;
+    priory:benchmarkUnitGold 0.025 .
+
+item:24299 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Intricate Totem"@en ;
+    priory:gw2Id 24299 ;
+    priory:benchmarkUnitGold 0.032 .
+
+item:24282 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Potent Venom Sac"@en ;
+    priory:gw2Id 24282 ;
+    priory:benchmarkUnitGold 0.030 .
+
+item:24276 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Incandescent Dust"@en ;
+    priory:gw2Id 24276 ;
+    priory:benchmarkUnitGold 0.020 .
+
+item:24272 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Pile of Incandescent Dust"@en ;
+    priory:gw2Id 24272 ;
+    priory:benchmarkUnitGold 0.020 .
+
+# ==============================================================================
+# Economic Benchmark Unit Prices (Fallback Gold Values)
+# ==============================================================================
+
+item:19721 priory:benchmarkUnitGold 0.301 .
+item:19976 priory:benchmarkUnitGold 1.950 .
+item:19675 priory:benchmarkUnitGold 7.420 .
+item:19912 priory:benchmarkUnitGold 1.000 .
+item:19676 priory:benchmarkUnitGold 1.000 ;
+    priory:vendorGoldCost 1.000 .
+
+item:89103 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Charm of Skill"@en ;
+    priory:gw2Id 89103 ;
+    priory:benchmarkUnitGold 0.056 .
+
+item:89258 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Charm of Potence"@en ;
+    priory:gw2Id 89258 ;
+    priory:benchmarkUnitGold 0.045 .
+
+item:89182 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Charm of Brilliance"@en ;
+    priory:gw2Id 89182 ;
+    priory:benchmarkUnitGold 0.045 .
+
+item:89140 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Lucent Mote"@en ;
+    priory:gw2Id 89140 ;
+    priory:benchmarkUnitGold 0.045 .
+
+item:19700 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mithril Ore"@en ;
+    priory:gw2Id 19700 ;
+    priory:benchmarkUnitGold 0.025 .
+
+item:19701 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Orichalcum Ore"@en ;
+    priory:gw2Id 19701 ;
+    priory:benchmarkUnitGold 0.085 .
+
+item:19739 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Mithril Ingot"@en ;
+    priory:gw2Id 19739 ;
+    priory:benchmarkUnitGold 0.040 .
+
+item:19740 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Orichalcum Ingot"@en ;
+    priory:gw2Id 19740 ;
+    priory:benchmarkUnitGold 0.120 .
+
+item:19729 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Thick Leather Section"@en ;
+    priory:gw2Id 19729 ;
+    priory:benchmarkUnitGold 0.035 .
+
+item:19732 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Hardened Leather Section"@en ;
+    priory:gw2Id 19732 ;
+    priory:benchmarkUnitGold 0.150 .
+
+item:19735 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Thick Leather Square"@en ;
+    priory:gw2Id 19735 ;
+    priory:benchmarkUnitGold 0.060 .
+
+item:19737 a priory:CraftingMaterial, owl:NamedIndividual ;
+    rdfs:label "Cured Hardened Leather Square"@en ;
+    priory:gw2Id 19737 ;
+    priory:benchmarkUnitGold 0.220 .
+
+item:29185 priory:benchmarkUnitGold 179.9 .
+item:29169 priory:benchmarkUnitGold 159.5 .
+item:29184 priory:benchmarkUnitGold 159.5 .
+item:29166 priory:benchmarkUnitGold 120.0 .
+item:29167 priory:benchmarkUnitGold 140.0 .
+item:29168 priory:benchmarkUnitGold 160.0 .
+item:29181 priory:benchmarkUnitGold 160.0 .
+item:29180 priory:benchmarkUnitGold 150.0 .
+item:29174 priory:benchmarkUnitGold 150.0 .
+
+item:96088 priory:benchmarkUnitGold 0.550 .
+item:96978 priory:benchmarkUnitGold 1.500 .
+item:96347 priory:benchmarkUnitGold 1.850 .
+item:96722 priory:benchmarkUnitGold 0.720 .

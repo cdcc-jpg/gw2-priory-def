@@ -41,45 +41,6 @@ class JourneyPillar(BaseModel):
     sub_components: Dict[str, float] = Field(default_factory=dict)
 
 
-BOOSTER_NAMES: Dict[int, str] = {
-    2059: "Experience Booster",
-    42970: "Heroic Booster",
-    78954: "Item Booster",
-    49424: "Celebration Booster",
-    45005: "Birthday Booster",
-    45003: "Booster",
-    67037: "Candy Corn Gobbler",
-    67040: "Candy Corn Gobbler",
-    67836: "Zhaitaffy Gobbler",
-    79523: "Snowflake Gobbler",
-    86675: "Snowflake Gobbler",
-    19983: "Tome of Knowledge",
-    43766: "Tome of Knowledge",
-    19997: "Experience Booster",
-    20002: "Experience Booster",
-    41819: "Experience Booster",
-    8417: "Experience Booster",
-    20005: "Heroic Booster",
-    41818: "Heroic Booster",
-    67500: "Heroic Booster",
-    67501: "Heroic Booster",
-    20001: "Karma Booster",
-    8419: "Karma Booster",
-    41821: "Karma Booster",
-    92843: "Karma Booster",
-    43499: "WXP Booster",
-    45056: "WXP Booster",
-    45060: "WXP Mini-Booster",
-    43485: "WXP Mini-Booster",
-    45037: "Celebration Booster",
-    45038: "Celebration Booster",
-    77749: "Celebration Booster",
-    20003: "Item Booster",
-    41820: "Item Booster",
-    78955: "Item Booster",
-}
-
-
 class PrecursorStrategy(BaseModel):
     """Evaluation of a specific Dusk precursor acquisition strategy."""
     strategy_name: str
@@ -146,6 +107,7 @@ class TwilightJourneyPlan(BaseModel):
     steps: List[JourneyAction] = Field(default_factory=list)
     time_gates: List[Dict[str, Any]] = Field(default_factory=list)
     expansion_warnings: List[str] = Field(default_factory=list)
+    cross_weapon_synergies: List[str] = Field(default_factory=list)
     recommended_character: Optional[str] = None
 
 
@@ -213,6 +175,117 @@ class TwilightJourneySolver:
             from engine.account_diff import AccountDiffEngine
             self.diff_engine = AccountDiffEngine(graph_store) if graph_store else None
         self.path_solver = path_solver
+        self._booster_catalog_cache: Optional[Dict[int, Dict[str, Any]]] = None
+
+    def _get_booster_catalog(self) -> Dict[int, Dict[str, Any]]:
+        """Dynamically resolves booster, gobbler, and tome metadata from the RDF ontology."""
+        if self._booster_catalog_cache is not None:
+            return self._booster_catalog_cache
+
+        catalog: Dict[int, Dict[str, Any]] = {}
+
+        if self.store and hasattr(self.store, "get_booster_catalog"):
+            try:
+                store_cat = self.store.get_booster_catalog()
+                if isinstance(store_cat, dict):
+                    for k, v in store_cat.items():
+                        catalog[int(k)] = dict(v)
+            except Exception:
+                pass
+
+        if self.store:
+            q_boosters = """
+            SELECT ?id ?label ?altLabel ?type ?effect ?bonus WHERE {
+                ?item priory:gw2Id ?id .
+                {
+                    ?item a ?targetClass .
+                    FILTER(?targetClass IN (
+                        priory:ExperienceBooster,
+                        priory:HeroicBooster,
+                        priory:KarmaBooster,
+                        priory:WXPBooster,
+                        priory:ItemBooster,
+                        priory:CelebrationBooster,
+                        priory:FestivalGobbler,
+                        priory:TomeOfKnowledge
+                    ))
+                }
+                UNION
+                { ?item priory:buffEffect ?effect }
+                UNION
+                { ?item priory:wvwRewardTrackBonusPercent ?bonus }
+                OPTIONAL { ?item rdfs:label ?label }
+                OPTIONAL { ?item skos:altLabel ?altLabel }
+                OPTIONAL { ?item a ?type }
+                OPTIONAL { ?item priory:buffEffect ?effect }
+                OPTIONAL { ?item priory:wvwRewardTrackBonusPercent ?bonus }
+            }
+            """
+            grouped: Dict[int, Dict[str, Any]] = {}
+            for r in self.store.query(q_boosters):
+                if r.get("id") is None:
+                    continue
+                iid = int(r["id"])
+                entry = grouped.setdefault(iid, {
+                    "labels": [],
+                    "alt_labels": [],
+                    "types": set(),
+                    "effects": [],
+                    "bonus": 0,
+                })
+                if r.get("label") and str(r["label"]) not in entry["labels"]:
+                    entry["labels"].append(str(r["label"]))
+                if r.get("altLabel") and str(r["altLabel"]) not in entry["alt_labels"]:
+                    entry["alt_labels"].append(str(r["altLabel"]))
+                if r.get("type"):
+                    entry["types"].add(str(r["type"]))
+                if r.get("effect") and str(r["effect"]) not in entry["effects"]:
+                    entry["effects"].append(str(r["effect"]))
+                if r.get("bonus") is not None:
+                    try:
+                        entry["bonus"] = max(entry["bonus"], int(r["bonus"]))
+                    except (ValueError, TypeError):
+                        pass
+
+            for iid, data in grouped.items():
+                types_str = " ".join(data["types"])
+                all_labels = data["labels"] + data["alt_labels"]
+                all_labels_low = " ".join(all_labels).lower()
+
+                if "FestivalGobbler" in types_str or "gobbler" in all_labels_low:
+                    category = "gobbler"
+                elif "TomeOfKnowledge" in types_str or "tome of knowledge" in all_labels_low or "writ of experience" in all_labels_low:
+                    category = "tome"
+                else:
+                    category = "booster"
+
+                chosen_label = ""
+                if category == "gobbler":
+                    for lbl in all_labels:
+                        if "gobbler" in lbl.lower():
+                            chosen_label = lbl
+                            break
+                if not chosen_label:
+                    for lbl in data["labels"]:
+                        if not lbl.startswith("Item "):
+                            chosen_label = lbl
+                            break
+                if not chosen_label and all_labels:
+                    chosen_label = all_labels[0]
+                if not chosen_label:
+                    chosen_label = catalog.get(iid, {}).get("label", f"Booster {iid}")
+
+                catalog[iid] = {
+                    "id": iid,
+                    "label": chosen_label,
+                    "category": category,
+                    "types": sorted(data["types"]),
+                    "buff_effect": data["effects"][0] if data["effects"] else catalog.get(iid, {}).get("buff_effect", ""),
+                    "wvw_bonus_pct": data["bonus"] or catalog.get(iid, {}).get("wvw_bonus_pct", 0),
+                }
+
+        self._booster_catalog_cache = catalog
+        return catalog
 
     def _introspect_weapon_bom(
         self,
@@ -223,33 +296,47 @@ class TwilightJourneySolver:
         """Dynamically introspects the target item's RDF BOM and AccountDiffReport tree."""
         from engine.account_diff import GEN1_WEAPONS, GEN2_WEAPONS, PRECURSOR_NAMES
 
-        # 1. Target Item Label & Generation / Precursor Archetype
+        # 1. Target Item Label & OWL-Inferred Generation / Precursor Archetype
         target_name = diff_report.goal_item_name if (diff_report and diff_report.goal_item_name and not diff_report.goal_item_name.startswith("Item ")) else ""
         prec_type_uri = ""
         alt_labels: List[str] = []
+        target_types: Set[str] = set()
         if self.store:
             q_meta = """
-            SELECT ?label ?ptype ?altLabel WHERE {
+            SELECT ?label ?ptype ?altLabel ?type WHERE {
                 ?item priory:gw2Id ?id .
                 OPTIONAL { ?item rdfs:label ?label }
                 OPTIONAL { ?item priory:hasPrecursorType ?ptype }
                 OPTIONAL { ?item skos:altLabel ?altLabel }
+                OPTIONAL { ?item a ?type }
             }
             """
             rows = self.store.query(q_meta, init_bindings={"id": Literal(target_item_id)})
             if rows:
-                if not target_name and rows[0].get("label"):
-                    target_name = str(rows[0]["label"])
+                if not target_name:
+                    for r in rows:
+                        if r.get("label") and not str(r["label"]).startswith("Item "):
+                            target_name = str(r["label"])
+                            break
                 for r in rows:
                     if r.get("ptype") and not prec_type_uri:
                         prec_type_uri = str(r["ptype"])
-                    if r.get("altLabel"):
+                    if r.get("altLabel") and str(r["altLabel"]) not in alt_labels:
                         alt_labels.append(str(r["altLabel"]))
+                    if r.get("type"):
+                        target_types.add(str(r["type"]))
         if not target_name:
             target_name = "Twilight" if target_item_id == self.TWILIGHT_ID else f"Legendary #{target_item_id}"
 
+        target_types_str = " ".join(target_types)
         alts_lower = " ".join(alt_labels).lower()
-        if "DragonVendorPrecursor" in prec_type_uri or "gen 3" in alts_lower or "generation 3" in alts_lower or "aurene" in target_name.lower() or target_item_id >= 95000:
+        if "Gen3LegendaryWeapon" in target_types_str:
+            generation = "GEN3"
+        elif "Gen2LegendaryWeapon" in target_types_str:
+            generation = "GEN2"
+        elif "Gen1LegendaryWeapon" in target_types_str:
+            generation = "GEN1"
+        elif "DragonVendorPrecursor" in prec_type_uri or "gen 3" in alts_lower or "generation 3" in alts_lower or "aurene" in target_name.lower() or target_item_id >= 95000:
             generation = "GEN3"
         elif "CollectionHuntPrecursor" in prec_type_uri or "ShardCraftingPrecursor" in prec_type_uri or "gen 2" in alts_lower or "generation 2" in alts_lower or target_item_id in GEN2_WEAPONS or (70000 <= target_item_id < 95000):
             generation = "GEN2"
@@ -305,7 +392,7 @@ class TwilightJourneySolver:
             if iid in sub_nodes_by_id:
                 meta["depends_on"].update(_subtree_ids(sub_nodes_by_id[iid]))
 
-        # A. Identify Precursor dynamically
+        # A. Identify Precursor via RDF class (`priory:PrecursorWeapon` / `priory:TradablePrecursor`) first
         precursor_id: Optional[int] = None
         precursor_name: str = ""
         for iid, meta in ing_meta.items():
@@ -359,50 +446,77 @@ class TwilightJourneySolver:
                 precursor_id = self.DUSK_ID
                 precursor_name = "Precursor"
 
-        # B. Identify Tribute / Fortune Gift dynamically (any top-level ingredient requiring Mystic Clover 19675 or Fortune/Tribute)
+        # B. Identify Tribute / Fortune Gift via `priory:TributePillarGift` first, then dependency/label fallback
         tribute_id: Optional[int] = None
         tribute_name: str = ""
         for iid, meta in ing_meta.items():
             if iid == precursor_id:
                 continue
+            types_str = " ".join(meta["types"])
             lbl_low = meta["label"].lower()
-            if iid in (19626, 71820, 96137) or "fortune" in lbl_low or "tribute" in lbl_low or (self.MYSTIC_CLOVER_ID in meta["depends_on"]):
+            if "TributePillarGift" in types_str and "mastery" not in lbl_low:
                 tribute_id = iid
                 tribute_name = meta["label"]
                 break
         if tribute_id is None:
+            for iid, meta in ing_meta.items():
+                if iid == precursor_id:
+                    continue
+                lbl_low = meta["label"].lower()
+                if "fortune" in lbl_low or "tribute" in lbl_low or (self.MYSTIC_CLOVER_ID in meta["depends_on"]):
+                    tribute_id = iid
+                    tribute_name = meta["label"]
+                    break
+        if tribute_id is None:
             tribute_id = self.GIFT_OF_FORTUNE_ID if generation == "GEN1" else (71820 if generation == "GEN2" else 96137)
             tribute_name = "Gift of Fortune" if generation == "GEN1" else ("Mystic Tribute" if generation == "GEN2" else "Draconic Tribute")
 
-        # C. Identify Mastery Gift dynamically
+        # C. Identify Mastery Gift via `priory:MasteryPillarGift` first, then dependency/label fallback
         mastery_id: Optional[int] = None
         mastery_name: str = ""
         for iid, meta in ing_meta.items():
             if iid in (precursor_id, tribute_id):
                 continue
-            lbl_low = meta["label"].lower()
-            if (
-                iid in (19674, 75498, 86068, 96033, 97096, 97655)
-                or "mastery" in lbl_low
-                or "cantha" in lbl_low
-                or "exploration" in lbl_low
-                or (19677 in meta["depends_on"] or 75919 in meta["depends_on"] or 97096 in meta["depends_on"])
-            ):
+            types_str = " ".join(meta["types"])
+            if "MasteryPillarGift" in types_str:
                 mastery_id = iid
                 mastery_name = meta["label"]
                 break
         if mastery_id is None:
+            for iid, meta in ing_meta.items():
+                if iid in (precursor_id, tribute_id):
+                    continue
+                lbl_low = meta["label"].lower()
+                if (
+                    "mastery" in lbl_low
+                    or "cantha" in lbl_low
+                    or "exploration" in lbl_low
+                    or (19677 in meta["depends_on"] or 75919 in meta["depends_on"] or 97096 in meta["depends_on"])
+                ):
+                    mastery_id = iid
+                    mastery_name = meta["label"]
+                    break
+        if mastery_id is None:
             mastery_id = self.GIFT_OF_MASTERY_ID if generation == "GEN1" else (75498 if generation == "GEN2" else 96033)
             mastery_name = "Gift of Mastery" if generation == "GEN1" else ("Gift of Maguuma Mastery" if generation == "GEN2" else "Gift of Jade Mastery")
 
-        # D. Identify Weapon-Specific Gift dynamically
+        # D. Identify Weapon-Specific Gift via `priory:WeaponSpecificPillarGift` first, then remaining top-level ingredient
         specific_id: Optional[int] = None
         specific_name: str = ""
         for iid, meta in ing_meta.items():
-            if iid not in (precursor_id, tribute_id, mastery_id):
+            if iid in (precursor_id, tribute_id, mastery_id):
+                continue
+            types_str = " ".join(meta["types"])
+            if "WeaponSpecificPillarGift" in types_str:
                 specific_id = iid
                 specific_name = meta["label"]
                 break
+        if specific_id is None:
+            for iid, meta in ing_meta.items():
+                if iid not in (precursor_id, tribute_id, mastery_id):
+                    specific_id = iid
+                    specific_name = meta["label"]
+                    break
         if specific_id is None:
             specific_id = 19648 if target_item_id == self.TWILIGHT_ID else 19648
             specific_name = f"Gift of {target_name}"
@@ -411,7 +525,9 @@ class TwilightJourneySolver:
         def _sum_bom_item(node: Any, target_ids: Set[int]) -> int:
             if not node:
                 return 0
-            total = node.required_quantity if node.item_id in target_ids else 0
+            if node.item_id in target_ids:
+                return node.required_quantity
+            total = 0
             for child in getattr(node, "sub_requirements", []):
                 total += _sum_bom_item(child, target_ids)
             return total
@@ -513,6 +629,85 @@ class TwilightJourneySolver:
             "waypoint": "[&DYEFAAA=]",
         })
 
+        # 6. Query Cross-Weapon Synergies from RDF Graph (`priory:unlocksSynthesisTarget`, `priory:requiresPartnerLegendary`, `priory:batchYieldQuantity`)
+        cross_weapon_synergies: List[str] = []
+        all_bom_ids: Set[int] = set(ing_meta.keys())
+        for meta in ing_meta.values():
+            all_bom_ids.update(meta["depends_on"])
+        if diff_report and diff_report.root_node:
+            all_bom_ids.update(_subtree_ids(diff_report.root_node))
+        if generation == "GEN1":
+            all_bom_ids.add(self.GIFT_OF_EXPLORATION_ID)
+
+        if self.store:
+            # 6a. Direct synthesis target / partner legendary via ontology properties or recipe links
+            q_syn = """
+            SELECT ?synId ?synLabel ?partnerId ?partnerLabel WHERE {
+                ?item priory:gw2Id ?id .
+                {
+                    ?item priory:unlocksSynthesisTarget ?syn .
+                    OPTIONAL { ?syn priory:gw2Id ?synId }
+                    OPTIONAL { ?syn rdfs:label ?synLabel }
+                    OPTIONAL {
+                        ?item priory:requiresPartnerLegendary ?partner .
+                        OPTIONAL { ?partner priory:gw2Id ?partnerId }
+                        OPTIONAL { ?partner rdfs:label ?partnerLabel }
+                    }
+                }
+                UNION
+                {
+                    ?req priory:requiresItem ?item .
+                    ?recipe priory:hasIngredientRequirement ?req ;
+                            priory:producesItem ?syn .
+                    ?syn priory:gw2Id ?synId ;
+                         rdfs:label ?synLabel .
+                    OPTIONAL {
+                        ?recipe priory:hasIngredientRequirement ?req2 .
+                        ?req2 priory:requiresItem ?partner .
+                        ?partner a priory:EquipmentItem ;
+                                 priory:gw2Id ?partnerId ;
+                                 rdfs:label ?partnerLabel .
+                        FILTER(?partner != ?item)
+                    }
+                }
+            }
+            """
+            seen_syn_targets: Set[str] = set()
+            for r in self.store.query(q_syn, init_bindings={"id": Literal(target_item_id)}):
+                syn_label = str(r["synLabel"]) if r.get("synLabel") else "Eternity"
+                syn_id = int(r["synId"]) if r.get("synId") is not None else 30689
+                if syn_label in seen_syn_targets:
+                    continue
+                seen_syn_targets.add(syn_label)
+                partner_label = str(r["partnerLabel"]) if r.get("partnerLabel") else ("Sunrise" if target_item_id == 30704 else "Twilight")
+                partner_id = int(r["partnerId"]) if r.get("partnerId") is not None else (30703 if target_item_id == 30704 else 30704)
+                cross_weapon_synergies.append(
+                    f"Dual-Legendary Synthesis: {target_name} ({target_item_id}) combines with partner legendary "
+                    f"{partner_label} ({partner_id}) in the Mystic Forge to synthesize {syn_label} ({syn_id})."
+                )
+
+            # 6b. Multi-yield batch components (`priory:batchYieldQuantity`) in the weapon's BOM
+            q_batch = """
+            SELECT ?compId ?compLabel ?yieldQty WHERE {
+                ?comp priory:gw2Id ?compId ;
+                      priory:batchYieldQuantity ?yieldQty .
+                OPTIONAL { ?comp rdfs:label ?compLabel }
+            }
+            """
+            seen_batch_ids: Set[int] = set()
+            for r in self.store.query(q_batch):
+                if r.get("compId") is None or r.get("yieldQty") is None:
+                    continue
+                comp_id = int(r["compId"])
+                yield_qty = int(r["yieldQty"])
+                if yield_qty > 1 and comp_id in all_bom_ids and comp_id not in seen_batch_ids:
+                    seen_batch_ids.add(comp_id)
+                    comp_label = str(r["compLabel"]) if r.get("compLabel") else f"Item {comp_id}"
+                    cross_weapon_synergies.append(
+                        f"Batch Yield Synergy: {comp_label} ({comp_id}) yields {yield_qty}x per completion "
+                        f"(priory:batchYieldQuantity={yield_qty}), leaving {yield_qty - 1}x spare towards a second Generation 1 Legendary (e.g. Sunrise/Twilight -> Eternity)."
+                    )
+
         return {
             "target_item_id": target_item_id,
             "target_item_name": target_name,
@@ -534,6 +729,7 @@ class TwilightJourneySolver:
             "dungeon_zone_name": dungeon_zone_name,
             "dungeon_waypoint": dungeon_waypoint,
             "time_gates": time_gates,
+            "cross_weapon_synergies": cross_weapon_synergies,
         }
 
     def solve_twilight_journey(
@@ -734,11 +930,12 @@ class TwilightJourneySolver:
             steps=session_itinerary,
             time_gates=bom["time_gates"],
             expansion_warnings=expansion_warnings,
-            recommended_character=rec_char
+            recommended_character=rec_char,
+            cross_weapon_synergies=bom.get("cross_weapon_synergies", []),
         )
 
     def _default_bom(self, account: AccountState, diff_report: Optional[AccountDiffReport] = None) -> Dict[str, Any]:
-        if diff_report is not None:
+        if diff_report is not None or self.store is not None:
             return self._introspect_weapon_bom(self.TWILIGHT_ID, diff_report, account)
         return {
             "target_item_id": self.TWILIGHT_ID,
@@ -760,6 +957,7 @@ class TwilightJourneySolver:
             "dungeon_gift_id": 19667,
             "dungeon_gift_name": "Gift of Ascalon",
             "time_gates": ["Daily Fractal Mystic Clovers (BUY-2046: 2/day)"],
+            "cross_weapon_synergies": [],
         }
 
     def _evaluate_precursor_pillar(
@@ -2288,35 +2486,51 @@ class TwilightJourneySolver:
         
         c3_actions = []
 
-        # Check actual owned boosters and gobblers from account snapshot
+        # Check actual owned boosters and gobblers from account snapshot via dynamic ontology catalog
         owned_boosters = account.owned_boosters()
         has_gobblers = account.has_gobbler()
+        booster_catalog = self._get_booster_catalog()
 
         booster_telemetry_str = ""
         tailored_instructions = []
         if owned_boosters:
             detected_items = []
+            gobbler_detected = []
+            regular_boosters = []
+            tome_ids_owned = []
+
             for item_id, count in sorted(owned_boosters.items()):
-                name = BOOSTER_NAMES.get(item_id, f"Booster {item_id}")
+                meta = booster_catalog.get(item_id, {})
+                name = meta.get("label") or f"Booster {item_id}"
+                category = meta.get("category", "booster")
                 detected_items.append(f"{count}x {name} {item_id}")
+
+                if category == "gobbler" or "gobbler" in name.lower():
+                    gobbler_detected.append(f"{count}x {name} {item_id}")
+                elif category == "tome" or "tome of knowledge" in name.lower() or "writ of experience" in name.lower():
+                    tome_ids_owned.append(str(item_id))
+                else:
+                    if name != f"Booster {item_id}" and not name.startswith("Booster "):
+                        regular_boosters.append(f"{count}x {name} ({count}x Booster {item_id})")
+                    else:
+                        regular_boosters.append(f"{count}x {name}")
+
             booster_telemetry_str = f"detected {', '.join(detected_items)} in bank/inventory!"
 
             # Gobblers
-            gobbler_detected = [f"{count}x {BOOSTER_NAMES.get(gid, 'Gobbler')} {gid}" for gid, count in owned_boosters.items() if gid in [67037, 67040, 67836, 79523, 86675]]
             if gobbler_detected:
                 tailored_instructions.append(f"🍬 Gobbler Activation: Use {' / '.join(gobbler_detected)} with festival candy/taffy/snowflakes for continuous +25%-50% WvW Reward Track & XP buffs.")
             elif has_gobblers:
                 tailored_instructions.append("🍬 Gobbler Activation: Activate your festival gobblers for continuous +25%-50% WvW Reward Track & XP buffs.")
 
             # Regular boosters
-            regular_boosters = [f"{count}x {BOOSTER_NAMES.get(bid, 'Booster')} {bid}" for bid, count in owned_boosters.items() if bid not in [67037, 67040, 67836, 79523, 86675, 19983, 43766]]
             if regular_boosters:
                 tailored_instructions.append(f"⚡ Booster Stacking: Activate {', '.join(regular_boosters)} + Guild Tavern WvW enhancement to accelerate Gift of Battle progression to ~3.5h - 4.5h.")
 
             # Tomes of Knowledge
             tome_count = account.tomes_of_knowledge_count()
             if tome_count > 0:
-                tome_id_str = "19983" if 19983 in owned_boosters else "Tome of Knowledge"
+                tome_id_str = ", ".join(tome_ids_owned) if tome_ids_owned else "Tome of Knowledge"
                 tailored_instructions.append(f"📖 Tome of Knowledge Conversion: Use {tome_count}x Tomes of Knowledge ({tome_id_str}) on a level 80 character to instantly generate Spirit Shards for Miyani's Bloodstone Shard (200 needed) and Mystic Clovers.")
 
         # 1. Gift of Ascalon
@@ -2425,8 +2639,12 @@ class TwilightJourneySolver:
             
         # 3. Bloodstone Shard & 200 Spirit Shard Check
         tome_note = ""
-        if 19983 in owned_boosters:
-            tome_note = f" (You have {owned_boosters[19983]}x Tomes of Knowledge available in bank/inventory to convert into Spirit Shards!)"
+        owned_tome_qty = sum(
+            cnt for iid, cnt in owned_boosters.items()
+            if booster_catalog.get(iid, {}).get("category") == "tome" or "tome of knowledge" in booster_catalog.get(iid, {}).get("label", "").lower()
+        )
+        if owned_tome_qty > 0:
+            tome_note = f" (You have {owned_tome_qty}x Tomes of Knowledge available in bank/inventory to convert into Spirit Shards!)"
 
         if not has_bloodstone:
             if spirit_shards >= 200:
@@ -3236,10 +3454,11 @@ class TwilightJourneySolver:
                 game_mode="Dungeon",
             ))
         for gate in bom.get("time_gates", []):
-            if "Clover" not in gate:
+            gate_name = gate.get("name", str(gate)) if isinstance(gate, dict) else str(gate)
+            if "Clover" not in gate_name:
                 c3_actions.append(JourneyAction(
-                    action_title=f"⏳ Time-Gate Cadence: {gate}",
-                    action_description=f"Maintain daily/weekly cadence for {gate} required by {target_name}.",
+                    action_title=f"⏳ Time-Gate Cadence: {gate_name}",
+                    action_description=f"Maintain daily/weekly cadence for {gate_name} required by {target_name}.",
                     estimated_minutes=10,
                     priority="HIGH",
                     zone_name="Lion's Arch",

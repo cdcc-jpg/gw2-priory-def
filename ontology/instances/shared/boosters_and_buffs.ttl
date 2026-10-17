@@ -18,8 +18,8 @@
 # 1. Experience & Reward Track Boosters
 # ------------------------------------------------------------------------------
 
-# --- Experience Booster (GW2 ID: 2059) ---
-item:2059 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+# --- Experience Boosters (GW2 IDs: 2059, 19997, 20002, 41819, 8417) ---
+item:2059 a priory:ExperienceBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Experience Booster"@en ;
     priory:gw2Id 2059 ;
     priory:hasRarity rarity:Rare ;
@@ -33,8 +33,36 @@ item:2059 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         priory:requiredQuantity 10000
     ] .
 
-# --- Heroic Booster (GW2 ID: 42970) ---
-item:42970 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+item:19997 a priory:ExperienceBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Experience Booster"@en ;
+    priory:gw2Id 19997 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:20002 a priory:ExperienceBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Experience Booster"@en ;
+    priory:gw2Id 20002 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:41819 a priory:ExperienceBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Experience Booster"@en ;
+    priory:gw2Id 41819 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:8417 a priory:ExperienceBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Experience Booster"@en ;
+    priory:gw2Id 8417 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+# --- Heroic Boosters (GW2 IDs: 42970, 20005, 41818, 67500, 67501) ---
+item:42970 a priory:HeroicBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Heroic Booster"@en ;
     priory:gw2Id 42970 ;
     priory:hasRarity rarity:Exotic ;
@@ -48,8 +76,36 @@ item:42970 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         priory:requiredQuantity 15000
     ] .
 
-# --- Black Lion Booster (GW2 ID: 78954) ---
-item:78954 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+item:20005 a priory:HeroicBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Heroic Booster"@en ;
+    priory:gw2Id 20005 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:41818 a priory:HeroicBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Heroic Booster"@en ;
+    priory:gw2Id 41818 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:67500 a priory:HeroicBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Heroic Booster"@en ;
+    priory:gw2Id 67500 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:67501 a priory:HeroicBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Heroic Booster"@en ;
+    priory:gw2Id 67501 ;
+    priory:hasRarity rarity:Exotic ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+# --- Item & Black Lion Boosters (GW2 IDs: 78954, 20003, 41820, 78955) ---
+item:78954 a priory:ItemBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Black Lion Booster"@en ;
     priory:gw2Id 78954 ;
     priory:hasRarity rarity:Rare ;
@@ -63,8 +119,43 @@ item:78954 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         priory:requiredQuantity 10000
     ] .
 
-# --- Birthday Booster (GW2 ID: 49424) ---
-item:45003 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+item:20003 a priory:ItemBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Item Booster"@en ;
+    priory:gw2Id 20003 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:41820 a priory:ItemBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Item Booster"@en ;
+    priory:gw2Id 41820 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:78955 a priory:ItemBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Item Booster"@en ;
+    priory:gw2Id 78955 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "120 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+# --- Celebration & Birthday Boosters (GW2 IDs: 49424, 45005, 45003, 45037, 45038, 77749) ---
+item:49424 a priory:CelebrationBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Celebration Booster"@en ;
+    priory:gw2Id 49424 ;
+    priory:hasRarity rarity:Masterwork ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.1" .
+
+item:45005 a priory:CelebrationBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Birthday Booster"@en ;
+    priory:gw2Id 45005 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "24 hours" ;
+    priory:accelerationMultiplier "1.1" .
+
+item:45003 a priory:CelebrationBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Birthday Booster"@en ;
     priory:gw2Id 45003 ;
     priory:hasRarity rarity:Rare ;
@@ -76,21 +167,87 @@ item:45003 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         rdfs:label "Character Birthday Gift Delivery"@en
     ] .
 
-# --- Celebration Booster (GW2 ID: 67836) ---
-item:67836 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+item:45037 a priory:CelebrationBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Celebration Booster"@en ;
-    priory:gw2Id 67836 ;
+    priory:gw2Id 45037 ;
     priory:hasRarity rarity:Masterwork ;
     priory:duration "60 minutes" ;
-    priory:accelerationMultiplier "1.1" ;
-    rdfs:comment "Grants +100% Experience in all game types and +10% WvW / PvP Reward Track gain for 1 hour."@en ;
-    priory:acquiredVia [
-        a priory:AchievementCollectionPath ;
-        rdfs:label "Achievement Milestone and Festival Rewards"@en
-    ] .
+    priory:accelerationMultiplier "1.1" .
+
+item:45038 a priory:CelebrationBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Celebration Booster"@en ;
+    priory:gw2Id 45038 ;
+    priory:hasRarity rarity:Masterwork ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.1" .
+
+item:77749 a priory:CelebrationBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Celebration Booster"@en ;
+    priory:gw2Id 77749 ;
+    priory:hasRarity rarity:Masterwork ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.1" .
+
+# --- Karma Boosters (GW2 IDs: 20001, 8419, 41821, 92843) ---
+item:20001 a priory:KarmaBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Karma Booster"@en ;
+    priory:gw2Id 20001 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:8419 a priory:KarmaBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Karma Booster"@en ;
+    priory:gw2Id 8419 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:41821 a priory:KarmaBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Karma Booster"@en ;
+    priory:gw2Id 41821 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:92843 a priory:KarmaBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Communal Boost Bonfire (Karma)"@en ;
+    priory:gw2Id 92843 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+# --- WXP Boosters (GW2 IDs: 43499, 45056, 45060, 43485) ---
+item:43499 a priory:WXPBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "WXP Booster"@en ;
+    priory:gw2Id 43499 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:45056 a priory:WXPBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "WXP Booster"@en ;
+    priory:gw2Id 45056 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "60 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:45060 a priory:WXPBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "WXP Mini-Booster"@en ;
+    priory:gw2Id 45060 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.5" .
+
+item:43485 a priory:WXPBooster, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "WXP Mini-Booster"@en ;
+    priory:gw2Id 43485 ;
+    priory:hasRarity rarity:Fine ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.5" .
 
 # ------------------------------------------------------------------------------
-# 2. Festival & Material Conversion Gobblers
+# 2. Festival & Material Conversion Gobblers & Tomes of Knowledge
 # ------------------------------------------------------------------------------
 
 # --- Piece of Candy Corn (GW2 ID: 36041) ---
@@ -105,8 +262,8 @@ item:36041 a priory:CraftingMaterial, owl:NamedIndividual ;
         rdfs:label "Trading Post Purchase of Candy Corn"@en
     ] .
 
-# --- Candy Corn Gobbler (GW2 ID: 67037) ---
-item:67037 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+# --- Candy Corn Gobbler (GW2 IDs: 67037, 67040) ---
+item:67037 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Candy Corn Gobbler"@en ;
     priory:gw2Id 67037 ;
     priory:hasRarity rarity:Rare ;
@@ -120,8 +277,29 @@ item:67037 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         priory:requiredQuantity 30000
     ] .
 
-# --- Zhaitaffy Gobbler (GW2 ID: 67836) ---
-item:93704 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+item:67040 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Candy Corn Gobbler"@en ;
+    priory:gw2Id 67040 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "Variable (7-10 minutes per boost)" ;
+    priory:accelerationMultiplier "1.5" .
+
+# --- Zhaitaffy Gobbler (GW2 IDs: 67836, 93704) ---
+item:67836 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Zhaitaffy Gobbler"@en ;
+    priory:gw2Id 67836 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.25" ;
+    rdfs:comment "Converts Piece of Zhaitaffy into Dragon Bash festival buffs, providing bonus experience, karma, and magic find."@en ;
+    priory:acquiredVia [
+        a priory:VendorExchangePath ;
+        rdfs:label "Gem Store Dragon Bash Special"@en ;
+        priory:requiresCurrency currency:Coin ;
+        priory:requiredQuantity 30000
+    ] .
+
+item:93704 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Zhaitaffy Gobbler"@en ;
     priory:gw2Id 93704 ;
     priory:hasRarity rarity:Rare ;
@@ -135,8 +313,8 @@ item:93704 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         priory:requiredQuantity 30000
     ] .
 
-# --- Snowflake Gobbler (GW2 ID: 79523) ---
-item:79523 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+# --- Snowflake Gobbler (GW2 IDs: 79523, 86675, 92585) ---
+item:79523 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Snowflake Gobbler"@en ;
     priory:gw2Id 79523 ;
     priory:hasRarity rarity:Rare ;
@@ -150,8 +328,29 @@ item:79523 a priory:Item, priory:ItemBuff, owl:NamedIndividual ;
         priory:requiredQuantity 50000
     ] .
 
-# --- Tome of Knowledge (GW2 ID: 19983) ---
-item:43766 a priory:Item, owl:NamedIndividual ;
+item:86675 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Snowflake Gobbler"@en ;
+    priory:gw2Id 86675 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.25" .
+
+item:92585 a priory:FestivalGobbler, priory:Item, priory:ItemBuff, owl:NamedIndividual ;
+    rdfs:label "Snowflake Gobbler"@en ;
+    priory:gw2Id 92585 ;
+    priory:hasRarity rarity:Rare ;
+    priory:duration "15 minutes" ;
+    priory:accelerationMultiplier "1.25" .
+
+# --- Tome of Knowledge (GW2 IDs: 19983, 43766) ---
+item:19983 a priory:TomeOfKnowledge, priory:Item, owl:NamedIndividual ;
+    rdfs:label "Tome of Knowledge"@en ;
+    priory:gw2Id 19983 ;
+    priory:hasRarity rarity:Rare ;
+    priory:isAccountBound true ;
+    rdfs:comment "Grants 1 character level or 1 Spirit Shard if consumed on a level 80 character."@en .
+
+item:43766 a priory:TomeOfKnowledge, priory:Item, owl:NamedIndividual ;
     rdfs:label "Tome of Knowledge"@en ;
     priory:gw2Id 43766 ;
     priory:hasRarity rarity:Rare ;
@@ -205,7 +404,6 @@ priory:ExperienceBooster a priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Experience Booster"@en ;
     priory:duration "120 minutes" ;
     priory:accelerationMultiplier "1.5" ;
-    owl:sameAs item:2059 ;
     rdfs:comment "Increases all experience gain by 50% and accelerates WvW reward track progression by 50%."@en .
 
 priory:GuildTavernEnhancement a priory:ItemBuff, owl:NamedIndividual ;
@@ -219,7 +417,6 @@ priory:HeroicBooster a priory:ItemBuff, owl:NamedIndividual ;
     rdfs:label "Heroic Booster"@en ;
     priory:duration "120 minutes" ;
     priory:accelerationMultiplier "1.5" ;
-    owl:sameAs item:42970 ;
     rdfs:comment "Combines Experience Booster and Item Booster effects; increases WvW reward track gain by 50% and bonus experience by 50%."@en .
 
 priory:KarmaBooster a priory:ItemBuff, owl:NamedIndividual ;
