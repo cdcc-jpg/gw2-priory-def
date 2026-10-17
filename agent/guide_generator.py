@@ -170,7 +170,15 @@ class GuideGenerator:
             )
 
         # Case 2: Partially missing materials
-        readiness = int(diff_report.overall_readiness_pct)
+        if (
+            optimal_plan
+            and getattr(optimal_plan, "pillars", None) is not None
+            and getattr(optimal_plan, "overall_readiness_pct", None) is not None
+            and float(optimal_plan.overall_readiness_pct) > 0
+        ):
+            readiness = round(float(optimal_plan.overall_readiness_pct), 1)
+        else:
+            readiness = int(diff_report.overall_readiness_pct)
 
         # Strategic analysis based on intent, constraints & optimal plan
         recommendations = []

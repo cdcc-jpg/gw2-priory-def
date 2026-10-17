@@ -435,15 +435,18 @@ class TwilightJourneySolver:
 
         # Dungeon gift detection from ontology (19664..19671)
         dungeon_gift_id: Optional[int] = None
-        dungeon_gift_name: str = "Gift of Ascalon"
-        dungeon_zone_name: str = "Ascalonian Catacombs"
-        dungeon_waypoint: str = "[&BIcBAAA=]"
+        dungeon_gift_name: Optional[str] = None
+        dungeon_zone_name: Optional[str] = None
+        dungeon_waypoint: Optional[str] = None
         for did in range(19664, 19672):
             if did in spec_sub_ids:
                 dungeon_gift_id = did
                 break
         if dungeon_gift_id is None and generation == "GEN1":
             dungeon_gift_id = self.GIFT_OF_ASCALON_ID
+            dungeon_gift_name = "Gift of Ascalon"
+            dungeon_zone_name = "Ascalonian Catacombs"
+            dungeon_waypoint = "[&BIcBAAA=]"
         if dungeon_gift_id and self.store:
             q_dg = """
             SELECT ?label WHERE { ?item priory:gw2Id ?id ; rdfs:label ?label } LIMIT 1
@@ -486,7 +489,7 @@ class TwilightJourneySolver:
                     display_lbl = f"{lbl} (Spiritwood Plank)"
                 elif "Deldrimor Steel Ingot" in note_str and "Deldrimor" not in display_lbl:
                     display_lbl = f"{lbl} (Deldrimor Steel Ingot)"
-                time_gates.append({
+                entry = {
                     "name": display_lbl,
                     "daily_limit": int(r["dailyLimit"]) if r.get("dailyLimit") is not None else None,
                     "weekly_limit": int(r["weeklyLimit"]) if r.get("weeklyLimit") is not None else None,
@@ -494,7 +497,11 @@ class TwilightJourneySolver:
                     "npc": str(r["npc"]) if r.get("npc") else None,
                     "zone": str(r["zone"]) if r.get("zone") else None,
                     "waypoint": str(r["wp"]) if r.get("wp") else None,
-                })
+                }
+                if generation == "GEN3" and "Summoning Stone" in lbl:
+                    time_gates.insert(0, entry)
+                else:
+                    time_gates.append(entry)
         # Always include BUY-2046 daily fractal clovers time-gate
         time_gates.append({
             "name": "BUY-2046 Daily Fractal Mystic Clovers",
