@@ -29,23 +29,59 @@ from engine.graph_store import (
 
 SESSION_GRAPH_PREFIX = "urn:priory:session:char:"
 
-STAT_NAME_MAP = {
-    "berserker": PRIORY.Berserker,
-    "viper": PRIORY.Viper,
-    "celestial": PRIORY.Celestial,
-    "marauder": PRIORY.Marauder,
-    "harrier": PRIORY.Harrier,
-    "diviner": PRIORY.Diviner,
-    "minstrel": PRIORY.Minstrel,
-    "trailblazer": PRIORY.Trailblazer,
-    "assassin": PRIORY.Assassin,
-    "ritualist": PRIORY.Ritualist,
-    "dragon": PRIORY.Dragon,
-    "knight": PRIORY.Knight,
-    "cavalier": PRIORY.Cavalier,
-    "sinister": PRIORY.Sinister,
-    "grieving": PRIORY.Grieving,
-}
+STAT_NAME_MAP: Dict[str, URIRef] = {}
+
+_DEFAULT_GRAPH_STORE: Optional[PrioryGraphStore] = None
+
+
+def _get_or_create_default_store() -> PrioryGraphStore:
+    """Returns the shared default PrioryGraphStore instance, loading ontology triples if needed."""
+    global _DEFAULT_GRAPH_STORE
+    try:
+        from engine import graph_store as _gs_mod
+        if hasattr(_gs_mod, "get_default_graph_store"):
+            return _gs_mod.get_default_graph_store()
+    except Exception:
+        pass
+    if _DEFAULT_GRAPH_STORE is None:
+        _DEFAULT_GRAPH_STORE = PrioryGraphStore()
+        _DEFAULT_GRAPH_STORE.load_all()
+    elif len(_DEFAULT_GRAPH_STORE.graph) == 0:
+        _DEFAULT_GRAPH_STORE.load_all()
+    return _DEFAULT_GRAPH_STORE
+
+
+def _ensure_stat_map_hydrated(graph_store: Optional[PrioryGraphStore] = None) -> Dict[str, URIRef]:
+    """Hydrates STAT_NAME_MAP dynamically from PrioryGraphStore."""
+    if STAT_NAME_MAP:
+        return STAT_NAME_MAP
+    store = graph_store or _get_or_create_default_store()
+    if hasattr(store, "get_stat_prefix_map"):
+        try:
+            raw_map = store.get_stat_prefix_map()
+            if isinstance(raw_map, dict):
+                for k, v in raw_map.items():
+                    STAT_NAME_MAP[str(k).strip().lower()] = v if isinstance(v, URIRef) else URIRef(str(v))
+        except Exception:
+            pass
+    if not STAT_NAME_MAP:
+        sparql = """
+        SELECT ?stat ?label WHERE {
+            ?stat skos:inScheme priory:StatCombinationScheme .
+            OPTIONAL { ?stat skos:prefLabel ?label }
+        }
+        """
+        for row in store.query(sparql):
+            stat_uri_str = str(row["stat"])
+            stat_uri = URIRef(stat_uri_str)
+            local_slug = stat_uri_str.rsplit("/", 1)[-1].strip().lower()
+            if local_slug:
+                STAT_NAME_MAP[local_slug] = stat_uri
+            if row.get("label"):
+                lbl_slug = str(row["label"]).replace("'s", "").strip().lower()
+                if lbl_slug:
+                    STAT_NAME_MAP[lbl_slug] = stat_uri
+    return STAT_NAME_MAP
 
 
 class CharacterGraphHydrator:
@@ -57,6 +93,8 @@ class CharacterGraphHydrator:
         self.ttl_seconds = ttl_seconds
         # Tracks {graph_uri: {"timestamp": float, "char_name": str, "session_id": str, "content_hash": str}}
         self._hydrated_graphs: Dict[URIRef, Dict[str, Any]] = {}
+        _ensure_stat_map_hydrated(self.store)
+        _ensure_crafting_stations_hydrated(self.store)
 
     def get_character_graph_uri(self, character_name: str, session_id: Optional[str] = None) -> URIRef:
         """Constructs canonical named graph URI for a character."""
@@ -105,8 +143,11 @@ class CharacterGraphHydrator:
         if isinstance(stats_obj, dict):
             # Check attribute names
             stat_name = stats_obj.get("id")
-            if stat_name and str(stat_name).lower() in STAT_NAME_MAP:
-                g.add((eq_node, PRIORY.hasStatCombination, STAT_NAME_MAP[str(stat_name).lower()]))
+            if stat_name:
+                stat_map = _ensure_stat_map_hydrated(self.store)
+                stat_key = str(stat_name).lower()
+                if stat_key in stat_map:
+                    g.add((eq_node, PRIORY.hasStatCombination, stat_map[stat_key]))
 
         # Binding status & skin
         binding = eq.get("binding")
@@ -339,71 +380,56 @@ class CharacterGraphHydrator:
 # Canonical Crafting Stations & Discipline Routing
 # ==============================================================================
 
-CRAFTING_DISCIPLINE_STATIONS: Dict[str, Dict[str, Any]] = {
-    "weaponsmith": {
-        "station_name": "Weaponsmithing Station",
-        "vendor_npc": "Master Craftsman Hobbs",
-        "chat_link": "[&BBAEAAA=]",  # Trader's Forum Waypoint, Lion's Arch
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BKgDAAA=]",  # Memorial Waypoint, Black Citadel
-    },
-    "armorsmith": {
-        "station_name": "Armorsmithing Station",
-        "vendor_npc": "Master Armorsmith",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BKgDAAA=]",
-    },
-    "artificer": {
-        "station_name": "Artificing Station",
-        "vendor_npc": "Master Artificer",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BLcEAAA=]",  # Accountancy Waypoint, Rata Sum
-    },
-    "huntsman": {
-        "station_name": "Huntsman's Station",
-        "vendor_npc": "Master Huntsman",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BCkDAAA=]",  # Minister's Waypoint, Divinity's Reach
-    },
-    "tailor": {
-        "station_name": "Tailoring Station",
-        "vendor_npc": "Master Tailor",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BLcEAAA=]",
-    },
-    "leatherworker": {
-        "station_name": "Leatherworking Station",
-        "vendor_npc": "Master Leatherworker",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BCkDAAA=]",
-    },
-    "jeweler": {
-        "station_name": "Jeweler's Station",
-        "vendor_npc": "Master Jeweler",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BLcEAAA=]",
-    },
-    "chef": {
-        "station_name": "Cooking Station",
-        "vendor_npc": "Master Chef",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&BKgDAAA=]",
-    },
-    "mystic_forge": {
-        "station_name": "Mystic Forge",
-        "vendor_npc": "Miyani",
-        "chat_link": "[&BBAEAAA=]",
-        "zone": "Lion's Arch",
-        "alternate_waypoint": "[&DYEFAAA=]",  # Mistlock Observatory Waypoint
-    }
-}
+CRAFTING_DISCIPLINE_STATIONS: Dict[str, Dict[str, Any]] = {}
+
+
+def _ensure_crafting_stations_hydrated(graph_store: Optional[PrioryGraphStore] = None) -> Dict[str, Dict[str, Any]]:
+    """Hydrates CRAFTING_DISCIPLINE_STATIONS dynamically from PrioryGraphStore."""
+    if CRAFTING_DISCIPLINE_STATIONS:
+        return CRAFTING_DISCIPLINE_STATIONS
+    store = graph_store or _get_or_create_default_store()
+    if hasattr(store, "get_crafting_stations"):
+        try:
+            raw_stations = store.get_crafting_stations()
+            if isinstance(raw_stations, dict):
+                for slug, info in raw_stations.items():
+                    if isinstance(info, dict):
+                        CRAFTING_DISCIPLINE_STATIONS[str(slug).strip().lower()] = {
+                            "station_name": str(info.get("station_name") or info.get("label") or f"{slug.title()} Station"),
+                            "vendor_npc": str(info.get("vendor_npc") or info.get("npc") or f"Master {slug.title()}"),
+                            "chat_link": str(info.get("chat_link") or info.get("waypoint") or "[&BBAEAAA=]"),
+                            "zone": str(info.get("zone") or "Lion's Arch"),
+                            "alternate_waypoint": str(info.get("alternate_waypoint") or info.get("alt_waypoint") or "[&BBAEAAA=]"),
+                        }
+        except Exception:
+            pass
+    if not CRAFTING_DISCIPLINE_STATIONS:
+        sparql = """
+        SELECT ?station ?slug ?label ?npc ?wp ?zone ?altWp ?disc WHERE {
+            ?station a priory:CraftingStation ;
+                     rdfs:label ?label .
+            OPTIONAL { ?station priory:disciplineSlug ?slug }
+            OPTIONAL { ?station priory:forDiscipline ?disc }
+            OPTIONAL { ?station priory:vendorNPC ?npc }
+            OPTIONAL { ?station priory:nearestWaypoint ?wp }
+            OPTIONAL { ?station priory:zoneName ?zone }
+            OPTIONAL { ?station priory:alternateWaypoint ?altWp }
+        }
+        """
+        for row in store.query(sparql):
+            slug_val = str(row.get("slug") or "").strip().lower()
+            if not slug_val and row.get("disc"):
+                slug_val = str(row["disc"]).rsplit("/", 1)[-1].strip().lower()
+            if not slug_val:
+                continue
+            CRAFTING_DISCIPLINE_STATIONS[slug_val] = {
+                "station_name": str(row["label"]),
+                "vendor_npc": str(row.get("npc") or f"Master {slug_val.title()}"),
+                "chat_link": str(row.get("wp") or "[&BBAEAAA=]"),
+                "zone": str(row.get("zone") or "Lion's Arch"),
+                "alternate_waypoint": str(row.get("altWp") or "[&BBAEAAA=]"),
+            }
+    return CRAFTING_DISCIPLINE_STATIONS
 
 
 def encode_item_chat_link(item_id: int, quantity: int = 1) -> str:
@@ -429,7 +455,8 @@ def route_crafting_discipline(
     avoiding 50 silver reactivation fees.
     """
     disc_lower = discipline.strip().lower()
-    station = CRAFTING_DISCIPLINE_STATIONS.get(disc_lower, {
+    stations = _ensure_crafting_stations_hydrated(graph_store)
+    station = stations.get(disc_lower, {
         "station_name": f"{disc_lower.title()} Station",
         "vendor_npc": f"Master {disc_lower.title()}",
         "chat_link": "[&BBAEAAA=]",

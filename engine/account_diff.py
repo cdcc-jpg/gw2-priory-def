@@ -39,594 +39,110 @@ class WizardVaultListing:
         return self.purchase_limit is not None and self.purchased >= self.purchase_limit
 
 
-LOUNGE_PASSES: Dict[int, Dict[str, Any]] = {
-    81664: {"name": "Mistlock Sanctuary Passkey", "chat_link": "[&AgEAPwEA]", "zone": "Mistlock Sanctuary"},
-    81665: {"name": "Mistlock Sanctuary Passkey (2 Weeks)", "chat_link": "[&AgEBPwEA]", "zone": "Mistlock Sanctuary"},
-    90011: {"name": "Armistice Bastion Pass", "chat_link": "[&AgHrXwEA]", "zone": "Armistice Bastion"},
-    90012: {"name": "Armistice Bastion Pass (2 Weeks)", "chat_link": "[&AgHsXwEA]", "zone": "Armistice Bastion"},
-    98048: {"name": "Thousand Seas Pavilion Pass", "chat_link": "[&AgGgcAEA]", "zone": "Thousand Seas Pavilion"},
-    98049: {"name": "Thousand Seas Pavilion Pass (2 Weeks)", "chat_link": "[&AgGhcAEA]", "zone": "Thousand Seas Pavilion"},
-    49149: {"name": "Royal Terrace Pass", "chat_link": "[&AgEVwAAA]", "zone": "Divinity's Reach"},
-    49148: {"name": "Royal Terrace Pass (2 Weeks)", "chat_link": "[&AgEUwAAA]", "zone": "Divinity's Reach"},
-    97009: {"name": "Arborstone Portal Scroll", "chat_link": "[&AgHxegEA]", "zone": "Arborstone"},
-    83457: {"name": "Passkey to the Lily of the Elon", "chat_link": "[&AgEBRgEA]", "zone": "Crystal Oasis"},
-    87498: {"name": "Invitation to 'Lily of the Elon'", "chat_link": "[&AgH6VwEA]", "zone": "Crystal Oasis"},
-    87499: {"name": "Invitation to 'Lily of the Elon' (2 Weeks)", "chat_link": "[&AgH7VwEA]", "zone": "Crystal Oasis"},
-    79500: {"name": "Lava Lounge Pass", "chat_link": "[&AgGMNgEA]", "zone": "Ember Bay"},
-    79501: {"name": "Lava Lounge Pass (2 Weeks)", "chat_link": "[&AgEtNwEA]", "zone": "Ember Bay"},
-    82791: {"name": "Champion's Rest Pass", "chat_link": "[&AgFnQwEA]", "zone": "Heart of the Mists"},
-    88385: {"name": "Champion's Rest Pass", "chat_link": "[&AgGBWQEA]", "zone": "Heart of the Mists"},
-    88386: {"name": "Champion's Rest Pass (2 Weeks)", "chat_link": "[&AgGCWQEA]", "zone": "Heart of the Mists"},
-    86634: {"name": "Captain's Airship Pass", "chat_link": "[&AgGqUgEA]", "zone": "Gendarran Fields"},
-    86635: {"name": "Captain's Airship Pass (2 Weeks)", "chat_link": "[&AgGrUgEA]", "zone": "Gendarran Fields"},
-    92055: {"name": "Eye of the North Portal Stone", "chat_link": "[&AgFnZwEA]", "zone": "Eye of the North"},
-    95430: {"name": "Wizard's Tower Portal Scroll", "chat_link": "[&AgFmfwEA]", "zone": "Wizard's Tower"},
-    100788: {"name": "Wizard's Tower Teleportation Scroll", "chat_link": "[&AgG0iQEA]", "zone": "Wizard's Tower"}
-}
+LOUNGE_PASSES: Dict[int, Dict[str, Any]] = {}
+CONVENIENCE_CATEGORIES: List[str] = []
+CONVENIENCE_ITEMS: Dict[str, Dict[str, Any]] = {}
+DEFAULT_ACCOUNT_ROSTER: List[str] = []
+
+_DEFAULT_DIFF_STORE: Optional[PrioryGraphStore] = None
+_BOOSTER_CATALOG_CACHE: Optional[Dict[str, Any]] = None
 
 
-CONVENIENCE_CATEGORIES: List[str] = [
-    "permanent_contracts",
-    "converters_and_gobblers",
-    "portal_tomes",
-    "infinite_tools",
-    "infinite_salvage",
-    "portable_forge",
-    "teleport_to_friend",
-    "vip_lounges"
-]
+def _get_or_create_default_store() -> PrioryGraphStore:
+    """Returns a shared PrioryGraphStore with all ontology files loaded."""
+    global _DEFAULT_DIFF_STORE
+    try:
+        from engine import graph_store as _gs_mod
+        if hasattr(_gs_mod, "get_default_graph_store"):
+            return _gs_mod.get_default_graph_store()
+    except Exception:
+        pass
+    if _DEFAULT_DIFF_STORE is None:
+        _DEFAULT_DIFF_STORE = PrioryGraphStore()
+        _DEFAULT_DIFF_STORE.load_all()
+    elif len(_DEFAULT_DIFF_STORE.graph) == 0:
+        _DEFAULT_DIFF_STORE.load_all()
+    return _DEFAULT_DIFF_STORE
 
 
-CONVENIENCE_ITEMS: Dict[str, Dict[str, Any]] = {
-    # 1. Permanent Contracts
-    "permanent_bank": {
-        "id": 35976,
-        "all_ids": [35976, 35978, 35984, 49308],
-        "name": "Permanent Bank Access Express",
-        "chat_link": "[&AgGQjAAA]",
-        "type": "PermanentContract",
-        "category": "permanent_contracts"
-    },
-    "permanent_tp": {
-        "id": 35978,
-        "all_ids": [35978, 35976, 35986, 35987],
-        "name": "Permanent Trading Post Express",
-        "chat_link": "[&AgGZjAAA]",
-        "type": "PermanentContract",
-        "category": "permanent_contracts"
-    },
-    "permanent_merchant": {
-        "id": 35977,
-        "all_ids": [35977, 35985],
-        "name": "Permanent Merchant Express",
-        "chat_link": "[&AgGJjAAA]",
-        "type": "PermanentContract",
-        "category": "permanent_contracts"
-    },
-    "permanent_hair_stylist": {
-        "id": 35984,
-        "all_ids": [35984, 35988, 36173],
-        "name": "Permanent Hair Stylist Contract",
-        "chat_link": "[&AgG4XAAA]",
-        "type": "PermanentContract",
-        "category": "permanent_contracts"
-    },
+def _ensure_account_catalogs_hydrated(store: Optional[PrioryGraphStore] = None) -> PrioryGraphStore:
+    """Ensures all module-level catalogs in account_diff are hydrated from PrioryGraphStore."""
+    resolved_store = store if (store is not None and len(store.graph) > 0) else _get_or_create_default_store()
+    _hydrate_catalogs_from_graph(resolved_store)
+    if not LOUNGE_PASSES or not CONVENIENCE_ITEMS or not GEN1_WEAPONS or not HOBBS_COLLECTIONS:
+        def_store = _get_or_create_default_store()
+        if def_store is not resolved_store:
+            _hydrate_catalogs_from_graph(def_store)
+            resolved_store = def_store
+    return resolved_store
 
-    # 2. Converters & Gobblers
-    "candy_corn_gobbler": {
-        "id": 67393,
-        "all_ids": [67393, 67037, 67040],
-        "name": "Candy Corn Gobbler",
-        "chat_link": "[&AgEZCgEA]",
-        "type": "Gobbler",
-        "category": "converters_and_gobblers"
-    },
-    "zhaitaffy_gobbler": {
-        "id": 67836,
-        "all_ids": [67836],
-        "name": "Zhaitaffy Gobbler",
-        "chat_link": "[&AgFs/QAA]",
-        "type": "Gobbler",
-        "category": "converters_and_gobblers"
-    },
-    "snowflake_gobbler": {
-        "id": 92585,
-        "all_ids": [92585, 79523, 86675],
-        "name": "Snowflake Gobbler",
-        "chat_link": "[&AgHpZQEA]",
-        "type": "Gobbler",
-        "category": "converters_and_gobblers"
-    },
-    "ley_energy_converter": {
-        "id": 67280,
-        "all_ids": [67280, 69949],
-        "name": "Ley-Energy Matter Converter",
-        "chat_link": "[&AgGgCgEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "karmic_converter": {
-        "id": 66624,
-        "all_ids": [66624, 67038],
-        "name": "Karmic Converter",
-        "chat_link": "[&AgEAfAEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "gleam_of_sentience": {
-        "id": 92209,
-        "all_ids": [92209, 81790],
-        "name": "Gleam of Sentience",
-        "chat_link": "[&AgERUQEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "sentient_aberration": {
-        "id": 79895,
-        "all_ids": [79895],
-        "name": "Sentient Aberration",
-        "chat_link": "[&AgFnNQEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "sentient_anomaly": {
-        "id": 82418,
-        "all_ids": [82418],
-        "name": "Sentient Anomaly",
-        "chat_link": "[&AgGyPQEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "sentient_oddity": {
-        "id": 80894,
-        "all_ids": [80894],
-        "name": "Sentient Oddity",
-        "chat_link": "[&AgH+OQEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "sentient_seed": {
-        "id": 81700,
-        "all_ids": [81700],
-        "name": "Sentient Seed",
-        "chat_link": "[&AgEkPgEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "princess": {
-        "id": 69887,
-        "all_ids": [69887],
-        "name": "Princess",
-        "chat_link": "[&AgF/EQEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "star_of_gratitude": {
-        "id": 68369,
-        "all_ids": [68369],
-        "name": "Star of Gratitude",
-        "chat_link": "[&AgExCwEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "herta": {
-        "id": 73248,
-        "all_ids": [73248],
-        "name": "Herta",
-        "chat_link": "[&AgGgHAEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
-    "mawdrey_2": {
-        "id": 66341,
-        "all_ids": [66341],
-        "name": "Mawdrey II",
-        "chat_link": "[&AgE1BAEA]",
-        "type": "Converter",
-        "category": "converters_and_gobblers"
-    },
 
-    # 3. Portal Tomes & Teleporters
-    "lws3_portal_tome": {
-        "id": 80332,
-        "all_ids": [80332, 79899, 82449, 82512],
-        "name": "Living World Season 3 Portal Tome",
-        "chat_link": "[&AgFsOQEA]",
-        "type": "PortalTome",
-        "category": "portal_tomes"
-    },
-    "lws4_portal_tome": {
-        "id": 87508,
-        "all_ids": [87508, 86586, 87509],
-        "name": "Living World Season 4 Portal Tome",
-        "chat_link": "[&AgF4VQEA]",
-        "type": "PortalTome",
-        "category": "portal_tomes"
-    },
-    "ibs_portal_tome": {
-        "id": 92850,
-        "all_ids": [92850, 92272, 92782, 92783],
-        "name": "Icebrood Saga Portal Tome",
-        "chat_link": "[&AgGyZwEA]",
-        "type": "PortalTome",
-        "category": "portal_tomes"
-    },
-    "arborstone_portal_scroll": {
-        "id": 97009,
-        "all_ids": [97009],
-        "name": "Arborstone Portal Scroll",
-        "chat_link": "[&AgHxegEA]",
-        "type": "PortalTome",
-        "category": "portal_tomes"
-    },
-    "wizards_tower_portal_scroll": {
-        "id": 100788,
-        "all_ids": [100788, 95430],
-        "name": "Wizard's Tower Teleportation Scroll",
-        "chat_link": "[&AgG0iQEA]",
-        "type": "PortalTome",
-        "category": "portal_tomes"
-    },
-    "spearmarshals_plea": {
-        "id": 84310,
-        "all_ids": [84310],
-        "name": "Spearmarshal's Plea",
-        "chat_link": "[&AgFpTwEA]",
-        "type": "PortalDevice",
-        "category": "portal_tomes"
-    },
-    "world_boss_portal_device": {
-        "id": 87504,
-        "all_ids": [87504],
-        "name": "World Boss Portal Device",
-        "chat_link": "[&AgHwVwEA]",
-        "type": "PortalDevice",
-        "category": "portal_tomes"
-    },
-    "maguuma_portal_device": {
-        "id": 90022,
-        "all_ids": [90022],
-        "name": "Maguuma Pact Operation Portal Device",
-        "chat_link": "[&AgFwXwEA]",
-        "type": "PortalDevice",
-        "category": "portal_tomes"
-    },
-    "eye_of_the_north_portal_stone": {
-        "id": 92055,
-        "all_ids": [92055],
-        "name": "Eye of the North Portal Stone",
-        "chat_link": "[&AgFnZwEA]",
-        "type": "PortalTome",
-        "category": "portal_tomes"
-    },
-
-    # 4. Infinite Gathering Tools
-    "lucky_dog_harvesting_tool": {
-        "id": 86694,
-        "all_ids": [86694],
-        "name": "Lucky Dog Harvesting Tool",
-        "chat_link": "[&AgGyUgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "volatile_magic_harvesting_tool": {
-        "id": 87435,
-        "all_ids": [87435],
-        "name": "Volatile Magic Harvesting Tool",
-        "chat_link": "[&AgFuVwEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "volatile_magic_mining_pick": {
-        "id": 87434,
-        "all_ids": [87434],
-        "name": "Volatile Magic Mining Pick",
-        "chat_link": "[&AgFrVwEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "volatile_magic_logging_axe": {
-        "id": 87433,
-        "all_ids": [87433],
-        "name": "Volatile Magic Logging Axe",
-        "chat_link": "[&AgFqVwEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "unbound_magic_harvesting_tool": {
-        "id": 80234,
-        "all_ids": [80234],
-        "name": "Unbound Magic Harvesting Tool",
-        "chat_link": "[&AgGqOQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "unbound_magic_mining_pick": {
-        "id": 80235,
-        "all_ids": [80235],
-        "name": "Unbound Magic Mining Pick",
-        "chat_link": "[&AgGrOQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "unbound_magic_logging_axe": {
-        "id": 80236,
-        "all_ids": [80236],
-        "name": "Unbound Magic Logging Axe",
-        "chat_link": "[&AgGsOQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "skyscale_harvesting_tool": {
-        "id": 92842,
-        "all_ids": [92842],
-        "name": "Skyscale Harvesting Tool",
-        "chat_link": "[&AgG6ZQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "skyscale_mining_pick": {
-        "id": 92841,
-        "all_ids": [92841],
-        "name": "Skyscale Mining Pick",
-        "chat_link": "[&AgG5ZQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "skyscale_logging_axe": {
-        "id": 92840,
-        "all_ids": [92840],
-        "name": "Skyscale Logging Axe",
-        "chat_link": "[&AgG4ZQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "cosmic_harvesting_tool": {
-        "id": 87405,
-        "all_ids": [87405],
-        "name": "Infinite Cosmic Harvesting Tool",
-        "chat_link": "[&AgFlVQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "cosmic_mining_pick": {
-        "id": 87372,
-        "all_ids": [87372],
-        "name": "Infinite Cosmic Mining Pick",
-        "chat_link": "[&AgFkVQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "cosmic_logging_axe": {
-        "id": 87371,
-        "all_ids": [87371],
-        "name": "Infinite Cosmic Logging Axe",
-        "chat_link": "[&AgFjVQEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "choya_mining_pick": {
-        "id": 86938,
-        "all_ids": [86938],
-        "name": "Choya Mining Pick",
-        "chat_link": "[&AgHKUwEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "choya_harvesting_sickle": {
-        "id": 86939,
-        "all_ids": [86939],
-        "name": "Choya Harvesting Sickle",
-        "chat_link": "[&AgHLUwEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "choya_logging_axe": {
-        "id": 86940,
-        "all_ids": [86940],
-        "name": "Choya Logging Axe",
-        "chat_link": "[&AgHMUwEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "consortium_sickle": {
-        "id": 48932,
-        "all_ids": [48932],
-        "name": "Consortium Harvesting Sickle",
-        "chat_link": "[&AgF0vwAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "molten_pick": {
-        "id": 48931,
-        "all_ids": [48931],
-        "name": "Molten Alliance Mining Pick",
-        "chat_link": "[&AgFzvwAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "chop_it_all_axe": {
-        "id": 48933,
-        "all_ids": [48933],
-        "name": "Chop-It-All Logging Axe",
-        "chat_link": "[&AgF1vwAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "watchwork_pick": {
-        "id": 47897,
-        "all_ids": [47897],
-        "name": "Watchwork Mining Pick",
-        "chat_link": "[&AgFpnQAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "tireless_harvesting_minion": {
-        "id": 49298,
-        "all_ids": [49298],
-        "name": "Tireless Harvesting Minion",
-        "chat_link": "[&AgEqwAAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "tireless_logging_minion": {
-        "id": 49297,
-        "all_ids": [49297],
-        "name": "Tireless Logging Minion",
-        "chat_link": "[&AgEpwAAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "bone_pick": {
-        "id": 49296,
-        "all_ids": [49296],
-        "name": "Bone Pick",
-        "chat_link": "[&AgEowAAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "fused_molten_sickle": {
-        "id": 49299,
-        "all_ids": [49299],
-        "name": "Fused Molten Sickle",
-        "chat_link": "[&AgErwAAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "fused_molten_logging_axe": {
-        "id": 49300,
-        "all_ids": [49300],
-        "name": "Fused Molten Logging Axe",
-        "chat_link": "[&AgEswAAA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "glitter_bomb_harvesting_tool": {
-        "id": 78949,
-        "all_ids": [78949],
-        "name": "Glitter Bomb Harvesting Tool",
-        "chat_link": "[&AgGVNAEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "solar_insect_tool": {
-        "id": 84698,
-        "all_ids": [84698],
-        "name": "Solar Insect Gathering Tool",
-        "chat_link": "[&AgGqTgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "mad_scientist_mining": {
-        "id": 67032,
-        "all_ids": [67032],
-        "name": "Mad Scientist Mining Tool",
-        "chat_link": "[&AgHYBgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "mad_scientist_harvesting": {
-        "id": 67034,
-        "all_ids": [67034],
-        "name": "Mad Scientist Harvesting Tool",
-        "chat_link": "[&AgHaBgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "mad_scientist_logging": {
-        "id": 67033,
-        "all_ids": [67033],
-        "name": "Mad Scientist Logging Tool",
-        "chat_link": "[&AgHZBgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "firefly_mining_flute": {
-        "id": 81472,
-        "all_ids": [81472],
-        "name": "Firefly Mining Flute",
-        "chat_link": "[&AgHAOgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "butterfly_harvesting_flute": {
-        "id": 81473,
-        "all_ids": [81473],
-        "name": "Butterfly Harvesting Flute",
-        "chat_link": "[&AgHBOgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-    "swarm_logging_flute": {
-        "id": 81471,
-        "all_ids": [81471],
-        "name": "Swarm Logging Flute",
-        "chat_link": "[&AgG/OgEA]",
-        "type": "GatheringTool",
-        "category": "infinite_tools"
-    },
-
-    # 4. Infinite Salvage
-    "copper_fed": {
-        "id": 44602,
-        "all_ids": [44602],
-        "name": "Copper-Fed Salvage-o-Matic",
-        "chat_link": "[&AgE6rgAA]",
-        "type": "SalvageKit",
-        "category": "infinite_salvage"
-    },
-    "silver_fed": {
-        "id": 67027,
-        "all_ids": [67027],
-        "name": "Silver-Fed Salvage-o-Matic",
-        "chat_link": "[&AgHTBQEA]",
-        "type": "SalvageKit",
-        "category": "infinite_salvage"
-    },
-    "runecrafter": {
-        "id": 87400,
-        "all_ids": [87400],
-        "name": "Runecrafter's Salvage-o-Matic",
-        "chat_link": "[&AgFoVQEA]",
-        "type": "SalvageKit",
-        "category": "infinite_salvage"
-    },
-    "upgrade_extractor": {
-        "id": 93121,
-        "all_ids": [93121, 93120, 93122],
-        "name": "Endless Upgrade Extractor",
-        "chat_link": "[&AgHpWgEA]",
-        "type": "SalvageKit",
-        "category": "infinite_salvage"
-    },
-
-    # 5. Portable Forge
-    "mystic_forge_conduit": {
-        "id": 70010,
-        "all_ids": [70010, 70013, 35728],
-        "name": "Mystic Forge Conduit",
-        "chat_link": "[&AgE6EQEA]",
-        "type": "MysticForge",
-        "category": "portable_forge"
-    },
-
-    # 6. Teleport to Friend
-    "teleport_to_friend": {
-        "id": 90335,
-        "all_ids": [90335],
-        "name": "Recharging Teleport to Friend",
-        "chat_link": "[&AgHfYAEA]",
-        "type": "Teleport",
-        "category": "teleport_to_friend"
+def _get_booster_catalog() -> Dict[str, Any]:
+    """Returns the booster catalog dictionary hydrated from PrioryGraphStore."""
+    global _BOOSTER_CATALOG_CACHE
+    if _BOOSTER_CATALOG_CACHE is not None and _BOOSTER_CATALOG_CACHE.get("booster_names"):
+        return _BOOSTER_CATALOG_CACHE
+    store = _ensure_account_catalogs_hydrated()
+    if hasattr(store, "get_booster_catalog"):
+        try:
+            cat = dict(store.get_booster_catalog())
+            if isinstance(cat, dict) and cat.get("booster_names"):
+                cls_sparql = """
+                SELECT DISTINCT ?id ?label ?cls WHERE {
+                    VALUES ?cls {
+                        priory:ExperienceBooster
+                        priory:HeroicBooster
+                        priory:KarmaBooster
+                        priory:WXPBooster
+                        priory:CelebrationBooster
+                        priory:ItemBooster
+                    }
+                    ?item a ?cls ;
+                          priory:gw2Id ?id ;
+                          rdfs:label ?label .
+                }
+                """
+                exp_ids: Set[int] = set()
+                heroic_ids: Set[int] = set()
+                karma_ids: Set[int] = set()
+                wxp_ids: Set[int] = set()
+                celeb_ids: Set[int] = set()
+                for row in store.query(cls_sparql):
+                    iid = int(row["id"])
+                    cls_str = str(row["cls"])
+                    lbl_str = str(row.get("label", ""))
+                    if cls_str.endswith("ExperienceBooster") or "Black Lion Booster" in lbl_str:
+                        exp_ids.add(iid)
+                    elif cls_str.endswith("HeroicBooster"):
+                        heroic_ids.add(iid)
+                    elif cls_str.endswith("KarmaBooster"):
+                        karma_ids.add(iid)
+                    elif cls_str.endswith("WXPBooster"):
+                        wxp_ids.add(iid)
+                    elif cls_str.endswith("CelebrationBooster"):
+                        celeb_ids.add(iid)
+                cat["experience_only_ids"] = exp_ids
+                cat["heroic_only_ids"] = heroic_ids
+                cat["karma_only_ids"] = karma_ids
+                cat["wxp_only_ids"] = wxp_ids
+                cat["celebration_only_ids"] = celeb_ids
+                _BOOSTER_CATALOG_CACHE = cat
+                return cat
+        except Exception:
+            pass
+    return {
+        "booster_names": {},
+        "gobbler_ids": set(),
+        "tome_ids": set(),
+        "xp_booster_ids": set(),
+        "wvw_booster_ids": set(),
+        "karma_booster_ids": set(),
+        "experience_only_ids": set(),
+        "heroic_only_ids": set(),
+        "karma_only_ids": set(),
+        "wxp_only_ids": set(),
+        "celebration_only_ids": set(),
     }
-}
-
-
-DEFAULT_ACCOUNT_ROSTER: List[str] = [
-    'Kerling', 'Skuta Rantakallio', 'Legacy Of Harathi', 'Styrman',
-    'Ksëne', 'Aubefein', 'Sara Loy', 'Flevkk', 'Like A Plastik Bag',
-    'Jaimelargent', 'Saladomatic'
-]
 
 
 @dataclass
@@ -975,6 +491,7 @@ class AccountState:
 
     def eligible_exploration_characters(self) -> List[str]:
         """Returns roster characters who have not completed 100% Core Map."""
+        _ensure_account_catalogs_hydrated()
         roster_names: List[str] = []
         if self.characters:
             for c in self.characters:
@@ -997,22 +514,19 @@ class AccountState:
 
     def owned_boosters(self) -> Dict[int, int]:
         """Detects owned boosters, gobblers, and tomes across materials, bank, and inventory."""
-        booster_ids = [
-            67836, 67037, 67040, 79523, 86675, 19983, 43766,
-            19997, 20002, 41819, 8417, 78954, 20005, 41818, 67500, 67501,
-            20001, 8419, 41821, 92843, 43499, 45056, 45060, 43485,
-            45003, 45037, 45038, 77749, 20003, 41820, 78955, 2059, 42970, 49424, 45005
-        ]
-        result = {}
+        cat = _get_booster_catalog()
+        booster_ids = cat.get("booster_names", {}).keys()
+        result: Dict[int, int] = {}
         for b_id in booster_ids:
-            count = self.total_item_count(b_id)
+            count = self.total_item_count(int(b_id))
             if count > 0:
-                result[b_id] = count
+                result[int(b_id)] = count
         return result
 
     def owned_lounges(self) -> List[Dict[str, Any]]:
         """Scans bank and inventory for owned VIP lounge passes and portal scrolls."""
-        results = []
+        _ensure_account_catalogs_hydrated()
+        results: List[Dict[str, Any]] = []
         for pass_id, meta in LOUNGE_PASSES.items():
             count = self.total_item_count(pass_id)
             if count > 0:
@@ -1027,6 +541,7 @@ class AccountState:
 
     def owned_convenience_items(self) -> Dict[str, Any]:
         """Detects owned convenience items across all 7 categories (contracts, gobblers/converters, portal tomes, infinite salvage, portable forge, teleport to friend, and VIP lounges)."""
+        _ensure_account_catalogs_hydrated()
         result: Dict[str, Any] = {}
         for slug, meta in CONVENIENCE_ITEMS.items():
             total = sum(self.total_item_count(i_id) for i_id in meta["all_ids"])
@@ -1047,15 +562,9 @@ class AccountState:
 
     def owned_convenience_by_category(self) -> Dict[str, List[Dict[str, Any]]]:
         """Returns owned convenience items grouped by convenience categories."""
+        _ensure_account_catalogs_hydrated()
         categories: Dict[str, List[Dict[str, Any]]] = {
-            "permanent_contracts": [],
-            "converters_and_gobblers": [],
-            "portal_tomes": [],
-            "infinite_tools": [],
-            "infinite_salvage": [],
-            "portable_forge": [],
-            "teleport_to_friend": [],
-            "vip_lounges": []
+            cat_name: [] for cat_name in CONVENIENCE_CATEGORIES
         }
         seen_ids: Set[int] = set()
         for slug, meta in CONVENIENCE_ITEMS.items():
@@ -1075,7 +584,7 @@ class AccountState:
                     categories[cat].append(item_dict)
 
         for l in self.owned_lounges():
-            categories["vip_lounges"].append({
+            categories.setdefault("vip_lounges", []).append({
                 "id": l["id"],
                 "name": l["name"],
                 "chat_link": l["chat_link"],
@@ -1089,6 +598,7 @@ class AccountState:
 
     def convenience_portfolio(self) -> Dict[str, List[Dict[str, Any]]]:
         """Returns structured convenience portfolio broken down into passes, portal tomes, converters, infinite tools, and utilities."""
+        _ensure_account_catalogs_hydrated()
         portfolio: Dict[str, List[Dict[str, Any]]] = {
             "passes": self.owned_lounges(),
             "portal_tomes": [],
@@ -1122,108 +632,139 @@ class AccountState:
 
         return portfolio
 
+    def _has_convenience_slug(self, slug: str) -> bool:
+        _ensure_account_catalogs_hydrated()
+        meta = CONVENIENCE_ITEMS.get(slug)
+        if not meta:
+            return False
+        return any(self.total_item_count(i) > 0 for i in meta.get("all_ids", ()))
+
     def has_permanent_bank(self) -> bool:
-        """Returns True if the account owns Permanent Bank Access Contract/Express (IDs 35976, 35978, 35984, 49308)."""
-        return any(self.total_item_count(i) > 0 for i in [35976, 35978, 35984, 49308])
+        """Returns True if the account owns Permanent Bank Access Contract/Express."""
+        return self._has_convenience_slug("permanent_bank")
 
     def has_permanent_tp(self) -> bool:
-        """Returns True if the account owns Permanent Trading Post Express/Contract (IDs 35978, 35976, 35986, 35987)."""
-        return any(self.total_item_count(i) > 0 for i in [35978, 35976, 35986, 35987])
+        """Returns True if the account owns Permanent Trading Post Express/Contract."""
+        return self._has_convenience_slug("permanent_tp")
 
     def has_permanent_merchant(self) -> bool:
-        """Returns True if the account owns Permanent Merchant Express/Contract (IDs 35977, 35985)."""
-        return any(self.total_item_count(i) > 0 for i in [35977, 35985])
+        """Returns True if the account owns Permanent Merchant Express/Contract."""
+        return self._has_convenience_slug("permanent_merchant")
 
     def has_permanent_hair_stylist(self) -> bool:
-        """Returns True if the account owns Permanent Hair Stylist Contract (IDs 35984, 35988, 36173)."""
-        return any(self.total_item_count(i) > 0 for i in [35984, 35988, 36173])
+        """Returns True if the account owns Permanent Hair Stylist Contract."""
+        return self._has_convenience_slug("permanent_hair_stylist")
 
     def has_permanent_contracts(self) -> bool:
         """Returns True if the account owns any permanent service contract."""
         return self.has_permanent_bank() or self.has_permanent_tp() or self.has_permanent_merchant() or self.has_permanent_hair_stylist()
 
     def has_ley_energy_converter(self) -> bool:
-        """Returns True if the account owns Ley-Energy Matter Converter (IDs 67280, 69949)."""
-        return any(self.total_item_count(i) > 0 for i in [67280, 69949])
+        """Returns True if the account owns Ley-Energy Matter Converter."""
+        return self._has_convenience_slug("ley_energy_converter")
 
     def has_karmic_converter(self) -> bool:
-        """Returns True if the account owns Karmic Converter (IDs 66624, 67038)."""
-        return any(self.total_item_count(i) > 0 for i in [66624, 67038])
+        """Returns True if the account owns Karmic Converter."""
+        return self._has_convenience_slug("karmic_converter")
 
     def has_sentient_converters(self) -> bool:
         """Returns True if the account owns Gleam of Sentience or any Sentient series converter."""
-        sentient_ids = [92209, 81790, 79895, 82418, 80894, 81700, 66341, 69887, 68369, 73248]
-        return any(self.total_item_count(i) > 0 for i in sentient_ids)
+        _ensure_account_catalogs_hydrated()
+        for slug, meta in CONVENIENCE_ITEMS.items():
+            if meta.get("type") == "Converter" and slug not in ("ley_energy_converter", "karmic_converter"):
+                if any(self.total_item_count(i) > 0 for i in meta.get("all_ids", ())):
+                    return True
+        return False
 
     def has_portal_tomes(self) -> bool:
         """Returns True if the account owns any Living World portal tome or scroll."""
-        tome_ids = [80332, 79899, 87508, 86586, 92850, 92272, 97009, 100788, 95430]
-        return any(self.total_item_count(i) > 0 for i in tome_ids)
+        _ensure_account_catalogs_hydrated()
+        for meta in CONVENIENCE_ITEMS.values():
+            if meta.get("category") == "portal_tomes":
+                if any(self.total_item_count(i) > 0 for i in meta.get("all_ids", ())):
+                    return True
+        return False
 
     def has_lounge_pass(self) -> bool:
         """Returns True if the account owns any VIP lounge pass or portal scroll."""
         return len(self.owned_lounges()) > 0
 
     def has_recharging_teleport_to_friend(self) -> bool:
-        """Returns True if the account owns Recharging Teleport to Friend (90335)."""
+        """Returns True if the account owns Recharging Teleport to Friend."""
         return "teleport_to_friend" in self.owned_convenience_items()
 
     def has_silver_fed(self) -> bool:
-        """Returns True if the account owns Silver-Fed Salvage-o-Matic (67027)."""
+        """Returns True if the account owns Silver-Fed Salvage-o-Matic."""
         return "silver_fed" in self.owned_convenience_items()
 
     def has_copper_fed(self) -> bool:
-        """Returns True if the account owns Copper-Fed Salvage-o-Matic (44602)."""
+        """Returns True if the account owns Copper-Fed Salvage-o-Matic."""
         return "copper_fed" in self.owned_convenience_items()
 
     def has_runecrafter(self) -> bool:
-        """Returns True if the account owns Runecrafter's Salvage-o-Matic (87400)."""
+        """Returns True if the account owns Runecrafter's Salvage-o-Matic."""
         return "runecrafter" in self.owned_convenience_items()
 
     def has_upgrade_extractor(self) -> bool:
-        """Returns True if the account owns Endless Upgrade Extractor (93121)."""
+        """Returns True if the account owns Endless Upgrade Extractor."""
         return "upgrade_extractor" in self.owned_convenience_items()
 
     def has_mystic_forge_conduit(self) -> bool:
-        """Returns True if the account owns Mystic Forge Conduit (70010 / 36014 / 35727)."""
+        """Returns True if the account owns Mystic Forge Conduit."""
         return "mystic_forge_conduit" in self.owned_convenience_items()
 
     def has_gobbler(self) -> bool:
-        """Returns True if the account owns Zhaitaffy Gobbler (67836), Candy Corn Gobbler (67037/67040/67393), or Snowflake Gobbler (79523/86675/92585)."""
-        gobbler_ids = [67836, 67037, 67040, 67393, 79523, 86675, 92585]
+        """Returns True if the account owns any festival gobbler."""
+        _ensure_account_catalogs_hydrated()
+        for meta in CONVENIENCE_ITEMS.values():
+            if meta.get("type") == "Gobbler":
+                if any(self.total_item_count(gid) > 0 for gid in meta.get("all_ids", ())):
+                    return True
+        gobbler_ids = _get_booster_catalog().get("gobbler_ids", set())
         return any(self.total_item_count(gid) > 0 for gid in gobbler_ids)
 
     def tomes_of_knowledge_count(self) -> int:
-        """Returns total owned count of Tomes of Knowledge (IDs 19983 and 43766)."""
-        return self.total_item_count(19983) + self.total_item_count(43766)
+        """Returns total owned count of Tomes of Knowledge."""
+        tome_ids = _get_booster_catalog().get("tome_ids", set())
+        return sum(self.total_item_count(tid) for tid in tome_ids)
 
     def zhaitaffy_gobblers_count(self) -> int:
-        """Returns count of Zhaitaffy Gobbler (ID 67836)."""
-        return self.total_item_count(67836)
+        """Returns count of Zhaitaffy Gobbler."""
+        _ensure_account_catalogs_hydrated()
+        meta = CONVENIENCE_ITEMS.get("zhaitaffy_gobbler", {})
+        return sum(self.total_item_count(gid) for gid in meta.get("all_ids", ()))
 
     def candy_corn_gobblers_count(self) -> int:
-        """Returns count of Candy Corn Gobbler (ID 67037 / 67040 / 67393)."""
-        return self.total_item_count(67037) + self.total_item_count(67040) + self.total_item_count(67393)
+        """Returns count of Candy Corn Gobbler."""
+        _ensure_account_catalogs_hydrated()
+        meta = CONVENIENCE_ITEMS.get("candy_corn_gobbler", {})
+        return sum(self.total_item_count(gid) for gid in meta.get("all_ids", ()))
 
     def experience_boosters_count(self) -> int:
         """Returns count of Experience Boosters."""
-        return sum(self.total_item_count(i) for i in [19997, 20002, 41819, 8417, 78954])
+        ids = _get_booster_catalog().get("experience_only_ids", set())
+        return sum(self.total_item_count(i) for i in ids)
 
     def heroic_boosters_count(self) -> int:
         """Returns count of Heroic Boosters."""
-        return sum(self.total_item_count(i) for i in [20005, 41818, 67500, 67501])
+        ids = _get_booster_catalog().get("heroic_only_ids", set())
+        return sum(self.total_item_count(i) for i in ids)
 
     def karma_boosters_count(self) -> int:
         """Returns count of Karma Boosters."""
-        return sum(self.total_item_count(i) for i in [20001, 8419, 41821, 92843])
+        ids = _get_booster_catalog().get("karma_only_ids", set())
+        return sum(self.total_item_count(i) for i in ids)
 
     def wxp_boosters_count(self) -> int:
         """Returns count of WXP / WvW Boosters."""
-        return sum(self.total_item_count(i) for i in [43499, 45056, 45060, 43485])
+        ids = _get_booster_catalog().get("wxp_only_ids", set())
+        return sum(self.total_item_count(i) for i in ids)
 
     def birthday_celebration_boosters_count(self) -> int:
         """Returns count of Birthday / Celebration Boosters."""
-        return sum(self.total_item_count(i) for i in [45003, 45037, 45038, 77749, 67836])
+        ids = _get_booster_catalog().get("celebration_only_ids", set())
+        return sum(self.total_item_count(i) for i in ids) + self.zhaitaffy_gobblers_count()
+
 
 
 @dataclass
@@ -1295,8 +836,7 @@ class AccountDiffEngine:
 
     def __init__(self, graph_store: Optional[PrioryGraphStore] = None):
         self.store = graph_store
-        if graph_store is not None:
-            _hydrate_catalogs_from_graph(graph_store)
+        _ensure_account_catalogs_hydrated(graph_store)
         # Memoization cache for intermediate sub-recipe DAG diffs across multi-item evaluations:
         # Key: (item_id, multiplier, id(account))
         # Value: (ItemRequirementNode, summary_missing, missing_currencies, used_recipes)
@@ -1947,6 +1487,7 @@ class AccountDiffEngine:
 
     def verify_legendary_prerequisites(self, goal_item_id: int, account_state: AccountState) -> PrerequisiteReport:
         """Verifies account prerequisites (mastery tiers, active crafting, world completion, precursor collections) for crafting a legendary goal."""
+        _ensure_account_catalogs_hydrated(self.store)
         item_meta = self.store.get_item_by_id(goal_item_id) if self.store else None
         goal_name = item_meta["label"] if item_meta else f"Item {goal_item_id}"
         if goal_name == f"Item {goal_item_id}":
@@ -2004,30 +1545,27 @@ class AccountDiffEngine:
         cur_crafting_mastery = account_state.legendary_crafting_mastery_level()
         missing_masteries: List[str] = []
 
+        tier_labels: Dict[int, str] = {}
+        for stages in HOBBS_COLLECTIONS.values():
+            for stg in stages:
+                m_tier = int(stg.get("mastery_tier", 0))
+                m_name = str(stg.get("mastery_name", ""))
+                if m_tier and m_name and m_tier not in tier_labels:
+                    tier_labels[m_tier] = f"Central Tyria Legendary Crafting Tier {m_tier}: {m_name}"
+
         if is_gen1:
             # Gen 1 precursor crafting / weapon forging requires Tier 3 Historian of the Armaments
             # (Tier 1 for Dusk I, Tier 2 for Dusk II, Tier 3 for Dusk III)
             required_tier = 3
             if cur_crafting_mastery < required_tier:
-                tier_labels = {
-                    1: "Central Tyria Legendary Crafting Tier 1: Revered Antiquarian",
-                    2: "Central Tyria Legendary Crafting Tier 2: Magister of Legends",
-                    3: "Central Tyria Legendary Crafting Tier 3: Historian of the Armaments",
-                }
                 for t in range(cur_crafting_mastery + 1, required_tier + 1):
-                    missing_masteries.append(tier_labels[t])
+                    missing_masteries.append(tier_labels.get(t, f"Central Tyria Legendary Crafting Tier {t}"))
         elif is_gen2:
             # Gen 2 requires Tier 4 Scholar of Secrets
             required_tier = 4
             if cur_crafting_mastery < required_tier:
-                tier_labels = {
-                    1: "Central Tyria Legendary Crafting Tier 1: Revered Antiquarian",
-                    2: "Central Tyria Legendary Crafting Tier 2: Magister of Legends",
-                    3: "Central Tyria Legendary Crafting Tier 3: Historian of the Armaments",
-                    4: "Central Tyria Legendary Crafting Tier 4: Scholar of Secrets",
-                }
                 for t in range(cur_crafting_mastery + 1, required_tier + 1):
-                    missing_masteries.append(tier_labels[t])
+                    missing_masteries.append(tier_labels.get(t, f"Central Tyria Legendary Crafting Tier {t}"))
             # Heart of Thorns masteries: Exalted Lore lvl 2, Itzel Lore lvl 1, Nuhoch Lore lvl 2
             if account_state.masteries.get(1, 0) < 2:
                 missing_masteries.append("Heart of Thorns: Exalted Acceptance (Level 2)")
@@ -2249,519 +1787,94 @@ class AccountDiffEngine:
 
 # ==============================================================================
 # Legendary Item Metadata & Grandmaster Hobbs Precursor Collection Definitions
+# (Hydrated dynamically from RDF via PrioryGraphStore)
 # ==============================================================================
 
-GEN1_WEAPONS: Dict[int, Dict[str, Any]] = {
-    30704: {"name": "Twilight", "precursor_id": 29185, "precursor_name": "Dusk", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29185,)},
-    30703: {"name": "Sunrise", "precursor_id": 29169, "precursor_name": "Dawn", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29184,)},
-    30689: {"name": "Eternity", "precursor_id": 30704, "precursor_name": "Twilight", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (30703, 30704)},
-    30699: {"name": "Bolt", "precursor_id": 29181, "precursor_name": "Zap", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29167,)},
-    30684: {"name": "Frostfang", "precursor_id": 29167, "precursor_name": "Tooth of Frostfang", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29169,)},
-    30687: {"name": "Incinerator", "precursor_id": 29177, "precursor_name": "Spark", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29165,)},
-    30690: {"name": "The Juggernaut", "precursor_id": 29179, "precursor_name": "The Colossus", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29172,)},
-    30692: {"name": "The Moot", "precursor_id": 29166, "precursor_name": "The Energizer", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29173,)},
-    30696: {"name": "The Flameseeker Prophecies", "precursor_id": 29170, "precursor_name": "The Chosen", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29177,)},
-    30691: {"name": "Kamohoali'i Kotaki", "precursor_id": 29173, "precursor_name": "Carcharias", "type": "Spear", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (29183,)},
-    30685: {"name": "Kudzu", "precursor_id": 29172, "precursor_name": "Leaf of Kudzu", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29171,)},
-    30686: {"name": "The Dreamer", "precursor_id": 29178, "precursor_name": "The Lover", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29175,)},
-    30694: {"name": "The Predator", "precursor_id": 29175, "precursor_name": "The Hunter", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (29173,)},
-    30693: {"name": "Quip", "precursor_id": 29168, "precursor_name": "Chaos Gun", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (29168,)},
-    30700: {"name": "Rodgort", "precursor_id": 29176, "precursor_name": "Rodgort's Flame", "type": "Torch", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29179,)},
-    30702: {"name": "Howler", "precursor_id": 29184, "precursor_name": "Howl", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (29180,)},
-    30697: {"name": "Frenzy", "precursor_id": 29182, "precursor_name": "Rage", "type": "HarpoonGun", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (29181,)},
-    30698: {"name": "The Bifrost", "precursor_id": 29180, "precursor_name": "The Legend", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29174,)},
-    30695: {"name": "Meteorlogicus", "precursor_id": 29171, "precursor_name": "Storm", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29170,)},
-    30688: {"name": "The Minstrel", "precursor_id": 29174, "precursor_name": "The Bard", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29178,)},
-    30701: {"name": "Kraitkin", "precursor_id": 29183, "precursor_name": "Venom", "type": "Trident", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (29182,)},
-}
-
-GEN2_WEAPONS: Dict[int, Dict[str, Any]] = {
-    71383: {"name": "Nevermore", "precursor_id": 71384, "precursor_name": "The Raven Staff", "type": "Staff", "disc": ("artificer", 500), "sec_disc": ("tailor", 400), "legacy_precursor_ids": (71436,)},
-    76158: {"name": "Astralaria", "precursor_id": 76159, "precursor_name": "The Mechanism", "type": "Axe", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (76688,)},
-    72713: {"name": "HOPE", "precursor_id": 75208, "precursor_name": "Prototype", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (71950,)},
-    75207: {"name": "HOPE", "precursor_id": 75208, "precursor_name": "Prototype", "type": "Pistol", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (71950,)},
-    78556: {"name": "Chuka and Champawat", "precursor_id": 78053, "precursor_name": "Tigris", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    78052: {"name": "Chuka and Champawat", "precursor_id": 78053, "precursor_name": "Tigris", "type": "ShortBow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    79562: {"name": "Eureka", "precursor_id": 79570, "precursor_name": "Endeavor", "type": "Mace", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (79563, 79803)},
-    79802: {"name": "Shooshadoo", "precursor_id": 79563, "precursor_name": "Friendship", "type": "Shield", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (79803,)},
-    80488: {"name": "The HMS Divinity", "precursor_id": 89036, "precursor_name": "The Ambition", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (86304,)},
-    86303: {"name": "The HMS Divinity", "precursor_id": 86304, "precursor_name": "The Ambition", "type": "Rifle", "disc": ("huntsman", 500), "sec_disc": ("weaponsmith", 400), "legacy_precursor_ids": (89036,)},
-    81206: {"name": "Flames of War", "precursor_id": 81780, "precursor_name": "Liturgy", "type": "Torch", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (81207,)},
-    81957: {"name": "The Shining Blade", "precursor_id": 81207, "precursor_name": "Save the Queen", "type": "Sword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    81839: {"name": "Sharur", "precursor_id": 81634, "precursor_name": "The Call", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (82792,)},
-    82791: {"name": "Sharur", "precursor_id": 82792, "precursor_name": "The Call", "type": "Hammer", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (81634,)},
-    86098: {"name": "The Binding of Ipos", "precursor_id": 86676, "precursor_name": "Ars Goetia", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    86675: {"name": "The Binding of Ipos", "precursor_id": 86676, "precursor_name": "Ars Goetia", "type": "Focus", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    87109: {"name": "Claw of the Khan-Ur", "precursor_id": 87688, "precursor_name": "Touch of the Khan-Ur", "type": "Dagger", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400)},
-    87687: {"name": "Verdarach", "precursor_id": 87764, "precursor_name": "Call to Arms", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (87688, 91877)},
-    91876: {"name": "Verdarach", "precursor_id": 91877, "precursor_name": "Call to Arms", "type": "Warhorn", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400), "legacy_precursor_ids": (87764,)},
-    88576: {"name": "Xiuquatl", "precursor_id": 88956, "precursor_name": "Tlehco", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    88955: {"name": "Xiuquatl", "precursor_id": 88956, "precursor_name": "Tlehco", "type": "Scepter", "disc": ("artificer", 500), "sec_disc": ("tailor", 400)},
-    89854: {"name": "Pharus", "precursor_id": 89855, "precursor_name": "Spero", "type": "Longbow", "disc": ("huntsman", 500), "sec_disc": ("leatherworker", 400)},
-    90551: {"name": "Exordium", "precursor_id": 90883, "precursor_name": "Epitaph", "type": "Greatsword", "disc": ("weaponsmith", 500), "sec_disc": ("armorsmith", 400), "legacy_precursor_ids": (90552,)},
-}
-
-GEN3_WEAPON_NAMES: Dict[int, str] = {
-    96356: "Aurene's Bite",
-    96203: "Aurene's Claw",
-    95675: "Aurene's Fang",
-    95612: "Aurene's Tail",
-    96937: "Aurene's Rending",
-    97783: "Aurene's Voice",
-    95808: "Aurene's Argument",
-    96028: "Aurene's Scale",
-    97165: "Aurene's Gaze",
-    96652: "Aurene's Insight",
-    97590: "Aurene's Flight",
-    97377: "Aurene's Persuasion",
-    97099: "Aurene's Breath",
-    96221: "Aurene's Wisdom",
-    97077: "Aurene's Wing",
-    95684: "Aurene's Weight",
-    # Legacy alias IDs
-    96228: "Aurene's Voice",
-    96841: "Aurene's Argument",
-    96603: "Aurene's Scale",
-    97594: "Aurene's Insight",
-    96376: "Aurene's Persuasion",
-    97141: "Aurene's Breath",
-    96613: "Aurene's Wisdom",
-}
-
-GEN3_WEAPON_DISCIPLINES: Dict[int, Tuple[str, int]] = {
-    96356: ("weaponsmith", 500),  # Aurene's Bite (Greatsword)
-    96203: ("weaponsmith", 500),  # Aurene's Claw (Dagger)
-    95675: ("weaponsmith", 500),  # Aurene's Fang (Sword)
-    95612: ("weaponsmith", 500),  # Aurene's Tail (Mace)
-    96937: ("weaponsmith", 500),  # Aurene's Rending (Axe)
-    97783: ("huntsman", 500),     # Aurene's Voice (Warhorn)
-    95808: ("huntsman", 500),     # Aurene's Argument (Pistol)
-    96028: ("weaponsmith", 500),  # Aurene's Scale (Shield)
-    97165: ("artificer", 500),    # Aurene's Gaze (Focus)
-    96652: ("artificer", 500),    # Aurene's Insight (Staff)
-    97590: ("huntsman", 500),     # Aurene's Flight (Longbow)
-    97377: ("huntsman", 500),     # Aurene's Persuasion (Rifle)
-    97099: ("huntsman", 500),     # Aurene's Breath (Torch)
-    96221: ("artificer", 500),    # Aurene's Wisdom (Scepter)
-    97077: ("huntsman", 500),     # Aurene's Wing (ShortBow)
-    95684: ("weaponsmith", 500),  # Aurene's Weight (Hammer)
-    # Legacy alias IDs
-    96228: ("huntsman", 500),
-    96841: ("huntsman", 500),
-    96603: ("weaponsmith", 500),
-    97594: ("artificer", 500),
-    96376: ("huntsman", 500),
-    97141: ("huntsman", 500),
-    96613: ("artificer", 500),
-}
-
-ARMOR_NAMES: Dict[int, str] = {
-    80384: "Perfected Envoy Helm", 80435: "Perfected Envoy Pauldrons", 80258: "Perfected Envoy Breastplate",
-    80145: "Perfected Envoy Gauntlets", 80161: "Perfected Envoy Tassets", 80248: "Perfected Envoy Greaves",
-    80296: "Perfected Envoy Mask", 80190: "Perfected Envoy Shoulderguards", 80277: "Perfected Envoy Jerkin",
-    80252: "Perfected Envoy Vambraces", 80281: "Perfected Envoy Leggings", 80557: "Perfected Envoy Boots",
-    80200: "Perfected Envoy Hood", 80356: "Perfected Envoy Mantle", 80131: "Perfected Envoy Vestments",
-    80196: "Perfected Envoy Pants",
-    101001: "Obsidian Helm", 101002: "Obsidian Pauldrons", 101003: "Obsidian Breastplate",
-    101004: "Obsidian Gauntlets", 101005: "Obsidian Tassets", 101006: "Obsidian Greaves",
-    101007: "Obsidian Mask", 101008: "Obsidian Shoulderguards", 101009: "Obsidian Jerkin",
-    101010: "Obsidian Vambraces", 101011: "Obsidian Leggings", 101012: "Obsidian Boots"
-}
-
-LEGENDARY_ARMOR_DISCIPLINES: Dict[int, Tuple[str, int]] = {
-    # Heavy -> Armorsmith 500
-    80384: ("armorsmith", 500), 80435: ("armorsmith", 500), 80258: ("armorsmith", 500),
-    80145: ("armorsmith", 500), 80161: ("armorsmith", 500), 80248: ("armorsmith", 500),
-    101001: ("armorsmith", 500), 101002: ("armorsmith", 500), 101003: ("armorsmith", 500),
-    101004: ("armorsmith", 500), 101005: ("armorsmith", 500), 101006: ("armorsmith", 500),
-    # Medium -> Leatherworker 500
-    80296: ("leatherworker", 500), 80190: ("leatherworker", 500), 80277: ("leatherworker", 500),
-    80252: ("leatherworker", 500), 80281: ("leatherworker", 500), 80557: ("leatherworker", 500),
-    101007: ("leatherworker", 500), 101008: ("leatherworker", 500), 101009: ("leatherworker", 500),
-    101010: ("leatherworker", 500), 101011: ("leatherworker", 500), 101012: ("leatherworker", 500),
-    # Light -> Tailor 500
-    80200: ("tailor", 500), 80356: ("tailor", 500), 80131: ("tailor", 500),
-    80196: ("tailor", 500)
-}
-
-PRECURSOR_NAMES: Dict[int, str] = {
-    29185: "Dusk",
-    29169: "Dawn",
-    29181: "Zap",
-    29167: "Tooth of Frostfang",
-    29172: "Leaf of Kudzu",
-    29178: "The Lover",
-    29177: "Spark",
-    29165: "Spark",
-    29174: "The Bard",
-    29179: "The Colossus",
-    29166: "The Energizer",
-    29170: "The Chosen",
-    29173: "Carcharias",
-    29168: "Chaos Gun",
-    29175: "The Hunter",
-    29171: "Storm",
-    29182: "Rage",
-    29180: "The Legend",
-    29176: "Rodgort's Flame",
-    29183: "Venom",
-    29184: "Howl",
-    71384: "The Raven Staff",
-    71436: "The Living Ravens",
-    76159: "The Mechanism",
-    76688: "The Mechanism",
-    75208: "Prototype",
-    71950: "Prototype",
-    78053: "Tigris",
-    79563: "Friendship",
-    79570: "Endeavor",
-    79803: "Endeavor",
-    81207: "Save the Queen",
-    81634: "The Call",
-    82792: "The Call",
-    86304: "The Ambition",
-    89036: "The Ambition",
-    86676: "Ars Goetia",
-    87688: "Touch of the Khan-Ur",
-    88956: "Tlehco",
-    89855: "Spero",
-    90552: "Epitaph",
-    90883: "Epitaph",
-    87764: "Call to Arms",
-    91877: "Call to Arms",
-    81780: "Liturgy",
-}
-
-GEN1_WEAPON_IDS: Set[int] = set(GEN1_WEAPONS.keys())
-GEN1_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN1_WEAPONS.values()} | {29165}
-GEN2_WEAPON_IDS: Set[int] = set(GEN2_WEAPONS.keys())
-GEN2_PRECURSOR_IDS: Set[int] = {w["precursor_id"] for w in GEN2_WEAPONS.values()} | {71436, 76688, 71950, 79803, 82792, 86304, 90552, 91877}
-GEN3_WEAPON_IDS: Set[int] = set(GEN3_WEAPON_NAMES.keys())
-LEGENDARY_ARMOR_IDS: Set[int] = set(ARMOR_NAMES.keys())
-
-PRECURSOR_TO_WEAPON: Dict[int, int] = {29165: 30687}
-for _w_id, _w_info in GEN1_WEAPONS.items():
-    PRECURSOR_TO_WEAPON[_w_info["precursor_id"]] = _w_id
-for _w_id, _w_info in GEN2_WEAPONS.items():
-    PRECURSOR_TO_WEAPON[_w_info["precursor_id"]] = _w_id
-    for _l_prec in _w_info.get("legacy_precursor_ids", ()):
-        if _l_prec not in PRECURSOR_TO_WEAPON:
-            PRECURSOR_TO_WEAPON[_l_prec] = _w_id
-
-HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {
-    29185: [
-        {"tier": 1, "name": "Dusk I: The Experimental Nightsword", "ach_ids": [2420, 2379], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Dusk II: The Perfected Nightsword", "ach_ids": [2184, 2455, 2382], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Dusk III: Dusk", "ach_ids": [2183, 2380], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29169: [
-        {"tier": 1, "name": "Sunrise I: The Experimental Daysword", "ach_ids": [2253], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Sunrise II: The Perfected Daysword", "ach_ids": [2278], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Sunrise III: Dawn", "ach_ids": [2630], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29181: [
-        {"tier": 1, "name": "Bolt I: The Experimental Sword", "ach_ids": [2355], "bits_total": 21, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Bolt II: The Perfected Sword", "ach_ids": [2356], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Bolt III: Zap", "ach_ids": [2480], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29167: [
-        {"tier": 1, "name": "Frostfang I: The Experimental Axe", "ach_ids": [2478], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Frostfang II: The Perfected Axe", "ach_ids": [2606], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Frostfang III: Tooth of Frostfang", "ach_ids": [2393], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29172: [
-        {"tier": 1, "name": "Kudzu I: The Experimental Longbow", "ach_ids": [2193], "bits_total": 13, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Kudzu II: The Perfected Longbow", "ach_ids": [2311], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Kudzu III: Leaf of Kudzu", "ach_ids": [2383], "bits_total": 29, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29178: [
-        {"tier": 1, "name": "The Dreamer I: The Experimental Short Bow", "ach_ids": [2481], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Dreamer II: The Perfected Short Bow", "ach_ids": [2610], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Dreamer III: The Lover", "ach_ids": [2428], "bits_total": 30, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29177: [
-        {"tier": 1, "name": "Incinerator I: The Experimental Dagger", "ach_ids": [2564], "bits_total": 18, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Incinerator II: The Perfected Dagger", "ach_ids": [2458], "bits_total": 15, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Incinerator III: Spark", "ach_ids": [2502], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29165: [
-        {"tier": 1, "name": "Incinerator I: The Experimental Dagger", "ach_ids": [2564], "bits_total": 18, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Incinerator II: The Perfected Dagger", "ach_ids": [2458], "bits_total": 15, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Incinerator III: Spark", "ach_ids": [2502], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29174: [
-        {"tier": 1, "name": "The Minstrel I: The Experimental Focus", "ach_ids": [2313], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Minstrel II: The Perfected Focus", "ach_ids": [2213], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Minstrel III: The Bard", "ach_ids": [2242], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29179: [
-        {"tier": 1, "name": "The Juggernaut I: The Experimental Hammer", "ach_ids": [2438], "bits_total": 32, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Juggernaut II: The Perfected Hammer", "ach_ids": [2241], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Juggernaut III: The Colossus", "ach_ids": [2468], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29166: [
-        {"tier": 1, "name": "The Moot I: The Experimental Mace", "ach_ids": [2177], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Moot II: The Perfected Mace", "ach_ids": [2291], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Moot III: The Energizer", "ach_ids": [2374], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29168: [
-        {"tier": 1, "name": "Quip I: The Experimental Pistol", "ach_ids": [2389], "bits_total": 16, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Quip II: The Perfected Pistol", "ach_ids": [2498], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Quip III: Chaos Gun", "ach_ids": [2524], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29175: [
-        {"tier": 1, "name": "The Predator I: The Experimental Rifle", "ach_ids": [2534], "bits_total": 17, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Predator II: The Perfected Rifle", "ach_ids": [2503], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Predator III: The Hunter", "ach_ids": [2280], "bits_total": 24, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29171: [
-        {"tier": 1, "name": "Meteorlogicus I: The Experimental Scepter", "ach_ids": [2441], "bits_total": 15, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Meteorlogicus II: The Perfected Scepter", "ach_ids": [2391], "bits_total": 11, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Meteorlogicus III: Storm", "ach_ids": [2449], "bits_total": 29, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29170: [
-        {"tier": 1, "name": "The Flameseeker Prophecies I: The Experimental Shield", "ach_ids": [2479], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Flameseeker Prophecies II: The Perfected Shield", "ach_ids": [2390], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Flameseeker Prophecies III: The Chosen", "ach_ids": [2536], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29182: [
-        {"tier": 1, "name": "Frenzy I: The Experimental Harpoon Gun", "ach_ids": [2637], "bits_total": 6, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Frenzy II: The Perfected Harpoon Gun", "ach_ids": [2232], "bits_total": 7, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Frenzy III: Rage", "ach_ids": [2409], "bits_total": 18, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29180: [
-        {"tier": 1, "name": "The Bifrost I: The Experimental Staff", "ach_ids": [2530], "bits_total": 16, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "The Bifrost II: The Perfected Staff", "ach_ids": [2500], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "The Bifrost III: The Legend", "ach_ids": [2187], "bits_total": 32, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29176: [
-        {"tier": 1, "name": "Rodgort I: The Experimental Torch", "ach_ids": [2180], "bits_total": 11, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Rodgort II: The Perfected Torch", "ach_ids": [2596], "bits_total": 12, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Rodgort III: Rodgort's Flame", "ach_ids": [2388], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29183: [
-        {"tier": 1, "name": "Kraitkin I: The Experimental Trident", "ach_ids": [2483], "bits_total": 7, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Kraitkin II: The Perfected Trident", "ach_ids": [2522], "bits_total": 9, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Kraitkin III: Venom", "ach_ids": [2296], "bits_total": 21, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29184: [
-        {"tier": 1, "name": "Howler I: The Experimental Warhorn", "ach_ids": [2270], "bits_total": 22, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Howler II: The Perfected Warhorn", "ach_ids": [2588], "bits_total": 13, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Howler III: Howl", "ach_ids": [2260], "bits_total": 35, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    29173: [
-        {"tier": 1, "name": "Kamohoali'i Kotaki I: The Experimental Spear", "ach_ids": [2642], "bits_total": 6, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Kamohoali'i Kotaki II: The Perfected Spear", "ach_ids": [2306], "bits_total": 7, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Kamohoali'i Kotaki III: Carcharias", "ach_ids": [2535], "bits_total": 28, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-    ],
-    71384: [
-        {"tier": 1, "name": "Nevermore I: Ravenswood Branch", "ach_ids": [2528], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Nevermore II: Ravenswood Staff", "ach_ids": [2288], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Nevermore III: The Raven Staff", "ach_ids": [2336], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "Nevermore IV: The Raven Spirit", "ach_ids": [2550], "bits_total": 63, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ],
-    71436: [
-        {"tier": 1, "name": "Nevermore I: Ravenswood Branch", "ach_ids": [2528], "bits_total": 14, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Nevermore II: Ravenswood Staff", "ach_ids": [2288], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Nevermore III: The Raven Staff", "ach_ids": [2336], "bits_total": 34, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "Nevermore IV: The Raven Spirit", "ach_ids": [2550], "bits_total": 63, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ],
-    76159: [
-        {"tier": 1, "name": "Astralaria I: The Device", "ach_ids": [2571], "bits_total": 19, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Astralaria II: The Apparatus", "ach_ids": [2447], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Astralaria III: The Mechanism", "ach_ids": [2433], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "Astralaria IV: The Cosmos", "ach_ids": [2268], "bits_total": 54, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ],
-    76688: [
-        {"tier": 1, "name": "Astralaria I: The Device", "ach_ids": [2571], "bits_total": 19, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Astralaria II: The Apparatus", "ach_ids": [2447], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Astralaria III: The Mechanism", "ach_ids": [2433], "bits_total": 33, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "Astralaria IV: The Cosmos", "ach_ids": [2268], "bits_total": 54, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ],
-    75208: [
-        {"tier": 1, "name": "HOPE I: Research", "ach_ids": [2450], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "HOPE II: Development", "ach_ids": [2354], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "HOPE III: Prototype", "ach_ids": [2556], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "HOPE IV: The Catalyst", "ach_ids": [2250], "bits_total": 59, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ],
-    71950: [
-        {"tier": 1, "name": "HOPE I: Research", "ach_ids": [2450], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "HOPE II: Development", "ach_ids": [2354], "bits_total": 14, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "HOPE III: Prototype", "ach_ids": [2556], "bits_total": 31, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "HOPE IV: The Catalyst", "ach_ids": [2250], "bits_total": 59, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ],
-    78053: [
-        {"tier": 1, "name": "Chuka and Champawat I: Hunter's Journal", "ach_ids": [2920, 2990], "bits_total": 20, "mastery_tier": 1, "mastery_name": "Revered Antiquarian"},
-        {"tier": 2, "name": "Chuka and Champawat II: Ambush", "ach_ids": [2921], "bits_total": 16, "mastery_tier": 2, "mastery_name": "Magister of Legends"},
-        {"tier": 3, "name": "Chuka and Champawat III: Tigris", "ach_ids": [2951, 2946], "bits_total": 20, "mastery_tier": 3, "mastery_name": "Historian of the Armaments"},
-        {"tier": 4, "name": "Chuka and Champawat IV: Baby Book", "ach_ids": [2913, 2943, 2974], "bits_total": 15, "mastery_tier": 4, "mastery_name": "Scholar of Secrets"},
-    ]
-}
-
-# Also map weapon ID to collection tiers
-for _p_id, _tiers in list(HOBBS_COLLECTIONS.items()):
-    _w_id = PRECURSOR_TO_WEAPON.get(_p_id)
-    if _w_id and _w_id not in HOBBS_COLLECTIONS:
-        HOBBS_COLLECTIONS[_w_id] = _tiers
-HOBBS_COLLECTIONS[75207] = HOBBS_COLLECTIONS[75208]
-HOBBS_COLLECTIONS[72713] = HOBBS_COLLECTIONS[75208]
-HOBBS_COLLECTIONS[78052] = HOBBS_COLLECTIONS[78053]
-HOBBS_COLLECTIONS[78556] = HOBBS_COLLECTIONS[78053]
-
-_WEAPON_TYPE_DISCIPLINES: Dict[str, Tuple[Tuple[str, int], Tuple[str, int]]] = {
-    "greatsword": (("weaponsmith", 500), ("armorsmith", 400)),
-    "sword": (("weaponsmith", 500), ("armorsmith", 400)),
-    "axe": (("weaponsmith", 500), ("armorsmith", 400)),
-    "dagger": (("weaponsmith", 500), ("armorsmith", 400)),
-    "hammer": (("weaponsmith", 500), ("armorsmith", 400)),
-    "mace": (("weaponsmith", 500), ("armorsmith", 400)),
-    "shield": (("weaponsmith", 500), ("armorsmith", 400)),
-    "spear": (("weaponsmith", 500), ("armorsmith", 400)),
-    "longbow": (("huntsman", 500), ("leatherworker", 400)),
-    "shortbow": (("huntsman", 500), ("leatherworker", 400)),
-    "rifle": (("huntsman", 500), ("weaponsmith", 400)),
-    "pistol": (("huntsman", 500), ("weaponsmith", 400)),
-    "torch": (("huntsman", 500), ("leatherworker", 400)),
-    "warhorn": (("huntsman", 500), ("leatherworker", 400)),
-    "harpoongun": (("huntsman", 500), ("weaponsmith", 400)),
-    "staff": (("artificer", 500), ("tailor", 400)),
-    "scepter": (("artificer", 500), ("tailor", 400)),
-    "focus": (("artificer", 500), ("tailor", 400)),
-    "trident": (("artificer", 500), ("tailor", 400)),
-}
+GEN1_WEAPONS: Dict[int, Dict[str, Any]] = {}
+GEN2_WEAPONS: Dict[int, Dict[str, Any]] = {}
+GEN3_WEAPON_NAMES: Dict[int, str] = {}
+GEN3_WEAPON_DISCIPLINES: Dict[int, Tuple[str, int]] = {}
+ARMOR_NAMES: Dict[int, str] = {}
+LEGENDARY_ARMOR_DISCIPLINES: Dict[int, Tuple[str, int]] = {}
+PRECURSOR_NAMES: Dict[int, str] = {}
+GEN1_WEAPON_IDS: Set[int] = set()
+GEN1_PRECURSOR_IDS: Set[int] = set()
+GEN2_WEAPON_IDS: Set[int] = set()
+GEN2_PRECURSOR_IDS: Set[int] = set()
+GEN3_WEAPON_IDS: Set[int] = set()
+LEGENDARY_ARMOR_IDS: Set[int] = set()
+PRECURSOR_TO_WEAPON: Dict[int, int] = {}
+HOBBS_COLLECTIONS: Dict[int, List[Dict[str, Any]]] = {}
+_WEAPON_TYPE_DISCIPLINES: Dict[str, Tuple[Tuple[str, int], Tuple[str, int]]] = {}
 
 _HYDRATED_GRAPH_SIGNATURES: Set[Tuple[int, int]] = set()
 
 
 def _hydrate_catalogs_from_graph(store: Optional[PrioryGraphStore] = None) -> None:
-    """Dynamically hydrates module-level weapon, precursor, armor, lounge, and convenience catalogs in-place from RDF."""
-    if store is None:
-        return
-    if len(store.graph) == 0:
+    """Dynamically hydrates module-level weapon, precursor, armor, lounge, convenience, and roster catalogs in-place from RDF."""
+    if store is None or len(store.graph) == 0:
         return
 
     sig = (id(store), len(store.graph))
-    if sig in _HYDRATED_GRAPH_SIGNATURES:
+    if sig in _HYDRATED_GRAPH_SIGNATURES and LOUNGE_PASSES and CONVENIENCE_ITEMS and GEN1_WEAPONS and HOBBS_COLLECTIONS:
         return
     _HYDRATED_GRAPH_SIGNATURES.add(sig)
 
-    # 1. Hydrate Legendary Weapons & Precursors from RDF
-    weapon_sparql = """
-    SELECT DISTINCT ?wId ?wLabel ?wType ?gen ?facet ?precId ?precLabel WHERE {
-        ?w a priory:LegendaryWeapon ;
-           priory:gw2Id ?wId ;
-           rdfs:label ?wLabel .
-        OPTIONAL { ?w priory:hasWeaponType ?wType }
-        OPTIONAL { ?w priory:generation ?gen }
-        OPTIONAL { ?w priory:hasDragonFacet ?facet }
-        OPTIONAL {
-            { ?w priory:hasPrecursor ?prec }
-            UNION { ?prec priory:precursorTo ?w }
-            UNION { ?prec priory:isPrecursorOf ?w }
-            ?prec priory:gw2Id ?precId ;
-                  rdfs:label ?precLabel .
-        }
-    }
-    """
-    for row in store.query(weapon_sparql):
-        if row.get("facet"):
-            continue  # Skip Gen 3 Elder Dragon cosmetic skin variants
-        w_id = int(row["wId"])
-        w_label = str(row["wLabel"])
-        w_type_uri = str(row.get("wType", ""))
-        w_type = w_type_uri.rstrip("/").split("/")[-1] if w_type_uri else "Greatsword"
-        disc_pair = _WEAPON_TYPE_DISCIPLINES.get(w_type.lower(), (("weaponsmith", 500), ("armorsmith", 400)))
-        gen_str = str(row.get("gen", ""))
+    # 1. Hydrate Default Character Roster from RDF
+    if hasattr(store, "get_default_character_roster"):
+        roster = store.get_default_character_roster()
+        for ch_name in roster:
+            if ch_name not in DEFAULT_ACCOUNT_ROSTER:
+                DEFAULT_ACCOUNT_ROSTER.append(ch_name)
 
-        if w_id in GEN1_WEAPONS or "1" in gen_str or (30680 <= w_id <= 30705):
-            if w_id not in GEN1_WEAPONS and row.get("precId") is not None:
-                p_id = int(row["precId"])
-                p_label = str(row.get("precLabel", f"Precursor {p_id}"))
-                GEN1_WEAPONS[w_id] = {
-                    "name": w_label,
-                    "precursor_id": p_id,
-                    "precursor_name": p_label,
-                    "type": w_type,
-                    "disc": disc_pair[0],
-                    "sec_disc": disc_pair[1],
-                }
-                PRECURSOR_NAMES.setdefault(p_id, p_label)
-                PRECURSOR_TO_WEAPON.setdefault(p_id, w_id)
-        elif w_id in GEN2_WEAPONS or "2" in gen_str or (70000 <= w_id < 95000):
-            if w_id not in GEN2_WEAPONS:
-                p_id = int(row["precId"]) if row.get("precId") is not None else 0
-                p_label = str(row.get("precLabel", f"Precursor {p_id}")) if p_id else "Precursor"
-                GEN2_WEAPONS[w_id] = {
-                    "name": w_label,
-                    "precursor_id": p_id,
-                    "precursor_name": p_label,
-                    "type": w_type,
-                    "disc": disc_pair[0],
-                    "sec_disc": disc_pair[1],
-                }
-                if p_id:
-                    PRECURSOR_NAMES.setdefault(p_id, p_label)
-                    PRECURSOR_TO_WEAPON.setdefault(p_id, w_id)
-        elif w_id in GEN3_WEAPON_NAMES or "3" in gen_str or w_id >= 95000:
-            GEN3_WEAPON_NAMES[w_id] = w_label
-            GEN3_WEAPON_DISCIPLINES[w_id] = disc_pair[0]
+    # 2. Hydrate VIP Lounge Passes from RDF
+    if hasattr(store, "get_lounge_passes"):
+        passes = store.get_lounge_passes()
+        for pid, pmeta in passes.items():
+            if not pmeta.get("chat_link"):
+                pmeta = dict(pmeta)
+                pmeta["chat_link"] = encode_item_chat_link(pid)
+            LOUNGE_PASSES.setdefault(pid, pmeta)
 
-    # 2. Hydrate Precursor Weapons from RDF
-    prec_sparql = """
-    SELECT DISTINCT ?pId ?pLabel WHERE {
-        ?p a priory:PrecursorWeapon ;
-           priory:gw2Id ?pId ;
-           rdfs:label ?pLabel .
-    }
-    """
-    for row in store.query(prec_sparql):
-        p_id = int(row["pId"])
-        if p_id not in PRECURSOR_NAMES:
-            PRECURSOR_NAMES[p_id] = str(row["pLabel"])
+    # 3. Hydrate Convenience Categories & Items from RDF
+    if hasattr(store, "get_convenience_catalog"):
+        cats, conv_items = store.get_convenience_catalog()
+        for c_name in cats:
+            if c_name not in CONVENIENCE_CATEGORIES:
+                CONVENIENCE_CATEGORIES.append(c_name)
+        for slug, c_meta in conv_items.items():
+            CONVENIENCE_ITEMS.setdefault(slug, c_meta)
 
-    # 3. Hydrate Legendary Armor from RDF
-    armor_sparql = """
-    SELECT DISTINCT ?aId ?aLabel ?weightClass WHERE {
-        ?a a priory:LegendaryArmor ;
-           priory:gw2Id ?aId ;
-           rdfs:label ?aLabel .
-        OPTIONAL { ?a priory:hasArmorWeight ?weightClass }
-        OPTIONAL { ?a priory:hasWeightClass ?weightClass }
-    }
-    """
-    for row in store.query(armor_sparql):
-        a_id = int(row["aId"])
-        a_label = str(row["aLabel"])
-        ARMOR_NAMES.setdefault(a_id, a_label)
-        if a_id not in LEGENDARY_ARMOR_DISCIPLINES:
-            w_cls = str(row.get("weightClass", "")).lower()
-            if "light" in w_cls:
-                LEGENDARY_ARMOR_DISCIPLINES[a_id] = ("tailor", 500)
-            elif "medium" in w_cls:
-                LEGENDARY_ARMOR_DISCIPLINES[a_id] = ("leatherworker", 500)
-            else:
-                LEGENDARY_ARMOR_DISCIPLINES[a_id] = ("armorsmith", 500)
+    # 4. Hydrate Legendary Weapons, Armor, Precursors, Discipline Rules & Hobbs Collections from RDF
+    if hasattr(store, "get_legendary_and_precursor_catalog"):
+        leg_cat = store.get_legendary_and_precursor_catalog()
+        _WEAPON_TYPE_DISCIPLINES.update(leg_cat.get("weapon_type_disciplines", {}))
+        for wid, winfo in leg_cat.get("gen1_weapons", {}).items():
+            GEN1_WEAPONS.setdefault(wid, winfo)
+        for wid, winfo in leg_cat.get("gen2_weapons", {}).items():
+            GEN2_WEAPONS.setdefault(wid, winfo)
+        for wid, wname in leg_cat.get("gen3_weapon_names", {}).items():
+            GEN3_WEAPON_NAMES.setdefault(wid, wname)
+        for wid, wdisc in leg_cat.get("gen3_weapon_disciplines", {}).items():
+            GEN3_WEAPON_DISCIPLINES.setdefault(wid, wdisc)
+        for aid, aname in leg_cat.get("armor_names", {}).items():
+            ARMOR_NAMES.setdefault(aid, aname)
+        for aid, adisc in leg_cat.get("legendary_armor_disciplines", {}).items():
+            LEGENDARY_ARMOR_DISCIPLINES.setdefault(aid, adisc)
+        for pid, pname in leg_cat.get("precursor_names", {}).items():
+            PRECURSOR_NAMES.setdefault(pid, pname)
+        for pid, wid in leg_cat.get("precursor_to_weapon", {}).items():
+            PRECURSOR_TO_WEAPON.setdefault(pid, wid)
+        for cid, ctiers in leg_cat.get("hobbs_collections", {}).items():
+            HOBBS_COLLECTIONS.setdefault(cid, ctiers)
+        GEN1_WEAPON_IDS.update(leg_cat.get("gen1_weapon_ids", set()))
+        GEN1_PRECURSOR_IDS.update(leg_cat.get("gen1_precursor_ids", set()))
+        GEN2_WEAPON_IDS.update(leg_cat.get("gen2_weapon_ids", set()))
+        GEN2_PRECURSOR_IDS.update(leg_cat.get("gen2_precursor_ids", set()))
+        GEN3_WEAPON_IDS.update(leg_cat.get("gen3_weapon_ids", set()))
+        LEGENDARY_ARMOR_IDS.update(leg_cat.get("legendary_armor_ids", set()))
 
-    # 4. Hydrate VIP Lounge Passes from RDF
-    lounge_sparql = """
-    SELECT DISTINCT ?pId ?pLabel ?chatCode ?zoneName WHERE {
-        { ?p a priory:VIPLoungePass } UNION { ?p a priory:VIPPass }
-        ?p priory:gw2Id ?pId ;
-           rdfs:label ?pLabel .
-        OPTIONAL { ?p priory:chatCode ?chatCode }
-        OPTIONAL { ?p priory:zoneName ?zoneName }
-    }
-    """
-    for row in store.query(lounge_sparql):
-        p_id = int(row["pId"])
-        if p_id not in LOUNGE_PASSES:
-            LOUNGE_PASSES[p_id] = {
-                "name": str(row["pLabel"]),
-                "chat_link": str(row.get("chatCode") or encode_item_chat_link(p_id)),
-                "zone": str(row.get("zoneName") or "VIP Lounge"),
-            }
-
-    # 5. Refresh derived sets and collection mappings in-place
+    # Refresh derived sets in-place
     GEN1_WEAPON_IDS.update(GEN1_WEAPONS.keys())
     GEN1_PRECURSOR_IDS.update(w["precursor_id"] for w in GEN1_WEAPONS.values() if w.get("precursor_id"))
     GEN2_WEAPON_IDS.update(GEN2_WEAPONS.keys())
@@ -2783,4 +1896,10 @@ def verify_legendary_prerequisites(
     """Convenience standalone wrapper for AccountDiffEngine.verify_legendary_prerequisites."""
     engine = AccountDiffEngine(graph_store=graph_store)
     return engine.verify_legendary_prerequisites(goal_item_id, account_state)
+
+
+try:
+    _ensure_account_catalogs_hydrated()
+except Exception:
+    pass
 

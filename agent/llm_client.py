@@ -38,6 +38,82 @@ class BaseLLMClient(ABC):
 class RuleBasedMockLLMClient(BaseLLMClient):
     """Deterministic, zero-dependency mock LLM client for offline pairing, tests, and CI/CD."""
 
+    _item_matches_cache: Optional[list[tuple[str, str]]] = None
+
+    @classmethod
+    def _get_specific_item_matches(cls) -> list[tuple[str, str]]:
+        """Dynamically resolves specific item/precursor/material patterns from the RDF Knowledge Graph."""
+        if cls._item_matches_cache is not None:
+            return cls._item_matches_cache
+        from engine.graph_store import get_default_graph_store
+        store = get_default_graph_store()
+        generic_categories = {
+            "ring", "rings", "legendary ring", "legendary rings",
+            "amulet", "amulets", "legendary amulet", "legendary amulets",
+            "accessory", "accessories", "legendary accessory", "legendary accessories",
+            "trinket", "trinkets", "legendary trinket", "legendary trinkets",
+            "backpack", "backpacks", "back", "legendary backpack", "legendary back",
+            "jewelry", "armor", "legendary armor", "heavy armor", "medium armor", "light armor",
+            "obsidian armor", "soto", "obsidian", "janthir", "aurene",
+            "upgrade", "upgrades", "legendary upgrade", "legendary upgrades",
+            "spear", "spears", "legendary spear", "legendary spears",
+            "weapon", "weapons", "legendary weapon", "legendary weapons",
+            "legendary", "legendaries",
+            "gen 1", "gen 2", "gen 3", "generation 1", "generation 2", "generation 3",
+        }
+        generic_substrings = (
+            "ring", "amulet", "accessory", "accessories", "trinket", "backpack",
+            "armor", "spear", "staff", "greatsword", "sword", "axe", "mace",
+            "dagger", "pistol", "scepter", "focus", "shield", "torch", "warhorn",
+            "longbow", "shortbow", "rifle", "hammer", "harpoon", "trident",
+            "gen 1", "gen 2", "gen 3", "gen one", "gen two", "gen three",
+            "generation", "legendary ", "soto", "obsidian", "janthir", "aurene",
+        )
+        matches_map: Dict[str, str] = {}
+        cat = store.get_legendary_and_precursor_catalog()
+        for winfo in cat.get("gen1_weapons", {}).values():
+            if winfo.get("name"):
+                matches_map[str(winfo["name"]).lower()] = str(winfo["name"])
+            if winfo.get("precursor_name"):
+                matches_map[str(winfo["precursor_name"]).lower()] = str(winfo["precursor_name"])
+        for winfo in cat.get("gen2_weapons", {}).values():
+            if winfo.get("name"):
+                matches_map[str(winfo["name"]).lower()] = str(winfo["name"])
+            if winfo.get("precursor_name"):
+                matches_map[str(winfo["precursor_name"]).lower()] = str(winfo["precursor_name"])
+        for wname in cat.get("gen3_weapon_names", {}).values():
+            matches_map[str(wname).lower()] = str(wname)
+        for aname in cat.get("armor_names", {}).values():
+            matches_map[str(aname).lower()] = str(aname)
+        for pname in cat.get("precursor_names", {}).values():
+            matches_map[str(pname).lower()] = str(pname)
+
+        sparql = """
+        SELECT DISTINCT ?label ?alt WHERE {
+            ?item a ?type ;
+                  priory:gw2Id ?id ;
+                  rdfs:label ?label .
+            FILTER (?type IN (
+                priory:LegendaryWeapon, priory:LegendaryArmor, priory:LegendaryTrinket,
+                priory:LegendaryBackpack, priory:LegendaryRelic, priory:LegendarySigil,
+                priory:LegendaryRune, priory:LegendaryItem, priory:PrecursorWeapon
+            ) || ?id IN (19675, 19976, 19721, 29))
+            OPTIONAL { ?item skos:altLabel ?alt }
+        }
+        """
+        for r in store.query(sparql):
+            canon = str(r["label"]).strip()
+            low = canon.lower()
+            if len(canon) >= 3 and low not in generic_categories:
+                matches_map[low] = canon
+            if r.get("alt"):
+                alt = str(r["alt"]).strip().lower()
+                if len(alt) >= 4 and alt not in generic_categories and not any(g in alt for g in generic_substrings):
+                    matches_map[alt] = canon
+
+        cls._item_matches_cache = sorted(matches_map.items(), key=lambda kv: len(kv[0]), reverse=True)
+        return cls._item_matches_cache
+
     def generate_structured(self, prompt: str, system_prompt: str, schema: Type[T]) -> T:
         p_lower = prompt.lower()
         user_part = prompt.split("New user message:\n")[-1] if "New user message:\n" in prompt else prompt
@@ -116,46 +192,8 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         if gold_match:
             gold_budget = int(gold_match.group(1))
 
-        # Specific item extraction
-        specific_item_matches = [
-            ("legendary sigil", "Legendary Sigil"),
-            ("legendary rune", "Legendary Rune"),
-            ("legendary relic", "Legendary Relic"),
-            ("the moot", "The Moot"),
-            ("the juggernaut", "The Juggernaut"),
-            ("chuka and champawat", "Chuka and Champawat"),
-            ("prismatic champion's regalia", "Prismatic Champion's Regalia"),
-            ("ad infinitum", "Ad Infinitum"),
-            ("the ascension", "The Ascension"),
-            ("klobjarne geirr", "Klobjarne Geirr"),
-            ("klobjarne harvester", "Klobjarne Geirr"),
-            ("kamohoali'i kotaki", "Kamohoali'i Kotaki"),
-            ("twilight", "Twilight"),
-            ("sunrise", "Sunrise"),
-            ("eternity", "Eternity"),
-            ("kudzu", "Kudzu"),
-            ("bolt", "Bolt"),
-            ("incinerator", "Incinerator"),
-            ("nevermore", "Nevermore"),
-            ("astralaria", "Astralaria"),
-            ("hope", "HOPE"),
-            ("conflux", "Conflux"),
-            ("coalescence", "Coalescence"),
-            ("transcendence", "Transcendence"),
-            ("vision", "Vision"),
-            ("aurora", "Aurora"),
-            ("warbringer", "Warbringer"),
-            ("aurene's weight", "Aurene's Weight"),
-            ("aurene's bite", "Aurene's Bite"),
-            ("aurene's argument", "Aurene's Argument"),
-            ("aurene's claw", "Aurene's Claw"),
-            ("aurene's fang", "Aurene's Fang"),
-            ("dusk", "Dusk"),
-            ("mystic clover", "Mystic Clover"),
-            ("mystic coin", "Mystic Coin"),
-            ("ectoplasm", "Glob of Ectoplasm"),
-            ("provisioner token", "Provisioner Token"),
-        ]
+        # Specific item extraction from RDF ontology
+        specific_item_matches = self._get_specific_item_matches()
         goal_item = None
         has_specific_item = False
 

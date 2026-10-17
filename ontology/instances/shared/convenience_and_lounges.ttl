@@ -755,3 +755,926 @@ item:19995 a priory:AccountStorageUpgrade, priory:ConvenienceGizmo, priory:Item,
     priory:isAccountBound true ;
     rdfs:comment "Account upgrade that adds one additional 30-slot tab to the account bank vault."@en ;
     rdfs:seeAlso <https://wiki.guildwars2.com/wiki/Bank_Tab_Expansion> .
+
+# ==============================================================================
+# Complete Convenience & VIP Lounge Catalog Grounding
+# ==============================================================================
+
+priory:LoungeCatalog_49148 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 49148 ;
+    rdfs:label "Royal Terrace Pass (2 Weeks)" ;
+    priory:catalogChatLink "[&AgEUwAAA]" ;
+    priory:zoneName "Divinity's Reach" .
+
+priory:LoungeCatalog_49149 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 49149 ;
+    rdfs:label "Royal Terrace Pass" ;
+    priory:catalogChatLink "[&AgEVwAAA]" ;
+    priory:zoneName "Divinity's Reach" .
+
+priory:LoungeCatalog_79500 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 79500 ;
+    rdfs:label "Lava Lounge Pass" ;
+    priory:catalogChatLink "[&AgGMNgEA]" ;
+    priory:zoneName "Ember Bay" .
+
+priory:LoungeCatalog_79501 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 79501 ;
+    rdfs:label "Lava Lounge Pass (2 Weeks)" ;
+    priory:catalogChatLink "[&AgEtNwEA]" ;
+    priory:zoneName "Ember Bay" .
+
+priory:LoungeCatalog_81664 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 81664 ;
+    rdfs:label "Mistlock Sanctuary Passkey" ;
+    priory:catalogChatLink "[&AgEAPwEA]" ;
+    priory:zoneName "Mistlock Sanctuary" .
+
+priory:LoungeCatalog_81665 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 81665 ;
+    rdfs:label "Mistlock Sanctuary Passkey (2 Weeks)" ;
+    priory:catalogChatLink "[&AgEBPwEA]" ;
+    priory:zoneName "Mistlock Sanctuary" .
+
+priory:LoungeCatalog_82791 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 82791 ;
+    rdfs:label "Champion's Rest Pass" ;
+    priory:catalogChatLink "[&AgFnQwEA]" ;
+    priory:zoneName "Heart of the Mists" .
+
+priory:LoungeCatalog_83457 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 83457 ;
+    rdfs:label "Passkey to the Lily of the Elon" ;
+    priory:catalogChatLink "[&AgEBRgEA]" ;
+    priory:zoneName "Crystal Oasis" .
+
+priory:LoungeCatalog_86634 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 86634 ;
+    rdfs:label "Captain's Airship Pass" ;
+    priory:catalogChatLink "[&AgGqUgEA]" ;
+    priory:zoneName "Gendarran Fields" .
+
+priory:LoungeCatalog_86635 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 86635 ;
+    rdfs:label "Captain's Airship Pass (2 Weeks)" ;
+    priory:catalogChatLink "[&AgGrUgEA]" ;
+    priory:zoneName "Gendarran Fields" .
+
+priory:LoungeCatalog_87498 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 87498 ;
+    rdfs:label "Invitation to 'Lily of the Elon'" ;
+    priory:catalogChatLink "[&AgH6VwEA]" ;
+    priory:zoneName "Crystal Oasis" .
+
+priory:LoungeCatalog_87499 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 87499 ;
+    rdfs:label "Invitation to 'Lily of the Elon' (2 Weeks)" ;
+    priory:catalogChatLink "[&AgH7VwEA]" ;
+    priory:zoneName "Crystal Oasis" .
+
+priory:LoungeCatalog_88385 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 88385 ;
+    rdfs:label "Champion's Rest Pass" ;
+    priory:catalogChatLink "[&AgGBWQEA]" ;
+    priory:zoneName "Heart of the Mists" .
+
+priory:LoungeCatalog_88386 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 88386 ;
+    rdfs:label "Champion's Rest Pass (2 Weeks)" ;
+    priory:catalogChatLink "[&AgGCWQEA]" ;
+    priory:zoneName "Heart of the Mists" .
+
+priory:LoungeCatalog_90011 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 90011 ;
+    rdfs:label "Armistice Bastion Pass" ;
+    priory:catalogChatLink "[&AgHrXwEA]" ;
+    priory:zoneName "Armistice Bastion" .
+
+priory:LoungeCatalog_90012 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 90012 ;
+    rdfs:label "Armistice Bastion Pass (2 Weeks)" ;
+    priory:catalogChatLink "[&AgHsXwEA]" ;
+    priory:zoneName "Armistice Bastion" .
+
+priory:LoungeCatalog_92055 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 92055 ;
+    rdfs:label "Eye of the North Portal Stone" ;
+    priory:catalogChatLink "[&AgFnZwEA]" ;
+    priory:zoneName "Eye of the North" .
+
+priory:LoungeCatalog_95430 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 95430 ;
+    rdfs:label "Wizard's Tower Portal Scroll" ;
+    priory:catalogChatLink "[&AgFmfwEA]" ;
+    priory:zoneName "Wizard's Tower" .
+
+priory:LoungeCatalog_97009 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 97009 ;
+    rdfs:label "Arborstone Portal Scroll" ;
+    priory:catalogChatLink "[&AgHxegEA]" ;
+    priory:zoneName "Arborstone" .
+
+priory:LoungeCatalog_98048 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 98048 ;
+    rdfs:label "Thousand Seas Pavilion Pass" ;
+    priory:catalogChatLink "[&AgGgcAEA]" ;
+    priory:zoneName "Thousand Seas Pavilion" .
+
+priory:LoungeCatalog_98049 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 98049 ;
+    rdfs:label "Thousand Seas Pavilion Pass (2 Weeks)" ;
+    priory:catalogChatLink "[&AgGhcAEA]" ;
+    priory:zoneName "Thousand Seas Pavilion" .
+
+priory:LoungeCatalog_100788 a priory:LoungePassCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 100788 ;
+    rdfs:label "Wizard's Tower Teleportation Scroll" ;
+    priory:catalogChatLink "[&AgG0iQEA]" ;
+    priory:zoneName "Wizard's Tower" .
+
+priory:ConvenienceCategory_1 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "permanent_contracts" ;
+    priory:categoryOrder 1 .
+
+priory:ConvenienceCategory_2 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "converters_and_gobblers" ;
+    priory:categoryOrder 2 .
+
+priory:ConvenienceCategory_3 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "portal_tomes" ;
+    priory:categoryOrder 3 .
+
+priory:ConvenienceCategory_4 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "infinite_tools" ;
+    priory:categoryOrder 4 .
+
+priory:ConvenienceCategory_5 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "infinite_salvage" ;
+    priory:categoryOrder 5 .
+
+priory:ConvenienceCategory_6 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "portable_forge" ;
+    priory:categoryOrder 6 .
+
+priory:ConvenienceCategory_7 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "teleport_to_friend" ;
+    priory:categoryOrder 7 .
+
+priory:ConvenienceCategory_8 a priory:ConvenienceCategoryEntry, owl:NamedIndividual ;
+    rdfs:label "vip_lounges" ;
+    priory:categoryOrder 8 .
+
+priory:ConvenienceEntry_permanent_bank a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "permanent_bank" ;
+    priory:categoryOrder 1 ;
+    priory:convenienceCategory "permanent_contracts" ;
+    priory:catalogItemId 35976 ;
+    priory:catalogChatLink "[&AgGQjAAA]" ;
+    priory:allItemIdsCsv "35976,35978,35984,49308" ;
+    priory:alternateItemId 35976 ;
+    priory:alternateItemId 35978 ;
+    priory:alternateItemId 35984 ;
+    priory:alternateItemId 49308 ;
+    rdfs:label "Permanent Bank Access Express" ;
+    priory:convenienceType "PermanentContract" .
+
+priory:ConvenienceEntry_permanent_tp a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "permanent_tp" ;
+    priory:categoryOrder 2 ;
+    priory:convenienceCategory "permanent_contracts" ;
+    priory:catalogItemId 35978 ;
+    priory:catalogChatLink "[&AgGZjAAA]" ;
+    priory:allItemIdsCsv "35978,35976,35986,35987" ;
+    priory:alternateItemId 35978 ;
+    priory:alternateItemId 35976 ;
+    priory:alternateItemId 35986 ;
+    priory:alternateItemId 35987 ;
+    rdfs:label "Permanent Trading Post Express" ;
+    priory:convenienceType "PermanentContract" .
+
+priory:ConvenienceEntry_permanent_merchant a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "permanent_merchant" ;
+    priory:categoryOrder 3 ;
+    priory:convenienceCategory "permanent_contracts" ;
+    priory:catalogItemId 35977 ;
+    priory:catalogChatLink "[&AgGJjAAA]" ;
+    priory:allItemIdsCsv "35977,35985" ;
+    priory:alternateItemId 35977 ;
+    priory:alternateItemId 35985 ;
+    rdfs:label "Permanent Merchant Express" ;
+    priory:convenienceType "PermanentContract" .
+
+priory:ConvenienceEntry_permanent_hair_stylist a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "permanent_hair_stylist" ;
+    priory:categoryOrder 4 ;
+    priory:convenienceCategory "permanent_contracts" ;
+    priory:catalogItemId 35984 ;
+    priory:catalogChatLink "[&AgG4XAAA]" ;
+    priory:allItemIdsCsv "35984,35988,36173" ;
+    priory:alternateItemId 35984 ;
+    priory:alternateItemId 35988 ;
+    priory:alternateItemId 36173 ;
+    rdfs:label "Permanent Hair Stylist Contract" ;
+    priory:convenienceType "PermanentContract" .
+
+priory:ConvenienceEntry_candy_corn_gobbler a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "candy_corn_gobbler" ;
+    priory:categoryOrder 5 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 67393 ;
+    priory:catalogChatLink "[&AgEZCgEA]" ;
+    priory:allItemIdsCsv "67393,67037,67040" ;
+    priory:alternateItemId 67393 ;
+    priory:alternateItemId 67037 ;
+    priory:alternateItemId 67040 ;
+    rdfs:label "Candy Corn Gobbler" ;
+    priory:convenienceType "Gobbler" .
+
+priory:ConvenienceEntry_zhaitaffy_gobbler a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "zhaitaffy_gobbler" ;
+    priory:categoryOrder 6 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 67836 ;
+    priory:catalogChatLink "[&AgFs/QAA]" ;
+    priory:allItemIdsCsv "67836" ;
+    priory:alternateItemId 67836 ;
+    rdfs:label "Zhaitaffy Gobbler" ;
+    priory:convenienceType "Gobbler" .
+
+priory:ConvenienceEntry_snowflake_gobbler a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "snowflake_gobbler" ;
+    priory:categoryOrder 7 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 92585 ;
+    priory:catalogChatLink "[&AgHpZQEA]" ;
+    priory:allItemIdsCsv "92585,79523,86675" ;
+    priory:alternateItemId 92585 ;
+    priory:alternateItemId 79523 ;
+    priory:alternateItemId 86675 ;
+    rdfs:label "Snowflake Gobbler" ;
+    priory:convenienceType "Gobbler" .
+
+priory:ConvenienceEntry_ley_energy_converter a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "ley_energy_converter" ;
+    priory:categoryOrder 8 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 67280 ;
+    priory:catalogChatLink "[&AgGgCgEA]" ;
+    priory:allItemIdsCsv "67280,69949" ;
+    priory:alternateItemId 67280 ;
+    priory:alternateItemId 69949 ;
+    rdfs:label "Ley-Energy Matter Converter" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_karmic_converter a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "karmic_converter" ;
+    priory:categoryOrder 9 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 66624 ;
+    priory:catalogChatLink "[&AgEAfAEA]" ;
+    priory:allItemIdsCsv "66624,67038" ;
+    priory:alternateItemId 66624 ;
+    priory:alternateItemId 67038 ;
+    rdfs:label "Karmic Converter" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_gleam_of_sentience a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "gleam_of_sentience" ;
+    priory:categoryOrder 10 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 92209 ;
+    priory:catalogChatLink "[&AgERUQEA]" ;
+    priory:allItemIdsCsv "92209,81790" ;
+    priory:alternateItemId 92209 ;
+    priory:alternateItemId 81790 ;
+    rdfs:label "Gleam of Sentience" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_sentient_aberration a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "sentient_aberration" ;
+    priory:categoryOrder 11 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 79895 ;
+    priory:catalogChatLink "[&AgFnNQEA]" ;
+    priory:allItemIdsCsv "79895" ;
+    priory:alternateItemId 79895 ;
+    rdfs:label "Sentient Aberration" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_sentient_anomaly a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "sentient_anomaly" ;
+    priory:categoryOrder 12 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 82418 ;
+    priory:catalogChatLink "[&AgGyPQEA]" ;
+    priory:allItemIdsCsv "82418" ;
+    priory:alternateItemId 82418 ;
+    rdfs:label "Sentient Anomaly" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_sentient_oddity a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "sentient_oddity" ;
+    priory:categoryOrder 13 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 80894 ;
+    priory:catalogChatLink "[&AgH+OQEA]" ;
+    priory:allItemIdsCsv "80894" ;
+    priory:alternateItemId 80894 ;
+    rdfs:label "Sentient Oddity" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_sentient_seed a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "sentient_seed" ;
+    priory:categoryOrder 14 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 81700 ;
+    priory:catalogChatLink "[&AgEkPgEA]" ;
+    priory:allItemIdsCsv "81700" ;
+    priory:alternateItemId 81700 ;
+    rdfs:label "Sentient Seed" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_princess a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "princess" ;
+    priory:categoryOrder 15 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 69887 ;
+    priory:catalogChatLink "[&AgF/EQEA]" ;
+    priory:allItemIdsCsv "69887" ;
+    priory:alternateItemId 69887 ;
+    rdfs:label "Princess" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_star_of_gratitude a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "star_of_gratitude" ;
+    priory:categoryOrder 16 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 68369 ;
+    priory:catalogChatLink "[&AgExCwEA]" ;
+    priory:allItemIdsCsv "68369" ;
+    priory:alternateItemId 68369 ;
+    rdfs:label "Star of Gratitude" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_herta a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "herta" ;
+    priory:categoryOrder 17 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 73248 ;
+    priory:catalogChatLink "[&AgGgHAEA]" ;
+    priory:allItemIdsCsv "73248" ;
+    priory:alternateItemId 73248 ;
+    rdfs:label "Herta" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_mawdrey_2 a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "mawdrey_2" ;
+    priory:categoryOrder 18 ;
+    priory:convenienceCategory "converters_and_gobblers" ;
+    priory:catalogItemId 66341 ;
+    priory:catalogChatLink "[&AgE1BAEA]" ;
+    priory:allItemIdsCsv "66341" ;
+    priory:alternateItemId 66341 ;
+    rdfs:label "Mawdrey II" ;
+    priory:convenienceType "Converter" .
+
+priory:ConvenienceEntry_lws3_portal_tome a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "lws3_portal_tome" ;
+    priory:categoryOrder 19 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 80332 ;
+    priory:catalogChatLink "[&AgFsOQEA]" ;
+    priory:allItemIdsCsv "80332,79899,82449,82512" ;
+    priory:alternateItemId 80332 ;
+    priory:alternateItemId 79899 ;
+    priory:alternateItemId 82449 ;
+    priory:alternateItemId 82512 ;
+    rdfs:label "Living World Season 3 Portal Tome" ;
+    priory:convenienceType "PortalTome" .
+
+priory:ConvenienceEntry_lws4_portal_tome a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "lws4_portal_tome" ;
+    priory:categoryOrder 20 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 87508 ;
+    priory:catalogChatLink "[&AgF4VQEA]" ;
+    priory:allItemIdsCsv "87508,86586,87509" ;
+    priory:alternateItemId 87508 ;
+    priory:alternateItemId 86586 ;
+    priory:alternateItemId 87509 ;
+    rdfs:label "Living World Season 4 Portal Tome" ;
+    priory:convenienceType "PortalTome" .
+
+priory:ConvenienceEntry_ibs_portal_tome a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "ibs_portal_tome" ;
+    priory:categoryOrder 21 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 92850 ;
+    priory:catalogChatLink "[&AgGyZwEA]" ;
+    priory:allItemIdsCsv "92850,92272,92782,92783" ;
+    priory:alternateItemId 92850 ;
+    priory:alternateItemId 92272 ;
+    priory:alternateItemId 92782 ;
+    priory:alternateItemId 92783 ;
+    rdfs:label "Icebrood Saga Portal Tome" ;
+    priory:convenienceType "PortalTome" .
+
+priory:ConvenienceEntry_arborstone_portal_scroll a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "arborstone_portal_scroll" ;
+    priory:categoryOrder 22 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 97009 ;
+    priory:catalogChatLink "[&AgHxegEA]" ;
+    priory:allItemIdsCsv "97009" ;
+    priory:alternateItemId 97009 ;
+    rdfs:label "Arborstone Portal Scroll" ;
+    priory:convenienceType "PortalTome" .
+
+priory:ConvenienceEntry_wizards_tower_portal_scroll a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "wizards_tower_portal_scroll" ;
+    priory:categoryOrder 23 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 100788 ;
+    priory:catalogChatLink "[&AgG0iQEA]" ;
+    priory:allItemIdsCsv "100788,95430" ;
+    priory:alternateItemId 100788 ;
+    priory:alternateItemId 95430 ;
+    rdfs:label "Wizard's Tower Teleportation Scroll" ;
+    priory:convenienceType "PortalTome" .
+
+priory:ConvenienceEntry_spearmarshals_plea a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "spearmarshals_plea" ;
+    priory:categoryOrder 24 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 84310 ;
+    priory:catalogChatLink "[&AgFpTwEA]" ;
+    priory:allItemIdsCsv "84310" ;
+    priory:alternateItemId 84310 ;
+    rdfs:label "Spearmarshal's Plea" ;
+    priory:convenienceType "PortalDevice" .
+
+priory:ConvenienceEntry_world_boss_portal_device a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "world_boss_portal_device" ;
+    priory:categoryOrder 25 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 87504 ;
+    priory:catalogChatLink "[&AgHwVwEA]" ;
+    priory:allItemIdsCsv "87504" ;
+    priory:alternateItemId 87504 ;
+    rdfs:label "World Boss Portal Device" ;
+    priory:convenienceType "PortalDevice" .
+
+priory:ConvenienceEntry_maguuma_portal_device a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "maguuma_portal_device" ;
+    priory:categoryOrder 26 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 90022 ;
+    priory:catalogChatLink "[&AgFwXwEA]" ;
+    priory:allItemIdsCsv "90022" ;
+    priory:alternateItemId 90022 ;
+    rdfs:label "Maguuma Pact Operation Portal Device" ;
+    priory:convenienceType "PortalDevice" .
+
+priory:ConvenienceEntry_eye_of_the_north_portal_stone a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "eye_of_the_north_portal_stone" ;
+    priory:categoryOrder 27 ;
+    priory:convenienceCategory "portal_tomes" ;
+    priory:catalogItemId 92055 ;
+    priory:catalogChatLink "[&AgFnZwEA]" ;
+    priory:allItemIdsCsv "92055" ;
+    priory:alternateItemId 92055 ;
+    rdfs:label "Eye of the North Portal Stone" ;
+    priory:convenienceType "PortalTome" .
+
+priory:ConvenienceEntry_lucky_dog_harvesting_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "lucky_dog_harvesting_tool" ;
+    priory:categoryOrder 28 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 86694 ;
+    priory:catalogChatLink "[&AgGyUgEA]" ;
+    priory:allItemIdsCsv "86694" ;
+    priory:alternateItemId 86694 ;
+    rdfs:label "Lucky Dog Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_volatile_magic_harvesting_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "volatile_magic_harvesting_tool" ;
+    priory:categoryOrder 29 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 87435 ;
+    priory:catalogChatLink "[&AgFuVwEA]" ;
+    priory:allItemIdsCsv "87435" ;
+    priory:alternateItemId 87435 ;
+    rdfs:label "Volatile Magic Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_volatile_magic_mining_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "volatile_magic_mining_pick" ;
+    priory:categoryOrder 30 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 87434 ;
+    priory:catalogChatLink "[&AgFrVwEA]" ;
+    priory:allItemIdsCsv "87434" ;
+    priory:alternateItemId 87434 ;
+    rdfs:label "Volatile Magic Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_volatile_magic_logging_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "volatile_magic_logging_axe" ;
+    priory:categoryOrder 31 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 87433 ;
+    priory:catalogChatLink "[&AgFqVwEA]" ;
+    priory:allItemIdsCsv "87433" ;
+    priory:alternateItemId 87433 ;
+    rdfs:label "Volatile Magic Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_unbound_magic_harvesting_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "unbound_magic_harvesting_tool" ;
+    priory:categoryOrder 32 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 80234 ;
+    priory:catalogChatLink "[&AgGqOQEA]" ;
+    priory:allItemIdsCsv "80234" ;
+    priory:alternateItemId 80234 ;
+    rdfs:label "Unbound Magic Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_unbound_magic_mining_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "unbound_magic_mining_pick" ;
+    priory:categoryOrder 33 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 80235 ;
+    priory:catalogChatLink "[&AgGrOQEA]" ;
+    priory:allItemIdsCsv "80235" ;
+    priory:alternateItemId 80235 ;
+    rdfs:label "Unbound Magic Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_unbound_magic_logging_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "unbound_magic_logging_axe" ;
+    priory:categoryOrder 34 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 80236 ;
+    priory:catalogChatLink "[&AgGsOQEA]" ;
+    priory:allItemIdsCsv "80236" ;
+    priory:alternateItemId 80236 ;
+    rdfs:label "Unbound Magic Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_skyscale_harvesting_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "skyscale_harvesting_tool" ;
+    priory:categoryOrder 35 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 92842 ;
+    priory:catalogChatLink "[&AgG6ZQEA]" ;
+    priory:allItemIdsCsv "92842" ;
+    priory:alternateItemId 92842 ;
+    rdfs:label "Skyscale Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_skyscale_mining_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "skyscale_mining_pick" ;
+    priory:categoryOrder 36 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 92841 ;
+    priory:catalogChatLink "[&AgG5ZQEA]" ;
+    priory:allItemIdsCsv "92841" ;
+    priory:alternateItemId 92841 ;
+    rdfs:label "Skyscale Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_skyscale_logging_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "skyscale_logging_axe" ;
+    priory:categoryOrder 37 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 92840 ;
+    priory:catalogChatLink "[&AgG4ZQEA]" ;
+    priory:allItemIdsCsv "92840" ;
+    priory:alternateItemId 92840 ;
+    rdfs:label "Skyscale Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_cosmic_harvesting_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "cosmic_harvesting_tool" ;
+    priory:categoryOrder 38 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 87405 ;
+    priory:catalogChatLink "[&AgFlVQEA]" ;
+    priory:allItemIdsCsv "87405" ;
+    priory:alternateItemId 87405 ;
+    rdfs:label "Infinite Cosmic Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_cosmic_mining_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "cosmic_mining_pick" ;
+    priory:categoryOrder 39 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 87372 ;
+    priory:catalogChatLink "[&AgFkVQEA]" ;
+    priory:allItemIdsCsv "87372" ;
+    priory:alternateItemId 87372 ;
+    rdfs:label "Infinite Cosmic Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_cosmic_logging_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "cosmic_logging_axe" ;
+    priory:categoryOrder 40 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 87371 ;
+    priory:catalogChatLink "[&AgFjVQEA]" ;
+    priory:allItemIdsCsv "87371" ;
+    priory:alternateItemId 87371 ;
+    rdfs:label "Infinite Cosmic Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_choya_mining_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "choya_mining_pick" ;
+    priory:categoryOrder 41 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 86938 ;
+    priory:catalogChatLink "[&AgHKUwEA]" ;
+    priory:allItemIdsCsv "86938" ;
+    priory:alternateItemId 86938 ;
+    rdfs:label "Choya Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_choya_harvesting_sickle a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "choya_harvesting_sickle" ;
+    priory:categoryOrder 42 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 86939 ;
+    priory:catalogChatLink "[&AgHLUwEA]" ;
+    priory:allItemIdsCsv "86939" ;
+    priory:alternateItemId 86939 ;
+    rdfs:label "Choya Harvesting Sickle" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_choya_logging_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "choya_logging_axe" ;
+    priory:categoryOrder 43 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 86940 ;
+    priory:catalogChatLink "[&AgHMUwEA]" ;
+    priory:allItemIdsCsv "86940" ;
+    priory:alternateItemId 86940 ;
+    rdfs:label "Choya Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_consortium_sickle a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "consortium_sickle" ;
+    priory:categoryOrder 44 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 48932 ;
+    priory:catalogChatLink "[&AgF0vwAA]" ;
+    priory:allItemIdsCsv "48932" ;
+    priory:alternateItemId 48932 ;
+    rdfs:label "Consortium Harvesting Sickle" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_molten_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "molten_pick" ;
+    priory:categoryOrder 45 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 48931 ;
+    priory:catalogChatLink "[&AgFzvwAA]" ;
+    priory:allItemIdsCsv "48931" ;
+    priory:alternateItemId 48931 ;
+    rdfs:label "Molten Alliance Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_chop_it_all_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "chop_it_all_axe" ;
+    priory:categoryOrder 46 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 48933 ;
+    priory:catalogChatLink "[&AgF1vwAA]" ;
+    priory:allItemIdsCsv "48933" ;
+    priory:alternateItemId 48933 ;
+    rdfs:label "Chop-It-All Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_watchwork_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "watchwork_pick" ;
+    priory:categoryOrder 47 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 47897 ;
+    priory:catalogChatLink "[&AgFpnQAA]" ;
+    priory:allItemIdsCsv "47897" ;
+    priory:alternateItemId 47897 ;
+    rdfs:label "Watchwork Mining Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_tireless_harvesting_minion a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "tireless_harvesting_minion" ;
+    priory:categoryOrder 48 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 49298 ;
+    priory:catalogChatLink "[&AgEqwAAA]" ;
+    priory:allItemIdsCsv "49298" ;
+    priory:alternateItemId 49298 ;
+    rdfs:label "Tireless Harvesting Minion" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_tireless_logging_minion a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "tireless_logging_minion" ;
+    priory:categoryOrder 49 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 49297 ;
+    priory:catalogChatLink "[&AgEpwAAA]" ;
+    priory:allItemIdsCsv "49297" ;
+    priory:alternateItemId 49297 ;
+    rdfs:label "Tireless Logging Minion" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_bone_pick a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "bone_pick" ;
+    priory:categoryOrder 50 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 49296 ;
+    priory:catalogChatLink "[&AgEowAAA]" ;
+    priory:allItemIdsCsv "49296" ;
+    priory:alternateItemId 49296 ;
+    rdfs:label "Bone Pick" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_fused_molten_sickle a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "fused_molten_sickle" ;
+    priory:categoryOrder 51 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 49299 ;
+    priory:catalogChatLink "[&AgErwAAA]" ;
+    priory:allItemIdsCsv "49299" ;
+    priory:alternateItemId 49299 ;
+    rdfs:label "Fused Molten Sickle" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_fused_molten_logging_axe a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "fused_molten_logging_axe" ;
+    priory:categoryOrder 52 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 49300 ;
+    priory:catalogChatLink "[&AgEswAAA]" ;
+    priory:allItemIdsCsv "49300" ;
+    priory:alternateItemId 49300 ;
+    rdfs:label "Fused Molten Logging Axe" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_glitter_bomb_harvesting_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "glitter_bomb_harvesting_tool" ;
+    priory:categoryOrder 53 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 78949 ;
+    priory:catalogChatLink "[&AgGVNAEA]" ;
+    priory:allItemIdsCsv "78949" ;
+    priory:alternateItemId 78949 ;
+    rdfs:label "Glitter Bomb Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_solar_insect_tool a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "solar_insect_tool" ;
+    priory:categoryOrder 54 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 84698 ;
+    priory:catalogChatLink "[&AgGqTgEA]" ;
+    priory:allItemIdsCsv "84698" ;
+    priory:alternateItemId 84698 ;
+    rdfs:label "Solar Insect Gathering Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_mad_scientist_mining a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "mad_scientist_mining" ;
+    priory:categoryOrder 55 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 67032 ;
+    priory:catalogChatLink "[&AgHYBgEA]" ;
+    priory:allItemIdsCsv "67032" ;
+    priory:alternateItemId 67032 ;
+    rdfs:label "Mad Scientist Mining Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_mad_scientist_harvesting a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "mad_scientist_harvesting" ;
+    priory:categoryOrder 56 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 67034 ;
+    priory:catalogChatLink "[&AgHaBgEA]" ;
+    priory:allItemIdsCsv "67034" ;
+    priory:alternateItemId 67034 ;
+    rdfs:label "Mad Scientist Harvesting Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_mad_scientist_logging a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "mad_scientist_logging" ;
+    priory:categoryOrder 57 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 67033 ;
+    priory:catalogChatLink "[&AgHZBgEA]" ;
+    priory:allItemIdsCsv "67033" ;
+    priory:alternateItemId 67033 ;
+    rdfs:label "Mad Scientist Logging Tool" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_firefly_mining_flute a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "firefly_mining_flute" ;
+    priory:categoryOrder 58 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 81472 ;
+    priory:catalogChatLink "[&AgHAOgEA]" ;
+    priory:allItemIdsCsv "81472" ;
+    priory:alternateItemId 81472 ;
+    rdfs:label "Firefly Mining Flute" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_butterfly_harvesting_flute a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "butterfly_harvesting_flute" ;
+    priory:categoryOrder 59 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 81473 ;
+    priory:catalogChatLink "[&AgHBOgEA]" ;
+    priory:allItemIdsCsv "81473" ;
+    priory:alternateItemId 81473 ;
+    rdfs:label "Butterfly Harvesting Flute" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_swarm_logging_flute a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "swarm_logging_flute" ;
+    priory:categoryOrder 60 ;
+    priory:convenienceCategory "infinite_tools" ;
+    priory:catalogItemId 81471 ;
+    priory:catalogChatLink "[&AgG/OgEA]" ;
+    priory:allItemIdsCsv "81471" ;
+    priory:alternateItemId 81471 ;
+    rdfs:label "Swarm Logging Flute" ;
+    priory:convenienceType "GatheringTool" .
+
+priory:ConvenienceEntry_copper_fed a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "copper_fed" ;
+    priory:categoryOrder 61 ;
+    priory:convenienceCategory "infinite_salvage" ;
+    priory:catalogItemId 44602 ;
+    priory:catalogChatLink "[&AgE6rgAA]" ;
+    priory:allItemIdsCsv "44602" ;
+    priory:alternateItemId 44602 ;
+    rdfs:label "Copper-Fed Salvage-o-Matic" ;
+    priory:convenienceType "SalvageKit" .
+
+priory:ConvenienceEntry_silver_fed a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "silver_fed" ;
+    priory:categoryOrder 62 ;
+    priory:convenienceCategory "infinite_salvage" ;
+    priory:catalogItemId 67027 ;
+    priory:catalogChatLink "[&AgHTBQEA]" ;
+    priory:allItemIdsCsv "67027" ;
+    priory:alternateItemId 67027 ;
+    rdfs:label "Silver-Fed Salvage-o-Matic" ;
+    priory:convenienceType "SalvageKit" .
+
+priory:ConvenienceEntry_runecrafter a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "runecrafter" ;
+    priory:categoryOrder 63 ;
+    priory:convenienceCategory "infinite_salvage" ;
+    priory:catalogItemId 87400 ;
+    priory:catalogChatLink "[&AgFoVQEA]" ;
+    priory:allItemIdsCsv "87400" ;
+    priory:alternateItemId 87400 ;
+    rdfs:label "Runecrafter's Salvage-o-Matic" ;
+    priory:convenienceType "SalvageKit" .
+
+priory:ConvenienceEntry_upgrade_extractor a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "upgrade_extractor" ;
+    priory:categoryOrder 64 ;
+    priory:convenienceCategory "infinite_salvage" ;
+    priory:catalogItemId 93121 ;
+    priory:catalogChatLink "[&AgHpWgEA]" ;
+    priory:allItemIdsCsv "93121,93120,93122" ;
+    priory:alternateItemId 93121 ;
+    priory:alternateItemId 93120 ;
+    priory:alternateItemId 93122 ;
+    rdfs:label "Endless Upgrade Extractor" ;
+    priory:convenienceType "SalvageKit" .
+
+priory:ConvenienceEntry_mystic_forge_conduit a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "mystic_forge_conduit" ;
+    priory:categoryOrder 65 ;
+    priory:convenienceCategory "portable_forge" ;
+    priory:catalogItemId 70010 ;
+    priory:catalogChatLink "[&AgE6EQEA]" ;
+    priory:allItemIdsCsv "70010,70013,35728" ;
+    priory:alternateItemId 70010 ;
+    priory:alternateItemId 70013 ;
+    priory:alternateItemId 35728 ;
+    rdfs:label "Mystic Forge Conduit" ;
+    priory:convenienceType "MysticForge" .
+
+priory:ConvenienceEntry_teleport_to_friend a priory:ConvenienceCatalogEntry, owl:NamedIndividual ;
+    priory:convenienceSlug "teleport_to_friend" ;
+    priory:categoryOrder 66 ;
+    priory:convenienceCategory "teleport_to_friend" ;
+    priory:catalogItemId 90335 ;
+    priory:catalogChatLink "[&AgHfYAEA]" ;
+    priory:allItemIdsCsv "90335" ;
+    priory:alternateItemId 90335 ;
+    rdfs:label "Recharging Teleport to Friend" ;
+    priory:convenienceType "Teleport" .

@@ -408,8 +408,9 @@ item:19678 a priory:GiftItem ;
 # Leaf Base Materials
 # ------------------------------------------------------------------------------
 
-item:19721 a priory:CraftingMaterial ; rdfs:label "Glob of Ectoplasm"@en ; priory:gw2Id 19721 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
+item:19721 a priory:CraftingMaterial ; rdfs:label "Glob of Ectoplasm"@en ; skos:altLabel "Ectoplasm"@en ; priory:gw2Id 19721 ; priory:hasRarity rarity:Rare ; priory:isAccountBound false .
 item:24562 a priory:CraftingMaterial ; rdfs:label "Superior Sigil of Strength"@en ; skos:altLabel "Superior Sigil of Force"@en ; priory:gw2Id 24562 ; priory:hasRarity rarity:Exotic ; priory:isAccountBound false .
+item:24615 a priory:CraftingMaterial ; rdfs:label "Superior Sigil of Force"@en ; priory:gw2Id 24615 ; priory:hasRarity rarity:Exotic ; priory:isAccountBound false .
 item:19684 a priory:CraftingMaterial ; rdfs:label "Mithril Ingot"@en ; priory:gw2Id 19684 ; priory:hasRarity rarity:Basic ; priory:isAccountBound false .
 item:19685 a priory:CraftingMaterial ; rdfs:label "Orichalcum Ingot"@en ; priory:gw2Id 19685 ; priory:hasRarity rarity:Basic ; priory:isAccountBound false .
 item:19686 a priory:CraftingMaterial ; rdfs:label "Platinum Ingot"@en ; priory:gw2Id 19686 ; priory:hasRarity rarity:Basic ; priory:isAccountBound false .

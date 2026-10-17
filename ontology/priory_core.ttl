@@ -596,6 +596,53 @@ priory:LoungeFeature a owl:Class ;
     skos:definition "A disposition inhering in a VIP Lounge or convenience hub that provides players with access to a specific crafting, commerce, or travel service."@en ;
     rdfs:comment "An amenity, service, or portal feature available within a VIP Lounge or hub."@en .
 
+priory:ExplorationRegion a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Exploration Region"@en ;
+    skos:definition "A regional map completion milestone representing a group of exploration zones required for Generation 1, 2, or 3 Legendary Weapon map completion gifts."@en ;
+    rdfs:comment "Regional exploration milestone with zone count, base completion hours, mount recommendations, and starting waypoint."@en .
+
+priory:LoungePassCatalogEntry a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "VIP Lounge Pass Catalog Entry"@en ;
+    skos:definition "A domain catalog entry describing a VIP Lounge Pass item, its convenience tier, feature flags, and teleportation behavior."@en .
+
+priory:ConvenienceCategoryEntry a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Convenience Category Entry"@en ;
+    skos:definition "An ordered category classification entry in the account convenience and QoL audit catalog."@en .
+
+priory:ConvenienceCatalogEntry a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Convenience Item Catalog Entry"@en ;
+    skos:definition "A domain catalog entry describing a convenience or QoL item, its category, primary and alternate item IDs, and utility parameters."@en .
+
+priory:WeaponTypeDisciplineRule a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Weapon Type Crafting Discipline Rule"@en ;
+    skos:definition "A domain rule mapping a weapon type slug to its required primary and optional secondary crafting discipline and rating."@en .
+
+priory:LegendaryWeaponCatalogEntry a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Legendary Weapon Catalog Entry"@en ;
+    skos:definition "A domain catalog entry specifying a Generation 1, 2, or 3 Legendary Weapon, its weapon type, precursor, and required crafting disciplines."@en .
+
+priory:LegendaryArmorCatalogEntry a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Legendary Armor Catalog Entry"@en ;
+    skos:definition "A domain catalog entry specifying a Legendary Armor piece and its required crafting discipline and rating."@en .
+
+priory:PrecursorCatalogEntry a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Precursor Weapon Catalog Entry"@en ;
+    skos:definition "A domain catalog entry specifying a Legendary Weapon precursor and the Legendary Weapon(s) it upgrades into."@en .
+
+priory:HobbsCollectionStage a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Master Craftsman Hobbs Precursor Collection Stage"@en ;
+    skos:definition "A sequential collection achievement stage (Tier 1-3 for Generation 1 or Tier 1-4 for Generation 2) in Master Craftsman Hobbs's precursor crafting journey."@en .
+
+
 # ==============================================================================
 # Object Properties (Verbs / Verb Phrases)
 # ==============================================================================
@@ -1361,6 +1408,245 @@ priory:trophyCategory a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:label "trophy material category"@en ;
     skos:definition "A string datatype property that classifies a Tier 6 Fine Crafting Material by its canonical trophy family (Blood, Bone, Claw, Fang, Scale, Totem, Venom, Dust)."@en .
+
+# --- Exploration Region & Catalog Grounding Properties ---
+
+priory:forGeneration a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "for legendary generation"@en ;
+    skos:definition "A string datatype property that specifies the legendary generation identifier (GEN1, GEN2, GEN3) associated with an exploration region or catalog entry."@en .
+
+priory:zoneCount a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "zone count"@en ;
+    skos:definition "An integer datatype property that specifies the number of explorable maps within an exploration region."@en .
+
+priory:baseExplorationHours a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "base exploration hours"@en ;
+    skos:definition "A decimal datatype property that specifies the unmounted baseline hours required to complete an exploration region."@en .
+
+priory:explorationDifficulty a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "exploration difficulty"@en ;
+    skos:definition "A string datatype property that records the traversal difficulty tier (Easy, Moderate, Hard) of an exploration region."@en .
+
+priory:primaryMountRecommendation a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "primary mount recommendation"@en ;
+    skos:definition "A string datatype property that specifies the primary mount slug recommended for traversing an exploration region."@en .
+
+priory:fallbackMountRecommendation a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "fallback mount recommendation"@en ;
+    skos:definition "A string datatype property that specifies the fallback mount slug recommended when the primary mount is unavailable."@en .
+
+priory:strategyNotes a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "strategy notes"@en ;
+    skos:definition "A string datatype property that provides routing, mastery, and event-timing strategy guidance for an exploration region."@en .
+
+priory:startingWaypoint a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "starting waypoint"@en ;
+    skos:definition "A string datatype property that records the starting waypoint display name and chat link for an exploration region."@en .
+
+priory:regionOrder a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "region display order"@en ;
+    skos:definition "An integer datatype property that specifies the canonical sequence order of an exploration region within its generation."@en .
+
+priory:loungeSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "lounge identifier slug"@en ;
+    skos:definition "A string datatype property that records the canonical identifier slug of a VIP Lounge Pass."@en .
+
+priory:convenienceTier a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "convenience tier"@en ;
+    skos:definition "A string datatype property that records the convenience rating tier (e.g., S+, S, A, B) of a VIP Lounge Pass."@en .
+
+priory:teleportNote a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "teleport behavior note"@en ;
+    skos:definition "A string datatype property that describes the teleportation and return-to-map mechanics of a VIP Lounge Pass."@en .
+
+priory:categoryOrder a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "category display order"@en ;
+    skos:definition "An integer datatype property that specifies the canonical ordering index of a convenience category."@en .
+
+priory:convenienceSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "convenience item slug"@en ;
+    skos:definition "A string datatype property that records the canonical dictionary key slug of a convenience catalog item."@en .
+
+priory:convenienceCategory a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "convenience category name"@en ;
+    skos:definition "A string datatype property that associates a convenience catalog item with its display category name."@en .
+
+priory:convenienceType a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "convenience functional type"@en ;
+    skos:definition "A string datatype property that records the functional classification slug of a convenience item (e.g., bank, tp, salvage, converter, portal)."@en .
+
+priory:utilityNote a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "utility note"@en ;
+    skos:definition "A string datatype property that describes the practical utility and economic benefits of a convenience item."@en .
+
+priory:salvageCostCopper a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "salvage cost in copper"@en ;
+    skos:definition "An integer datatype property that records the per-use salvage cost in copper coins for an infinite salvage gizmo."@en .
+
+priory:ectoYieldRate a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "ectoplasm yield rate"@en ;
+    skos:definition "A decimal datatype property that records the rare material / ectoplasm yield rate of an infinite salvage gizmo."@en .
+
+priory:alternateItemId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "alternate GW2 item ID"@en ;
+    skos:definition "An integer datatype property that records an accepted GW2 API item ID (including primary and variant IDs) for a convenience catalog item."@en .
+
+priory:weaponTypeSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "weapon type slug"@en ;
+    skos:definition "A string datatype property that records the lowercase weapon type identifier (e.g., greatsword, axe, longbow)."@en .
+
+priory:primaryDisciplineSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "primary crafting discipline slug"@en ;
+    skos:definition "A string datatype property that specifies the lowercase slug of the primary crafting discipline required to craft an item."@en .
+
+priory:primaryDisciplineRating a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "primary crafting discipline rating"@en ;
+    skos:definition "An integer datatype property that specifies the required skill rating in the primary crafting discipline."@en .
+
+priory:secondaryDisciplineSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "secondary crafting discipline slug"@en ;
+    skos:definition "A string datatype property that specifies the lowercase slug of the optional secondary crafting discipline required to craft an item."@en .
+
+priory:secondaryDisciplineRating a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "secondary crafting discipline rating"@en ;
+    skos:definition "An integer datatype property that specifies the required skill rating in the optional secondary crafting discipline."@en .
+
+priory:precursorItemId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "precursor GW2 item ID"@en ;
+    skos:definition "An integer datatype property that specifies the primary GW2 item ID of a Legendary Weapon's precursor."@en .
+
+priory:legacyPrecursorId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "legacy precursor GW2 item ID"@en ;
+    skos:definition "An integer datatype property that specifies an alternate or legacy GW2 item ID accepted as a precursor for a Generation 2 Legendary Weapon."@en .
+
+priory:targetWeaponId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "target legendary weapon GW2 item ID"@en ;
+    skos:definition "An integer datatype property that records a target Legendary Weapon GW2 item ID produced from a precursor."@en .
+
+priory:forPrecursorId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "for precursor GW2 item ID"@en ;
+    skos:definition "An integer datatype property that associates a Hobbs collection achievement stage with its precursor GW2 item ID."@en .
+
+priory:collectionTierNumber a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "collection tier number"@en ;
+    skos:definition "An integer datatype property that records the ordinal collection tier number (1, 2, 3, or 4) of a Hobbs precursor collection stage."@en .
+
+priory:bitsTotal a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "collection bits total"@en ;
+    skos:definition "An integer datatype property that specifies the total number of collection achievement bits required to complete a Hobbs precursor collection stage."@en .
+
+priory:catalogChatLink a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "catalog in-game chat link"@en ;
+    skos:definition "A string datatype property that records the in-game chat link code on a catalog entry."@en .
+
+priory:precursorName a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "precursor display name"@en ;
+    skos:definition "A string datatype property that records the display name of the precursor item associated with a Legendary Weapon catalog entry."@en .
+
+priory:allItemIdsCsv a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "ordered accepted GW2 item IDs CSV"@en ;
+    skos:definition "A comma-separated string of integer GW2 item IDs preserving the canonical sequence of accepted variant IDs for a convenience catalog entry."@en .
+
+priory:legacyPrecursorIdsCsv a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "ordered legacy precursor GW2 item IDs CSV"@en ;
+    skos:definition "A comma-separated string of integer GW2 item IDs preserving the canonical tuple order of legacy precursor IDs for a Legendary Weapon catalog entry."@en .
+
+priory:achievementId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "GW2 achievement ID"@en ;
+    skos:definition "An integer datatype property that records a GW2 achievement ID associated with a Hobbs precursor collection stage."@en .
+
+priory:achievementIdsCsv a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "ordered GW2 achievement IDs CSV"@en ;
+    skos:definition "A comma-separated string of integer GW2 achievement IDs preserving the canonical list order for a Hobbs precursor collection stage."@en .
+
+priory:masteryTier a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "required mastery tier"@en ;
+    skos:definition "An integer datatype property that specifies the Legendary Crafting Mastery tier (1-4) required for a Hobbs precursor collection stage."@en .
+
+priory:catalogItemId a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "catalog GW2 item ID"@en ;
+    skos:definition "An integer datatype property that records the GW2 item ID on a domain catalog entry without colliding with canonical item:gw2Id triples."@en .
+
+
+
 
 # ==============================================================================
 # Controlled Vocabularies: Weapon Taxonomy (SKOS)

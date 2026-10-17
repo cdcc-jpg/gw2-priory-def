@@ -1,5 +1,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix priory: <https://priory.gw2/def/> .
 @prefix mount: <https://priory.gw2/ref/mount/> .
 @prefix zone: <https://priory.gw2/ref/zone/> .
@@ -59,3 +61,164 @@ zone:OrrExploration a priory:ExplorationZone ;
     priory:explorationDifficulty "Hard" ;
     priory:recommendedMount mount:Skyscale ;
     rdfs:comment "Hostile mobs, temple events gate some POIs. Complete Straits of Devastation during Temple of Balthazar event for simultaneous Obsidian Shard farming. Estimated 3-4 hours." .
+
+# ==============================================================================
+# Exploration Regions (GEN1 Core Tyria, GEN2 Heart of Maguuma, GEN3 Cantha)
+# ==============================================================================
+
+zone:Gen1RegionKryta a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Kryta (6 Zones: Queensdale -> Southsun/Gendarran)" ;
+    priory:forGeneration "GEN1" ;
+    priory:regionOrder 1 ;
+    priory:zoneCount 6 ;
+    priory:baseExplorationHours 3.8 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:primaryMountRecommendation "raptor" ;
+    priory:fallbackMountRecommendation "jackal" ;
+    priory:strategyNotes "Mostly flat terrain; Raptor Canyon Jumping speeds up Queensdale, Kessex Hills, and Gendarran Fields." ;
+    priory:startingWaypoint "Shaemoor Waypoint [&BO8AAAA=]" .
+
+zone:Gen1RegionAscalon a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Ascalon (6 Zones: Plains of Ashford -> Fireheart Rise)" ;
+    priory:forGeneration "GEN1" ;
+    priory:regionOrder 2 ;
+    priory:zoneCount 6 ;
+    priory:baseExplorationHours 4.2 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:primaryMountRecommendation "raptor" ;
+    priory:fallbackMountRecommendation "springer" ;
+    priory:strategyNotes "Long horizontal stretches with moderate cliffs in Blazeridge Steppes and Fireheart Rise." ;
+    priory:startingWaypoint "Smokestead Waypoint [&BIABAAA=]" .
+
+zone:Gen1RegionShiverpeaks a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Shiverpeaks (6 Zones: Wayfarer Foothills -> Frostgorge Sound)" ;
+    priory:forGeneration "GEN1" ;
+    priory:regionOrder 3 ;
+    priory:zoneCount 6 ;
+    priory:baseExplorationHours 4.8 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "springer" ;
+    priory:strategyNotes "High verticality in Lornar's Pass, Dredgehaunt Cliffs, and Timberline Falls; Skyscale or Springer High Vault saves hours." ;
+    priory:startingWaypoint "Horncall Waypoint [&BUMBAAA=]" .
+
+zone:Gen1RegionMaguuma a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Maguuma Jungle (4 Zones: Caledon Forest -> Mount Maelstrom)" ;
+    priory:forGeneration "GEN1" ;
+    priory:regionOrder 4 ;
+    priory:zoneCount 4 ;
+    priory:baseExplorationHours 3.5 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:primaryMountRecommendation "springer" ;
+    priory:fallbackMountRecommendation "raptor" ;
+    priory:strategyNotes "Dense foliage, multi-layered roots in Metrica Province/Brisban Wildlands, and volcano slopes in Mount Maelstrom." ;
+    priory:startingWaypoint "Astorea Waypoint [&BLsAAAA=]" .
+
+zone:Gen1RegionOrr a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Ruins of Orr (3 Zones: Straits of Devastation -> Cursed Shore)" ;
+    priory:forGeneration "GEN1" ;
+    priory:regionOrder 5 ;
+    priory:zoneCount 3 ;
+    priory:baseExplorationHours 3.7 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "jackal" ;
+    priory:strategyNotes "High-density Risen mobs with chill/cripple; Cathedral temple events can temporarily lock POIs/Vistas. Farm Temple of Balthazar for Obsidian Shards while visiting Straits!" ;
+    priory:startingWaypoint "Fort Trinity Waypoint [&BBcDAAA=]" .
+
+zone:Gen2RegionVerdantBrink a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Verdant Brink (Canopy, Night Bosses & Mastery Insights)" ;
+    priory:forGeneration "GEN2" ;
+    priory:regionOrder 1 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 2.5 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "griffon" ;
+    priory:strategyNotes "Requires Updraft Use, Bouncing Mushrooms, and Nuhoch Wallows (or Skyscale) to reach Canopy Vistas and Hero Challenges." ;
+    priory:startingWaypoint "Shipwreck Peak Waypoint [&BN4HAAA=]" .
+
+zone:Gen2RegionAuricBasin a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Auric Basin (Octovine Meta, Exalted Masks & Tunnels)" ;
+    priory:forGeneration "GEN2" ;
+    priory:regionOrder 2 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 2.0 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:primaryMountRecommendation "raptor" ;
+    priory:fallbackMountRecommendation "springer" ;
+    priory:strategyNotes "Requires Exalted Markings mastery for inner Tarir POIs; several Hero Challenges are champion-tier group events." ;
+    priory:startingWaypoint "Wanderer's Waypoint [&BGwIAAA=]" .
+
+zone:Gen2RegionTangledDepths a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Tangled Depths (Chak Gerent Lanes & Subterranean Labyrinths)" ;
+    priory:forGeneration "GEN2" ;
+    priory:regionOrder 3 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 3.0 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "springer" ;
+    priory:strategyNotes "Complex 4-layer underground map; follow Nuhoch Wallows and Ley-Line Confluence tunnels carefully." ;
+    priory:startingWaypoint "Order of Whispers Camp Waypoint [&BA4IAAA=]" .
+
+zone:Gen2RegionDragonsStand a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Dragon's Stand (Mordremoth Meta Map Completion)" ;
+    priory:forGeneration "GEN2" ;
+    priory:regionOrder 4 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 2.0 ;
+    priory:explorationDifficulty "Hard" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "raptor" ;
+    priory:strategyNotes "Blighted Towers and southern islands only open after a successful Mouth of Mordremoth meta event!" ;
+    priory:startingWaypoint "Pact Base Camp Waypoint [&BBAIAAA=]" .
+
+zone:Gen3RegionSeitungProvince a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Seitung Province (Shing Jea Island)" ;
+    priory:forGeneration "GEN3" ;
+    priory:regionOrder 1 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 1.5 ;
+    priory:explorationDifficulty "Easy" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "raptor" ;
+    priory:strategyNotes "Straightforward coastal and monastery terrain; complete Aetherblade Assault meta while exploring." ;
+    priory:startingWaypoint "Village Waypoint [&BJkMAAA=]" .
+
+zone:Gen3RegionNewKainengCity a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "New Kaineng City (Vertical Megacity & Zip Lines)" ;
+    priory:forGeneration "GEN3" ;
+    priory:regionOrder 2 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 2.0 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "springer" ;
+    priory:strategyNotes "Extreme verticality; Jade Bot Zip Lines and Skyscale make rooftop Vistas and Jade Tech Hero Points effortless." ;
+    priory:startingWaypoint "Kaineng Docks Waypoint [&BBoNAAA=]" .
+
+zone:Gen3RegionEchovaldWilds a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "The Echovald Wilds (Petrified Cathedral Forest)" ;
+    priory:forGeneration "GEN3" ;
+    priory:regionOrder 3 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 2.0 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "springer" ;
+    priory:strategyNotes "Multi-level petrified tree canopy and Ward cathedral ruins; watch for Gang War meta." ;
+    priory:startingWaypoint "Mori Village Waypoint [&BMcMAAA=]" .
+
+zone:Gen3RegionDragonsEnd a priory:ExplorationRegion, owl:NamedIndividual ;
+    rdfs:label "Dragon's End (Jade Quarry & Battle for the Jade Sea)" ;
+    priory:forGeneration "GEN3" ;
+    priory:regionOrder 4 ;
+    priory:zoneCount 1 ;
+    priory:baseExplorationHours 1.5 ;
+    priory:explorationDifficulty "Moderate" ;
+    priory:primaryMountRecommendation "skyscale" ;
+    priory:fallbackMountRecommendation "skimmer" ;
+    priory:strategyNotes "Fastest map completion for Lantern lighting (repeatable for additional Gifts of the Dragon Empire)." ;
+    priory:startingWaypoint "Jade Quarry Waypoint [&BKIMAAA=]" .
+

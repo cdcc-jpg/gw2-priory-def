@@ -9,7 +9,8 @@ and acquisition pathways are dynamically queried from RDF semantic artifacts.
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, Optional, Set
+import re
+from typing import Any, Dict, List, Optional, Set, Tuple
 from pydantic import BaseModel, Field
 from rdflib import Literal, URIRef
 from engine.graph_store import PrioryGraphStore
@@ -75,22 +76,40 @@ class ExplorationPlan(BaseModel):
     starting_waypoint: Optional[str] = None
 
 
-TWILIGHT_ITEM_ID = 30704
 PlaySessionStep = JourneyAction
+
+_DEFAULT_STORE_FALLBACK: Optional[PrioryGraphStore] = None
+
+
+def _get_or_init_default_store() -> PrioryGraphStore:
+    """Returns the shared default PrioryGraphStore instance, loading ontology triples if needed."""
+    global _DEFAULT_STORE_FALLBACK
+    try:
+        from engine import graph_store as _gs_mod
+        if hasattr(_gs_mod, "get_default_graph_store"):
+            return _gs_mod.get_default_graph_store()
+    except Exception:
+        pass
+    if _DEFAULT_STORE_FALLBACK is None:
+        _DEFAULT_STORE_FALLBACK = PrioryGraphStore()
+        _DEFAULT_STORE_FALLBACK.load_all()
+    elif len(_DEFAULT_STORE_FALLBACK.graph) == 0:
+        _DEFAULT_STORE_FALLBACK.load_all()
+    return _DEFAULT_STORE_FALLBACK
 
 
 class TwilightJourneyPlan(BaseModel):
     """Complete multi-dimensional Legendary acquisition plan and master roadmap."""
-    target_item_id: int = TWILIGHT_ITEM_ID
+    target_item_id: int = 0
     target_item_name: str = "Twilight"
     generation: str = "GEN1"
-    precursor_id: Optional[int] = 29185
+    precursor_id: Optional[int] = None
     precursor_name: str = "Dusk"
-    tribute_gift_id: Optional[int] = 19626
+    tribute_gift_id: Optional[int] = None
     tribute_gift_name: str = "Gift of Fortune"
-    mastery_gift_id: Optional[int] = 19674
+    mastery_gift_id: Optional[int] = None
     mastery_gift_name: str = "Gift of Mastery"
-    specific_gift_id: Optional[int] = 19648
+    specific_gift_id: Optional[int] = None
     specific_gift_name: str = "Gift of Twilight"
     required_clovers: int = 77
     required_t6_per_type: int = 250
@@ -117,65 +136,227 @@ LegendaryJourneyPlan = TwilightJourneyPlan
 class TwilightJourneySolver:
     """Multi-criteria ontology-driven graph solver for Legendary Weapon acquisition (Gen 1, Gen 2, Gen 3)."""
 
-    TWILIGHT_ID = 30704
-    DUSK_ID = 29185
-    GIFT_OF_MASTERY_ID = 19674
-    GIFT_OF_FORTUNE_ID = 19626
-    GIFT_OF_TWILIGHT_ID = 19635
-    GIFT_OF_EXPLORATION_ID = 19677
-    GIFT_OF_BATTLE_ID = 19678
-    OBSIDIAN_SHARD_ID = 19925
-    BLOODSTONE_SHARD_ID = 20797
-    MYSTIC_CLOVER_ID = 19675
-    GLOB_OF_ECTOPLASM_ID = 19721
-    ICY_RUNESTONE_ID = 19676
-    ONYX_LODESTONE_ID = 24310
-    ONYX_CORE_ID = 24309
-    SUPERIOR_SIGIL_OF_STRENGTH_ID = 24562
-    SUPERIOR_SIGIL_OF_FORCE_ID = 24562
-    PHILOSOPHERS_STONE_ID = 20796
-    CURED_HARDENED_LEATHER_SQUARE_ID = 19737
-
-    GIFT_OF_ASCALON_ID = 19664
-    GIFT_OF_METAL_ID = 19622
-    GIFT_OF_DARKNESS_ID = 19630
-
-    T6_MATERIAL_IDS = [
-        24295,  # Vial of Powerful Blood
-        24283,  # Powerful Venom Sac
-        24300,  # Elaborate Totem
-        24277,  # Pile of Crystalline Dust
-        24351,  # Vicious Claw
-        24289,  # Armored Scale
-        24358,  # Ancient Bone
-        24357   # Vicious Fang
-    ]
-
-    LEGACY_T6_MATERIAL_IDS = [
-        19748,  # Powerful Blood (legacy)
-        19745,  # Potent Venom Sac (legacy)
-        19746,  # Elaborate Totem (legacy)
-        19732,  # Crystalline Dust (legacy)
-        19725,  # Vicious Claw (legacy)
-        19734,  # Armored Scale (legacy)
-        19723,  # Ancient Bone (legacy)
-        19728   # Vicious Fang (legacy)
-    ]
-
     def __init__(
         self,
-        graph_store: PrioryGraphStore,
+        graph_store: Optional[PrioryGraphStore] = None,
         diff_engine: Optional[Any] = None,
         path_solver: Optional[Any] = None
     ):
-        self.store = graph_store
+        if graph_store is None:
+            self.store = _get_or_init_default_store()
+        else:
+            self.store = graph_store
+            if not getattr(self.store, "_loaded", False) and len(self.store.graph) == 0:
+                self.store.load_all()
         if diff_engine is not None:
             self.diff_engine = diff_engine
         else:
             from engine.account_diff import AccountDiffEngine
-            self.diff_engine = AccountDiffEngine(graph_store) if graph_store else None
+            self.diff_engine = AccountDiffEngine(self.store) if self.store else None
         self.path_solver = path_solver
         self._booster_catalog_cache: Optional[Dict[int, Dict[str, Any]]] = None
+        self._ontology_entities_cache: Optional[Dict[str, Any]] = None
+        self._ontology_characters_cache: Optional[List[str]] = None
+
+    def _resolve_ontology_entities(self) -> Dict[str, Any]:
+        """Dynamically resolves core item IDs, T6 material IDs, and pillar gifts from the RDF graph."""
+        if self._ontology_entities_cache is not None:
+            return self._ontology_entities_cache
+        if self.store is not None and getattr(self.store, "_solver_ontology_entities_cache", None) is not None:
+            self._ontology_entities_cache = getattr(self.store, "_solver_ontology_entities_cache")
+            return self._ontology_entities_cache
+
+        store = self.store or _get_or_init_default_store()
+        label_to_id: Dict[str, int] = {}
+        label_rank: Dict[str, Tuple[bool, bool]] = {}
+        label_to_ids: Dict[str, List[int]] = {}
+        t6_ids: Set[int] = set()
+        dungeon_gift_ids: Set[int] = set()
+        starter_kit_ids: Set[int] = set()
+
+        q_items = """
+        SELECT ?id ?label ?cat ?hasPrimary ?isSingleLabel ?isDungeonGift ?isStarterKit WHERE {
+            ?item priory:gw2Id ?id .
+            OPTIONAL { ?item rdfs:label ?label }
+            OPTIONAL { ?item priory:trophyCategory ?cat }
+            BIND(EXISTS { { ?item priory:producedBy ?r } UNION { ?item priory:acquiredVia ?p } } AS ?hasPrimary)
+            BIND(NOT EXISTS { ?item rdfs:label ?otherLabel . FILTER(STR(?otherLabel) != STR(?label)) } AS ?isSingleLabel)
+            BIND(EXISTS {
+                ?item priory:acquiredVia ?dgPath .
+                ?dgPath priory:requiresCurrency ?dgCurr .
+                FILTER(CONTAINS(STR(?dgCurr), "69") || CONTAINS(STR(?dgCurr), "TalesOfDungeonDelving"))
+            } AS ?isDungeonGift)
+            BIND(EXISTS { ?item a priory:LegendaryStarterKit } AS ?isStarterKit)
+        }
+        """
+        for r in store.query(q_items):
+            if r.get("id") is None:
+                continue
+            iid = int(r["id"])
+            if r.get("cat"):
+                t6_ids.add(iid)
+            if r.get("isDungeonGift"):
+                dungeon_gift_ids.add(iid)
+            if r.get("isStarterKit"):
+                starter_kit_ids.add(iid)
+            lbl = str(r["label"]).strip() if r.get("label") else ""
+            if not lbl:
+                continue
+            rank = (bool(r.get("hasPrimary")), bool(r.get("isSingleLabel")))
+            ids_for_lbl = label_to_ids.setdefault(lbl, [])
+            if iid not in ids_for_lbl:
+                ids_for_lbl.append(iid)
+            if lbl not in label_to_id or rank > label_rank.get(lbl, (False, False)):
+                label_to_id[lbl] = iid
+                label_rank[lbl] = rank
+
+        if not t6_ids and hasattr(store, "get_t6_material_promotions"):
+            try:
+                t6_ids.update(int(k) for k in store.get_t6_material_promotions().keys())
+            except Exception:
+                pass
+
+        result = {
+            "label_to_id": label_to_id,
+            "label_to_ids": label_to_ids,
+            "t6_material_ids": sorted(t6_ids),
+            "legacy_t6_material_ids": sorted(t6_ids),
+            "dungeon_gift_ids": sorted(dungeon_gift_ids),
+            "starter_kit_ids": sorted(starter_kit_ids),
+        }
+        self._ontology_entities_cache = result
+        if self.store is not None:
+            setattr(self.store, "_solver_ontology_entities_cache", result)
+        return result
+
+    def _resolve_item_id(self, label: str, fallback: int = 0) -> int:
+        """Resolves a canonical GW2 item ID by its rdfs:label from the ontology."""
+        entities = self._resolve_ontology_entities()
+        return entities["label_to_id"].get(label, fallback)
+
+    def _resolve_item_ids(self, label: str) -> List[int]:
+        """Returns all GW2 item IDs matching the given rdfs:label in the ontology."""
+        entities = self._resolve_ontology_entities()
+        return list(entities["label_to_ids"].get(label, []))
+
+    def _get_ontology_characters(self) -> List[str]:
+        """Queries default character roster / hydrated priory:Character entities from the ontology."""
+        if self._ontology_characters_cache is not None:
+            return self._ontology_characters_cache
+        store = self.store or _get_or_init_default_store()
+        q_chars = """
+        SELECT DISTINCT ?name ?order WHERE {
+            { ?char a priory:DefaultRosterMember }
+            UNION
+            { ?char a priory:Character }
+            ?char priory:characterName ?name .
+            OPTIONAL { ?char priory:rosterOrder ?order }
+        }
+        """
+        rows = store.query(q_chars)
+        sorted_rows = sorted(
+            rows,
+            key=lambda r: (int(r["order"]) if r.get("order") is not None else 999, str(r.get("name", ""))),
+        )
+        names: List[str] = []
+        for r in sorted_rows:
+            nm = str(r.get("name", "")).strip()
+            if nm and nm not in names:
+                names.append(nm)
+        self._ontology_characters_cache = names
+        return names
+
+    @property
+    def TWILIGHT_ID(self) -> int:
+        return self._resolve_item_id("Twilight")
+
+    @property
+    def DUSK_ID(self) -> int:
+        return self._resolve_item_id("Dusk")
+
+    @property
+    def GIFT_OF_MASTERY_ID(self) -> int:
+        return self._resolve_item_id("Gift of Mastery")
+
+    @property
+    def GIFT_OF_FORTUNE_ID(self) -> int:
+        return self._resolve_item_id("Gift of Fortune")
+
+    @property
+    def GIFT_OF_TWILIGHT_ID(self) -> int:
+        return self._resolve_item_id("Gift of Twilight")
+
+    @property
+    def GIFT_OF_EXPLORATION_ID(self) -> int:
+        return self._resolve_item_id("Gift of Exploration")
+
+    @property
+    def GIFT_OF_BATTLE_ID(self) -> int:
+        return self._resolve_item_id("Gift of Battle")
+
+    @property
+    def OBSIDIAN_SHARD_ID(self) -> int:
+        return self._resolve_item_id("Obsidian Shard")
+
+    @property
+    def BLOODSTONE_SHARD_ID(self) -> int:
+        return self._resolve_item_id("Bloodstone Shard")
+
+    @property
+    def MYSTIC_CLOVER_ID(self) -> int:
+        return self._resolve_item_id("Mystic Clover")
+
+    @property
+    def GLOB_OF_ECTOPLASM_ID(self) -> int:
+        return self._resolve_item_id("Glob of Ectoplasm")
+
+    @property
+    def ICY_RUNESTONE_ID(self) -> int:
+        return self._resolve_item_id("Icy Runestone")
+
+    @property
+    def ONYX_LODESTONE_ID(self) -> int:
+        return self._resolve_item_id("Onyx Lodestone")
+
+    @property
+    def ONYX_CORE_ID(self) -> int:
+        return self._resolve_item_id("Onyx Core")
+
+    @property
+    def SUPERIOR_SIGIL_OF_STRENGTH_ID(self) -> int:
+        return self._resolve_item_id("Superior Sigil of Strength")
+
+    @property
+    def SUPERIOR_SIGIL_OF_FORCE_ID(self) -> int:
+        return self._resolve_item_id("Superior Sigil of Force") or self._resolve_item_id("Superior Sigil of Strength")
+
+    @property
+    def PHILOSOPHERS_STONE_ID(self) -> int:
+        return self._resolve_item_id("Philosopher's Stone")
+
+    @property
+    def CURED_HARDENED_LEATHER_SQUARE_ID(self) -> int:
+        return self._resolve_item_id("Cured Hardened Leather Square")
+
+    @property
+    def GIFT_OF_ASCALON_ID(self) -> int:
+        return self._resolve_item_id("Gift of Ascalon")
+
+    @property
+    def GIFT_OF_METAL_ID(self) -> int:
+        return self._resolve_item_id("Gift of Metal")
+
+    @property
+    def GIFT_OF_DARKNESS_ID(self) -> int:
+        return self._resolve_item_id("Gift of Darkness")
+
+    @property
+    def T6_MATERIAL_IDS(self) -> List[int]:
+        return list(self._resolve_ontology_entities()["t6_material_ids"])
+
+    @property
+    def LEGACY_T6_MATERIAL_IDS(self) -> List[int]:
+        return list(self._resolve_ontology_entities()["legacy_t6_material_ids"])
 
     def _get_booster_catalog(self) -> Dict[int, Dict[str, Any]]:
         """Dynamically resolves booster, gobbler, and tome metadata from the RDF ontology."""
@@ -468,7 +649,11 @@ class TwilightJourneySolver:
                     tribute_name = meta["label"]
                     break
         if tribute_id is None:
-            tribute_id = self.GIFT_OF_FORTUNE_ID if generation == "GEN1" else (71820 if generation == "GEN2" else 96137)
+            tribute_id = (
+                self.GIFT_OF_FORTUNE_ID
+                if generation == "GEN1"
+                else (self._resolve_item_id("Mystic Tribute") if generation == "GEN2" else self._resolve_item_id("Draconic Tribute"))
+            )
             tribute_name = "Gift of Fortune" if generation == "GEN1" else ("Mystic Tribute" if generation == "GEN2" else "Draconic Tribute")
 
         # C. Identify Mastery Gift via `priory:MasteryPillarGift` first, then dependency/label fallback
@@ -483,6 +668,11 @@ class TwilightJourneySolver:
                 mastery_name = meta["label"]
                 break
         if mastery_id is None:
+            exp_dep_ids = {
+                self.GIFT_OF_EXPLORATION_ID,
+                self._resolve_item_id("Gift of Insights"),
+                self._resolve_item_id("Gift of Cantha"),
+            } - {0}
             for iid, meta in ing_meta.items():
                 if iid in (precursor_id, tribute_id):
                     continue
@@ -491,13 +681,17 @@ class TwilightJourneySolver:
                     "mastery" in lbl_low
                     or "cantha" in lbl_low
                     or "exploration" in lbl_low
-                    or (19677 in meta["depends_on"] or 75919 in meta["depends_on"] or 97096 in meta["depends_on"])
+                    or bool(exp_dep_ids & meta["depends_on"])
                 ):
                     mastery_id = iid
                     mastery_name = meta["label"]
                     break
         if mastery_id is None:
-            mastery_id = self.GIFT_OF_MASTERY_ID if generation == "GEN1" else (75498 if generation == "GEN2" else 96033)
+            mastery_id = (
+                self.GIFT_OF_MASTERY_ID
+                if generation == "GEN1"
+                else (self._resolve_item_id("Gift of Maguuma Mastery") if generation == "GEN2" else self._resolve_item_id("Gift of Jade Mastery"))
+            )
             mastery_name = "Gift of Mastery" if generation == "GEN1" else ("Gift of Maguuma Mastery" if generation == "GEN2" else "Gift of Jade Mastery")
 
         # D. Identify Weapon-Specific Gift via `priory:WeaponSpecificPillarGift` first, then remaining top-level ingredient
@@ -518,7 +712,7 @@ class TwilightJourneySolver:
                     specific_name = meta["label"]
                     break
         if specific_id is None:
-            specific_id = 19648 if target_item_id == self.TWILIGHT_ID else 19648
+            specific_id = self.GIFT_OF_TWILIGHT_ID
             specific_name = f"Gift of {target_name}"
 
         # 3. Compute exact Mystic Clover and T6 Fine Material counts from the weapon's BOM
@@ -549,15 +743,43 @@ class TwilightJourneySolver:
         spec_node = sub_nodes_by_id.get(specific_id) if specific_id else None
         spec_sub_ids = _subtree_ids(spec_node) if spec_node else (ing_meta.get(specific_id, {}).get("depends_on", set()) if specific_id else set())
 
-        # Dungeon gift detection from ontology (19664..19671)
+        sub_gifts: List[Tuple[int, str]] = []
+        if self.store and specific_id:
+            for s_ing in self.store.get_direct_recipe_ingredients(specific_id):
+                sg_id = int(s_ing["ingredientId"])
+                sg_label = str(s_ing["ingredientLabel"])
+                if sg_label.lower().startswith("gift of "):
+                    sub_gifts.append((sg_id, sg_label))
+        if not sub_gifts and spec_node:
+            for child in getattr(spec_node, "sub_requirements", []):
+                c_lbl = child.label.split(" (Unpackable")[0].strip()
+                if c_lbl.lower().startswith("gift of "):
+                    sub_gifts.append((child.item_id, c_lbl))
+        if not sub_gifts and specific_id == self.GIFT_OF_TWILIGHT_ID:
+            sub_gifts = [
+                (self.GIFT_OF_METAL_ID, "Gift of Metal"),
+                (self.GIFT_OF_DARKNESS_ID, "Gift of Darkness"),
+            ]
+
+        # Dungeon gift detection from ontology
         dungeon_gift_id: Optional[int] = None
         dungeon_gift_name: Optional[str] = None
         dungeon_zone_name: Optional[str] = None
         dungeon_waypoint: Optional[str] = None
-        for did in range(19664, 19672):
-            if did in spec_sub_ids:
+        ontology_dungeon_ids = self._resolve_ontology_entities().get("dungeon_gift_ids", [])
+        for did in ontology_dungeon_ids:
+            if did in spec_sub_ids or any(sg_id == did for sg_id, _ in sub_gifts):
                 dungeon_gift_id = did
                 break
+        if dungeon_gift_id is None and self.store and sub_gifts:
+            for sg_id, _ in sub_gifts:
+                for sub_ing in self.store.get_direct_recipe_ingredients(sg_id):
+                    cand_id = int(sub_ing["ingredientId"])
+                    if cand_id in ontology_dungeon_ids:
+                        dungeon_gift_id = cand_id
+                        break
+                if dungeon_gift_id is not None:
+                    break
         if dungeon_gift_id is None and generation == "GEN1":
             dungeon_gift_id = self.GIFT_OF_ASCALON_ID
             dungeon_gift_name = "Gift of Ascalon"
@@ -675,12 +897,14 @@ class TwilightJourneySolver:
             seen_syn_targets: Set[str] = set()
             for r in self.store.query(q_syn, init_bindings={"id": Literal(target_item_id)}):
                 syn_label = str(r["synLabel"]) if r.get("synLabel") else "Eternity"
-                syn_id = int(r["synId"]) if r.get("synId") is not None else 30689
+                syn_id = int(r["synId"]) if r.get("synId") is not None else self._resolve_item_id("Eternity")
                 if syn_label in seen_syn_targets:
                     continue
                 seen_syn_targets.add(syn_label)
-                partner_label = str(r["partnerLabel"]) if r.get("partnerLabel") else ("Sunrise" if target_item_id == 30704 else "Twilight")
-                partner_id = int(r["partnerId"]) if r.get("partnerId") is not None else (30703 if target_item_id == 30704 else 30704)
+                partner_label = str(r["partnerLabel"]) if r.get("partnerLabel") else ("Sunrise" if target_item_id == self.TWILIGHT_ID else "Twilight")
+                partner_id = int(r["partnerId"]) if r.get("partnerId") is not None else (
+                    self._resolve_item_id("Sunrise") if target_item_id == self.TWILIGHT_ID else self.TWILIGHT_ID
+                )
                 cross_weapon_synergies.append(
                     f"Dual-Legendary Synthesis: {target_name} ({target_item_id}) combines with partner legendary "
                     f"{partner_label} ({partner_id}) in the Mystic Forge to synthesize {syn_label} ({syn_id})."
@@ -724,6 +948,7 @@ class TwilightJourneySolver:
             "required_clovers": required_clovers,
             "required_t6_per_type": required_t6_per_type,
             "required_t6_total": required_t6_total,
+            "sub_gifts": sub_gifts,
             "dungeon_gift_id": dungeon_gift_id,
             "dungeon_gift_name": dungeon_gift_name,
             "dungeon_zone_name": dungeon_zone_name,
@@ -935,30 +1160,12 @@ class TwilightJourneySolver:
         )
 
     def _default_bom(self, account: AccountState, diff_report: Optional[AccountDiffReport] = None) -> Dict[str, Any]:
-        if diff_report is not None or self.store is not None:
-            return self._introspect_weapon_bom(self.TWILIGHT_ID, diff_report, account)
-        return {
-            "target_item_id": self.TWILIGHT_ID,
-            "target_item_name": "Twilight",
-            "generation": "GEN1",
-            "precursor_id": self.DUSK_ID,
-            "precursor_name": "Dusk",
-            "precursor_type": "PrecursorWeapon",
-            "tribute_gift_id": 19626,
-            "tribute_gift_name": "Gift of Fortune",
-            "mastery_gift_id": 19674,
-            "mastery_gift_name": "Gift of Mastery",
-            "specific_gift_id": 19648,
-            "specific_gift_name": "Gift of Twilight",
-            "required_clovers": 77,
-            "required_t6_per_type": 250,
-            "required_t6_total": 2000,
-            "sub_gifts": [(19623, "Gift of Metal"), (19647, "Gift of Darkness")],
-            "dungeon_gift_id": 19667,
-            "dungeon_gift_name": "Gift of Ascalon",
-            "time_gates": ["Daily Fractal Mystic Clovers (BUY-2046: 2/day)"],
-            "cross_weapon_synergies": [],
-        }
+        target_id = (
+            int(diff_report.goal_item_id)
+            if (diff_report is not None and getattr(diff_report, "goal_item_id", None))
+            else self._resolve_item_id("Twilight")
+        )
+        return self._introspect_weapon_bom(target_id, diff_report, account)
 
     def _evaluate_precursor_pillar(
         self,
@@ -1098,7 +1305,8 @@ class TwilightJourneySolver:
         mastery_name = bom["mastery_gift_name"]
 
         if gen == "GEN2":
-            has_maguuma_gift = account.total_item_count(71333) > 0 or account.total_item_count(bom["mastery_gift_id"]) > 0
+            maguuma_gift_id = self._resolve_item_id("Gift of Maguuma")
+            has_maguuma_gift = (maguuma_gift_id > 0 and account.total_item_count(maguuma_gift_id) > 0) or account.total_item_count(bom["mastery_gift_id"]) > 0
             has_battle = account.has_gift_of_battle()
             obsidian_count = account.total_item_count(self.OBSIDIAN_SHARD_ID)
             bloodstone_count = 1 if account.has_bloodstone_shard() else 0
@@ -1163,7 +1371,8 @@ class TwilightJourneySolver:
             )
 
         if gen == "GEN3":
-            has_cantha_gift = account.total_item_count(97096) > 0 or account.total_item_count(bom["mastery_gift_id"]) > 0
+            cantha_gift_id = self._resolve_item_id("Gift of Cantha")
+            has_cantha_gift = (cantha_gift_id > 0 and account.total_item_count(cantha_gift_id) > 0) or account.total_item_count(bom["mastery_gift_id"]) > 0
             spirit_shards = account.spirit_shards_count()
             imperial_favor = account.wallet.get(68, 0)
             exp_pct = 100.0 if has_cantha_gift else 0.0
@@ -1403,7 +1612,8 @@ class TwilightJourneySolver:
                 ))
 
         if bom["generation"] == "GEN3":
-            ass_count = account.total_item_count(96978)
+            ass_id = self._resolve_item_id("Antique Summoning Stone")
+            ass_count = account.total_item_count(ass_id) if ass_id > 0 else 0
             if ass_count < 100:
                 needed_ass = 100 - ass_count
                 blockers.append(f"Need {needed_ass} more Antique Summoning Stones (weekly vendor cap from Leivas in Arborstone).")
@@ -1615,8 +1825,10 @@ class TwilightJourneySolver:
                     game_mode="OpenWorld"
                 ))
         elif gen == "GEN3":
-            jade_runestones = account.total_item_count(96722)
-            ambergris = account.total_item_count(96347)
+            jade_runestone_id = self._resolve_item_id("Jade Runestone")
+            ambergris_id = self._resolve_item_id("Chunk of Ancient Ambergris")
+            jade_runestones = account.total_item_count(jade_runestone_id) if jade_runestone_id > 0 else 0
+            ambergris = account.total_item_count(ambergris_id) if ambergris_id > 0 else 0
             jr_pct = min(100.0, (jade_runestones / 100.0) * 100.0)
             amb_pct = min(100.0, (ambergris / 100.0) * 100.0)
             sub_components["100x Jade Runestones"] = jr_pct
@@ -1695,7 +1907,7 @@ class TwilightJourneySolver:
         account: AccountState,
         bom: Optional[Dict[str, Any]] = None,
     ) -> List[ExplorationPlan]:
-        """Builds mount-aware regional map completion strategy based on weapon generation."""
+        """Builds mount-aware regional map completion strategy dynamically from priory:ExplorationRegion triples."""
         if bom is None:
             bom = self._default_bom(account)
 
@@ -1711,132 +1923,104 @@ class TwilightJourneySolver:
             speed_factor = 1.0
 
         gen = bom["generation"]
-        if gen == "GEN2":
-            return [
-                ExplorationPlan(
-                    region_name="Verdant Brink",
-                    zone_count=1,
-                    estimated_hours=round(1.5 * speed_factor, 1),
-                    difficulty="Moderate",
-                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
-                    strategy_notes="Canopy and floor tiers. Use Skyscale/Updrafts for canopy Hero Points and vistas.",
-                    starting_waypoint="[&BAgIAAA=]",
-                ),
-                ExplorationPlan(
-                    region_name="Auric Basin",
-                    zone_count=1,
-                    estimated_hours=round(1.5 * speed_factor, 1),
-                    difficulty="Easy",
-                    recommended_mount="Raptor" if has_raptor else None,
-                    strategy_notes="Complete Tarir Octovine meta to unlock inner chambers and Exalted chests.",
-                    starting_waypoint="[&BGwIAAA=]",
-                ),
-                ExplorationPlan(
-                    region_name="Tangled Depths",
-                    zone_count=1,
-                    estimated_hours=round(2.5 * speed_factor, 1),
-                    difficulty="Hard",
-                    recommended_mount="Skyscale" if has_skyscale else None,
-                    strategy_notes="Multi-layer subterranean tunnels (Ogre, Nuhoch, Rata Novus, SCAR lanes).",
-                    starting_waypoint="[&BPUHAAA=]",
-                ),
-                ExplorationPlan(
-                    region_name="Dragon's Stand",
-                    zone_count=1,
-                    estimated_hours=round(2.0 * speed_factor, 1),
-                    difficulty="Moderate",
-                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
-                    strategy_notes="Requires active Mouth of Mordremoth meta completion to access final POIs and farm 250x Crystalline Ore.",
-                    starting_waypoint="[&BBAIAAA=]",
-                ),
-            ]
-        elif gen == "GEN3":
-            return [
-                ExplorationPlan(
-                    region_name="Seitung Province",
-                    zone_count=1,
-                    estimated_hours=round(1.2 * speed_factor, 1),
-                    difficulty="Easy",
-                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
-                    strategy_notes="Coastal Canthan island. Complete map or light Imperial Lanterns for Gift of Seitung Province.",
-                    starting_waypoint="[&BGUNAAA=]",
-                ),
-                ExplorationPlan(
-                    region_name="New Kaineng City",
-                    zone_count=1,
-                    estimated_hours=round(1.5 * speed_factor, 1),
-                    difficulty="Moderate",
-                    recommended_mount="Skyscale" if has_skyscale else ("Springer" if has_springer else None),
-                    strategy_notes="High verticality Jade-tech metropolis. Use Skyscale and Jade Bot Zip Lines.",
-                    starting_waypoint="[&BGUNAAA=]",
-                ),
-                ExplorationPlan(
-                    region_name="The Echovald Wilds",
-                    zone_count=1,
-                    estimated_hours=round(1.5 * speed_factor, 1),
-                    difficulty="Moderate",
-                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
-                    strategy_notes="Petrified forest cathedral canopy. Combine with Gang War meta for Imperial Favor.",
-                    starting_waypoint="[&BGUNAAA=]",
-                ),
-                ExplorationPlan(
-                    region_name="Dragon's End",
-                    zone_count=1,
-                    estimated_hours=round(1.5 * speed_factor, 1),
-                    difficulty="Moderate",
-                    recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
-                    strategy_notes="Jade Sea quarry map. Complete exploration or lantern lighting for Gift of Dragon's End.",
-                    starting_waypoint="[&BGUNAAA=]",
-                ),
-            ]
+        store = self.store or _get_or_init_default_store()
 
-        return [
-            ExplorationPlan(
-                region_name="Kryta",
-                zone_count=6,
-                estimated_hours=round(3.5 * speed_factor, 1),
-                difficulty="Easy",
-                recommended_mount="Raptor" if has_raptor else None,
-                strategy_notes="Mostly flat terrain. Queensdale, Kessex Hills, Gendarran Fields, Harathi Hinterlands, Bloodtide Coast.",
-                starting_waypoint="[&BO8AAAA=]"
-            ),
-            ExplorationPlan(
-                region_name="Ascalon",
-                zone_count=6,
-                estimated_hours=round(3.5 * speed_factor, 1),
-                difficulty="Moderate",
-                recommended_mount="Raptor" if has_raptor else None,
-                strategy_notes="Rolling terrain with chasms. Plains of Ashford, Diessa Plateau, Fields of Ruin, Iron Marches, Blazeridge Steppes, Fireheart Rise + Black Citadel.",
-                starting_waypoint="[&BIABAAA=]"
-            ),
-            ExplorationPlan(
-                region_name="Shiverpeak Mountains",
-                zone_count=6,
-                estimated_hours=round(4.5 * speed_factor, 1),
-                difficulty="Hard",
-                recommended_mount="Skyscale" if has_skyscale else ("Springer" if has_springer else None),
-                strategy_notes="High verticality and cliffs. Wayfarer Foothills, Snowden Drifts, Lornar's Pass, Dredgehaunt Cliffs, Timberline Falls, Frostgorge Sound + Hoelbrak.",
-                starting_waypoint="[&BUMBAAA=]"
-            ),
-            ExplorationPlan(
-                region_name="Maguuma Jungle",
-                zone_count=4,
-                estimated_hours=round(3.5 * speed_factor, 1),
-                difficulty="Moderate",
-                recommended_mount="Skyscale" if has_skyscale else ("Raptor" if has_raptor else None),
-                strategy_notes="Dense multi-tier canopy. Caledon Forest, Metrica Province, Brisban Wildlands, Mount Maelstrom + The Grove, Rata Sum.",
-                starting_waypoint="[&BLsAAAA=]"
-            ),
-            ExplorationPlan(
-                region_name="Ruins of Orr",
-                zone_count=3,
-                estimated_hours=round(3.5 * speed_factor, 1),
-                difficulty="Hard",
-                recommended_mount="Skyscale" if has_skyscale else None,
-                strategy_notes="Hostile density and contested temples. Straits of Devastation, Malchor's Leap, Cursed Shore. Tip: Sync with Temple of Balthazar meta event.",
-                starting_waypoint="[&BBcDAAA=]"
+        # Resolve canonical region prefLabels from priory:RegionScheme (e.g. Shiverpeaks -> Shiverpeak Mountains)
+        canonical_region_labels: List[str] = []
+        q_scheme = """
+        SELECT ?pref WHERE {
+            ?concept skos:inScheme priory:RegionScheme ;
+                     skos:prefLabel ?pref .
+        }
+        """
+        for r in store.query(q_scheme):
+            if r.get("pref"):
+                lbl = str(r["pref"]).strip()
+                if "/" not in lbl and lbl not in canonical_region_labels:
+                    canonical_region_labels.append(lbl)
+
+        def _canonicalize_region_name(raw_label: str) -> str:
+            base = raw_label.split(" (")[0].strip()
+            stem = base[:-1].lower() if base.lower().endswith("s") else base.lower()
+            for pref in canonical_region_labels:
+                if pref.lower() == base.lower():
+                    return pref
+            for pref in canonical_region_labels:
+                if pref.lower().startswith(stem):
+                    return pref
+            return base
+
+        raw_regions: List[Dict[str, Any]] = []
+        if hasattr(store, "get_exploration_regions"):
+            try:
+                raw_regions = list(store.get_exploration_regions(gen) or [])
+            except Exception:
+                raw_regions = []
+
+        if not raw_regions:
+            q_exp = """
+            SELECT ?region ?label ?gen ?order ?zones ?hours ?diff ?recMount ?fbMount ?notes ?wp WHERE {
+                ?region a priory:ExplorationRegion ;
+                        rdfs:label ?label ;
+                        priory:regionOrder ?order ;
+                        priory:zoneCount ?zones ;
+                        priory:baseExplorationHours ?hours ;
+                        priory:explorationDifficulty ?diff ;
+                        priory:recommendedMount ?recMount ;
+                        priory:strategyNotes ?notes ;
+                        priory:startingWaypoint ?wp .
+                OPTIONAL { ?region priory:appliesToGeneration ?gen }
+                OPTIONAL { ?region priory:fallbackMount ?fbMount }
+            } ORDER BY ASC(?order)
+            """
+            for r in store.query(q_exp):
+                r_gen = str(r.get("gen") or "GEN1").upper()
+                if r_gen != gen.upper():
+                    continue
+                raw_regions.append({
+                    "region_name": str(r.get("label", "")),
+                    "zone_count": int(r["zones"]) if r.get("zones") is not None else 1,
+                    "base_hours": float(r["hours"]) if r.get("hours") is not None else 1.5,
+                    "difficulty": str(r.get("diff", "Moderate")),
+                    "recommended_mount": str(r["recMount"]) if r.get("recMount") else None,
+                    "fallback_mount": str(r["fbMount"]) if r.get("fbMount") else None,
+                    "strategy_notes": str(r.get("notes", "")),
+                    "starting_waypoint": str(r.get("wp", "")),
+                })
+
+        plans: List[ExplorationPlan] = []
+        for reg in raw_regions:
+            raw_name = str(reg.get("region_name") or reg.get("label") or "")
+            region_name = _canonicalize_region_name(raw_name)
+            zone_count = int(reg.get("zone_count") or reg.get("zones") or 1)
+            base_hours = float(reg.get("base_hours") if reg.get("base_hours") is not None else reg.get("estimated_hours", 1.5))
+            difficulty = str(reg.get("difficulty") or "Moderate")
+            rec_m = str(reg.get("recommended_mount") or "").strip()
+            fb_m = str(reg.get("fallback_mount") or "").strip()
+
+            chosen_mount: Optional[str] = None
+            if rec_m and rec_m.lower() != "walk" and account.has_mount(rec_m.lower()):
+                chosen_mount = rec_m
+            elif fb_m and fb_m.lower() != "walk" and account.has_mount(fb_m.lower()):
+                chosen_mount = fb_m
+
+            wp_raw = str(reg.get("starting_waypoint") or "")
+            wp_match = re.search(r"(\[&[^\]]+\])", wp_raw)
+            starting_wp = wp_match.group(1) if wp_match else wp_raw
+
+            plans.append(
+                ExplorationPlan(
+                    region_name=region_name,
+                    zone_count=zone_count,
+                    estimated_hours=round(base_hours * speed_factor, 1),
+                    difficulty=difficulty,
+                    recommended_mount=chosen_mount,
+                    strategy_notes=str(reg.get("strategy_notes") or ""),
+                    starting_waypoint=starting_wp,
+                )
             )
-        ]
+
+        return plans
 
     def _generate_precursor_strategies(
         self,
@@ -1969,8 +2153,17 @@ class TwilightJourneySolver:
         return strats
 
     def _find_mobility_character_name(self, account: AccountState) -> str:
-        """Finds primary mobility character name from eligible exploration characters (excluding completed characters like Kerling)."""
+        """Finds primary mobility character name from eligible exploration characters."""
         eligible = account.eligible_exploration_characters()
+        if not eligible and account.characters:
+            ontology_chars = self._get_ontology_characters()
+            char_names = [
+                (c.get("name") if isinstance(c, dict) else str(c))
+                for c in account.characters
+                if (isinstance(c, dict) and c.get("name")) or isinstance(c, str)
+            ]
+            if ontology_chars and ontology_chars[0] in char_names:
+                eligible = [c for c in ontology_chars if not account.is_character_map_completed(c)]
         if not eligible:
             if account.characters:
                 first_char = account.characters[0]
@@ -1995,8 +2188,8 @@ class TwilightJourneySolver:
                     if name in eligible:
                         return name
 
-        # 3. Known preferred alts from default roster
-        for pref in ["Skuta Rantakallio", "Sara Loy", "Legacy Of Harathi"]:
+        # 3. Query ontology roster characters in order
+        for pref in self._get_ontology_characters():
             if pref in eligible:
                 return pref
 
@@ -2360,19 +2553,14 @@ class TwilightJourneySolver:
         c2_readiness = 100.0 if has_exploration else 50.0
         c2_actions = []
 
-        DEFAULT_CHARACTERS = [
-            'Kerling', 'Skuta Rantakallio', 'Legacy Of Harathi', 'Styrman',
-            'Ksëne', 'Aubefein', 'Sara Loy', 'Flevkk', 'Like A Plastik Bag',
-            'Jaimelargent', 'Saladomatic'
-        ]
-
         if not has_exploration:
             char_list = [
                 (c.get("name") if isinstance(c, dict) else str(c))
                 for c in account.characters
                 if (isinstance(c, dict) and c.get("name")) or isinstance(c, str)
             ]
-            is_default_roster = "Kerling" in char_list
+            ontology_chars = self._get_ontology_characters()
+            is_default_roster = bool(ontology_chars and ontology_chars[0] in char_list)
 
             # Select primary mobility character from eligible exploration characters
             mobility_char = self._find_mobility_character_name(account)
@@ -2387,10 +2575,21 @@ class TwilightJourneySolver:
             notice_str = ""
             if account.map_completed_characters and (is_default_roster or any(m in char_list for m in account.map_completed_characters)):
                 completed_names = ", ".join(account.map_completed_characters)
-                if is_default_roster:
-                    eligible_examples = "Skuta Rantakallio, Sara Loy, or Legacy Of Harathi"
+                ontology_uncompleted = [c for c in ontology_chars if c not in account.map_completed_characters]
+                account_eligible = account.eligible_exploration_characters()
+                combined_alts: List[str] = []
+                if is_default_roster and ontology_uncompleted:
+                    combined_alts.append(ontology_uncompleted[0])
+                for c in account_eligible + ontology_uncompleted:
+                    if c not in combined_alts:
+                        combined_alts.append(c)
+                top_alts = combined_alts[:3]
+                if len(top_alts) == 3:
+                    eligible_examples = f"{top_alts[0]}, {top_alts[1]}, or {top_alts[2]}"
+                elif top_alts:
+                    eligible_examples = ", ".join(top_alts)
                 else:
-                    eligible_examples = ", ".join(account.eligible_exploration_characters()[:3]) or mobility_char
+                    eligible_examples = mobility_char
                 mount_hint = " with your Skyscale" if account.has_mount("skyscale") else ""
                 notice_str = (
                     f"✅ 100% Map Complete Character: {completed_names} has already completed 100% Core Tyria Map Completion and claimed their Gifts of Exploration. "
@@ -2911,13 +3110,15 @@ class TwilightJourneySolver:
         lounge_name = lounge["name"] if lounge else None
         lounge_link = lounge["chat_link"] if lounge else None
         lounge_zone = lounge.get("zone", lounge_name) if lounge else None
+        if lounge_zone == "VIP Lounge" and lounge_name:
+            lounge_zone = re.sub(r"\s+(Passkey|Pass|Scroll|Invitation|Key)$", "", lounge_name, flags=re.IGNORECASE).strip()
 
         c4_actions = []
         c4_readiness = 0.0
         
-        has_metal = any(account.total_item_count(mid) > 0 for mid in [self.GIFT_OF_METAL_ID, 19623])
-        has_darkness = any(account.total_item_count(did) > 0 for did in [self.GIFT_OF_DARKNESS_ID, 19647])
-        has_gift_twilight = any(account.total_item_count(tid) > 0 for tid in [self.GIFT_OF_TWILIGHT_ID, 19648])
+        has_metal = account.total_item_count(self.GIFT_OF_METAL_ID) > 0
+        has_darkness = account.total_item_count(self.GIFT_OF_DARKNESS_ID) > 0
+        has_gift_twilight = account.total_item_count(self.GIFT_OF_TWILIGHT_ID) > 0
 
         # Build Crafter Summary
         if primary_crafter:
@@ -3524,12 +3725,9 @@ def solve_twilight_journey(
     optimize_for_cost: bool = True,
     excluded_modes: Optional[List[str]] = None,
     preferred_modes: Optional[List[str]] = None,
-    target_item_id: int = TWILIGHT_ITEM_ID,
+    target_item_id: Optional[int] = None,
 ) -> TwilightJourneyPlan:
-    """Module-level helper to solve a legendary weapon journey (defaults to Twilight 30704)."""
-    if store is None:
-        store = PrioryGraphStore()
-        store.load_default_ontology()
+    """Module-level helper to solve a legendary weapon journey (defaults to ontology-resolved Twilight)."""
     solver = TwilightJourneySolver(store)
     return solver.solve_twilight_journey(
         account=account,
@@ -3544,7 +3742,7 @@ def solve_twilight_journey(
 
 
 def solve_legendary_journey(
-    target_item_id: int = TWILIGHT_ITEM_ID,
+    target_item_id: Optional[int] = None,
     account: Optional[AccountState] = None,
     store: Optional[PrioryGraphStore] = None,
     tp_prices: Optional[Dict[int, float]] = None,
@@ -3566,4 +3764,10 @@ def solve_legendary_journey(
         preferred_modes=preferred_modes,
         target_item_id=target_item_id,
     )
+
+
+def __getattr__(name: str) -> Any:
+    if name == "TWILIGHT_ITEM_ID":
+        return TwilightJourneySolver().TWILIGHT_ID
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
 

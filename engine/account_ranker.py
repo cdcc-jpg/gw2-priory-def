@@ -183,21 +183,12 @@ class AccountRanker:
                 if filtered_legs:
                     legendaries = filtered_legs
 
-        # Default baseline price fallbacks for leaf materials (if no live TP feed)
-        prices = tp_prices or {
-            19721: 0.22,  # Ecto
-            19675: 5.50,  # Clover (approx forge value)
-            24277: 0.25,  # Dust
-            24289: 0.40,  # Venom
-            24295: 0.35,  # Blood
-            24358: 0.20,  # Totem
-            24283: 0.30,  # Scale
-            24276: 0.30,  # Bone
-            24288: 0.30,  # Fang
-            24351: 0.30,  # Claw
-            19684: 0.02,  # Mithril
-            19685: 0.35,  # Orichalcum
-        }
+        # Default baseline price fallbacks for leaf materials from ontology (converted from copper to gold)
+        if tp_prices:
+            prices = tp_prices
+        else:
+            raw_bench = self.store.get_benchmark_prices() if hasattr(self.store, "get_benchmark_prices") else {}
+            prices = {iid: float(copper) / 10000.0 for iid, copper in raw_bench.items()}
 
         for leg in legendaries:
             item_id = leg["gw2Id"]

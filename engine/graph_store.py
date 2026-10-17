@@ -8,7 +8,7 @@ from __future__ import annotations
 import os
 import threading
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 import rdflib
 from rdflib import Dataset, Graph, Literal, Namespace, URIRef
 from rdflib.plugins.sparql import prepareQuery
@@ -66,12 +66,30 @@ DEFAULT_NAMESPACES = {
 }
 
 
+_DEFAULT_STORE: Optional[PrioryGraphStore] = None
+_DEFAULT_STORE_LOCK = threading.Lock()
+
+
+def get_default_graph_store() -> PrioryGraphStore:
+    """Returns a cached, fully-loaded PrioryGraphStore singleton instance."""
+    global _DEFAULT_STORE
+    if _DEFAULT_STORE is not None and _DEFAULT_STORE._loaded:
+        return _DEFAULT_STORE
+    with _DEFAULT_STORE_LOCK:
+        if _DEFAULT_STORE is None or not _DEFAULT_STORE._loaded:
+            store = PrioryGraphStore()
+            store.load_all()
+            _DEFAULT_STORE = store
+    return _DEFAULT_STORE
+
+
 class PrioryGraphStore:
     """In-memory RDF Graph Store powered by RDFLib Dataset with SPARQL 1.1 and Named Graph support."""
 
     def __init__(self, ref_repo_path: Optional[Path] = None, def_repo_path: Optional[Path] = None):
         self.dataset = Dataset(default_union=True)
         self.graph = self.dataset.default_graph
+        self._uses_default_paths = ref_repo_path is None and def_repo_path is None
         self.ref_repo_path = ref_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-ref")
         self.def_repo_path = def_repo_path or Path("/Users/clementd/Documents/GitHub/gw2-priory-def")
         self._loaded = False
@@ -83,6 +101,13 @@ class PrioryGraphStore:
         self._starter_kit_precursors_cache: Optional[set[int]] = None
         self._benchmark_prices_cache: Optional[Dict[int, float]] = None
         self._weapon_pillars_cache: Dict[int, Dict[str, Any]] = {}
+        self._exploration_regions_cache: Dict[str, List[Dict[str, Any]]] = {}
+        self._crafting_stations_cache: Optional[Dict[str, Dict[str, Any]]] = None
+        self._stat_prefix_map_cache: Optional[Dict[str, URIRef]] = None
+        self._default_roster_cache: Optional[List[str]] = None
+        self._lounge_passes_cache: Optional[Dict[int, Dict[str, Any]]] = None
+        self._convenience_catalog_cache: Optional[Tuple[List[str], Dict[str, Dict[str, Any]]]] = None
+        self._legendary_precursor_catalog_cache: Optional[Dict[str, Any]] = None
         self._query_lock = threading.Lock()
 
         self._bind_namespaces()
@@ -144,6 +169,9 @@ class PrioryGraphStore:
         self._materialize_owl_entailments()
 
         self._loaded = True
+        global _DEFAULT_STORE
+        if _DEFAULT_STORE is None and getattr(self, "_uses_default_paths", False):
+            _DEFAULT_STORE = self
         return len(self.graph) - total_triples_before
 
     def _materialize_owl_entailments(self) -> None:
@@ -675,3 +703,596 @@ class PrioryGraphStore:
         }
         self._weapon_pillars_cache[target_item_id] = result
         return result
+
+    def get_exploration_regions(self, generation: str = "GEN1") -> List[Dict[str, Any]]:
+        """Queries ontology-grounded priory:ExplorationRegion individuals for GEN1, GEN2, or GEN3."""
+        gen_raw = str(generation or "GEN1").strip().upper()
+        if gen_raw in ("1", "GEN 1", "GENERATION 1"):
+            gen_key = "GEN1"
+        elif gen_raw in ("2", "GEN 2", "GENERATION 2"):
+            gen_key = "GEN2"
+        elif gen_raw in ("3", "GEN 3", "GENERATION 3"):
+            gen_key = "GEN3"
+        else:
+            gen_key = gen_raw
+
+        if gen_key in self._exploration_regions_cache:
+            return [dict(r) for r in self._exploration_regions_cache[gen_key]]
+
+        sparql = """
+        SELECT DISTINCT ?region ?label ?order ?zoneCount ?baseHours ?diff ?primaryMount ?fallbackMount ?notes ?waypoint WHERE {
+            ?region a priory:ExplorationRegion ;
+                    rdfs:label ?label ;
+                    priory:forGeneration ?gen .
+            OPTIONAL { ?region priory:regionOrder ?order }
+            OPTIONAL { ?region priory:zoneCount ?zoneCount }
+            OPTIONAL { ?region priory:baseExplorationHours ?baseHours }
+            OPTIONAL { ?region priory:explorationDifficulty ?diff }
+            OPTIONAL { ?region priory:primaryMountRecommendation ?primaryMount }
+            OPTIONAL { ?region priory:fallbackMountRecommendation ?fallbackMount }
+            OPTIONAL { ?region priory:strategyNotes ?notes }
+            OPTIONAL { ?region priory:startingWaypoint ?waypoint }
+        }
+        """
+        rows = self.query(sparql, init_bindings={"gen": Literal(gen_key)})
+        sorted_rows = sorted(
+            rows,
+            key=lambda r: (
+                int(r["order"]) if r.get("order") is not None else 999,
+                str(r.get("label", "")),
+            ),
+        )
+        regions: List[Dict[str, Any]] = []
+        for r in sorted_rows:
+            regions.append({
+                "region_name": str(r["label"]),
+                "zones_count": int(r["zoneCount"]) if r.get("zoneCount") is not None else 1,
+                "base_hours": float(r["baseHours"]) if r.get("baseHours") is not None else 2.0,
+                "difficulty": str(r.get("diff") or "Moderate"),
+                "recommended_mount": str(r.get("primaryMount") or "skyscale"),
+                "fallback_mount": str(r.get("fallbackMount") or "raptor"),
+                "strategy_notes": str(r.get("notes") or ""),
+                "starting_waypoint": str(r.get("waypoint") or ""),
+            })
+        if regions:
+            self._exploration_regions_cache[gen_key] = regions
+        return [dict(r) for r in regions]
+
+    def get_crafting_stations(self) -> Dict[str, Dict[str, Any]]:
+        """Queries ontology-grounded priory:CraftingStation individuals for all disciplines and Mystic Forge."""
+        if self._crafting_stations_cache is not None:
+            return {k: dict(v) for k, v in self._crafting_stations_cache.items()}
+
+        sparql = """
+        SELECT DISTINCT ?station ?slug ?disc ?label ?npc ?wp ?zone ?altWp WHERE {
+            ?station a priory:CraftingStation ;
+                     rdfs:label ?label .
+            OPTIONAL { ?station priory:disciplineSlug ?slug }
+            OPTIONAL { ?station priory:forDiscipline ?disc }
+            OPTIONAL { ?station priory:vendorNPC ?npc }
+            OPTIONAL { ?station priory:nearestWaypoint ?wp }
+            OPTIONAL { ?station priory:zoneName ?zone }
+            OPTIONAL { ?station priory:alternateWaypoint ?altWp }
+        }
+        """
+        rows = self.query(sparql)
+        stations: Dict[str, Dict[str, Any]] = {}
+        for r in rows:
+            slug = str(r.get("slug") or "").strip().lower()
+            if not slug and r.get("disc"):
+                slug = str(r["disc"]).rstrip("/").split("/")[-1].strip().lower()
+            if not slug:
+                continue
+            stations[slug] = {
+                "station_name": str(r["label"]),
+                "vendor_npc": str(r.get("npc") or f"Master {slug.title()}"),
+                "chat_link": str(r.get("wp") or "[&BBAEAAA=]"),
+                "zone": str(r.get("zone") or "Lion's Arch"),
+                "alternate_waypoint": str(r.get("altWp") or "[&BBAEAAA=]"),
+            }
+        if stations:
+            self._crafting_stations_cache = stations
+        return {k: dict(v) for k, v in stations.items()}
+
+    def get_stat_prefix_map(self) -> Dict[str, URIRef]:
+        """Queries ontology-grounded priory:StatPrefix concepts and maps lowercase stat slugs to URIRef."""
+        if self._stat_prefix_map_cache is not None:
+            return dict(self._stat_prefix_map_cache)
+
+        sparql = """
+        SELECT DISTINCT ?stat ?slug ?label WHERE {
+            { ?stat a priory:StatPrefix }
+            UNION
+            { ?stat skos:inScheme priory:StatCombinationScheme }
+            OPTIONAL { ?stat priory:statSlug ?slug }
+            OPTIONAL { ?stat skos:prefLabel ?label }
+        }
+        """
+        rows = self.query(sparql)
+        stat_map: Dict[str, URIRef] = {}
+        for r in rows:
+            stat_uri = URIRef(str(r["stat"]))
+            if r.get("slug"):
+                stat_map[str(r["slug"]).strip().lower()] = stat_uri
+            else:
+                local_slug = str(r["stat"]).rstrip("/").split("/")[-1].strip().lower()
+                if local_slug:
+                    stat_map[local_slug] = stat_uri
+                if r.get("label"):
+                    lbl_slug = str(r["label"]).replace("'s", "").strip().lower()
+                    if lbl_slug:
+                        stat_map[lbl_slug] = stat_uri
+        if stat_map:
+            self._stat_prefix_map_cache = stat_map
+        return dict(stat_map)
+
+    def get_default_character_roster(self) -> List[str]:
+        """Queries ontology-grounded priory:DefaultRosterMember individuals in canonical roster order."""
+        if self._default_roster_cache is not None:
+            return list(self._default_roster_cache)
+
+        sparql = """
+        SELECT DISTINCT ?member ?name ?rName ?label ?order WHERE {
+            ?member a priory:DefaultRosterMember .
+            OPTIONAL { ?member priory:rosterCharacterName ?rName }
+            OPTIONAL { ?member priory:characterName ?name }
+            OPTIONAL { ?member rdfs:label ?label }
+            OPTIONAL { ?member priory:rosterOrder ?order }
+        }
+        """
+        rows = self.query(sparql)
+        sorted_rows = sorted(
+            rows,
+            key=lambda r: (
+                int(r["order"]) if r.get("order") is not None else 999,
+                str(r.get("rName") or r.get("name") or r.get("label") or ""),
+            ),
+        )
+        roster: List[str] = []
+        for r in sorted_rows:
+            nm = str(r.get("rName") or r.get("name") or r.get("label") or "").strip()
+            if nm and nm not in roster:
+                roster.append(nm)
+        if roster:
+            self._default_roster_cache = roster
+        return list(roster)
+
+    def get_lounge_passes(self) -> Dict[int, Dict[str, Any]]:
+        """Queries ontology-grounded VIP Lounge Pass catalog entries and dynamic VIPLoungePass instances."""
+        sparql = """
+        SELECT DISTINCT ?entry ?id ?label ?chatLink ?zone ?slug ?tier ?hasCrafting ?hasForge ?hasBank ?hasTp ?hasVendor ?instantReturn ?tpNote WHERE {
+            {
+                ?entry a priory:LoungePassCatalogEntry ;
+                       priory:catalogItemId ?id ;
+                       rdfs:label ?label .
+            }
+            UNION
+            {
+                { ?entry a priory:VIPLoungePass } UNION { ?entry a priory:VIPPass }
+                ?entry priory:gw2Id ?id ;
+                       rdfs:label ?label .
+            }
+            OPTIONAL { ?entry priory:catalogChatLink ?chatLink }
+            OPTIONAL { ?entry priory:chatCode ?chatLink }
+            OPTIONAL { ?entry priory:zoneName ?zone }
+            OPTIONAL { ?entry priory:loungeSlug ?slug }
+            OPTIONAL { ?entry priory:convenienceTier ?tier }
+            OPTIONAL { ?entry priory:hasCraftingStations ?hasCrafting }
+            OPTIONAL { ?entry priory:hasMysticForge ?hasForge }
+            OPTIONAL { ?entry priory:hasBank ?hasBank }
+            OPTIONAL { ?entry priory:hasTradingPost ?hasTp }
+            OPTIONAL { ?entry priory:hasVendor ?hasVendor }
+            OPTIONAL { ?entry priory:hasInstantReturn ?instantReturn }
+            OPTIONAL { ?entry priory:teleportNote ?tpNote }
+        }
+        """
+        rows = self.query(sparql)
+        passes: Dict[int, Dict[str, Any]] = {}
+        # Prefer LoungePassCatalogEntry rows first so canonical catalog entries take precedence
+        sorted_rows = sorted(
+            rows,
+            key=lambda r: (0 if "LoungeCatalog_" in str(r.get("entry", "")) else 1, int(r["id"])),
+        )
+        for r in sorted_rows:
+            pid = int(r["id"])
+            if pid in passes:
+                continue
+            entry_dict: Dict[str, Any] = {
+                "name": str(r["label"]),
+                "chat_link": str(r.get("chatLink") or ""),
+                "zone": str(r.get("zone") or "VIP Lounge"),
+            }
+            if r.get("slug") is not None:
+                entry_dict["lounge_id"] = str(r["slug"])
+            if r.get("tier") is not None:
+                entry_dict["tier"] = str(r["tier"])
+            if r.get("hasCrafting") is not None:
+                entry_dict["has_crafting"] = bool(r["hasCrafting"])
+            if r.get("hasForge") is not None:
+                entry_dict["has_mystic_forge"] = bool(r["hasForge"])
+            if r.get("hasBank") is not None:
+                entry_dict["has_bank"] = bool(r["hasBank"])
+            if r.get("hasTp") is not None:
+                entry_dict["has_tp"] = bool(r["hasTp"])
+            if r.get("hasVendor") is not None:
+                entry_dict["has_vendor"] = bool(r["hasVendor"])
+            if r.get("instantReturn") is not None:
+                entry_dict["instant_return"] = bool(r["instantReturn"])
+            if r.get("tpNote") is not None:
+                entry_dict["teleport_note"] = str(r["tpNote"])
+            passes[pid] = entry_dict
+        return passes
+
+    def get_convenience_catalog(self) -> Tuple[List[str], Dict[str, Dict[str, Any]]]:
+        """Queries ontology-grounded convenience categories and convenience items catalog."""
+        if self._convenience_catalog_cache is not None:
+            cats, items = self._convenience_catalog_cache
+            return list(cats), {k: dict(v) for k, v in items.items()}
+
+        cat_sparql = """
+        SELECT DISTINCT ?label ?order WHERE {
+            ?cat a priory:ConvenienceCategoryEntry ;
+                 rdfs:label ?label ;
+                 priory:categoryOrder ?order .
+        }
+        """
+        cat_rows = sorted(
+            self.query(cat_sparql),
+            key=lambda r: (int(r["order"]) if r.get("order") is not None else 999, str(r.get("label", ""))),
+        )
+        categories: List[str] = [str(r["label"]) for r in cat_rows]
+
+        item_sparql = """
+        SELECT DISTINCT ?entry ?slug ?order ?cat ?id ?chatLink ?allIdsCsv ?label ?type ?costCopper ?ectoRate ?note WHERE {
+            ?entry a priory:ConvenienceCatalogEntry ;
+                   priory:convenienceSlug ?slug ;
+                   priory:catalogItemId ?id ;
+                   rdfs:label ?label ;
+                   priory:convenienceType ?type ;
+                   priory:convenienceCategory ?cat .
+            OPTIONAL { ?entry priory:categoryOrder ?order }
+            OPTIONAL { ?entry priory:catalogChatLink ?chatLink }
+            OPTIONAL { ?entry priory:allItemIdsCsv ?allIdsCsv }
+            OPTIONAL { ?entry priory:salvageCostCopper ?costCopper }
+            OPTIONAL { ?entry priory:ectoYieldRate ?ectoRate }
+            OPTIONAL { ?entry priory:utilityNote ?note }
+        }
+        """
+        item_rows = sorted(
+            self.query(item_sparql),
+            key=lambda r: (int(r["order"]) if r.get("order") is not None else 999, str(r.get("slug", ""))),
+        )
+        items: Dict[str, Dict[str, Any]] = {}
+        for r in item_rows:
+            slug = str(r["slug"])
+            pid = int(r["id"])
+            all_ids_str = str(r.get("allIdsCsv") or "")
+            if all_ids_str:
+                all_ids = [int(x) for x in all_ids_str.split(",") if x.strip()]
+            else:
+                all_ids = [pid]
+            info: Dict[str, Any] = {
+                "id": pid,
+                "all_ids": all_ids,
+                "name": str(r["label"]),
+                "chat_link": str(r.get("chatLink") or ""),
+                "type": str(r["type"]),
+                "category": str(r["cat"]),
+            }
+            if r.get("costCopper") is not None:
+                info["cost_copper"] = int(r["costCopper"])
+            if r.get("ectoRate") is not None:
+                info["ecto_rate"] = float(r["ectoRate"])
+            if r.get("note") is not None:
+                info["note"] = str(r["note"])
+            items[slug] = info
+
+        if categories and items:
+            self._convenience_catalog_cache = (categories, items)
+        return list(categories), {k: dict(v) for k, v in items.items()}
+
+    def get_legendary_and_precursor_catalog(self) -> Dict[str, Any]:
+        """Queries ontology-grounded weapon, armor, precursor, weapon-type discipline rules, and Hobbs collections."""
+        graph_len = len(self.graph)
+        if (
+            self._legendary_precursor_catalog_cache is not None
+            and getattr(self, "_legendary_precursor_catalog_sig", -1) == graph_len
+        ):
+            return self._legendary_precursor_catalog_cache
+
+        # 1. Weapon Type Discipline Rules
+        rule_sparql = """
+        SELECT DISTINCT ?wtype ?pDisc ?pRat ?sDisc ?sRat WHERE {
+            ?rule a priory:WeaponTypeDisciplineRule ;
+                  priory:weaponTypeSlug ?wtype ;
+                  priory:primaryDisciplineSlug ?pDisc ;
+                  priory:primaryDisciplineRating ?pRat .
+            OPTIONAL { ?rule priory:secondaryDisciplineSlug ?sDisc }
+            OPTIONAL { ?rule priory:secondaryDisciplineRating ?sRat }
+        }
+        """
+        weapon_type_disciplines: Dict[str, Tuple[Tuple[str, int], Tuple[str, int]]] = {}
+        for r in self.query(rule_sparql):
+            wt = str(r["wtype"]).strip().lower()
+            p_pair = (str(r["pDisc"]), int(r["pRat"]))
+            s_pair = (
+                str(r.get("sDisc") or "armorsmith"),
+                int(r["sRat"]) if r.get("sRat") is not None else 400,
+            )
+            weapon_type_disciplines[wt] = (p_pair, s_pair)
+
+        # 2. Gen 1, Gen 2, Gen 3 Legendary Weapon Catalog Entries
+        weap_sparql = """
+        SELECT DISTINCT ?gen ?id ?label ?wtype ?precId ?precName ?legacyCsv ?pDisc ?pRat ?sDisc ?sRat WHERE {
+            ?entry a priory:LegendaryWeaponCatalogEntry ;
+                   priory:forGeneration ?gen ;
+                   priory:catalogItemId ?id ;
+                   rdfs:label ?label ;
+                   priory:primaryDisciplineSlug ?pDisc ;
+                   priory:primaryDisciplineRating ?pRat .
+            OPTIONAL { ?entry priory:weaponTypeSlug ?wtype }
+            OPTIONAL { ?entry priory:precursorItemId ?precId }
+            OPTIONAL { ?entry priory:precursorName ?precName }
+            OPTIONAL { ?entry priory:legacyPrecursorIdsCsv ?legacyCsv }
+            OPTIONAL { ?entry priory:secondaryDisciplineSlug ?sDisc }
+            OPTIONAL { ?entry priory:secondaryDisciplineRating ?sRat }
+        }
+        """
+        gen1_weapons: Dict[int, Dict[str, Any]] = {}
+        gen2_weapons: Dict[int, Dict[str, Any]] = {}
+        gen3_weapon_names: Dict[int, str] = {}
+        gen3_weapon_disciplines: Dict[int, Tuple[str, int]] = {}
+
+        for r in self.query(weap_sparql):
+            gen_key = str(r["gen"]).strip().upper()
+            wid = int(r["id"])
+            wname = str(r["label"])
+            p_disc = str(r["pDisc"])
+            p_rat = int(r["pRat"])
+            if gen_key == "GEN3":
+                gen3_weapon_names[wid] = wname
+                gen3_weapon_disciplines[wid] = (p_disc, p_rat)
+                continue
+
+            s_disc = str(r.get("sDisc") or "armorsmith")
+            s_rat = int(r["sRat"]) if r.get("sRat") is not None else 400
+            prec_id = int(r["precId"]) if r.get("precId") is not None else 0
+            prec_name = str(r.get("precName") or "")
+            wtype = str(r.get("wtype") or "Greatsword")
+            legacy_str = str(r.get("legacyCsv") or "")
+            legacy_tuple = tuple(int(x) for x in legacy_str.split(",") if x.strip())
+
+            winfo: Dict[str, Any] = {
+                "name": wname,
+                "precursor_id": prec_id,
+                "precursor_name": prec_name,
+                "type": wtype,
+                "disc": (p_disc, p_rat),
+                "sec_disc": (s_disc, s_rat),
+                "primary": p_disc,
+                "rating": p_rat,
+                "secondary": s_disc,
+                "secondary_rating": s_rat,
+            }
+            if legacy_tuple:
+                winfo["legacy_precursor_ids"] = legacy_tuple
+
+            if gen_key == "GEN1":
+                gen1_weapons[wid] = winfo
+            elif gen_key == "GEN2":
+                gen2_weapons[wid] = winfo
+
+        # 3. Legendary Armor Catalog Entries
+        armor_sparql = """
+        SELECT DISTINCT ?id ?label ?pDisc ?pRat WHERE {
+            ?entry a priory:LegendaryArmorCatalogEntry ;
+                   priory:catalogItemId ?id ;
+                   rdfs:label ?label ;
+                   priory:primaryDisciplineSlug ?pDisc ;
+                   priory:primaryDisciplineRating ?pRat .
+        }
+        """
+        armor_names: Dict[int, str] = {}
+        legendary_armor_disciplines: Dict[int, Tuple[str, int]] = {}
+        for r in self.query(armor_sparql):
+            aid = int(r["id"])
+            armor_names[aid] = str(r["label"])
+            legendary_armor_disciplines[aid] = (str(r["pDisc"]), int(r["pRat"]))
+
+        # 4. Precursor Catalog Entries
+        prec_sparql = """
+        SELECT DISTINCT ?id ?label ?targetWid WHERE {
+            ?entry a priory:PrecursorCatalogEntry ;
+                   priory:catalogItemId ?id ;
+                   rdfs:label ?label .
+            OPTIONAL { ?entry priory:targetWeaponId ?targetWid }
+        }
+        """
+        precursor_names: Dict[int, str] = {}
+        precursor_to_weapon: Dict[int, int] = {}
+        for r in self.query(prec_sparql):
+            pid = int(r["id"])
+            precursor_names[pid] = str(r["label"])
+            if r.get("targetWid") is not None:
+                precursor_to_weapon[pid] = int(r["targetWid"])
+
+        # Dynamic scan for any additional LegendaryWeapon / PrecursorWeapon / LegendaryArmor nodes in graph
+        dyn_weap_sparql = """
+        SELECT DISTINCT ?wId ?wLabel ?wType ?gen ?facet ?precId ?precLabel WHERE {
+            ?w a priory:LegendaryWeapon ;
+               priory:gw2Id ?wId ;
+               rdfs:label ?wLabel .
+            OPTIONAL { ?w priory:hasWeaponType ?wType }
+            OPTIONAL { ?w priory:generation ?gen }
+            OPTIONAL { ?w priory:hasDragonFacet ?facet }
+            OPTIONAL {
+                { ?w priory:hasPrecursor ?prec }
+                UNION { ?prec priory:precursorTo ?w }
+                UNION { ?prec priory:isPrecursorOf ?w }
+                ?prec priory:gw2Id ?precId ;
+                      rdfs:label ?precLabel .
+            }
+        }
+        """
+        for row in self.query(dyn_weap_sparql):
+            if row.get("facet"):
+                continue
+            w_id = int(row["wId"])
+            if w_id in gen1_weapons or w_id in gen2_weapons or w_id in gen3_weapon_names:
+                continue
+            w_label = str(row["wLabel"])
+            w_type_uri = str(row.get("wType", ""))
+            w_type = w_type_uri.rstrip("/").split("/")[-1] if w_type_uri else "Greatsword"
+            disc_pair = weapon_type_disciplines.get(
+                w_type.lower(), (("weaponsmith", 500), ("armorsmith", 400))
+            )
+            gen_str = str(row.get("gen", ""))
+            p_id = int(row["precId"]) if row.get("precId") is not None else 0
+            p_label = str(row.get("precLabel", f"Precursor {p_id}")) if p_id else "Precursor"
+            if "1" in gen_str or (30680 <= w_id <= 30705):
+                if p_id:
+                    gen1_weapons[w_id] = {
+                        "name": w_label,
+                        "precursor_id": p_id,
+                        "precursor_name": p_label,
+                        "type": w_type,
+                        "disc": disc_pair[0],
+                        "sec_disc": disc_pair[1],
+                        "primary": disc_pair[0][0],
+                        "rating": disc_pair[0][1],
+                        "secondary": disc_pair[1][0],
+                        "secondary_rating": disc_pair[1][1],
+                    }
+                    precursor_names.setdefault(p_id, p_label)
+            elif "2" in gen_str or (70000 <= w_id < 95000):
+                gen2_weapons[w_id] = {
+                    "name": w_label,
+                    "precursor_id": p_id,
+                    "precursor_name": p_label,
+                    "type": w_type,
+                    "disc": disc_pair[0],
+                    "sec_disc": disc_pair[1],
+                    "primary": disc_pair[0][0],
+                    "rating": disc_pair[0][1],
+                    "secondary": disc_pair[1][0],
+                    "secondary_rating": disc_pair[1][1],
+                }
+                if p_id:
+                    precursor_names.setdefault(p_id, p_label)
+            else:
+                gen3_weapon_names[w_id] = w_label
+                gen3_weapon_disciplines[w_id] = disc_pair[0]
+
+        dyn_prec_sparql = """
+        SELECT DISTINCT ?pId ?pLabel WHERE {
+            ?p a priory:PrecursorWeapon ;
+               priory:gw2Id ?pId ;
+               rdfs:label ?pLabel .
+        }
+        """
+        for row in self.query(dyn_prec_sparql):
+            p_id = int(row["pId"])
+            precursor_names.setdefault(p_id, str(row["pLabel"]))
+
+        dyn_armor_sparql = """
+        SELECT DISTINCT ?aId ?aLabel ?weightClass WHERE {
+            ?a a priory:LegendaryArmor ;
+               priory:gw2Id ?aId ;
+               rdfs:label ?aLabel .
+            OPTIONAL { ?a priory:hasArmorWeight ?weightClass }
+            OPTIONAL { ?a priory:hasWeightClass ?weightClass }
+        }
+        """
+        for row in self.query(dyn_armor_sparql):
+            a_id = int(row["aId"])
+            armor_names.setdefault(a_id, str(row["aLabel"]))
+            if a_id not in legendary_armor_disciplines:
+                w_cls = str(row.get("weightClass", "")).lower()
+                if "light" in w_cls:
+                    legendary_armor_disciplines[a_id] = ("tailor", 500)
+                elif "medium" in w_cls:
+                    legendary_armor_disciplines[a_id] = ("leatherworker", 500)
+                else:
+                    legendary_armor_disciplines[a_id] = ("armorsmith", 500)
+
+        # Re-apply deterministic GEN1 / GEN2 precursor_to_weapon mapping order
+        for wid, winfo in gen1_weapons.items():
+            if winfo.get("precursor_id"):
+                precursor_to_weapon[winfo["precursor_id"]] = wid
+        for wid, winfo in gen2_weapons.items():
+            if winfo.get("precursor_id"):
+                precursor_to_weapon[winfo["precursor_id"]] = wid
+            for l_prec in winfo.get("legacy_precursor_ids", ()):
+                if l_prec not in precursor_to_weapon:
+                    precursor_to_weapon[l_prec] = wid
+
+        # 5. Master Craftsman Hobbs Collection Stages
+        hobbs_sparql = """
+        SELECT DISTINCT ?pid ?tier ?achCsv ?label ?bits ?mTier ?mName WHERE {
+            ?stage a priory:HobbsCollectionStage ;
+                   priory:forPrecursorId ?pid ;
+                   priory:collectionTierNumber ?tier ;
+                   priory:achievementIdsCsv ?achCsv ;
+                   rdfs:label ?label ;
+                   priory:bitsTotal ?bits ;
+                   priory:masteryTier ?mTier ;
+                   priory:masteryName ?mName .
+        }
+        """
+        hobbs_by_pid: Dict[int, List[Dict[str, Any]]] = {}
+        for r in self.query(hobbs_sparql):
+            pid = int(r["pid"])
+            ach_ids = [int(x) for x in str(r["achCsv"]).split(",") if x.strip()]
+            hobbs_by_pid.setdefault(pid, []).append({
+                "tier": int(r["tier"]),
+                "id": ach_ids[0] if ach_ids else 0,
+                "name": str(r["label"]),
+                "ach_ids": ach_ids,
+                "bits_total": int(r["bits"]),
+                "mastery_tier": int(r["mTier"]),
+                "mastery_name": str(r["mName"]),
+            })
+        hobbs_collections: Dict[int, List[Dict[str, Any]]] = {
+            pid: sorted(tiers, key=lambda t: t["tier"])
+            for pid, tiers in hobbs_by_pid.items()
+        }
+        for pid, tiers in list(hobbs_collections.items()):
+            wid = precursor_to_weapon.get(pid)
+            if wid and wid not in hobbs_collections:
+                hobbs_collections[wid] = tiers
+        for alias_wid, src_pid in ((75207, 75208), (72713, 75208), (78052, 78053), (78556, 78053)):
+            if src_pid in hobbs_collections:
+                hobbs_collections[alias_wid] = hobbs_collections[src_pid]
+
+        gen1_precursor_ids = {w["precursor_id"] for w in gen1_weapons.values() if w.get("precursor_id")} | (
+            {29165} if 29165 in precursor_names else set()
+        )
+        gen2_precursor_ids = {w["precursor_id"] for w in gen2_weapons.values() if w.get("precursor_id")}
+        for w in gen2_weapons.values():
+            for lp in w.get("legacy_precursor_ids", ()):
+                if lp in precursor_names:
+                    gen2_precursor_ids.add(lp)
+
+        catalog = {
+            "weapon_type_disciplines": weapon_type_disciplines,
+            "gen1_weapons": gen1_weapons,
+            "gen2_weapons": gen2_weapons,
+            "gen3_weapon_names": gen3_weapon_names,
+            "gen3_weapon_disciplines": gen3_weapon_disciplines,
+            "armor_names": armor_names,
+            "legendary_armor_disciplines": legendary_armor_disciplines,
+            "precursor_names": precursor_names,
+            "precursor_to_weapon": precursor_to_weapon,
+            "hobbs_collections": hobbs_collections,
+            "gen1_weapon_ids": set(gen1_weapons.keys()),
+            "gen1_precursor_ids": gen1_precursor_ids,
+            "gen2_weapon_ids": set(gen2_weapons.keys()),
+            "gen2_precursor_ids": gen2_precursor_ids,
+            "gen3_weapon_ids": set(gen3_weapon_names.keys()),
+            "legendary_armor_ids": set(armor_names.keys()),
+        }
+        self._legendary_precursor_catalog_cache = catalog
+        self._legendary_precursor_catalog_sig = graph_len
+        return catalog
+
+

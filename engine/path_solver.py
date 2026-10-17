@@ -126,167 +126,42 @@ class ArbitrageReport:
     recommended_action: str  # "CRAFT_FOR_SELF", "CRAFT_FOR_PROFIT", "BUY_FINISHED_DIRECT"
 
 
-BENCHMARK_FALLBACK_PRICES: Dict[int, float] = {
-    19721: 0.301,  # Glob of Ectoplasm
-    19976: 1.950,  # Mystic Coin
-    19675: 7.420,  # Mystic Clover (crafting cost basis)
-    19912: 1.000,  # Icy Runestone (legacy ID, 1 gold)
-    19676: 1.000,  # Icy Runestone (canonical ID, 1 gold)
-    # Canonical T6 Fine Materials
-    24295: 0.221,  # Vial of Powerful Blood (T6)
-    24358: 0.189,  # Ancient Bone (T6)
-    24351: 0.159,  # Vicious Claw (T6)
-    24357: 0.129,  # Vicious Fang (T6)
-    24289: 0.188,  # Armored Scale (T6)
-    24300: 0.156,  # Elaborate Totem (T6)
-    24283: 0.189,  # Powerful Venom Sac (T6)
-    24277: 0.161,  # Pile of Crystalline Dust (T6)
-    # Canonical & Legacy T5 Fine Materials
-    24294: 0.035,  # Potent Blood (T5)
-    24341: 0.025,  # Large Bone (T5 canonical)
-    24275: 0.025,  # Large Bone (T5 legacy)
-    24350: 0.030,  # Large Claw (T5)
-    24356: 0.028,  # Large Fang (T5 canonical)
-    24287: 0.028,  # Large Fang (T5 legacy)
-    24288: 0.025,  # Large Scale (T5 canonical)
-    24299: 0.032,  # Intricate Totem (T5 canonical)
-    24282: 0.030,  # Potent Venom Sac (T5 canonical)
-    24276: 0.020,  # Pile of Incandescent Dust (T5 canonical)
-    24272: 0.020,  # Pile of Incandescent Dust (T5 legacy)
-    # Upgrades & Refined Materials
-    89103: 0.056,  # Lucent Crystal
-    89258: 0.045,  # Symbol of Control
-    89182: 0.045,  # Symbol of Enhancement
-    89140: 0.045,  # Symbol of Pain
-    19700: 0.025,  # Mithril Ingot
-    19701: 0.085,  # Orichalcum Ingot
-    19739: 0.040,  # Elder Wood Plank
-    19740: 0.120,  # Ancient Wood Plank
-    19729: 0.035,  # Silk Bolt
-    19732: 0.150,  # Gossamer Bolt
-    19735: 0.060,  # Thick Leather Section
-    19737: 0.220,  # Hardened Leather Section
-    # Canonical Gen 1 Precursors
-    29185: 179.9,  # Dusk
-    29169: 159.5,  # Dawn
-    29167: 120.0,  # Tooth of Frostfang
-    29177: 140.0,  # Spark
-    29165: 140.0,  # Spark (legacy alias)
-    29181: 160.0,  # Zap
-    29180: 150.0,  # The Legend
-    29166: 95.0,   # The Energizer
-    29168: 110.0,  # Chaos Gun
-    29170: 115.0,  # The Chosen
-    29171: 115.0,  # Storm
-    29172: 125.0,  # Leaf of Kudzu
-    29173: 85.0,   # Carcharias
-    29174: 95.0,   # The Bard
-    29175: 135.0,  # The Hunter
-    29176: 105.0,  # Rodgort's Flame
-    29178: 120.0,  # The Lover
-    29179: 130.0,  # The Colossus
-    29182: 75.0,   # Rage
-    29183: 80.0,   # Venom
-    29184: 95.0,   # Howl
-    # Gen 3 Materials
-    96088: 0.550,  # Memory of Aurene
-    96978: 1.500,  # Antique Summoning Stone
-    96347: 1.850,  # Chunk of Ancient Ambergris
-    96722: 0.720,  # Jade Runestone
-}
+BENCHMARK_FALLBACK_PRICES: Dict[int, float] = {}
+T6_FINE_MATERIALS: Dict[str, Dict[str, Any]] = {}
+T6_ID_TO_CAT: Dict[int, str] = {}
+STARTER_KIT_PRECURSORS: Set[int] = set()
 
-T6_FINE_MATERIALS: Dict[str, Dict[str, Any]] = {
-    "Blood": {
-        "t6_id": 24295,
-        "t6_name": "Vial of Powerful Blood",
-        "t5_id": 24294,
-        "t5_ids": [24294],
-        "t5_name": "Potent Blood",
-    },
-    "Bone": {
-        "t6_id": 24358,
-        "t6_name": "Ancient Bone",
-        "t5_id": 24341,
-        "t5_ids": [24341, 24275],
-        "t5_name": "Large Bone",
-    },
-    "Claw": {
-        "t6_id": 24351,
-        "t6_name": "Vicious Claw",
-        "t5_id": 24350,
-        "t5_ids": [24350],
-        "t5_name": "Large Claw",
-    },
-    "Fang": {
-        "t6_id": 24357,
-        "t6_name": "Vicious Fang",
-        "t5_id": 24356,
-        "t5_ids": [24356, 24287],
-        "t5_name": "Large Fang",
-    },
-    "Scale": {
-        "t6_id": 24289,
-        "t6_name": "Armored Scale",
-        "t5_id": 24288,
-        "t5_ids": [24288, 24282],
-        "t5_name": "Large Scale",
-    },
-    "Totem": {
-        "t6_id": 24300,
-        "t6_name": "Elaborate Totem",
-        "t5_id": 24299,
-        "t5_ids": [24299, 24357],
-        "t5_name": "Intricate Totem",
-    },
-    "Venom": {
-        "t6_id": 24283,
-        "t6_name": "Powerful Venom Sac",
-        "t5_id": 24282,
-        "t5_ids": [24282, 24288],
-        "t5_name": "Potent Venom Sac",
-    },
-    "Dust": {
-        "t6_id": 24277,
-        "t6_name": "Pile of Crystalline Dust",
-        "t5_id": 24276,
-        "t5_ids": [24276, 24272],
-        "t5_name": "Pile of Incandescent Dust",
-    },
-}
+_DEFAULT_SOLVER_STORE: Optional[PrioryGraphStore] = None
 
-T6_ID_TO_CAT: Dict[int, str] = {info["t6_id"]: cat for cat, info in T6_FINE_MATERIALS.items()}
 
-STARTER_KIT_PRECURSORS: Set[int] = {
-    29185,  # Dusk (Twilight)
-    29169,  # Dawn (Sunrise)
-    29181,  # Zap (Bolt)
-    29180,  # The Legend (The Bifrost)
-    29171,  # Storm (Meteorlogicus)
-    29168,  # Chaos Gun (Quip)
-    29166,  # The Energizer (The Moot)
-    29175,  # The Hunter (The Predator)
-    29170,  # The Chosen (The Flameseeker Prophecies)
-    29176,  # Rodgort's Flame (Rodgort)
-    29182,  # Rage (Frenzy)
-    29184,  # Howl (Howler)
-    29177,  # Spark (Incinerator)
-    29165,  # Spark (legacy alias)
-    29167,  # Tooth of Frostfang (Frostfang)
-    29179,  # The Colossus (The Juggernaut)
-    29183,  # Venom (Kraitkin)
-    29172,  # Leaf of Kudzu (Kudzu)
-    29173,  # Carcharias (Kamohoali'i Kotaki)
-    29174,  # The Bard (The Minstrel)
-    29178,  # The Lover (The Dreamer)
-}
+def _get_or_create_default_store() -> PrioryGraphStore:
+    """Returns a shared PrioryGraphStore with all ontology files loaded."""
+    global _DEFAULT_SOLVER_STORE
+    try:
+        from engine import graph_store as _gs_mod
+        if hasattr(_gs_mod, "get_default_graph_store"):
+            return _gs_mod.get_default_graph_store()
+    except Exception:
+        pass
+    if _DEFAULT_SOLVER_STORE is None:
+        _DEFAULT_SOLVER_STORE = PrioryGraphStore()
+        _DEFAULT_SOLVER_STORE.load_all()
+    elif len(_DEFAULT_SOLVER_STORE.graph) == 0:
+        _DEFAULT_SOLVER_STORE.load_all()
+    return _DEFAULT_SOLVER_STORE
 
 
 class PathSolver:
     """Evaluates alternative acquisition routes dynamically via semantic graph queries."""
 
     def __init__(self, graph_store: Optional[PrioryGraphStore] = None):
-        self.store = graph_store
-        self.diff_engine = AccountDiffEngine(graph_store) if graph_store else None
+        if graph_store is None:
+            self.store = _get_or_create_default_store()
+        else:
+            self.store = graph_store
+            if len(self.store.graph) == 0:
+                self.store.load_all()
+        self.diff_engine = AccountDiffEngine(self.store) if self.store else None
         self.benchmark_prices: Dict[int, float] = dict(BENCHMARK_FALLBACK_PRICES)
         self.t6_materials: Dict[str, Dict[str, Any]] = {k: dict(v) for k, v in T6_FINE_MATERIALS.items()}
         self.t6_id_to_cat: Dict[int, str] = dict(T6_ID_TO_CAT)
@@ -300,99 +175,135 @@ class PathSolver:
         if self.store is None or len(self.store.graph) == 0:
             return
         sig = (id(self.store), len(self.store.graph))
-        if self._hydrated_store_sig == sig:
+        if self._hydrated_store_sig == sig and self.benchmark_prices and self.t6_materials and self.starter_kit_precursors:
             return
         self._hydrated_store_sig = sig
 
+        stores_to_check = [self.store]
+        def_store = _get_or_create_default_store()
+        if def_store is not self.store:
+            stores_to_check.append(def_store)
+
         # 1. Benchmark fallback prices from graph
-        if hasattr(self.store, "get_benchmark_prices"):
-            try:
-                g_prices = self.store.get_benchmark_prices()
-                if isinstance(g_prices, dict):
-                    for k, v in g_prices.items():
-                        if float(v) > 0:
-                            self.benchmark_prices[int(k)] = float(v)
-                            BENCHMARK_FALLBACK_PRICES[int(k)] = float(v)
-            except Exception:
-                pass
-        else:
+        for st in stores_to_check:
+            if hasattr(st, "get_benchmark_prices"):
+                try:
+                    g_prices = st.get_benchmark_prices()
+                    if isinstance(g_prices, dict):
+                        for k, v in g_prices.items():
+                            if float(v) > 0:
+                                self.benchmark_prices[int(k)] = float(v)
+                                BENCHMARK_FALLBACK_PRICES[int(k)] = float(v)
+                except Exception:
+                    pass
             price_q = """
-            SELECT ?id ?gold WHERE {
-                ?item priory:gw2Id ?id ;
-                      priory:benchmarkUnitGold ?gold .
+            SELECT ?item ?id ?gold WHERE {
+                ?item priory:benchmarkUnitGold ?gold .
+                OPTIONAL { ?item priory:gw2Id ?id }
             }
             """
-            for row in self.store.query(price_q):
+            for row in st.query(price_q):
                 try:
-                    iid = int(row["id"])
+                    raw_id = row.get("id")
+                    if raw_id is not None:
+                        iid = int(raw_id)
+                    else:
+                        uri_tail = str(row["item"]).rsplit("/", 1)[-1]
+                        iid = int(uri_tail)
                     g_val = float(row["gold"])
                     if g_val > 0:
                         self.benchmark_prices[iid] = g_val
                         BENCHMARK_FALLBACK_PRICES[iid] = g_val
                 except (ValueError, TypeError, KeyError):
                     pass
+            if self.benchmark_prices:
+                break
 
         # 2. T6 Fine Material promotions from graph
-        if hasattr(self.store, "get_t6_material_promotions"):
-            try:
-                g_t6 = self.store.get_t6_material_promotions()
-                if isinstance(g_t6, dict):
-                    for cat, info in g_t6.items():
-                        if cat in self.t6_materials and isinstance(info, dict):
-                            # Preserve t5_ids list while updating from ontology
-                            merged = dict(self.t6_materials[cat])
-                            merged.update(info)
-                            t5_id = merged.get("t5_id")
-                            t5_ids = list(merged.get("t5_ids", []))
+        for st in stores_to_check:
+            if hasattr(st, "get_t6_material_promotions"):
+                try:
+                    g_t6 = st.get_t6_material_promotions()
+                    if isinstance(g_t6, dict):
+                        for k, info in g_t6.items():
+                            if not isinstance(info, dict):
+                                continue
+                            cat = str(info.get("category") or k).strip()
+                            if cat.isdigit() and info.get("category"):
+                                cat = str(info["category"]).strip()
+                            t6_id = int(info.get("t6_id") or (k if str(k).isdigit() else 0))
+                            t6_name = str(info.get("t6_name") or info.get("name") or "")
+                            t5_id = int(info.get("t5_id", 0))
+                            t5_name = str(info.get("t5_name", ""))
+                            t5_ids = [int(x) for x in info.get("t5_ids", []) if str(x).isdigit()]
                             if t5_id and t5_id not in t5_ids:
                                 t5_ids.insert(0, t5_id)
-                            merged["t5_ids"] = t5_ids
-                            self.t6_materials[cat] = merged
-                            T6_FINE_MATERIALS[cat] = merged
-            except Exception:
-                pass
-        else:
+                            if cat and t6_id:
+                                entry = {
+                                    "t6_id": t6_id,
+                                    "t6_name": t6_name,
+                                    "t5_id": t5_id,
+                                    "t5_ids": t5_ids,
+                                    "t5_name": t5_name,
+                                }
+                                self.t6_materials[cat] = entry
+                                T6_FINE_MATERIALS[cat] = entry
+                except Exception:
+                    pass
+
             t6_q = """
-            SELECT ?cat ?t6Id ?t6Label ?t5Id ?t5Label WHERE {
+            SELECT ?cat ?t6Id ?t6Label ?t5Id ?t5Label ?altT5Id WHERE {
                 ?t6 priory:gw2Id ?t6Id ;
                     rdfs:label ?t6Label ;
                     priory:trophyCategory ?cat ;
                     priory:promotedFromT5 ?t5 .
                 ?t5 priory:gw2Id ?t5Id ;
                     rdfs:label ?t5Label .
+                OPTIONAL {
+                    ?altT5 a priory:CraftingMaterial ;
+                           rdfs:label ?t5Label ;
+                           priory:gw2Id ?altT5Id .
+                }
             }
             """
-            for row in self.store.query(t6_q):
-                cat = str(row.get("cat", ""))
-                if cat in self.t6_materials:
-                    t6_id = int(row["t6Id"])
-                    t5_id = int(row["t5Id"])
-                    merged = dict(self.t6_materials[cat])
-                    merged["t6_id"] = t6_id
-                    merged["t6_name"] = str(row["t6Label"])
-                    merged["t5_id"] = t5_id
-                    merged["t5_name"] = str(row["t5Label"])
-                    t5_ids = list(merged.get("t5_ids", []))
-                    if t5_id not in t5_ids:
-                        t5_ids.insert(0, t5_id)
-                    merged["t5_ids"] = t5_ids
-                    self.t6_materials[cat] = merged
-                    T6_FINE_MATERIALS[cat] = merged
+            for row in st.query(t6_q):
+                cat = str(row.get("cat", "")).strip()
+                if not cat:
+                    continue
+                t6_id = int(row["t6Id"])
+                t5_id = int(row["t5Id"])
+                merged = dict(self.t6_materials.get(cat, {}))
+                merged["t6_id"] = t6_id
+                merged["t6_name"] = str(row["t6Label"])
+                merged["t5_id"] = t5_id
+                merged["t5_name"] = str(row["t5Label"])
+                t5_ids = list(merged.get("t5_ids", []))
+                if t5_id not in t5_ids:
+                    t5_ids.insert(0, t5_id)
+                if row.get("altT5Id") is not None:
+                    alt_id = int(row["altT5Id"])
+                    if alt_id not in t5_ids:
+                        t5_ids.append(alt_id)
+                merged["t5_ids"] = t5_ids
+                self.t6_materials[cat] = merged
+                T6_FINE_MATERIALS[cat] = merged
+            if self.t6_materials:
+                break
 
-        self.t6_id_to_cat = {info["t6_id"]: cat for cat, info in self.t6_materials.items()}
+        self.t6_id_to_cat = {info["t6_id"]: cat for cat, info in self.t6_materials.items() if "t6_id" in info}
         T6_ID_TO_CAT.clear()
         T6_ID_TO_CAT.update(self.t6_id_to_cat)
 
         # 3. Starter Kit precursors from graph
-        if hasattr(self.store, "get_starter_kit_precursor_ids"):
-            try:
-                sk_ids = self.store.get_starter_kit_precursor_ids()
-                if sk_ids:
-                    self.starter_kit_precursors.update(int(x) for x in sk_ids)
-                    STARTER_KIT_PRECURSORS.update(self.starter_kit_precursors)
-            except Exception:
-                pass
-        else:
+        for st in stores_to_check:
+            if hasattr(st, "get_starter_kit_precursor_ids"):
+                try:
+                    sk_ids = st.get_starter_kit_precursor_ids()
+                    if sk_ids:
+                        self.starter_kit_precursors.update(int(x) for x in sk_ids)
+                        STARTER_KIT_PRECURSORS.update(self.starter_kit_precursors)
+                except Exception:
+                    pass
             sk_q = """
             SELECT DISTINCT ?precId WHERE {
                 {
@@ -405,13 +316,15 @@ class PathSolver:
                 }
             }
             """
-            for row in self.store.query(sk_q):
+            for row in st.query(sk_q):
                 try:
                     pid = int(row["precId"])
                     self.starter_kit_precursors.add(pid)
                     STARTER_KIT_PRECURSORS.add(pid)
                 except (ValueError, TypeError, KeyError):
                     pass
+            if self.starter_kit_precursors:
+                break
 
     def evaluate_cross_role_opportunity_cost(
         self,
@@ -1142,17 +1055,16 @@ class PathSolver:
         # 3. Dynamic T6 Fine Material Pathways Strategy (Queried from Graph)
         # ----------------------------------------------------------------------
         t6_strats = []
-        t6_ids = {
-            24295: "Powerful Blood",
-            24276: "Ancient Bone",
-            24358: "Elaborate Totem",
-            24277: "Crystalline Dust",
-            24351: "Vicious Claw",
-            24288: "Vicious Fang",
-            24283: "Armored Scale",
-            24289: "Powerful Venom Sac",
-        }
-        missing_t6 = {k: v for k, v in missing.items() if any(t_name.lower() in k.lower() for t_name in t6_ids.values())}
+        self._hydrate_domain_tables()
+        t6_search_terms: List[str] = []
+        for _cat, t6_info in self.t6_materials.items():
+            t_name = str(t6_info.get("t6_name", "")).strip()
+            if t_name:
+                t6_search_terms.append(t_name.lower())
+                for prefix in ("vial of ", "pile of "):
+                    if t_name.lower().startswith(prefix):
+                        t6_search_terms.append(t_name[len(prefix):].lower())
+        missing_t6 = {k: v for k, v in missing.items() if any(t_term in k.lower() for t_term in t6_search_terms)}
 
         if missing_t6:
             # Query all T6 acquisition pathways
@@ -1855,70 +1767,63 @@ class PathSolver:
         """
         goal_name = ""
         alt_labels: List[str] = []
+        rdf_classes: Set[str] = set()
+        inferred_gen: Optional[int] = None
 
-        if self.store:
-            sparql = """
-            SELECT DISTINCT ?label ?altLabel WHERE {
-                ?item priory:gw2Id ?gw2Id .
-                OPTIONAL { ?item rdfs:label ?label }
-                OPTIONAL { ?item skos:altLabel ?altLabel }
-            }
-            """
-            rows = self.store.query(sparql, init_bindings={"gw2Id": Literal(goal_item_id)})
+        stores_to_check: List[PrioryGraphStore] = []
+        if self.store is not None and len(self.store.graph) > 0:
+            stores_to_check.append(self.store)
+        def_store = _get_or_create_default_store()
+        if def_store not in stores_to_check:
+            stores_to_check.append(def_store)
+
+        sparql = """
+        SELECT DISTINCT ?label ?altLabel ?cls ?gen WHERE {
+            ?item priory:gw2Id ?gw2Id .
+            OPTIONAL { ?item rdfs:label ?label }
+            OPTIONAL { ?item skos:altLabel ?altLabel }
+            OPTIONAL { ?item a ?cls }
+            OPTIONAL { ?item priory:legendaryGeneration ?gen }
+        }
+        """
+        for st in stores_to_check:
+            rows = st.query(sparql, init_bindings={"gw2Id": Literal(goal_item_id)})
             if rows:
-                goal_name = str(rows[0].get("label", ""))
+                if not goal_name:
+                    for r in rows:
+                        if r.get("label"):
+                            goal_name = str(r["label"])
+                            break
                 for r in rows:
                     if r.get("altLabel"):
-                        alt_labels.append(str(r["altLabel"]))
-
-        WELL_KNOWN_GOALS: Dict[int, Tuple[str, str]] = {
-            30704: ("Twilight", "GEN1"),
-            30689: ("Sunrise", "GEN1"),
-            30684: ("Frostfang", "GEN1"),
-            30685: ("Kudzu", "GEN1"),
-            30686: ("The Dreamer", "GEN1"),
-            30687: ("Incinerator", "GEN1"),
-            30688: ("The Minstrel", "GEN1"),
-            30690: ("The Juggernaut", "GEN1"),
-            30691: ("Kraitkin", "GEN1"),
-            30692: ("Meteorlogicus", "GEN1"),
-            30693: ("The Predator", "GEN1"),
-            30694: ("The Bifrost", "GEN1"),
-            30695: ("Bolt", "GEN1"),
-            30696: ("Rodgort", "GEN1"),
-            30697: ("Frenzy", "GEN1"),
-            30698: ("Quip", "GEN1"),
-            30699: ("Howler", "GEN1"),
-            30700: ("The Flameseeker Prophecies", "GEN1"),
-            30702: ("Eternity", "GEN1"),
-            71383: ("Nevermore", "GEN2"),
-            71384: ("The Raven Staff", "GEN2"),
-            74155: ("Astralaria", "GEN2"),
-            76158: ("HOPE", "GEN2"),
-            79562: ("Shooshadoo", "GEN2"),
-            79802: ("Chuka and Champawat", "GEN2"),
-            80562: ("Eureka", "GEN2"),
-            81775: ("The Shining Blade", "GEN2"),
-            86303: ("Claw of the Khan-Ur", "GEN2"),
-            88330: ("The Binding of Ipos", "GEN2"),
-            89854: ("Exordium", "GEN2"),
-            90530: ("Pharus", "GEN2"),
-            96203: ("Aurene's Bite", "GEN3"),
-            96356: ("Aurene's Bite", "GEN3"),
-            96221: ("Aurene's Bite", "GEN3"),
-            96652: ("Aurene's Fang", "GEN3"),
-            95684: ("Aurene's Weight", "GEN3"),
-            95808: ("Aurene's Fang", "GEN3"),
-            97165: ("Aurene's Argument", "GEN3"),
-            91505: ("Legendary Sigil", "GENERAL"),
-            91536: ("Legendary Rune", "GENERAL"),
-        }
+                        alt_str = str(r["altLabel"])
+                        if alt_str not in alt_labels:
+                            alt_labels.append(alt_str)
+                    if r.get("cls"):
+                        rdf_classes.add(str(r["cls"]))
+                    if r.get("gen") is not None and inferred_gen is None:
+                        try:
+                            inferred_gen = int(r["gen"])
+                        except (ValueError, TypeError):
+                            pass
+                if hasattr(st, "get_weapon_inferred_pillars") and inferred_gen is None:
+                    try:
+                        pillars = st.get_weapon_inferred_pillars(goal_item_id)
+                        if isinstance(pillars, dict) and pillars.get("generation"):
+                            inferred_gen = int(pillars["generation"])
+                    except Exception:
+                        pass
+                break
 
         fallback_class = "GENERAL"
-        if not goal_name and goal_item_id in WELL_KNOWN_GOALS:
-            goal_name, fallback_class = WELL_KNOWN_GOALS[goal_item_id]
-        elif not goal_name:
-            if 101001 <= goal_item_id <= 101018:
+        if not goal_name:
+            if goal_item_id in GEN1_WEAPONS:
+                goal_name = str(GEN1_WEAPONS[goal_item_id].get("name", ""))
+                fallback_class = "GEN1"
+            elif goal_item_id in GEN2_WEAPONS:
+                goal_name = str(GEN2_WEAPONS[goal_item_id].get("name", ""))
+                fallback_class = "GEN2"
+            elif 101001 <= goal_item_id <= 101700:
                 goal_name = "Obsidian Armor"
                 fallback_class = "OBSIDIAN_ARMOR"
             else:
@@ -1928,23 +1833,33 @@ class PathSolver:
         gn_lower = goal_name.lower()
         alts_lower = [a.lower() for a in alt_labels]
 
-        if "obsidian" in gn_lower or any("obsidian" in a for a in alts_lower) or any("soto" in a for a in alts_lower):
+        if (
+            "obsidian" in gn_lower
+            or any("obsidian" in a or "soto" in a for a in alts_lower)
+            or any("ObsidianArmor" in c for c in rdf_classes)
+        ):
             classification = "OBSIDIAN_ARMOR"
-        elif any("gen 1" in a or "generation 1" in a or "gen one" in a for a in alts_lower) or gn_lower in [
-            "twilight", "sunrise", "bolt", "the bifrost", "bifrost", "frostfang", "kudzu", "incinerator",
-            "the juggernaut", "juggernaut", "eternity", "the dreamer", "the minstrel", "meteorlogicus",
-            "the predator", "quip", "howler", "the flameseeker prophecies", "rodgort", "frenzy", "kraitkin"
-        ]:
+        elif (
+            inferred_gen == 1
+            or any("Gen1LegendaryWeapon" in c for c in rdf_classes)
+            or goal_item_id in GEN1_WEAPONS
+            or any("gen 1" in a or "generation 1" in a or "gen one" in a for a in alts_lower)
+        ):
             classification = "GEN1"
-        elif any("gen 2" in a or "generation 2" in a or "gen two" in a for a in alts_lower) or gn_lower in [
-            "nevermore", "astralaria", "hope", "chuka and champawat", "eureka", "the shining blade",
-            "claw of the khan-ur", "the binding of ipos", "exordium", "pharus", "shooshadoo", "sharur", "xiuquatl"
-        ]:
+        elif (
+            inferred_gen == 2
+            or any("Gen2LegendaryWeapon" in c for c in rdf_classes)
+            or goal_item_id in GEN2_WEAPONS
+            or any("gen 2" in a or "generation 2" in a or "gen two" in a for a in alts_lower)
+        ):
             classification = "GEN2"
-        elif any("gen 3" in a or "generation 3" in a or "gen three" in a for a in alts_lower) or "aurene" in gn_lower:
+        elif (
+            inferred_gen == 3
+            or any("Gen3LegendaryWeapon" in c for c in rdf_classes)
+            or any("gen 3" in a or "generation 3" in a or "gen three" in a for a in alts_lower)
+            or "aurene" in gn_lower
+        ):
             classification = "GEN3"
-        elif goal_item_id in WELL_KNOWN_GOALS:
-            classification = WELL_KNOWN_GOALS[goal_item_id][1]
         else:
             classification = fallback_class
 
@@ -2426,7 +2341,7 @@ def schedule_daily_session_itinerary(
     **kwargs
 ) -> DailySessionItinerary:
     """Convenience module-level entrypoint for scheduling a daily session itinerary."""
-    solver = PathSolver(graph_store) if graph_store is not None else PathSolver(PrioryGraphStore())
+    solver = PathSolver(graph_store)
     return solver.schedule_daily_session_itinerary(
         goal_item_id=goal_item_id,
         time_budget_minutes=time_budget_minutes,
@@ -2445,11 +2360,6 @@ def solve_buy_vs_craft_vs_vault(
     graph_store: Optional[PrioryGraphStore] = None
 ) -> ArbitrageReport:
     """Convenience module-level entrypoint for multi-way arbitrage and acquisition decision matrix."""
-    if graph_store is None:
-        graph_store = PrioryGraphStore()
-        graph_store.load_all()
-    elif len(graph_store.graph) == 0:
-        graph_store.load_all()
     solver = PathSolver(graph_store)
     return solver.solve_buy_vs_craft_vs_vault(
         goal_item_id=goal_item_id,

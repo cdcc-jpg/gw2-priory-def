@@ -1665,3 +1665,1777 @@ discipline:Artificer a owl:NamedIndividual,
 discipline:Weaponsmith a owl:NamedIndividual,
         priory:CraftingDiscipline .
 
+
+# ==============================================================================
+# Complete Master Craftsman Hobbs Precursor Collection Stages Grounding
+# ==============================================================================
+
+priory:HobbsStage_29165_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29165 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2564" ;
+    priory:achievementId 2564 ;
+    rdfs:label "Incinerator I: The Experimental Dagger" ;
+    priory:bitsTotal 18 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29165_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29165 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2458" ;
+    priory:achievementId 2458 ;
+    rdfs:label "Incinerator II: The Perfected Dagger" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29165_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29165 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2502" ;
+    priory:achievementId 2502 ;
+    rdfs:label "Incinerator III: Spark" ;
+    priory:bitsTotal 24 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29166_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29166 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2177" ;
+    priory:achievementId 2177 ;
+    rdfs:label "The Moot I: The Experimental Mace" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29166_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29166 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2291" ;
+    priory:achievementId 2291 ;
+    rdfs:label "The Moot II: The Perfected Mace" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29166_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29166 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2374" ;
+    priory:achievementId 2374 ;
+    rdfs:label "The Moot III: The Energizer" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29167_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29167 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2478" ;
+    priory:achievementId 2478 ;
+    rdfs:label "Frostfang I: The Experimental Axe" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29167_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29167 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2606" ;
+    priory:achievementId 2606 ;
+    rdfs:label "Frostfang II: The Perfected Axe" ;
+    priory:bitsTotal 12 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29167_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29167 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2393" ;
+    priory:achievementId 2393 ;
+    rdfs:label "Frostfang III: Tooth of Frostfang" ;
+    priory:bitsTotal 34 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29168_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29168 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2389" ;
+    priory:achievementId 2389 ;
+    rdfs:label "Quip I: The Experimental Pistol" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29168_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29168 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2498" ;
+    priory:achievementId 2498 ;
+    rdfs:label "Quip II: The Perfected Pistol" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29168_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29168 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2524" ;
+    priory:achievementId 2524 ;
+    rdfs:label "Quip III: Chaos Gun" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29169_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29169 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2253" ;
+    priory:achievementId 2253 ;
+    rdfs:label "Sunrise I: The Experimental Daysword" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29169_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29169 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2278" ;
+    priory:achievementId 2278 ;
+    rdfs:label "Sunrise II: The Perfected Daysword" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29169_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29169 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2630" ;
+    priory:achievementId 2630 ;
+    rdfs:label "Sunrise III: Dawn" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29170_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29170 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2479" ;
+    priory:achievementId 2479 ;
+    rdfs:label "The Flameseeker Prophecies I: The Experimental Shield" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29170_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29170 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2390" ;
+    priory:achievementId 2390 ;
+    rdfs:label "The Flameseeker Prophecies II: The Perfected Shield" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29170_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29170 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2536" ;
+    priory:achievementId 2536 ;
+    rdfs:label "The Flameseeker Prophecies III: The Chosen" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29171_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29171 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2441" ;
+    priory:achievementId 2441 ;
+    rdfs:label "Meteorlogicus I: The Experimental Scepter" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29171_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29171 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2391" ;
+    priory:achievementId 2391 ;
+    rdfs:label "Meteorlogicus II: The Perfected Scepter" ;
+    priory:bitsTotal 11 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29171_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29171 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2449" ;
+    priory:achievementId 2449 ;
+    rdfs:label "Meteorlogicus III: Storm" ;
+    priory:bitsTotal 29 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29172_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29172 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2193" ;
+    priory:achievementId 2193 ;
+    rdfs:label "Kudzu I: The Experimental Longbow" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29172_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29172 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2311" ;
+    priory:achievementId 2311 ;
+    rdfs:label "Kudzu II: The Perfected Longbow" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29172_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29172 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2383" ;
+    priory:achievementId 2383 ;
+    rdfs:label "Kudzu III: Leaf of Kudzu" ;
+    priory:bitsTotal 29 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29173_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29173 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2642" ;
+    priory:achievementId 2642 ;
+    rdfs:label "Kamohoali'i Kotaki I: The Experimental Spear" ;
+    priory:bitsTotal 6 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29173_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29173 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2306" ;
+    priory:achievementId 2306 ;
+    rdfs:label "Kamohoali'i Kotaki II: The Perfected Spear" ;
+    priory:bitsTotal 7 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29173_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29173 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2535" ;
+    priory:achievementId 2535 ;
+    rdfs:label "Kamohoali'i Kotaki III: Carcharias" ;
+    priory:bitsTotal 28 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29174_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29174 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2313" ;
+    priory:achievementId 2313 ;
+    rdfs:label "The Minstrel I: The Experimental Focus" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29174_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29174 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2213" ;
+    priory:achievementId 2213 ;
+    rdfs:label "The Minstrel II: The Perfected Focus" ;
+    priory:bitsTotal 12 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29174_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29174 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2242" ;
+    priory:achievementId 2242 ;
+    rdfs:label "The Minstrel III: The Bard" ;
+    priory:bitsTotal 33 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29175_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29175 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2534" ;
+    priory:achievementId 2534 ;
+    rdfs:label "The Predator I: The Experimental Rifle" ;
+    priory:bitsTotal 17 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29175_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29175 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2503" ;
+    priory:achievementId 2503 ;
+    rdfs:label "The Predator II: The Perfected Rifle" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29175_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29175 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2280" ;
+    priory:achievementId 2280 ;
+    rdfs:label "The Predator III: The Hunter" ;
+    priory:bitsTotal 24 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29176_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29176 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2180" ;
+    priory:achievementId 2180 ;
+    rdfs:label "Rodgort I: The Experimental Torch" ;
+    priory:bitsTotal 11 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29176_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29176 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2596" ;
+    priory:achievementId 2596 ;
+    rdfs:label "Rodgort II: The Perfected Torch" ;
+    priory:bitsTotal 12 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29176_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29176 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2388" ;
+    priory:achievementId 2388 ;
+    rdfs:label "Rodgort III: Rodgort's Flame" ;
+    priory:bitsTotal 31 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29177_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29177 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2564" ;
+    priory:achievementId 2564 ;
+    rdfs:label "Incinerator I: The Experimental Dagger" ;
+    priory:bitsTotal 18 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29177_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29177 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2458" ;
+    priory:achievementId 2458 ;
+    rdfs:label "Incinerator II: The Perfected Dagger" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29177_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29177 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2502" ;
+    priory:achievementId 2502 ;
+    rdfs:label "Incinerator III: Spark" ;
+    priory:bitsTotal 24 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29178_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29178 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2481" ;
+    priory:achievementId 2481 ;
+    rdfs:label "The Dreamer I: The Experimental Short Bow" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29178_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29178 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2610" ;
+    priory:achievementId 2610 ;
+    rdfs:label "The Dreamer II: The Perfected Short Bow" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29178_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29178 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2428" ;
+    priory:achievementId 2428 ;
+    rdfs:label "The Dreamer III: The Lover" ;
+    priory:bitsTotal 30 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29179_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29179 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2438" ;
+    priory:achievementId 2438 ;
+    rdfs:label "The Juggernaut I: The Experimental Hammer" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29179_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29179 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2241" ;
+    priory:achievementId 2241 ;
+    rdfs:label "The Juggernaut II: The Perfected Hammer" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29179_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29179 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2468" ;
+    priory:achievementId 2468 ;
+    rdfs:label "The Juggernaut III: The Colossus" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29180_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29180 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2530" ;
+    priory:achievementId 2530 ;
+    rdfs:label "The Bifrost I: The Experimental Staff" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29180_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29180 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2500" ;
+    priory:achievementId 2500 ;
+    rdfs:label "The Bifrost II: The Perfected Staff" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29180_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29180 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2187" ;
+    priory:achievementId 2187 ;
+    rdfs:label "The Bifrost III: The Legend" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29181_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29181 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2355" ;
+    priory:achievementId 2355 ;
+    rdfs:label "Bolt I: The Experimental Sword" ;
+    priory:bitsTotal 21 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29181_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29181 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2356" ;
+    priory:achievementId 2356 ;
+    rdfs:label "Bolt II: The Perfected Sword" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29181_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29181 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2480" ;
+    priory:achievementId 2480 ;
+    rdfs:label "Bolt III: Zap" ;
+    priory:bitsTotal 30 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29182_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29182 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2637" ;
+    priory:achievementId 2637 ;
+    rdfs:label "Frenzy I: The Experimental Harpoon Gun" ;
+    priory:bitsTotal 6 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29182_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29182 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2232" ;
+    priory:achievementId 2232 ;
+    rdfs:label "Frenzy II: The Perfected Harpoon Gun" ;
+    priory:bitsTotal 7 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29182_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29182 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2409" ;
+    priory:achievementId 2409 ;
+    rdfs:label "Frenzy III: Rage" ;
+    priory:bitsTotal 18 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29183_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29183 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2483" ;
+    priory:achievementId 2483 ;
+    rdfs:label "Kraitkin I: The Experimental Trident" ;
+    priory:bitsTotal 7 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29183_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29183 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2522" ;
+    priory:achievementId 2522 ;
+    rdfs:label "Kraitkin II: The Perfected Trident" ;
+    priory:bitsTotal 9 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29183_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29183 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2296" ;
+    priory:achievementId 2296 ;
+    rdfs:label "Kraitkin III: Venom" ;
+    priory:bitsTotal 21 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29184_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29184 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2270" ;
+    priory:achievementId 2270 ;
+    rdfs:label "Howler I: The Experimental Warhorn" ;
+    priory:bitsTotal 22 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29184_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29184 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2588" ;
+    priory:achievementId 2588 ;
+    rdfs:label "Howler II: The Perfected Warhorn" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29184_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29184 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2260" ;
+    priory:achievementId 2260 ;
+    rdfs:label "Howler III: Howl" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_29185_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29185 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2420,2379" ;
+    priory:achievementId 2420 ;
+    priory:achievementId 2379 ;
+    rdfs:label "Dusk I: The Experimental Nightsword" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_29185_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29185 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2184,2455,2382" ;
+    priory:achievementId 2184 ;
+    priory:achievementId 2455 ;
+    priory:achievementId 2382 ;
+    rdfs:label "Dusk II: The Perfected Nightsword" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_29185_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 29185 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2183,2380" ;
+    priory:achievementId 2183 ;
+    priory:achievementId 2380 ;
+    rdfs:label "Dusk III: Dusk" ;
+    priory:bitsTotal 30 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30684_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30684 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2478" ;
+    priory:achievementId 2478 ;
+    rdfs:label "Frostfang I: The Experimental Axe" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30684_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30684 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2606" ;
+    priory:achievementId 2606 ;
+    rdfs:label "Frostfang II: The Perfected Axe" ;
+    priory:bitsTotal 12 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30684_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30684 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2393" ;
+    priory:achievementId 2393 ;
+    rdfs:label "Frostfang III: Tooth of Frostfang" ;
+    priory:bitsTotal 34 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30685_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30685 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2193" ;
+    priory:achievementId 2193 ;
+    rdfs:label "Kudzu I: The Experimental Longbow" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30685_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30685 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2311" ;
+    priory:achievementId 2311 ;
+    rdfs:label "Kudzu II: The Perfected Longbow" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30685_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30685 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2383" ;
+    priory:achievementId 2383 ;
+    rdfs:label "Kudzu III: Leaf of Kudzu" ;
+    priory:bitsTotal 29 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30686_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30686 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2481" ;
+    priory:achievementId 2481 ;
+    rdfs:label "The Dreamer I: The Experimental Short Bow" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30686_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30686 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2610" ;
+    priory:achievementId 2610 ;
+    rdfs:label "The Dreamer II: The Perfected Short Bow" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30686_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30686 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2428" ;
+    priory:achievementId 2428 ;
+    rdfs:label "The Dreamer III: The Lover" ;
+    priory:bitsTotal 30 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30687_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30687 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2564" ;
+    priory:achievementId 2564 ;
+    rdfs:label "Incinerator I: The Experimental Dagger" ;
+    priory:bitsTotal 18 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30687_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30687 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2458" ;
+    priory:achievementId 2458 ;
+    rdfs:label "Incinerator II: The Perfected Dagger" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30687_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30687 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2502" ;
+    priory:achievementId 2502 ;
+    rdfs:label "Incinerator III: Spark" ;
+    priory:bitsTotal 24 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30688_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30688 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2313" ;
+    priory:achievementId 2313 ;
+    rdfs:label "The Minstrel I: The Experimental Focus" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30688_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30688 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2213" ;
+    priory:achievementId 2213 ;
+    rdfs:label "The Minstrel II: The Perfected Focus" ;
+    priory:bitsTotal 12 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30688_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30688 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2242" ;
+    priory:achievementId 2242 ;
+    rdfs:label "The Minstrel III: The Bard" ;
+    priory:bitsTotal 33 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30690_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30690 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2438" ;
+    priory:achievementId 2438 ;
+    rdfs:label "The Juggernaut I: The Experimental Hammer" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30690_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30690 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2241" ;
+    priory:achievementId 2241 ;
+    rdfs:label "The Juggernaut II: The Perfected Hammer" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30690_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30690 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2468" ;
+    priory:achievementId 2468 ;
+    rdfs:label "The Juggernaut III: The Colossus" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30691_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30691 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2642" ;
+    priory:achievementId 2642 ;
+    rdfs:label "Kamohoali'i Kotaki I: The Experimental Spear" ;
+    priory:bitsTotal 6 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30691_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30691 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2306" ;
+    priory:achievementId 2306 ;
+    rdfs:label "Kamohoali'i Kotaki II: The Perfected Spear" ;
+    priory:bitsTotal 7 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30691_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30691 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2535" ;
+    priory:achievementId 2535 ;
+    rdfs:label "Kamohoali'i Kotaki III: Carcharias" ;
+    priory:bitsTotal 28 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30692_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30692 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2177" ;
+    priory:achievementId 2177 ;
+    rdfs:label "The Moot I: The Experimental Mace" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30692_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30692 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2291" ;
+    priory:achievementId 2291 ;
+    rdfs:label "The Moot II: The Perfected Mace" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30692_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30692 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2374" ;
+    priory:achievementId 2374 ;
+    rdfs:label "The Moot III: The Energizer" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30693_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30693 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2389" ;
+    priory:achievementId 2389 ;
+    rdfs:label "Quip I: The Experimental Pistol" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30693_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30693 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2498" ;
+    priory:achievementId 2498 ;
+    rdfs:label "Quip II: The Perfected Pistol" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30693_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30693 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2524" ;
+    priory:achievementId 2524 ;
+    rdfs:label "Quip III: Chaos Gun" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30694_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30694 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2534" ;
+    priory:achievementId 2534 ;
+    rdfs:label "The Predator I: The Experimental Rifle" ;
+    priory:bitsTotal 17 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30694_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30694 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2503" ;
+    priory:achievementId 2503 ;
+    rdfs:label "The Predator II: The Perfected Rifle" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30694_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30694 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2280" ;
+    priory:achievementId 2280 ;
+    rdfs:label "The Predator III: The Hunter" ;
+    priory:bitsTotal 24 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30695_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30695 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2441" ;
+    priory:achievementId 2441 ;
+    rdfs:label "Meteorlogicus I: The Experimental Scepter" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30695_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30695 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2391" ;
+    priory:achievementId 2391 ;
+    rdfs:label "Meteorlogicus II: The Perfected Scepter" ;
+    priory:bitsTotal 11 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30695_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30695 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2449" ;
+    priory:achievementId 2449 ;
+    rdfs:label "Meteorlogicus III: Storm" ;
+    priory:bitsTotal 29 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30696_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30696 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2479" ;
+    priory:achievementId 2479 ;
+    rdfs:label "The Flameseeker Prophecies I: The Experimental Shield" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30696_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30696 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2390" ;
+    priory:achievementId 2390 ;
+    rdfs:label "The Flameseeker Prophecies II: The Perfected Shield" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30696_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30696 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2536" ;
+    priory:achievementId 2536 ;
+    rdfs:label "The Flameseeker Prophecies III: The Chosen" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30697_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30697 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2637" ;
+    priory:achievementId 2637 ;
+    rdfs:label "Frenzy I: The Experimental Harpoon Gun" ;
+    priory:bitsTotal 6 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30697_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30697 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2232" ;
+    priory:achievementId 2232 ;
+    rdfs:label "Frenzy II: The Perfected Harpoon Gun" ;
+    priory:bitsTotal 7 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30697_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30697 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2409" ;
+    priory:achievementId 2409 ;
+    rdfs:label "Frenzy III: Rage" ;
+    priory:bitsTotal 18 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30698_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30698 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2530" ;
+    priory:achievementId 2530 ;
+    rdfs:label "The Bifrost I: The Experimental Staff" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30698_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30698 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2500" ;
+    priory:achievementId 2500 ;
+    rdfs:label "The Bifrost II: The Perfected Staff" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30698_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30698 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2187" ;
+    priory:achievementId 2187 ;
+    rdfs:label "The Bifrost III: The Legend" ;
+    priory:bitsTotal 32 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30699_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30699 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2355" ;
+    priory:achievementId 2355 ;
+    rdfs:label "Bolt I: The Experimental Sword" ;
+    priory:bitsTotal 21 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30699_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30699 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2356" ;
+    priory:achievementId 2356 ;
+    rdfs:label "Bolt II: The Perfected Sword" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30699_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30699 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2480" ;
+    priory:achievementId 2480 ;
+    rdfs:label "Bolt III: Zap" ;
+    priory:bitsTotal 30 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30700_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30700 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2180" ;
+    priory:achievementId 2180 ;
+    rdfs:label "Rodgort I: The Experimental Torch" ;
+    priory:bitsTotal 11 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30700_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30700 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2596" ;
+    priory:achievementId 2596 ;
+    rdfs:label "Rodgort II: The Perfected Torch" ;
+    priory:bitsTotal 12 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30700_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30700 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2388" ;
+    priory:achievementId 2388 ;
+    rdfs:label "Rodgort III: Rodgort's Flame" ;
+    priory:bitsTotal 31 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30701_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30701 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2483" ;
+    priory:achievementId 2483 ;
+    rdfs:label "Kraitkin I: The Experimental Trident" ;
+    priory:bitsTotal 7 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30701_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30701 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2522" ;
+    priory:achievementId 2522 ;
+    rdfs:label "Kraitkin II: The Perfected Trident" ;
+    priory:bitsTotal 9 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30701_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30701 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2296" ;
+    priory:achievementId 2296 ;
+    rdfs:label "Kraitkin III: Venom" ;
+    priory:bitsTotal 21 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30702_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30702 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2270" ;
+    priory:achievementId 2270 ;
+    rdfs:label "Howler I: The Experimental Warhorn" ;
+    priory:bitsTotal 22 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30702_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30702 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2588" ;
+    priory:achievementId 2588 ;
+    rdfs:label "Howler II: The Perfected Warhorn" ;
+    priory:bitsTotal 13 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30702_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30702 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2260" ;
+    priory:achievementId 2260 ;
+    rdfs:label "Howler III: Howl" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30703_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30703 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2253" ;
+    priory:achievementId 2253 ;
+    rdfs:label "Sunrise I: The Experimental Daysword" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30703_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30703 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2278" ;
+    priory:achievementId 2278 ;
+    rdfs:label "Sunrise II: The Perfected Daysword" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30703_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30703 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2630" ;
+    priory:achievementId 2630 ;
+    rdfs:label "Sunrise III: Dawn" ;
+    priory:bitsTotal 35 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_30704_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30704 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2420,2379" ;
+    priory:achievementId 2420 ;
+    priory:achievementId 2379 ;
+    rdfs:label "Dusk I: The Experimental Nightsword" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_30704_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30704 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2184,2455,2382" ;
+    priory:achievementId 2184 ;
+    priory:achievementId 2455 ;
+    priory:achievementId 2382 ;
+    rdfs:label "Dusk II: The Perfected Nightsword" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_30704_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 30704 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2183,2380" ;
+    priory:achievementId 2183 ;
+    priory:achievementId 2380 ;
+    rdfs:label "Dusk III: Dusk" ;
+    priory:bitsTotal 30 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_71383_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71383 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2528" ;
+    priory:achievementId 2528 ;
+    rdfs:label "Nevermore I: Ravenswood Branch" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_71383_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71383 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2288" ;
+    priory:achievementId 2288 ;
+    rdfs:label "Nevermore II: Ravenswood Staff" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_71383_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71383 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2336" ;
+    priory:achievementId 2336 ;
+    rdfs:label "Nevermore III: The Raven Staff" ;
+    priory:bitsTotal 34 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_71383_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71383 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2550" ;
+    priory:achievementId 2550 ;
+    rdfs:label "Nevermore IV: The Raven Spirit" ;
+    priory:bitsTotal 63 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_71384_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71384 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2528" ;
+    priory:achievementId 2528 ;
+    rdfs:label "Nevermore I: Ravenswood Branch" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_71384_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71384 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2288" ;
+    priory:achievementId 2288 ;
+    rdfs:label "Nevermore II: Ravenswood Staff" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_71384_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71384 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2336" ;
+    priory:achievementId 2336 ;
+    rdfs:label "Nevermore III: The Raven Staff" ;
+    priory:bitsTotal 34 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_71384_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71384 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2550" ;
+    priory:achievementId 2550 ;
+    rdfs:label "Nevermore IV: The Raven Spirit" ;
+    priory:bitsTotal 63 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_71436_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71436 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2528" ;
+    priory:achievementId 2528 ;
+    rdfs:label "Nevermore I: Ravenswood Branch" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_71436_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71436 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2288" ;
+    priory:achievementId 2288 ;
+    rdfs:label "Nevermore II: Ravenswood Staff" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_71436_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71436 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2336" ;
+    priory:achievementId 2336 ;
+    rdfs:label "Nevermore III: The Raven Staff" ;
+    priory:bitsTotal 34 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_71436_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71436 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2550" ;
+    priory:achievementId 2550 ;
+    rdfs:label "Nevermore IV: The Raven Spirit" ;
+    priory:bitsTotal 63 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_71950_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71950 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2450" ;
+    priory:achievementId 2450 ;
+    rdfs:label "HOPE I: Research" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_71950_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71950 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2354" ;
+    priory:achievementId 2354 ;
+    rdfs:label "HOPE II: Development" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_71950_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71950 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2556" ;
+    priory:achievementId 2556 ;
+    rdfs:label "HOPE III: Prototype" ;
+    priory:bitsTotal 31 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_71950_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 71950 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2250" ;
+    priory:achievementId 2250 ;
+    rdfs:label "HOPE IV: The Catalyst" ;
+    priory:bitsTotal 59 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_72713_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 72713 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2450" ;
+    priory:achievementId 2450 ;
+    rdfs:label "HOPE I: Research" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_72713_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 72713 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2354" ;
+    priory:achievementId 2354 ;
+    rdfs:label "HOPE II: Development" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_72713_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 72713 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2556" ;
+    priory:achievementId 2556 ;
+    rdfs:label "HOPE III: Prototype" ;
+    priory:bitsTotal 31 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_72713_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 72713 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2250" ;
+    priory:achievementId 2250 ;
+    rdfs:label "HOPE IV: The Catalyst" ;
+    priory:bitsTotal 59 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_75207_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75207 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2450" ;
+    priory:achievementId 2450 ;
+    rdfs:label "HOPE I: Research" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_75207_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75207 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2354" ;
+    priory:achievementId 2354 ;
+    rdfs:label "HOPE II: Development" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_75207_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75207 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2556" ;
+    priory:achievementId 2556 ;
+    rdfs:label "HOPE III: Prototype" ;
+    priory:bitsTotal 31 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_75207_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75207 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2250" ;
+    priory:achievementId 2250 ;
+    rdfs:label "HOPE IV: The Catalyst" ;
+    priory:bitsTotal 59 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_75208_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75208 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2450" ;
+    priory:achievementId 2450 ;
+    rdfs:label "HOPE I: Research" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_75208_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75208 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2354" ;
+    priory:achievementId 2354 ;
+    rdfs:label "HOPE II: Development" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_75208_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75208 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2556" ;
+    priory:achievementId 2556 ;
+    rdfs:label "HOPE III: Prototype" ;
+    priory:bitsTotal 31 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_75208_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 75208 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2250" ;
+    priory:achievementId 2250 ;
+    rdfs:label "HOPE IV: The Catalyst" ;
+    priory:bitsTotal 59 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_76158_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76158 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2571" ;
+    priory:achievementId 2571 ;
+    rdfs:label "Astralaria I: The Device" ;
+    priory:bitsTotal 19 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_76158_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76158 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2447" ;
+    priory:achievementId 2447 ;
+    rdfs:label "Astralaria II: The Apparatus" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_76158_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76158 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2433" ;
+    priory:achievementId 2433 ;
+    rdfs:label "Astralaria III: The Mechanism" ;
+    priory:bitsTotal 33 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_76158_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76158 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2268" ;
+    priory:achievementId 2268 ;
+    rdfs:label "Astralaria IV: The Cosmos" ;
+    priory:bitsTotal 54 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_76159_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76159 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2571" ;
+    priory:achievementId 2571 ;
+    rdfs:label "Astralaria I: The Device" ;
+    priory:bitsTotal 19 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_76159_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76159 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2447" ;
+    priory:achievementId 2447 ;
+    rdfs:label "Astralaria II: The Apparatus" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_76159_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76159 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2433" ;
+    priory:achievementId 2433 ;
+    rdfs:label "Astralaria III: The Mechanism" ;
+    priory:bitsTotal 33 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_76159_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76159 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2268" ;
+    priory:achievementId 2268 ;
+    rdfs:label "Astralaria IV: The Cosmos" ;
+    priory:bitsTotal 54 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_76688_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76688 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2571" ;
+    priory:achievementId 2571 ;
+    rdfs:label "Astralaria I: The Device" ;
+    priory:bitsTotal 19 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_76688_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76688 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2447" ;
+    priory:achievementId 2447 ;
+    rdfs:label "Astralaria II: The Apparatus" ;
+    priory:bitsTotal 14 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_76688_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76688 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2433" ;
+    priory:achievementId 2433 ;
+    rdfs:label "Astralaria III: The Mechanism" ;
+    priory:bitsTotal 33 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_76688_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 76688 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2268" ;
+    priory:achievementId 2268 ;
+    rdfs:label "Astralaria IV: The Cosmos" ;
+    priory:bitsTotal 54 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_78052_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78052 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2920,2990" ;
+    priory:achievementId 2920 ;
+    priory:achievementId 2990 ;
+    rdfs:label "Chuka and Champawat I: Hunter's Journal" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_78052_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78052 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2921" ;
+    priory:achievementId 2921 ;
+    rdfs:label "Chuka and Champawat II: Ambush" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_78052_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78052 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2951,2946" ;
+    priory:achievementId 2951 ;
+    priory:achievementId 2946 ;
+    rdfs:label "Chuka and Champawat III: Tigris" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_78052_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78052 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2913,2943,2974" ;
+    priory:achievementId 2913 ;
+    priory:achievementId 2943 ;
+    priory:achievementId 2974 ;
+    rdfs:label "Chuka and Champawat IV: Baby Book" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_78053_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78053 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2920,2990" ;
+    priory:achievementId 2920 ;
+    priory:achievementId 2990 ;
+    rdfs:label "Chuka and Champawat I: Hunter's Journal" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_78053_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78053 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2921" ;
+    priory:achievementId 2921 ;
+    rdfs:label "Chuka and Champawat II: Ambush" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_78053_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78053 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2951,2946" ;
+    priory:achievementId 2951 ;
+    priory:achievementId 2946 ;
+    rdfs:label "Chuka and Champawat III: Tigris" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_78053_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78053 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2913,2943,2974" ;
+    priory:achievementId 2913 ;
+    priory:achievementId 2943 ;
+    priory:achievementId 2974 ;
+    rdfs:label "Chuka and Champawat IV: Baby Book" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .
+
+priory:HobbsStage_78556_T1 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78556 ;
+    priory:collectionTierNumber 1 ;
+    priory:achievementIdsCsv "2920,2990" ;
+    priory:achievementId 2920 ;
+    priory:achievementId 2990 ;
+    rdfs:label "Chuka and Champawat I: Hunter's Journal" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 1 ;
+    priory:masteryName "Revered Antiquarian" .
+
+priory:HobbsStage_78556_T2 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78556 ;
+    priory:collectionTierNumber 2 ;
+    priory:achievementIdsCsv "2921" ;
+    priory:achievementId 2921 ;
+    rdfs:label "Chuka and Champawat II: Ambush" ;
+    priory:bitsTotal 16 ;
+    priory:masteryTier 2 ;
+    priory:masteryName "Magister of Legends" .
+
+priory:HobbsStage_78556_T3 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78556 ;
+    priory:collectionTierNumber 3 ;
+    priory:achievementIdsCsv "2951,2946" ;
+    priory:achievementId 2951 ;
+    priory:achievementId 2946 ;
+    rdfs:label "Chuka and Champawat III: Tigris" ;
+    priory:bitsTotal 20 ;
+    priory:masteryTier 3 ;
+    priory:masteryName "Historian of the Armaments" .
+
+priory:HobbsStage_78556_T4 a priory:HobbsCollectionStage, owl:NamedIndividual ;
+    priory:forPrecursorId 78556 ;
+    priory:collectionTierNumber 4 ;
+    priory:achievementIdsCsv "2913,2943,2974" ;
+    priory:achievementId 2913 ;
+    priory:achievementId 2943 ;
+    priory:achievementId 2974 ;
+    rdfs:label "Chuka and Champawat IV: Baby Book" ;
+    priory:bitsTotal 15 ;
+    priory:masteryTier 4 ;
+    priory:masteryName "Scholar of Secrets" .

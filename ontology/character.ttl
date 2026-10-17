@@ -220,7 +220,7 @@ priory:canEquipWeaponType a owl:ObjectProperty ;
 # ==============================================================================
 
 priory:characterName a owl:DatatypeProperty ;
-    rdfs:domain priory:Character ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (priory:Character priory:DefaultRosterMember) ] ;
     rdfs:range xsd:string ;
     rdfs:label "character name"@en ;
     skos:definition "A string datatype property that records the unique display name of a player character."@en .
@@ -626,21 +626,32 @@ priory:StatCombinationScheme a skos:ConceptScheme ;
     skos:prefLabel "Stat Combination Scheme"@en ;
     skos:definition "A SKOS concept scheme classifying named equipment attribute prefixes (such as Berserker's, Viper's, and Celestial)."@en .
 
-priory:Berserker a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Berserker's"@en ; skos:definition "A three-stat attribute combination concept granting major Power with minor Precision and Ferocity."@en .
-priory:Viper a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Viper's"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Condition Damage with minor Precision and Expertise."@en .
-priory:Celestial a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Celestial"@en ; skos:definition "An all-stat attribute combination concept granting balanced bonuses across all nine combat attributes."@en .
-priory:Marauder a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Marauder"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Precision with minor Vitality and Ferocity."@en .
-priory:Harrier a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Harrier's"@en ; skos:definition "A three-stat attribute combination concept granting major Power with minor Healing Power and Concentration."@en .
-priory:Diviner a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Diviner's"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Concentration with minor Precision and Ferocity."@en .
-priory:Minstrel a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Minstrel's"@en ; skos:definition "A four-stat attribute combination concept granting major Toughness and Healing Power with minor Vitality and Concentration."@en .
-priory:Trailblazer a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Trailblazer's"@en ; skos:definition "A four-stat attribute combination concept granting major Toughness and Condition Damage with minor Vitality and Expertise."@en .
-priory:Assassin a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Assassin's"@en ; skos:definition "A three-stat attribute combination concept granting major Precision with minor Power and Ferocity."@en .
-priory:Ritualist a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Ritualist's"@en ; skos:definition "A four-stat attribute combination concept granting major Vitality and Condition Damage with minor Concentration and Expertise."@en .
-priory:Dragon a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Dragon's"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Ferocity with minor Precision and Vitality."@en .
-priory:Knight a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Knight's"@en ; skos:definition "A three-stat attribute combination concept granting major Toughness with minor Power and Precision."@en .
-priory:Cavalier a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Cavalier's"@en ; skos:definition "A three-stat attribute combination concept granting major Toughness with minor Power and Ferocity."@en .
-priory:Sinister a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Sinister"@en ; skos:definition "A three-stat attribute combination concept granting major Condition Damage with minor Power and Precision."@en .
-priory:Grieving a skos:Concept ; skos:inScheme priory:StatCombinationScheme ; skos:prefLabel "Grieving"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Condition Damage with minor Precision and Ferocity."@en .
+priory:StatPrefix a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Equipment Stat Prefix"@en ;
+    skos:definition "An equipment attribute combination prefix that maps an API/build stat slug to its canonical Priory URI."@en .
+
+priory:statSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "stat combination slug"@en ;
+    skos:definition "A lowercase string identifier mapping a build or API stat prefix name to its StatPrefix concept."@en .
+
+priory:Berserker a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "berserker" ; skos:prefLabel "Berserker's"@en ; skos:definition "A three-stat attribute combination concept granting major Power with minor Precision and Ferocity."@en .
+priory:Viper a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "viper" ; skos:prefLabel "Viper's"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Condition Damage with minor Precision and Expertise."@en .
+priory:Celestial a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "celestial" ; skos:prefLabel "Celestial"@en ; skos:definition "An all-stat attribute combination concept granting balanced bonuses across all nine combat attributes."@en .
+priory:Marauder a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "marauder" ; skos:prefLabel "Marauder"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Precision with minor Vitality and Ferocity."@en .
+priory:Harrier a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "harrier" ; skos:prefLabel "Harrier's"@en ; skos:definition "A three-stat attribute combination concept granting major Power with minor Healing Power and Concentration."@en .
+priory:Diviner a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "diviner" ; skos:prefLabel "Diviner's"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Concentration with minor Precision and Ferocity."@en .
+priory:Minstrel a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "minstrel" ; skos:prefLabel "Minstrel's"@en ; skos:definition "A four-stat attribute combination concept granting major Toughness and Healing Power with minor Vitality and Concentration."@en .
+priory:Trailblazer a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "trailblazer" ; skos:prefLabel "Trailblazer's"@en ; skos:definition "A four-stat attribute combination concept granting major Toughness and Condition Damage with minor Vitality and Expertise."@en .
+priory:Assassin a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "assassin" ; skos:prefLabel "Assassin's"@en ; skos:definition "A three-stat attribute combination concept granting major Precision with minor Power and Ferocity."@en .
+priory:Ritualist a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "ritualist" ; skos:prefLabel "Ritualist's"@en ; skos:definition "A four-stat attribute combination concept granting major Vitality and Condition Damage with minor Concentration and Expertise."@en .
+priory:Dragon a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "dragon" ; skos:prefLabel "Dragon's"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Ferocity with minor Precision and Vitality."@en .
+priory:Knight a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "knight" ; skos:prefLabel "Knight's"@en ; skos:definition "A three-stat attribute combination concept granting major Toughness with minor Power and Precision."@en .
+priory:Cavalier a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "cavalier" ; skos:prefLabel "Cavalier's"@en ; skos:definition "A three-stat attribute combination concept granting major Toughness with minor Power and Ferocity."@en .
+priory:Sinister a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "sinister" ; skos:prefLabel "Sinister"@en ; skos:definition "A three-stat attribute combination concept granting major Condition Damage with minor Power and Precision."@en .
+priory:Grieving a skos:Concept, priory:StatPrefix ; skos:inScheme priory:StatCombinationScheme ; priory:statSlug "grieving" ; skos:prefLabel "Grieving"@en ; skos:definition "A four-stat attribute combination concept granting major Power and Condition Damage with minor Precision and Ferocity."@en .
 
 # ==============================================================================
 # Controlled Vocabularies: Elite & Core Specializations (SKOS)
@@ -695,3 +706,194 @@ priory:Virtuoso a skos:Concept ; skos:inScheme priory:SpecializationScheme ; sko
 priory:Reaper a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Reaper"@en ; priory:isEliteSpecialization true ; skos:definition "A Necromancer elite specialization concept from Heart of Thorns that wields Greatswords and enters melee Reaper's Shroud."@en .
 priory:Scourge a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Scourge"@en ; priory:isEliteSpecialization true ; skos:definition "A Necromancer elite specialization concept from Path of Fire that wields Torches and manifests Sand Shades to corrupt boons and grant barrier."@en .
 priory:Harbinger a skos:Concept ; skos:inScheme priory:SpecializationScheme ; skos:prefLabel "Harbinger"@en ; priory:isEliteSpecialization true ; skos:definition "A Necromancer elite specialization concept from End of Dragons that wields Pistols and consumes Elixirs to accumulate Blight in Harbinger Shroud."@en .
+
+# ==============================================================================
+# Crafting Discipline Stations & Mystic Forge Spatial Routing
+# ==============================================================================
+
+priory:CraftingStation a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Crafting Discipline Station"@en ;
+    skos:definition "An in-game crafting station or Mystic Forge location with associated master crafter NPC, primary waypoint, zone, and alternate hub waypoint."@en .
+
+priory:disciplineSlug a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "crafting discipline slug"@en ;
+    skos:definition "A lowercase string identifier for a crafting station or discipline (e.g., weaponsmith, armorsmith, mystic_forge)."@en .
+
+priory:alternateWaypoint a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:string ;
+    rdfs:label "alternate hub waypoint chat code"@en ;
+    skos:definition "A string datatype property recording the alternate waypoint chat link code for a crafting station."@en .
+
+priory:StationWeaponsmith a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Weaponsmithing Station" ;
+    priory:disciplineSlug "weaponsmith" ;
+    priory:forDiscipline discipline:Weaponsmith ;
+    priory:vendorNPC "Master Craftsman Hobbs" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BKgDAAA=]" .
+
+priory:StationArmorsmith a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Armorsmithing Station" ;
+    priory:disciplineSlug "armorsmith" ;
+    priory:forDiscipline discipline:Armorsmith ;
+    priory:vendorNPC "Master Armorsmith" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BKgDAAA=]" .
+
+priory:StationArtificer a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Artificing Station" ;
+    priory:disciplineSlug "artificer" ;
+    priory:forDiscipline discipline:Artificer ;
+    priory:vendorNPC "Master Artificer" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BLcEAAA=]" .
+
+priory:StationHuntsman a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Huntsman's Station" ;
+    priory:disciplineSlug "huntsman" ;
+    priory:forDiscipline discipline:Huntsman ;
+    priory:vendorNPC "Master Huntsman" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BCkDAAA=]" .
+
+priory:StationTailor a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Tailoring Station" ;
+    priory:disciplineSlug "tailor" ;
+    priory:forDiscipline discipline:Tailor ;
+    priory:vendorNPC "Master Tailor" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BLcEAAA=]" .
+
+priory:StationLeatherworker a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Leatherworking Station" ;
+    priory:disciplineSlug "leatherworker" ;
+    priory:forDiscipline discipline:Leatherworker ;
+    priory:vendorNPC "Master Leatherworker" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BCkDAAA=]" .
+
+priory:StationJeweler a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Jeweler's Station" ;
+    priory:disciplineSlug "jeweler" ;
+    priory:forDiscipline discipline:Jeweler ;
+    priory:vendorNPC "Master Jeweler" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BLcEAAA=]" .
+
+priory:StationChef a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Cooking Station" ;
+    priory:disciplineSlug "chef" ;
+    priory:forDiscipline discipline:Chef ;
+    priory:vendorNPC "Master Chef" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&BKgDAAA=]" .
+
+priory:StationMysticForge a priory:CraftingStation, owl:NamedIndividual ;
+    rdfs:label "Mystic Forge" ;
+    priory:disciplineSlug "mystic_forge" ;
+    priory:vendorNPC "Miyani" ;
+    priory:nearestWaypoint "[&BBAEAAA=]" ;
+    priory:zoneName "Lion's Arch" ;
+    priory:alternateWaypoint "[&DYEFAAA=]" .
+
+# ==============================================================================
+# Default Account Character Roster (Fallback Profile)
+# ==============================================================================
+
+priory:DefaultRosterMember a owl:Class ;
+    rdfs:subClassOf priory:Entity ;
+    rdfs:label "Default Account Roster Member"@en ;
+    skos:definition "A default fallback character roster entry used when live GW2 API character rosters are not provided."@en .
+
+priory:rosterOrder a owl:DatatypeProperty ;
+    rdfs:domain priory:Entity ;
+    rdfs:range xsd:integer ;
+    rdfs:label "roster display order"@en ;
+    skos:definition "An integer datatype property specifying the canonical sequence index of a character in the default account roster."@en .
+
+priory:rosterCharacterName a owl:DatatypeProperty ;
+    rdfs:domain priory:DefaultRosterMember ;
+    rdfs:range xsd:string ;
+    rdfs:label "default roster character name"@en ;
+    skos:definition "A string datatype property recording the character name of a default account roster entry."@en .
+
+priory:RosterMember_1 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Kerling" ;
+    priory:characterName "Kerling" ;
+    priory:rosterCharacterName "Kerling" ;
+    priory:rosterOrder 1 .
+
+priory:RosterMember_2 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Skuta Rantakallio" ;
+    priory:characterName "Skuta Rantakallio" ;
+    priory:rosterCharacterName "Skuta Rantakallio" ;
+    priory:rosterOrder 2 .
+
+priory:RosterMember_3 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Legacy Of Harathi" ;
+    priory:characterName "Legacy Of Harathi" ;
+    priory:rosterCharacterName "Legacy Of Harathi" ;
+    priory:rosterOrder 3 .
+
+priory:RosterMember_4 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Styrman" ;
+    priory:characterName "Styrman" ;
+    priory:rosterCharacterName "Styrman" ;
+    priory:rosterOrder 4 .
+
+priory:RosterMember_5 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Ksëne" ;
+    priory:characterName "Ksëne" ;
+    priory:rosterCharacterName "Ksëne" ;
+    priory:rosterOrder 5 .
+
+priory:RosterMember_6 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Aubefein" ;
+    priory:characterName "Aubefein" ;
+    priory:rosterCharacterName "Aubefein" ;
+    priory:rosterOrder 6 .
+
+priory:RosterMember_7 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Sara Loy" ;
+    priory:characterName "Sara Loy" ;
+    priory:rosterCharacterName "Sara Loy" ;
+    priory:rosterOrder 7 .
+
+priory:RosterMember_8 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Flevkk" ;
+    priory:characterName "Flevkk" ;
+    priory:rosterCharacterName "Flevkk" ;
+    priory:rosterOrder 8 .
+
+priory:RosterMember_9 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Like A Plastik Bag" ;
+    priory:characterName "Like A Plastik Bag" ;
+    priory:rosterCharacterName "Like A Plastik Bag" ;
+    priory:rosterOrder 9 .
+
+priory:RosterMember_10 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Jaimelargent" ;
+    priory:characterName "Jaimelargent" ;
+    priory:rosterCharacterName "Jaimelargent" ;
+    priory:rosterOrder 10 .
+
+priory:RosterMember_11 a priory:DefaultRosterMember, owl:NamedIndividual ;
+    rdfs:label "Saladomatic" ;
+    priory:characterName "Saladomatic" ;
+    priory:rosterCharacterName "Saladomatic" ;
+    priory:rosterOrder 11 .
+
+
+

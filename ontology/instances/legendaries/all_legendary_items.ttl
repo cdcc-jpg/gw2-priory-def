@@ -779,3 +779,1319 @@
     ns1:hasWeaponType <https://priory.gw2/ref/weapon/Warhorn> ;
     ns1:isAccountBound true .
 
+
+@prefix priory: <https://priory.gw2/def/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix item: <https://priory.gw2/id/item/> .
+@prefix rarity: <https://priory.gw2/ref/rarity/> .
+
+# ==============================================================================
+# Complete Legendary, Armor, and Precursor Catalog Grounding
+# ==============================================================================
+
+priory:WeaponTypeRule_axe a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "axe" ;
+    priory:weaponTypeSlug "axe" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_dagger a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "dagger" ;
+    priory:weaponTypeSlug "dagger" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_focus a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "focus" ;
+    priory:weaponTypeSlug "focus" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_greatsword a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "greatsword" ;
+    priory:weaponTypeSlug "greatsword" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_hammer a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "hammer" ;
+    priory:weaponTypeSlug "hammer" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_harpoongun a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "harpoongun" ;
+    priory:weaponTypeSlug "harpoongun" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_longbow a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "longbow" ;
+    priory:weaponTypeSlug "longbow" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_mace a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "mace" ;
+    priory:weaponTypeSlug "mace" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_pistol a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "pistol" ;
+    priory:weaponTypeSlug "pistol" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_rifle a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "rifle" ;
+    priory:weaponTypeSlug "rifle" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_scepter a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "scepter" ;
+    priory:weaponTypeSlug "scepter" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_shield a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "shield" ;
+    priory:weaponTypeSlug "shield" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_shortbow a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "shortbow" ;
+    priory:weaponTypeSlug "shortbow" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_spear a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "spear" ;
+    priory:weaponTypeSlug "spear" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_staff a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "staff" ;
+    priory:weaponTypeSlug "staff" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_sword a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "sword" ;
+    priory:weaponTypeSlug "sword" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_torch a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "torch" ;
+    priory:weaponTypeSlug "torch" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_trident a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "trident" ;
+    priory:weaponTypeSlug "trident" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:WeaponTypeRule_warhorn a priory:WeaponTypeDisciplineRule, owl:NamedIndividual ;
+    rdfs:label "warhorn" ;
+    priory:weaponTypeSlug "warhorn" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30684 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30684 ;
+    rdfs:label "Frostfang" ;
+    priory:weaponTypeSlug "Axe" ;
+    priory:precursorItemId 29167 ;
+    priory:precursorName "Tooth of Frostfang" ;
+    priory:legacyPrecursorIdsCsv "29169" ;
+    priory:legacyPrecursorId 29169 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30685 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30685 ;
+    rdfs:label "Kudzu" ;
+    priory:weaponTypeSlug "Longbow" ;
+    priory:precursorItemId 29172 ;
+    priory:precursorName "Leaf of Kudzu" ;
+    priory:legacyPrecursorIdsCsv "29171" ;
+    priory:legacyPrecursorId 29171 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30686 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30686 ;
+    rdfs:label "The Dreamer" ;
+    priory:weaponTypeSlug "ShortBow" ;
+    priory:precursorItemId 29178 ;
+    priory:precursorName "The Lover" ;
+    priory:legacyPrecursorIdsCsv "29175" ;
+    priory:legacyPrecursorId 29175 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30687 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30687 ;
+    rdfs:label "Incinerator" ;
+    priory:weaponTypeSlug "Dagger" ;
+    priory:precursorItemId 29177 ;
+    priory:precursorName "Spark" ;
+    priory:legacyPrecursorIdsCsv "29165" ;
+    priory:legacyPrecursorId 29165 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30688 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30688 ;
+    rdfs:label "The Minstrel" ;
+    priory:weaponTypeSlug "Focus" ;
+    priory:precursorItemId 29174 ;
+    priory:precursorName "The Bard" ;
+    priory:legacyPrecursorIdsCsv "29178" ;
+    priory:legacyPrecursorId 29178 ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30689 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30689 ;
+    rdfs:label "Eternity" ;
+    priory:weaponTypeSlug "Greatsword" ;
+    priory:precursorItemId 30704 ;
+    priory:precursorName "Twilight" ;
+    priory:legacyPrecursorIdsCsv "30703,30704" ;
+    priory:legacyPrecursorId 30703 ;
+    priory:legacyPrecursorId 30704 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30690 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30690 ;
+    rdfs:label "The Juggernaut" ;
+    priory:weaponTypeSlug "Hammer" ;
+    priory:precursorItemId 29179 ;
+    priory:precursorName "The Colossus" ;
+    priory:legacyPrecursorIdsCsv "29172" ;
+    priory:legacyPrecursorId 29172 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30691 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30691 ;
+    rdfs:label "Kamohoali'i Kotaki" ;
+    priory:weaponTypeSlug "Spear" ;
+    priory:precursorItemId 29173 ;
+    priory:precursorName "Carcharias" ;
+    priory:legacyPrecursorIdsCsv "29183" ;
+    priory:legacyPrecursorId 29183 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30692 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30692 ;
+    rdfs:label "The Moot" ;
+    priory:weaponTypeSlug "Mace" ;
+    priory:precursorItemId 29166 ;
+    priory:precursorName "The Energizer" ;
+    priory:legacyPrecursorIdsCsv "29173" ;
+    priory:legacyPrecursorId 29173 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30693 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30693 ;
+    rdfs:label "Quip" ;
+    priory:weaponTypeSlug "Pistol" ;
+    priory:precursorItemId 29168 ;
+    priory:precursorName "Chaos Gun" ;
+    priory:legacyPrecursorIdsCsv "29168" ;
+    priory:legacyPrecursorId 29168 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30694 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30694 ;
+    rdfs:label "The Predator" ;
+    priory:weaponTypeSlug "Rifle" ;
+    priory:precursorItemId 29175 ;
+    priory:precursorName "The Hunter" ;
+    priory:legacyPrecursorIdsCsv "29173" ;
+    priory:legacyPrecursorId 29173 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30695 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30695 ;
+    rdfs:label "Meteorlogicus" ;
+    priory:weaponTypeSlug "Scepter" ;
+    priory:precursorItemId 29171 ;
+    priory:precursorName "Storm" ;
+    priory:legacyPrecursorIdsCsv "29170" ;
+    priory:legacyPrecursorId 29170 ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30696 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30696 ;
+    rdfs:label "The Flameseeker Prophecies" ;
+    priory:weaponTypeSlug "Shield" ;
+    priory:precursorItemId 29170 ;
+    priory:precursorName "The Chosen" ;
+    priory:legacyPrecursorIdsCsv "29177" ;
+    priory:legacyPrecursorId 29177 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30697 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30697 ;
+    rdfs:label "Frenzy" ;
+    priory:weaponTypeSlug "HarpoonGun" ;
+    priory:precursorItemId 29182 ;
+    priory:precursorName "Rage" ;
+    priory:legacyPrecursorIdsCsv "29181" ;
+    priory:legacyPrecursorId 29181 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30698 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30698 ;
+    rdfs:label "The Bifrost" ;
+    priory:weaponTypeSlug "Staff" ;
+    priory:precursorItemId 29180 ;
+    priory:precursorName "The Legend" ;
+    priory:legacyPrecursorIdsCsv "29174" ;
+    priory:legacyPrecursorId 29174 ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30699 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30699 ;
+    rdfs:label "Bolt" ;
+    priory:weaponTypeSlug "Sword" ;
+    priory:precursorItemId 29181 ;
+    priory:precursorName "Zap" ;
+    priory:legacyPrecursorIdsCsv "29167" ;
+    priory:legacyPrecursorId 29167 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30700 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30700 ;
+    rdfs:label "Rodgort" ;
+    priory:weaponTypeSlug "Torch" ;
+    priory:precursorItemId 29176 ;
+    priory:precursorName "Rodgort's Flame" ;
+    priory:legacyPrecursorIdsCsv "29179" ;
+    priory:legacyPrecursorId 29179 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30701 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30701 ;
+    rdfs:label "Kraitkin" ;
+    priory:weaponTypeSlug "Trident" ;
+    priory:precursorItemId 29183 ;
+    priory:precursorName "Venom" ;
+    priory:legacyPrecursorIdsCsv "29182" ;
+    priory:legacyPrecursorId 29182 ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30702 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30702 ;
+    rdfs:label "Howler" ;
+    priory:weaponTypeSlug "Warhorn" ;
+    priory:precursorItemId 29184 ;
+    priory:precursorName "Howl" ;
+    priory:legacyPrecursorIdsCsv "29180" ;
+    priory:legacyPrecursorId 29180 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30703 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30703 ;
+    rdfs:label "Sunrise" ;
+    priory:weaponTypeSlug "Greatsword" ;
+    priory:precursorItemId 29169 ;
+    priory:precursorName "Dawn" ;
+    priory:legacyPrecursorIdsCsv "29184" ;
+    priory:legacyPrecursorId 29184 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen1WeaponCatalog_30704 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN1" ;
+    priory:catalogItemId 30704 ;
+    rdfs:label "Twilight" ;
+    priory:weaponTypeSlug "Greatsword" ;
+    priory:precursorItemId 29185 ;
+    priory:precursorName "Dusk" ;
+    priory:legacyPrecursorIdsCsv "29185" ;
+    priory:legacyPrecursorId 29185 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_71383 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 71383 ;
+    rdfs:label "Nevermore" ;
+    priory:weaponTypeSlug "Staff" ;
+    priory:precursorItemId 71384 ;
+    priory:precursorName "The Raven Staff" ;
+    priory:legacyPrecursorIdsCsv "71436" ;
+    priory:legacyPrecursorId 71436 ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_72713 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 72713 ;
+    rdfs:label "HOPE" ;
+    priory:weaponTypeSlug "Pistol" ;
+    priory:precursorItemId 75208 ;
+    priory:precursorName "Prototype" ;
+    priory:legacyPrecursorIdsCsv "71950" ;
+    priory:legacyPrecursorId 71950 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_75207 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 75207 ;
+    rdfs:label "HOPE" ;
+    priory:weaponTypeSlug "Pistol" ;
+    priory:precursorItemId 75208 ;
+    priory:precursorName "Prototype" ;
+    priory:legacyPrecursorIdsCsv "71950" ;
+    priory:legacyPrecursorId 71950 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_76158 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 76158 ;
+    rdfs:label "Astralaria" ;
+    priory:weaponTypeSlug "Axe" ;
+    priory:precursorItemId 76159 ;
+    priory:precursorName "The Mechanism" ;
+    priory:legacyPrecursorIdsCsv "76688" ;
+    priory:legacyPrecursorId 76688 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_78052 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 78052 ;
+    rdfs:label "Chuka and Champawat" ;
+    priory:weaponTypeSlug "ShortBow" ;
+    priory:precursorItemId 78053 ;
+    priory:precursorName "Tigris" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_78556 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 78556 ;
+    rdfs:label "Chuka and Champawat" ;
+    priory:weaponTypeSlug "ShortBow" ;
+    priory:precursorItemId 78053 ;
+    priory:precursorName "Tigris" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_79562 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 79562 ;
+    rdfs:label "Eureka" ;
+    priory:weaponTypeSlug "Mace" ;
+    priory:precursorItemId 79570 ;
+    priory:precursorName "Endeavor" ;
+    priory:legacyPrecursorIdsCsv "79563,79803" ;
+    priory:legacyPrecursorId 79563 ;
+    priory:legacyPrecursorId 79803 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_79802 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 79802 ;
+    rdfs:label "Shooshadoo" ;
+    priory:weaponTypeSlug "Shield" ;
+    priory:precursorItemId 79563 ;
+    priory:precursorName "Friendship" ;
+    priory:legacyPrecursorIdsCsv "79803" ;
+    priory:legacyPrecursorId 79803 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_80488 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 80488 ;
+    rdfs:label "The HMS Divinity" ;
+    priory:weaponTypeSlug "Rifle" ;
+    priory:precursorItemId 89036 ;
+    priory:precursorName "The Ambition" ;
+    priory:legacyPrecursorIdsCsv "86304" ;
+    priory:legacyPrecursorId 86304 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_81206 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 81206 ;
+    rdfs:label "Flames of War" ;
+    priory:weaponTypeSlug "Torch" ;
+    priory:precursorItemId 81780 ;
+    priory:precursorName "Liturgy" ;
+    priory:legacyPrecursorIdsCsv "81207" ;
+    priory:legacyPrecursorId 81207 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_81839 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 81839 ;
+    rdfs:label "Sharur" ;
+    priory:weaponTypeSlug "Hammer" ;
+    priory:precursorItemId 81634 ;
+    priory:precursorName "The Call" ;
+    priory:legacyPrecursorIdsCsv "82792" ;
+    priory:legacyPrecursorId 82792 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_81957 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 81957 ;
+    rdfs:label "The Shining Blade" ;
+    priory:weaponTypeSlug "Sword" ;
+    priory:precursorItemId 81207 ;
+    priory:precursorName "Save the Queen" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_82791 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 82791 ;
+    rdfs:label "Sharur" ;
+    priory:weaponTypeSlug "Hammer" ;
+    priory:precursorItemId 82792 ;
+    priory:precursorName "The Call" ;
+    priory:legacyPrecursorIdsCsv "81634" ;
+    priory:legacyPrecursorId 81634 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_86098 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 86098 ;
+    rdfs:label "The Binding of Ipos" ;
+    priory:weaponTypeSlug "Focus" ;
+    priory:precursorItemId 86676 ;
+    priory:precursorName "Ars Goetia" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_86303 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 86303 ;
+    rdfs:label "The HMS Divinity" ;
+    priory:weaponTypeSlug "Rifle" ;
+    priory:precursorItemId 86304 ;
+    priory:precursorName "The Ambition" ;
+    priory:legacyPrecursorIdsCsv "89036" ;
+    priory:legacyPrecursorId 89036 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "weaponsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_86675 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 86675 ;
+    rdfs:label "The Binding of Ipos" ;
+    priory:weaponTypeSlug "Focus" ;
+    priory:precursorItemId 86676 ;
+    priory:precursorName "Ars Goetia" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_87109 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 87109 ;
+    rdfs:label "Claw of the Khan-Ur" ;
+    priory:weaponTypeSlug "Dagger" ;
+    priory:precursorItemId 87688 ;
+    priory:precursorName "Touch of the Khan-Ur" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_87687 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 87687 ;
+    rdfs:label "Verdarach" ;
+    priory:weaponTypeSlug "Warhorn" ;
+    priory:precursorItemId 87764 ;
+    priory:precursorName "Call to Arms" ;
+    priory:legacyPrecursorIdsCsv "87688,91877" ;
+    priory:legacyPrecursorId 87688 ;
+    priory:legacyPrecursorId 91877 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_88576 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 88576 ;
+    rdfs:label "Xiuquatl" ;
+    priory:weaponTypeSlug "Scepter" ;
+    priory:precursorItemId 88956 ;
+    priory:precursorName "Tlehco" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_88955 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 88955 ;
+    rdfs:label "Xiuquatl" ;
+    priory:weaponTypeSlug "Scepter" ;
+    priory:precursorItemId 88956 ;
+    priory:precursorName "Tlehco" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "tailor" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_89854 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 89854 ;
+    rdfs:label "Pharus" ;
+    priory:weaponTypeSlug "Longbow" ;
+    priory:precursorItemId 89855 ;
+    priory:precursorName "Spero" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_90551 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 90551 ;
+    rdfs:label "Exordium" ;
+    priory:weaponTypeSlug "Greatsword" ;
+    priory:precursorItemId 90883 ;
+    priory:precursorName "Epitaph" ;
+    priory:legacyPrecursorIdsCsv "90552" ;
+    priory:legacyPrecursorId 90552 ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "armorsmith" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen2WeaponCatalog_91876 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN2" ;
+    priory:catalogItemId 91876 ;
+    rdfs:label "Verdarach" ;
+    priory:weaponTypeSlug "Warhorn" ;
+    priory:precursorItemId 91877 ;
+    priory:precursorName "Call to Arms" ;
+    priory:legacyPrecursorIdsCsv "87764" ;
+    priory:legacyPrecursorId 87764 ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 ;
+    priory:secondaryDisciplineSlug "leatherworker" ;
+    priory:secondaryDisciplineRating 400 .
+
+priory:Gen3WeaponCatalog_95612 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 95612 ;
+    rdfs:label "Aurene's Tail" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_95675 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 95675 ;
+    rdfs:label "Aurene's Fang" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_95684 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 95684 ;
+    rdfs:label "Aurene's Weight" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_95808 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 95808 ;
+    rdfs:label "Aurene's Argument" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96028 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96028 ;
+    rdfs:label "Aurene's Scale" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96203 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96203 ;
+    rdfs:label "Aurene's Claw" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96221 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96221 ;
+    rdfs:label "Aurene's Wisdom" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96228 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96228 ;
+    rdfs:label "Aurene's Voice" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96356 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96356 ;
+    rdfs:label "Aurene's Bite" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96376 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96376 ;
+    rdfs:label "Aurene's Persuasion" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96603 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96603 ;
+    rdfs:label "Aurene's Scale" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96613 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96613 ;
+    rdfs:label "Aurene's Wisdom" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96652 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96652 ;
+    rdfs:label "Aurene's Insight" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96841 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96841 ;
+    rdfs:label "Aurene's Argument" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_96937 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 96937 ;
+    rdfs:label "Aurene's Rending" ;
+    priory:primaryDisciplineSlug "weaponsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97077 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97077 ;
+    rdfs:label "Aurene's Wing" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97099 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97099 ;
+    rdfs:label "Aurene's Breath" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97141 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97141 ;
+    rdfs:label "Aurene's Breath" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97165 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97165 ;
+    rdfs:label "Aurene's Gaze" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97377 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97377 ;
+    rdfs:label "Aurene's Persuasion" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97590 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97590 ;
+    rdfs:label "Aurene's Flight" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97594 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97594 ;
+    rdfs:label "Aurene's Insight" ;
+    priory:primaryDisciplineSlug "artificer" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:Gen3WeaponCatalog_97783 a priory:LegendaryWeaponCatalogEntry, owl:NamedIndividual ;
+    priory:forGeneration "GEN3" ;
+    priory:catalogItemId 97783 ;
+    rdfs:label "Aurene's Voice" ;
+    priory:primaryDisciplineSlug "huntsman" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80131 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80131 ;
+    rdfs:label "Perfected Envoy Vestments" ;
+    priory:primaryDisciplineSlug "tailor" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80145 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80145 ;
+    rdfs:label "Perfected Envoy Gauntlets" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80161 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80161 ;
+    rdfs:label "Perfected Envoy Tassets" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80190 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80190 ;
+    rdfs:label "Perfected Envoy Shoulderguards" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80196 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80196 ;
+    rdfs:label "Perfected Envoy Pants" ;
+    priory:primaryDisciplineSlug "tailor" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80200 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80200 ;
+    rdfs:label "Perfected Envoy Hood" ;
+    priory:primaryDisciplineSlug "tailor" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80248 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80248 ;
+    rdfs:label "Perfected Envoy Greaves" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80252 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80252 ;
+    rdfs:label "Perfected Envoy Vambraces" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80258 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80258 ;
+    rdfs:label "Perfected Envoy Breastplate" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80277 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80277 ;
+    rdfs:label "Perfected Envoy Jerkin" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80281 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80281 ;
+    rdfs:label "Perfected Envoy Leggings" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80296 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80296 ;
+    rdfs:label "Perfected Envoy Mask" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80356 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80356 ;
+    rdfs:label "Perfected Envoy Mantle" ;
+    priory:primaryDisciplineSlug "tailor" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80384 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80384 ;
+    rdfs:label "Perfected Envoy Helm" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80435 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80435 ;
+    rdfs:label "Perfected Envoy Pauldrons" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_80557 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 80557 ;
+    rdfs:label "Perfected Envoy Boots" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101001 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101001 ;
+    rdfs:label "Obsidian Helm" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101002 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101002 ;
+    rdfs:label "Obsidian Pauldrons" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101003 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101003 ;
+    rdfs:label "Obsidian Breastplate" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101004 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101004 ;
+    rdfs:label "Obsidian Gauntlets" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101005 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101005 ;
+    rdfs:label "Obsidian Tassets" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101006 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101006 ;
+    rdfs:label "Obsidian Greaves" ;
+    priory:primaryDisciplineSlug "armorsmith" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101007 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101007 ;
+    rdfs:label "Obsidian Mask" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101008 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101008 ;
+    rdfs:label "Obsidian Shoulderguards" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101009 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101009 ;
+    rdfs:label "Obsidian Jerkin" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101010 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101010 ;
+    rdfs:label "Obsidian Vambraces" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101011 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101011 ;
+    rdfs:label "Obsidian Leggings" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:ArmorCatalog_101012 a priory:LegendaryArmorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 101012 ;
+    rdfs:label "Obsidian Boots" ;
+    priory:primaryDisciplineSlug "leatherworker" ;
+    priory:primaryDisciplineRating 500 .
+
+priory:PrecursorCatalog_29165 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29165 ;
+    priory:targetWeaponId 30687 ;
+    rdfs:label "Spark" .
+
+priory:PrecursorCatalog_29166 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29166 ;
+    priory:targetWeaponId 30692 ;
+    rdfs:label "The Energizer" .
+
+priory:PrecursorCatalog_29167 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29167 ;
+    priory:targetWeaponId 30684 ;
+    rdfs:label "Tooth of Frostfang" .
+
+priory:PrecursorCatalog_29168 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29168 ;
+    priory:targetWeaponId 30693 ;
+    rdfs:label "Chaos Gun" .
+
+priory:PrecursorCatalog_29169 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29169 ;
+    priory:targetWeaponId 30703 ;
+    rdfs:label "Dawn" .
+
+priory:PrecursorCatalog_29170 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29170 ;
+    priory:targetWeaponId 30696 ;
+    rdfs:label "The Chosen" .
+
+priory:PrecursorCatalog_29171 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29171 ;
+    priory:targetWeaponId 30695 ;
+    rdfs:label "Storm" .
+
+priory:PrecursorCatalog_29172 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29172 ;
+    priory:targetWeaponId 30685 ;
+    rdfs:label "Leaf of Kudzu" .
+
+priory:PrecursorCatalog_29173 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29173 ;
+    priory:targetWeaponId 30691 ;
+    rdfs:label "Carcharias" .
+
+priory:PrecursorCatalog_29174 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29174 ;
+    priory:targetWeaponId 30688 ;
+    rdfs:label "The Bard" .
+
+priory:PrecursorCatalog_29175 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29175 ;
+    priory:targetWeaponId 30694 ;
+    rdfs:label "The Hunter" .
+
+priory:PrecursorCatalog_29176 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29176 ;
+    priory:targetWeaponId 30700 ;
+    rdfs:label "Rodgort's Flame" .
+
+priory:PrecursorCatalog_29177 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29177 ;
+    priory:targetWeaponId 30687 ;
+    rdfs:label "Spark" .
+
+priory:PrecursorCatalog_29178 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29178 ;
+    priory:targetWeaponId 30686 ;
+    rdfs:label "The Lover" .
+
+priory:PrecursorCatalog_29179 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29179 ;
+    priory:targetWeaponId 30690 ;
+    rdfs:label "The Colossus" .
+
+priory:PrecursorCatalog_29180 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29180 ;
+    priory:targetWeaponId 30698 ;
+    rdfs:label "The Legend" .
+
+priory:PrecursorCatalog_29181 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29181 ;
+    priory:targetWeaponId 30699 ;
+    rdfs:label "Zap" .
+
+priory:PrecursorCatalog_29182 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29182 ;
+    priory:targetWeaponId 30697 ;
+    rdfs:label "Rage" .
+
+priory:PrecursorCatalog_29183 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29183 ;
+    priory:targetWeaponId 30701 ;
+    rdfs:label "Venom" .
+
+priory:PrecursorCatalog_29184 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29184 ;
+    priory:targetWeaponId 30702 ;
+    rdfs:label "Howl" .
+
+priory:PrecursorCatalog_29185 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 29185 ;
+    priory:targetWeaponId 30704 ;
+    rdfs:label "Dusk" .
+
+priory:PrecursorCatalog_71384 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 71384 ;
+    priory:targetWeaponId 71383 ;
+    rdfs:label "The Raven Staff" .
+
+priory:PrecursorCatalog_71436 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 71436 ;
+    priory:targetWeaponId 71383 ;
+    rdfs:label "The Living Ravens" .
+
+priory:PrecursorCatalog_71950 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 71950 ;
+    priory:targetWeaponId 72713 ;
+    rdfs:label "Prototype" .
+
+priory:PrecursorCatalog_75208 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 75208 ;
+    priory:targetWeaponId 75207 ;
+    rdfs:label "Prototype" .
+
+priory:PrecursorCatalog_76159 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 76159 ;
+    priory:targetWeaponId 76158 ;
+    rdfs:label "The Mechanism" .
+
+priory:PrecursorCatalog_76688 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 76688 ;
+    priory:targetWeaponId 76158 ;
+    rdfs:label "The Mechanism" .
+
+priory:PrecursorCatalog_78053 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 78053 ;
+    priory:targetWeaponId 78052 ;
+    rdfs:label "Tigris" .
+
+priory:PrecursorCatalog_79563 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 79563 ;
+    priory:targetWeaponId 79802 ;
+    rdfs:label "Friendship" .
+
+priory:PrecursorCatalog_79570 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 79570 ;
+    priory:targetWeaponId 79562 ;
+    rdfs:label "Endeavor" .
+
+priory:PrecursorCatalog_79803 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 79803 ;
+    priory:targetWeaponId 79562 ;
+    rdfs:label "Endeavor" .
+
+priory:PrecursorCatalog_81207 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 81207 ;
+    priory:targetWeaponId 81957 ;
+    rdfs:label "Save the Queen" .
+
+priory:PrecursorCatalog_81634 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 81634 ;
+    priory:targetWeaponId 81839 ;
+    rdfs:label "The Call" .
+
+priory:PrecursorCatalog_81780 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 81780 ;
+    priory:targetWeaponId 81206 ;
+    rdfs:label "Liturgy" .
+
+priory:PrecursorCatalog_82792 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 82792 ;
+    priory:targetWeaponId 82791 ;
+    rdfs:label "The Call" .
+
+priory:PrecursorCatalog_86304 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 86304 ;
+    priory:targetWeaponId 86303 ;
+    rdfs:label "The Ambition" .
+
+priory:PrecursorCatalog_86676 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 86676 ;
+    priory:targetWeaponId 86675 ;
+    rdfs:label "Ars Goetia" .
+
+priory:PrecursorCatalog_87688 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 87688 ;
+    priory:targetWeaponId 87109 ;
+    rdfs:label "Touch of the Khan-Ur" .
+
+priory:PrecursorCatalog_87764 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 87764 ;
+    priory:targetWeaponId 87687 ;
+    rdfs:label "Call to Arms" .
+
+priory:PrecursorCatalog_88956 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 88956 ;
+    priory:targetWeaponId 88955 ;
+    rdfs:label "Tlehco" .
+
+priory:PrecursorCatalog_89036 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 89036 ;
+    priory:targetWeaponId 80488 ;
+    rdfs:label "The Ambition" .
+
+priory:PrecursorCatalog_89855 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 89855 ;
+    priory:targetWeaponId 89854 ;
+    rdfs:label "Spero" .
+
+priory:PrecursorCatalog_90552 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 90552 ;
+    priory:targetWeaponId 90551 ;
+    rdfs:label "Epitaph" .
+
+priory:PrecursorCatalog_90883 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 90883 ;
+    priory:targetWeaponId 90551 ;
+    rdfs:label "Epitaph" .
+
+priory:PrecursorCatalog_91877 a priory:PrecursorCatalogEntry, owl:NamedIndividual ;
+    priory:catalogItemId 91877 ;
+    priory:targetWeaponId 91876 ;
+    rdfs:label "Call to Arms" .

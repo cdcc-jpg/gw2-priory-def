@@ -127,6 +127,73 @@ class IntentParser:
     def __init__(self, semantic_query_service: SemanticQueryService, llm_client: Optional[BaseLLMClient] = None):
         self.semantic_service = semantic_query_service
         self.llm = llm_client or get_default_llm_client()
+        self._known_specific_names_cache: Optional[List[str]] = None
+
+    def _get_known_specific_names(self) -> List[str]:
+        """Dynamically resolves all specific item and precursor names from the RDF Knowledge Graph, excluding generic category/slot terms."""
+        if self._known_specific_names_cache is not None:
+            return self._known_specific_names_cache
+        generic_categories = {
+            "ring", "rings", "legendary ring", "legendary rings",
+            "amulet", "amulets", "legendary amulet", "legendary amulets",
+            "accessory", "accessories", "legendary accessory", "legendary accessories",
+            "trinket", "trinkets", "legendary trinket", "legendary trinkets",
+            "backpack", "backpacks", "back", "legendary backpack", "legendary back",
+            "jewelry", "armor", "legendary armor", "heavy armor", "medium armor", "light armor",
+            "obsidian armor", "soto", "obsidian", "janthir", "aurene",
+            "upgrade", "upgrades", "legendary upgrade", "legendary upgrades",
+            "spear", "spears", "legendary spear", "legendary spears",
+            "weapon", "weapons", "legendary weapon", "legendary weapons",
+            "legendary", "legendaries",
+            "gen 1", "gen 2", "gen 3", "generation 1", "generation 2", "generation 3",
+        }
+        generic_substrings = (
+            "ring", "amulet", "accessory", "accessories", "trinket", "backpack",
+            "armor", "spear", "staff", "greatsword", "sword", "axe", "mace",
+            "dagger", "pistol", "scepter", "focus", "shield", "torch", "warhorn",
+            "longbow", "shortbow", "rifle", "hammer", "harpoon", "trident",
+            "gen 1", "gen 2", "gen 3", "gen one", "gen two", "gen three",
+            "generation", "legendary ", "soto", "obsidian", "janthir", "aurene",
+        )
+        names: set[str] = {"sigil", "sigils", "rune", "runes"}
+        store = getattr(self.semantic_service, "store", None)
+        if store is not None:
+            cat = store.get_legendary_and_precursor_catalog() if hasattr(store, "get_legendary_and_precursor_catalog") else {}
+            for winfo in cat.get("gen1_weapons", {}).values():
+                if winfo.get("name"):
+                    names.add(str(winfo["name"]).lower())
+                if winfo.get("precursor_name"):
+                    names.add(str(winfo["precursor_name"]).lower())
+            for winfo in cat.get("gen2_weapons", {}).values():
+                if winfo.get("name"):
+                    names.add(str(winfo["name"]).lower())
+                if winfo.get("precursor_name"):
+                    names.add(str(winfo["precursor_name"]).lower())
+            for wname in cat.get("gen3_weapon_names", {}).values():
+                names.add(str(wname).lower())
+            for aname in cat.get("armor_names", {}).values():
+                names.add(str(aname).lower())
+            for pname in cat.get("precursor_names", {}).values():
+                names.add(str(pname).lower())
+            sparql = """
+            SELECT DISTINCT ?label ?alt WHERE {
+                ?item priory:gw2Id ?id ;
+                      rdfs:label ?label .
+                OPTIONAL { ?item skos:altLabel ?alt }
+            }
+            """
+            for r in store.query(sparql):
+                if r.get("label"):
+                    lbl = str(r["label"]).strip().lower()
+                    if len(lbl) >= 3 and lbl not in generic_categories:
+                        names.add(lbl)
+                if r.get("alt"):
+                    alt = str(r["alt"]).strip().lower()
+                    if len(alt) >= 4 and alt not in generic_categories and not any(g in alt for g in generic_substrings):
+                        names.add(alt)
+        names -= generic_categories
+        self._known_specific_names_cache = sorted(names, key=len, reverse=True)
+        return self._known_specific_names_cache
 
     def parse_intent(
         self,
@@ -233,7 +300,7 @@ class IntentParser:
         if ("no dungeon" in p_lower or "hate dungeon" in p_lower or "avoid dungeon" in p_lower or "without dungeon" in p_lower) and "Dungeons" not in intent.excluded_game_modes:
             intent.excluded_game_modes.append("Dungeons")
 
-        # Relational / indirect description check (e.g. "legendary greatsword made from Dusk", "dark shadowy Gen 1 legendary greatsword")
+        # Relational / indirect description check via ontology (e.g. "legendary greatsword made from Dusk", "dark shadowy Gen 1 legendary greatsword")
         has_indirect_twilight = bool(
             re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dusk\b", p_lower)
             or ("greatsword" in p_lower and ("dark" in p_lower or "shadow" in p_lower or ("legendary" in p_lower and "dusk" in p_lower)))
@@ -241,15 +308,8 @@ class IntentParser:
         if has_indirect_twilight:
             intent.target_item_name = "Twilight"
 
-        # Check if single specific item is explicitly named in prompt
-        known_specific_names = [
-            "twilight", "sunrise", "eternity", "kudzu", "the moot", "the juggernaut",
-            "bolt", "incinerator", "nevermore", "astralaria", "hope", "chuka and champawat",
-            "conflux", "coalescence", "transcendence", "vision", "aurora", "ad infinitum",
-            "the ascension", "warbringer", "prismatic champion's regalia",
-            "klobjarne geirr", "klobjarne harvester", "kamohoali'i kotaki",
-            "dusk", "mystic clover", "mystic coin", "sigil", "sigils", "rune", "runes"
-        ]
+        # Check if single specific item is explicitly named in prompt using ontology-hydrated labels
+        known_specific_names = self._get_known_specific_names()
         has_named_specific_item = (
             has_indirect_twilight
             or any(re.search(r"\b" + re.escape(name) + r"\b", p_lower) for name in known_specific_names)
