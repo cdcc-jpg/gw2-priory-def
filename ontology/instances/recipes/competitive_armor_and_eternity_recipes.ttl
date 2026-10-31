@@ -137,6 +137,18 @@ priory:Recipe_StarOfGlory a priory:Recipe, owl:NamedIndividual ;
 
 
 # WvW Gift of War Prosperity
+item:19628 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Magic"@en ;
+    priory:gw2Id 19628 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true .
+
+item:19629 a priory:GiftItem, owl:NamedIndividual ;
+    rdfs:label "Gift of Might"@en ;
+    priory:gw2Id 19629 ;
+    priory:hasRarity <https://priory.gw2/ref/rarity/Legendary> ;
+    priory:isAccountBound true .
+
 item:80850 a priory:GiftItem, owl:NamedIndividual ;
     rdfs:label "Gift of War Prosperity" ;
     priory:gw2Id 80850 ;

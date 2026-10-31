@@ -1062,6 +1062,7 @@ item:95777 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's
 item:95814 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Insight"@en ; priory:gw2Id 95814 .
 item:95846 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Tail"@en ; priory:gw2Id 95846 .
 item:95920 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Weight"@en ; priory:gw2Id 95920 .
+item:71994 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Condensed Magic"@en ; priory:gw2Id 71994 .
 item:95922 a priory:GiftItem, owl:NamedIndividual ; rdfs:label "Gift of Aurene's Breath"@en ; priory:gw2Id 95922 .
 item:95967 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Claw"@en ; priory:gw2Id 95967 .
 item:95994 a priory:Item, owl:NamedIndividual ; rdfs:label "Dragon's Fang"@en ; priory:gw2Id 95994 .

@@ -101,16 +101,23 @@ class PrioryChatSession:
 
         # Route SESSION_ITINERARY
         elif resolved_goal.goal_type == GoalType.SESSION_ITINERARY:
+            target_id = resolved_goal.resolved_item_id or 30704
+            diff_report = self.orchestrator.diff_engine.compute_diff(
+                goal_item_id=target_id,
+                account=self.account_state,
+                target_quantity=resolved_goal.target_quantity,
+            )
             itinerary = self.orchestrator.solver.schedule_daily_session_itinerary(
                 account=self.account_state,
                 time_budget_minutes=resolved_goal.intent.time_budget_minutes,
-                target_item_id=resolved_goal.resolved_item_id
+                target_item_id=target_id
             )
             guide: PersonalizedGuide = self.orchestrator.guide_generator.generate_session_itinerary_guide(
                 itinerary=itinerary,
                 goal=resolved_goal,
                 user_prompt=user_prompt,
-                account_state=self.account_state
+                account_state=self.account_state,
+                diff_report=diff_report,
             )
             self.history.append({"role": "user", "content": user_prompt})
             self.history.append({"role": "assistant", "content": guide.executive_summary})

@@ -13,242 +13,246 @@
 # ------------------------------------------------------------------------------
 # Generation 2.0 (The Four Majors — Extensive 40h+ Scavenger Collections)
 # ------------------------------------------------------------------------------
-item:76158 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Astralaria (Axe)
-item:71383 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Nevermore (Staff)
-item:72713 priory:hasPrecursorType priory:CollectionHuntPrecursor . # HOPE (Pistol)
-item:75208 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Prototype (HOPE precursor)
-item:78556 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Chuka and Champawat (Short Bow)
-item:78053 priory:hasPrecursorType priory:CollectionHuntPrecursor . # Tigris (Chuka and Champawat precursor)
+item:76158 rdfs:label "Astralaria"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # Astralaria (Axe)
+item:71426 rdfs:label "The Mechanism"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # The Mechanism (Astralaria precursor)
+item:71383 rdfs:label "Nevermore"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # Nevermore (Staff)
+item:74068 rdfs:label "The Raven Staff"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # The Raven Staff (Nevermore precursor)
+item:72713 rdfs:label "HOPE"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # HOPE (Pistol)
+item:76399 rdfs:label "Prototype"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # Prototype (HOPE precursor)
+item:78556 rdfs:label "Chuka and Champawat"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # Chuka and Champawat (Short Bow)
+item:78425 rdfs:label "Tigris"@en ; priory:hasPrecursorType priory:CollectionHuntPrecursor . # Tigris (Chuka and Champawat precursor)
 
 # ------------------------------------------------------------------------------
 # Generation 2.5 (Shard-Crafted Precursors — Instant Shard Crafting at Station)
 # ------------------------------------------------------------------------------
-item:86098 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Binding of Ipos (Focus)
-item:86676 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Ars Goetia (The Binding of Ipos precursor)
-item:87109 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Claw of the Khan-Ur (Dagger)
-item:87688 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Touch of the Khan-Ur (Claw of the Khan-Ur precursor)
-item:79562 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Eureka (Mace)
-item:79570 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Endeavor (Eureka precursor)
-item:79802 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Shooshadoo (Shield)
-item:79563 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Friendship (Shooshadoo precursor)
-item:80488 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The HMS Divinity (Rifle)
-item:89036 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Ambition (The HMS Divinity precursor)
-item:81206 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Flames of War (Torch)
-item:81780 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Liturgy (Flames of War precursor)
-item:81957 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Shining Blade (Sword)
-item:81207 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Save the Queen (The Shining Blade precursor)
-item:81839 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Sharur (Hammer)
-item:81634 priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Call (Sharur precursor)
-item:88576 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Xiuquatl (Scepter)
-item:88956 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Tlehco (Xiuquatl precursor)
-item:89854 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Pharus (Longbow)
-item:89855 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Spero (Pharus precursor)
-item:90551 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Exordium (Greatsword)
-item:90883 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Epitaph (Exordium precursor)
-item:87687 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Verdarach (Warhorn)
-item:87764 priory:hasPrecursorType priory:ShardCraftingPrecursor . # Call to Arms (Verdarach precursor)
+item:86098 rdfs:label "The Binding of Ipos"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Binding of Ipos (Focus)
+item:86097 rdfs:label "Ars Goetia"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Ars Goetia (The Binding of Ipos precursor)
+item:87109 rdfs:label "Claw of the Khan-Ur"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Claw of the Khan-Ur (Dagger)
+item:87037 rdfs:label "Claw of Resolution"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Claw of Resolution (Claw of the Khan-Ur precursor)
+item:79562 rdfs:label "Eureka"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Eureka (Mace)
+item:79570 rdfs:label "Endeavor"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Endeavor (Eureka precursor)
+item:79802 rdfs:label "Shooshadoo"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Shooshadoo (Shield)
+item:79836 rdfs:label "Friendship"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Friendship (Shooshadoo precursor)
+item:80488 rdfs:label "The HMS Divinity"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # The HMS Divinity (Rifle)
+item:80135 rdfs:label "Man o' War"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Man o' War (The HMS Divinity precursor)
+item:81206 rdfs:label "Flames of War"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Flames of War (Torch)
+item:81022 rdfs:label "Liturgy"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Liturgy (Flames of War precursor)
+item:81957 rdfs:label "The Shining Blade"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # The Shining Blade (Sword)
+item:81812 rdfs:label "Save the Queen"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Save the Queen (The Shining Blade precursor)
+item:81839 rdfs:label "Sharur"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Sharur (Hammer)
+item:81634 rdfs:label "Might of Arah"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Might of Arah (Sharur precursor)
+item:88576 rdfs:label "Xiuquatl"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Xiuquatl (Scepter)
+item:88851 rdfs:label "Tlehco"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Tlehco (Xiuquatl precursor)
+item:89854 rdfs:label "Pharus"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Pharus (Longbow)
+item:89886 rdfs:label "Spero"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Spero (Pharus precursor)
+item:90551 rdfs:label "Exordium"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Exordium (Greatsword)
+item:90883 rdfs:label "Exitare"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Exitare (Exordium precursor)
+item:87687 rdfs:label "Verdarach"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Verdarach (Warhorn)
+item:87764 rdfs:label "Call of the Void"@en ; priory:hasPrecursorType priory:ShardCraftingPrecursor . # Call of the Void (Verdarach precursor)
 
 # ------------------------------------------------------------------------------
 # Generation 1 (Tradable on Trading Post or Crafted via Hobbs Tier 1-3)
 # ------------------------------------------------------------------------------
-item:29165 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30687 ; priory:inStarterKitPool true . # Spark -> Incinerator (Dagger)
-item:29166 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30692 ; priory:inStarterKitPool true . # The Energizer -> The Moot (Mace)
-item:29167 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30699 ; priory:inStarterKitPool true . # Zap -> Bolt (Sword)
-item:29168 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30693 ; priory:inStarterKitPool true . # Chaos Gun -> Quip (Pistol)
-item:29169 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30684 ; priory:inStarterKitPool true . # Tooth of Frostfang -> Frostfang (Axe)
-item:29170 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30695 ; priory:inStarterKitPool true . # Storm -> Meteorlogicus (Scepter)
-item:29171 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30685 ; priory:inStarterKitPool true . # Leaf of Kudzu -> Kudzu (Longbow)
-item:29172 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30690 ; priory:inStarterKitPool true . # The Colossus -> The Juggernaut (Hammer)
-item:29173 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30694 ; priory:inStarterKitPool true . # The Hunter -> The Predator (Rifle)
-item:29174 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30698 ; priory:inStarterKitPool true . # The Legend -> The Bifrost (Staff)
-item:29175 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30686 ; priory:inStarterKitPool true . # The Lover -> The Dreamer (Short Bow)
-item:29176 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30695 ; priory:inStarterKitPool true . # Storm (Starter Kit variant) -> Meteorlogicus
-item:29177 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30696 ; priory:inStarterKitPool true . # The Chosen -> The Flameseeker Prophecies (Shield)
-item:29178 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30688 ; priory:inStarterKitPool true . # The Bard -> The Minstrel (Focus)
-item:29179 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30700 ; priory:inStarterKitPool true . # Rodgort's Flame -> Rodgort (Torch)
-item:29180 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30702 ; priory:inStarterKitPool true . # Howl -> Howler (Warhorn)
-item:29181 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30697 ; priory:inStarterKitPool true . # Rage -> Frenzy (Harpoon Gun)
-item:29182 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30701 ; priory:inStarterKitPool true . # Venom -> Kraitkin (Trident)
-item:29183 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30691 ; priory:inStarterKitPool true . # Carcharias -> Kamohoali'i Kotaki (Spear)
-item:29184 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30703 ; priory:inStarterKitPool true . # Dawn -> Sunrise (Greatsword)
-item:29185 priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30704 ; priory:inStarterKitPool true . # Dusk -> Twilight (Greatsword)
-item:30684 priory:hasPrecursorType priory:TradablePrecursor . # Frostfang (Axe)
-item:30685 priory:hasPrecursorType priory:TradablePrecursor . # Kudzu (Longbow)
-item:30686 priory:hasPrecursorType priory:TradablePrecursor . # The Dreamer (Short Bow)
-item:30687 priory:hasPrecursorType priory:TradablePrecursor . # Incinerator (Dagger)
-item:30688 priory:hasPrecursorType priory:TradablePrecursor . # The Minstrel (Focus)
-item:30689 priory:hasPrecursorType priory:TradablePrecursor . # Eternity (Greatsword)
-item:30690 priory:hasPrecursorType priory:TradablePrecursor . # The Juggernaut (Hammer)
-item:30691 priory:hasPrecursorType priory:TradablePrecursor . # Kamohoali'i Kotaki (Spear)
-item:30692 priory:hasPrecursorType priory:TradablePrecursor . # The Moot (Mace)
-item:30693 priory:hasPrecursorType priory:TradablePrecursor . # Quip (Pistol)
-item:30694 priory:hasPrecursorType priory:TradablePrecursor . # The Predator (Rifle)
-item:30695 priory:hasPrecursorType priory:TradablePrecursor . # Meteorlogicus (Scepter)
-item:30696 priory:hasPrecursorType priory:TradablePrecursor . # The Flameseeker Prophecies (Shield)
-item:30697 priory:hasPrecursorType priory:TradablePrecursor . # Frenzy (Harpoon Gun)
-item:30698 priory:hasPrecursorType priory:TradablePrecursor . # The Bifrost (Staff)
-item:30699 priory:hasPrecursorType priory:TradablePrecursor . # Bolt (Sword)
-item:30700 priory:hasPrecursorType priory:TradablePrecursor . # Rodgort (Torch)
-item:30701 priory:hasPrecursorType priory:TradablePrecursor . # Kraitkin (Trident)
-item:30702 priory:hasPrecursorType priory:TradablePrecursor . # Howler (Warhorn)
-item:30703 priory:hasPrecursorType priory:TradablePrecursor . # Sunrise (Greatsword)
-item:30704 priory:hasPrecursorType priory:TradablePrecursor . # Twilight (Greatsword)
+item:29166 rdfs:label "Tooth of Frostfang"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30684 ; priory:inStarterKitPool true . # Tooth of Frostfang -> Frostfang (Axe)
+item:29167 rdfs:label "Spark"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30687 ; priory:inStarterKitPool true . # Spark -> Incinerator (Dagger)
+item:29168 rdfs:label "The Bard"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30688 ; priory:inStarterKitPool true . # The Bard -> The Minstrel (Focus)
+item:29169 rdfs:label "Dawn"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30703 ; priory:inStarterKitPool true . # Dawn -> Sunrise (Greatsword)
+item:29170 rdfs:label "The Colossus"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30690 ; priory:inStarterKitPool true . # The Colossus -> The Juggernaut (Hammer)
+item:29171 rdfs:label "Carcharias"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30691 ; priory:inStarterKitPool true . # Carcharias -> Kamohoali'i Kotaki (Spear)
+item:29172 rdfs:label "Leaf of Kudzu"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30685 ; priory:inStarterKitPool true . # Leaf of Kudzu -> Kudzu (Longbow)
+item:29173 rdfs:label "The Energizer"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30692 ; priory:inStarterKitPool true . # The Energizer -> The Moot (Mace)
+item:29174 rdfs:label "Chaos Gun"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30693 ; priory:inStarterKitPool true . # Chaos Gun -> Quip (Pistol)
+item:29175 rdfs:label "The Hunter"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30694 ; priory:inStarterKitPool true . # The Hunter -> The Predator (Rifle)
+item:29176 rdfs:label "Storm"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30695 ; priory:inStarterKitPool true . # Storm -> Meteorlogicus (Scepter)
+item:29177 rdfs:label "The Chosen"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30696 ; priory:inStarterKitPool true . # The Chosen -> The Flameseeker Prophecies (Shield)
+item:29178 rdfs:label "The Lover"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30686 ; priory:inStarterKitPool true . # The Lover -> The Dreamer (Short Bow)
+item:29179 rdfs:label "Rage"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30697 ; priory:inStarterKitPool true . # Rage -> Frenzy (Harpoon Gun)
+item:29180 rdfs:label "The Legend"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30698 ; priory:inStarterKitPool true . # The Legend -> The Bifrost (Staff)
+item:29181 rdfs:label "Zap"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30699 ; priory:inStarterKitPool true . # Zap -> Bolt (Sword)
+item:29182 rdfs:label "Rodgort's Flame"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30700 ; priory:inStarterKitPool true . # Rodgort's Flame -> Rodgort (Torch)
+item:29183 rdfs:label "Venom"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30701 ; priory:inStarterKitPool true . # Venom -> Kraitkin (Trident)
+item:29184 rdfs:label "Howl"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30702 ; priory:inStarterKitPool true . # Howl -> Howler (Warhorn)
+item:29185 rdfs:label "Dusk"@en ; priory:hasPrecursorType priory:TradablePrecursor ; priory:isPrecursorOf item:30704 ; priory:inStarterKitPool true . # Dusk -> Twilight (Greatsword)
+item:30684 rdfs:label "Frostfang"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Frostfang (Axe)
+item:30685 rdfs:label "Kudzu"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Kudzu (Longbow)
+item:30686 rdfs:label "The Dreamer"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Dreamer (Short Bow)
+item:30687 rdfs:label "Incinerator"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Incinerator (Dagger)
+item:30688 rdfs:label "The Minstrel"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Minstrel (Focus)
+item:30689 rdfs:label "Eternity"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Eternity (Greatsword)
+item:30690 rdfs:label "The Juggernaut"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Juggernaut (Hammer)
+item:30691 rdfs:label "Kamohoali'i Kotaki"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Kamohoali'i Kotaki (Spear)
+item:30692 rdfs:label "The Moot"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Moot (Mace)
+item:30693 rdfs:label "Quip"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Quip (Pistol)
+item:30694 rdfs:label "The Predator"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Predator (Rifle)
+item:30695 rdfs:label "Meteorlogicus"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Meteorlogicus (Scepter)
+item:30696 rdfs:label "The Flameseeker Prophecies"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Flameseeker Prophecies (Shield)
+item:30697 rdfs:label "Frenzy"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Frenzy (Harpoon Gun)
+item:30698 rdfs:label "The Bifrost"@en ; priory:hasPrecursorType priory:TradablePrecursor . # The Bifrost (Staff)
+item:30699 rdfs:label "Bolt"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Bolt (Sword)
+item:30700 rdfs:label "Rodgort"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Rodgort (Torch)
+item:30701 rdfs:label "Kraitkin"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Kraitkin (Trident)
+item:30702 rdfs:label "Howler"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Howler (Warhorn)
+item:30703 rdfs:label "Sunrise"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Sunrise (Greatsword)
+item:30704 rdfs:label "Twilight"@en ; priory:hasPrecursorType priory:TradablePrecursor . # Twilight (Greatsword)
 
 # ------------------------------------------------------------------------------
 # Generation 3 (Aurene Variants — Fast Crafting from Hydrocatalytic Reagents)
 # ------------------------------------------------------------------------------
-item:96221 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Bite (Greatsword)
-item:95675 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Fang (Sword)
-item:95684 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Rending (Axe)
-item:97165 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Claw (Dagger)
-item:96652 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Wisdom (Scepter)
-item:96028 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Insight (Staff)
-item:97077 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Breath (Torch)
-item:96203 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Voice (Warhorn)
-item:95808 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Weight (Hammer)
-item:97594 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Argument (Pistol)
-item:97783 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Flight (Short Bow)
-item:96356 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Gaze (Focus)
-item:95612 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Wing (Shield)
-item:95802 priory:hasPrecursorType priory:DragonVendorPrecursor . # Dragon's Tail (Mace)
-item:96937 priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Scale (Mace)
-item:97486 priory:hasPrecursorType priory:DragonVendorPrecursor . # Dragon's Persuasion (Rifle)
+item:96356 rdfs:label "Aurene's Bite"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Bite (Greatsword)
+item:96357 rdfs:label "Dragon's Bite"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:96356 . # Dragon's Bite (Aurene's Bite precursor)
+item:95675 rdfs:label "Aurene's Fang"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Fang (Sword)
+item:95994 rdfs:label "Dragon's Fang"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:95675 . # Dragon's Fang (Aurene's Fang precursor)
+item:96937 rdfs:label "Aurene's Rending"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Rending (Axe)
+item:97449 rdfs:label "Dragon's Rending"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:96937 . # Dragon's Rending (Aurene's Rending precursor)
+item:96203 rdfs:label "Aurene's Claw"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Claw (Dagger)
+item:95967 rdfs:label "Dragon's Claw"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:96203 . # Dragon's Claw (Aurene's Claw precursor)
+item:96221 rdfs:label "Aurene's Wisdom"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Wisdom (Scepter)
+item:96193 rdfs:label "Dragon's Wisdom"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:96221 . # Dragon's Wisdom (Aurene's Wisdom precursor)
+item:96652 rdfs:label "Aurene's Insight"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Insight (Staff)
+item:95814 rdfs:label "Dragon's Insight"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:96652 . # Dragon's Insight (Aurene's Insight precursor)
+item:97099 rdfs:label "Aurene's Breath"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Breath (Torch)
+item:96925 rdfs:label "Dragon's Breath"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:97099 . # Dragon's Breath (Aurene's Breath precursor)
+item:97783 rdfs:label "Aurene's Voice"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Voice (Warhorn)
+item:97513 rdfs:label "Dragon's Voice"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:97783 . # Dragon's Voice (Aurene's Voice precursor)
+item:95684 rdfs:label "Aurene's Weight"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Weight (Hammer)
+item:95920 rdfs:label "Dragon's Weight"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:95684 . # Dragon's Weight (Aurene's Weight precursor)
+item:95808 rdfs:label "Aurene's Argument"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Argument (Pistol)
+item:96915 rdfs:label "Dragon's Argument"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:95808 . # Dragon's Argument (Aurene's Argument precursor)
+item:97590 rdfs:label "Aurene's Flight"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Flight (Longbow)
+item:95834 rdfs:label "Dragon's Flight"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:97590 . # Dragon's Flight (Aurene's Flight precursor)
+item:97165 rdfs:label "Aurene's Gaze"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Gaze (Focus)
+item:96303 rdfs:label "Dragon's Gaze"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:97165 . # Dragon's Gaze (Aurene's Gaze precursor)
+item:97077 rdfs:label "Aurene's Wing"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Wing (Short Bow)
+item:96330 rdfs:label "Dragon's Wing"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:97077 . # Dragon's Wing (Aurene's Wing precursor)
+item:96028 rdfs:label "Aurene's Scale"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Scale (Shield)
+item:97691 rdfs:label "Dragon's Scale"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:96028 . # Dragon's Scale (Aurene's Scale precursor)
+item:95612 rdfs:label "Aurene's Tail"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Tail (Mace)
+item:96827 rdfs:label "Dragon's Tail"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:95612 . # Dragon's Tail (Aurene's Tail precursor)
+item:97377 rdfs:label "Aurene's Persuasion"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor . # Aurene's Persuasion (Rifle)
+item:97267 rdfs:label "Dragon's Persuasion"@en ; priory:hasPrecursorType priory:DragonVendorPrecursor ; priory:isPrecursorOf item:97377 . # Dragon's Persuasion (Aurene's Persuasion precursor)
 
 # ------------------------------------------------------------------------------
 # Eternity (Special Double-Legendary Mystic Forge Combination & Synergy)
 # ------------------------------------------------------------------------------
-item:30689 priory:hasPrecursorType priory:TradablePrecursor ;
+item:30689 rdfs:label "Eternity"@en ; priory:hasPrecursorType priory:TradablePrecursor ;
     priory:requiresPartnerLegendary item:30704, item:30703 . # Eternity (Combines Sunrise & Twilight)
-item:30704 priory:unlocksSynthesisTarget item:30689 ;
+item:30704 rdfs:label "Twilight"@en ; priory:unlocksSynthesisTarget item:30689 ;
     priory:requiresPartnerLegendary item:30703 .
-item:30703 priory:unlocksSynthesisTarget item:30689 ;
+item:30703 rdfs:label "Sunrise"@en ; priory:unlocksSynthesisTarget item:30689 ;
     priory:requiresPartnerLegendary item:30704 .
 
 # ------------------------------------------------------------------------------
 # BOM Pillar Gift Classifications & Batch Yield Quantities
 # ------------------------------------------------------------------------------
-item:19674 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Mastery"@en ;
+item:19674 rdfs:label "Gift of Mastery"@en ;
+    a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
     priory:gw2Id 19674 .
-item:75498 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Maguuma Mastery"@en ;
-    priory:gw2Id 75498 .
-item:81743 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Desert Mastery"@en ;
-    priory:gw2Id 81743 .
-item:86036 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Desert Mastery"@en ;
+item:73239 rdfs:label "Gift of Maguuma Mastery"@en ;
+    a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
+    priory:gw2Id 73239 .
+item:86036 rdfs:label "Gift of Desert Mastery"@en ;
+    a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
     priory:gw2Id 86036 .
-item:86069 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Desert Mastery"@en ;
-    priory:gw2Id 86069 .
-item:96033 a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Jade Mastery"@en ;
+item:96033 rdfs:label "Gift of Jade Mastery"@en ;
+    a priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
     priory:gw2Id 96033 .
 
-item:19626 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Gift of Fortune"@en ;
+item:19626 rdfs:label "Gift of Fortune"@en ;
+    a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
     priory:gw2Id 19626 .
-item:71820 a priory:TributePillarGift, priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Mystic Tribute"@en ;
+item:71820 rdfs:label "Mystic Tribute"@en ;
+    a priory:TributePillarGift, priory:MasteryPillarGift, priory:GiftItem, owl:NamedIndividual ;
     priory:gw2Id 71820 .
-item:71815 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Mystic Tribute"@en ;
-    priory:gw2Id 71815 .
-item:96137 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Draconic Tribute"@en ;
+item:96137 rdfs:label "Draconic Tribute"@en ;
+    a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
     priory:gw2Id 96137 .
-item:96713 a priory:TributePillarGift, priory:GiftItem, owl:NamedIndividual ;
-    rdfs:label "Draconic Tribute"@en ;
-    priory:gw2Id 96713 .
 
-item:19677 priory:batchYieldQuantity 2 . # Gift of Exploration awards 2 per 100% World Completion
+item:19677 rdfs:label "Gift of Exploration"@en ; priory:batchYieldQuantity 2 . # Gift of Exploration awards 2 per 100% World Completion
 
-# ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # WvW Competitive Legendary Armors (Triumphant Hero's & Mistforged)
 # ------------------------------------------------------------------------------
 
 # Triumphant Hero's (Tier 1)
-item:84176 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Warhelm (Heavy Helm)
-item:82963 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Pauldrons (Heavy Shoulders)
-item:83394 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Breastplate (Heavy Chest)
-item:82456 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Gauntlets (Heavy Gloves)
-item:82196 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Legplates (Heavy Legs)
-item:82801 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Wargreaves (Heavy Boots)
-item:82437 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Faceguard (Medium Helm)
-item:82994 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Shoulderguards (Medium Shoulders)
-item:84578 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Brigandine (Medium Chest)
-item:84110 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Wristplates (Medium Gloves)
-item:82903 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Legguards (Medium Legs)
-item:82093 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Shinplates (Medium Boots)
-item:82902 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Masque (Light Helm)
-item:82173 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Epaulets (Light Shoulders)
-item:83036 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Raiment (Light Chest)
-item:84629 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Armguards (Light Gloves)
-item:83497 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Leggings (Light Legs)
-item:83289 priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Footgear (Light Boots)
+item:84176 rdfs:label "Triumphant Hero's Warhelm"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Warhelm (Heavy Helm)
+item:82963 rdfs:label "Triumphant Hero's Pauldrons"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Pauldrons (Heavy Shoulders)
+item:83394 rdfs:label "Triumphant Hero's Breastplate"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Breastplate (Heavy Chest)
+item:82456 rdfs:label "Triumphant Hero's Gauntlets"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Gauntlets (Heavy Gloves)
+item:82196 rdfs:label "Triumphant Hero's Legplates"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Legplates (Heavy Legs)
+item:82801 rdfs:label "Triumphant Hero's Wargreaves"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Wargreaves (Heavy Boots)
+item:82437 rdfs:label "Triumphant Hero's Faceguard"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Faceguard (Medium Helm)
+item:82994 rdfs:label "Triumphant Hero's Shoulderguards"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Shoulderguards (Medium Shoulders)
+item:84578 rdfs:label "Triumphant Hero's Brigandine"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Brigandine (Medium Chest)
+item:84110 rdfs:label "Triumphant Hero's Wristplates"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Wristplates (Medium Gloves)
+item:82903 rdfs:label "Triumphant Hero's Legguards"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Legguards (Medium Legs)
+item:82093 rdfs:label "Triumphant Hero's Shinplates"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Shinplates (Medium Boots)
+item:82902 rdfs:label "Triumphant Hero's Masque"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Masque (Light Helm)
+item:82173 rdfs:label "Triumphant Hero's Epaulets"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Epaulets (Light Shoulders)
+item:83036 rdfs:label "Triumphant Hero's Raiment"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Raiment (Light Chest)
+item:84629 rdfs:label "Triumphant Hero's Armguards"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Armguards (Light Gloves)
+item:83497 rdfs:label "Triumphant Hero's Leggings"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Leggings (Light Legs)
+item:83289 rdfs:label "Triumphant Hero's Footgear"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Triumphant Hero's Footgear (Light Boots)
 
 # Mistforged Triumphant Hero's (Tier 2)
-item:84301 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Warhelm (Heavy Helm)
-item:84181 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Pauldrons (Heavy Shoulders)
-item:84481 priory:hasPrecursorType priory:WvWRankPrecursor . # Sublime Mistforged Triumphant Hero's Breastplate (Heavy Chest)
-item:82348 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Gauntlets (Heavy Gloves)
-item:83702 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Legplates (Heavy Legs)
-item:83094 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Wargreaves (Heavy Boots)
-item:82180 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Faceguard (Medium Helm)
-item:83087 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Shoulderguards (Medium Shoulders)
-item:82102 priory:hasPrecursorType priory:WvWRankPrecursor . # Sublime Mistforged Triumphant Hero's Brigandine (Medium Chest)
-item:82552 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Wristplates (Medium Gloves)
-item:83862 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Legguards (Medium Legs)
-item:83699 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Shinplates (Medium Boots)
-item:82925 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Masque (Light Helm)
-item:83308 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Epaulets (Light Shoulders)
-item:84508 priory:hasPrecursorType priory:WvWRankPrecursor . # Sublime Mistforged Triumphant Hero's Raiment (Light Chest)
-item:82109 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Armguards (Light Gloves)
-item:82502 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Leggings (Light Legs)
-item:83482 priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Footgear (Light Boots)
+item:84301 rdfs:label "Mistforged Triumphant Hero's Warhelm"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Warhelm (Heavy Helm)
+item:84181 rdfs:label "Mistforged Triumphant Hero's Pauldrons"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Pauldrons (Heavy Shoulders)
+item:84481 rdfs:label "Sublime Mistforged Triumphant Hero's Breastplate"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Sublime Mistforged Triumphant Hero's Breastplate (Heavy Chest)
+item:82348 rdfs:label "Mistforged Triumphant Hero's Gauntlets"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Gauntlets (Heavy Gloves)
+item:83702 rdfs:label "Mistforged Triumphant Hero's Legplates"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Legplates (Heavy Legs)
+item:83094 rdfs:label "Mistforged Triumphant Hero's Wargreaves"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Wargreaves (Heavy Boots)
+item:82180 rdfs:label "Mistforged Triumphant Hero's Faceguard"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Faceguard (Medium Helm)
+item:83087 rdfs:label "Mistforged Triumphant Hero's Shoulderguards"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Shoulderguards (Medium Shoulders)
+item:82102 rdfs:label "Sublime Mistforged Triumphant Hero's Brigandine"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Sublime Mistforged Triumphant Hero's Brigandine (Medium Chest)
+item:82552 rdfs:label "Mistforged Triumphant Hero's Wristplates"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Wristplates (Medium Gloves)
+item:83862 rdfs:label "Mistforged Triumphant Hero's Legguards"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Legguards (Medium Legs)
+item:83699 rdfs:label "Mistforged Triumphant Hero's Shinplates"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Shinplates (Medium Boots)
+item:82925 rdfs:label "Mistforged Triumphant Hero's Masque"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Masque (Light Helm)
+item:83308 rdfs:label "Mistforged Triumphant Hero's Epaulets"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Epaulets (Light Shoulders)
+item:84508 rdfs:label "Sublime Mistforged Triumphant Hero's Raiment"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Sublime Mistforged Triumphant Hero's Raiment (Light Chest)
+item:82109 rdfs:label "Mistforged Triumphant Hero's Armguards"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Armguards (Light Gloves)
+item:82502 rdfs:label "Mistforged Triumphant Hero's Leggings"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Leggings (Light Legs)
+item:83482 rdfs:label "Mistforged Triumphant Hero's Footgear"@en ; priory:hasPrecursorType priory:WvWRankPrecursor . # Mistforged Triumphant Hero's Footgear (Light Boots)
 
 # ------------------------------------------------------------------------------
 # PvP Competitive Legendary Armors (Ardent Glorious & Mistforged)
 # ------------------------------------------------------------------------------
 
 # Ardent Glorious (Tier 1)
-item:83921 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Plate Helm (Heavy Helm)
-item:83127 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Pauldrons (Heavy Shoulders)
-item:83348 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Breastplate (Heavy Chest)
-item:82465 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Gauntlets (Heavy Gloves)
-item:83323 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Legplates (Heavy Legs)
-item:84655 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Wargreaves (Heavy Boots)
-item:84643 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Cap (Medium Helm)
-item:83929 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Shoulderguards (Medium Shoulders)
-item:82670 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Brigandine (Medium Chest)
-item:82245 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Wristplates (Medium Gloves)
-item:82512 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Legguards (Medium Legs)
-item:82214 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Shinplates (Medium Boots)
-item:84633 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Crown (Light Helm)
-item:83595 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Epaulets (Light Shoulders)
-item:83113 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Raiment (Light Chest)
-item:83162 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Armguards (Light Gloves)
-item:84546 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Leggings (Light Legs)
-item:82519 priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Footgear (Light Boots)
+item:83921 rdfs:label "Ardent Glorious Plate Helm"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Plate Helm (Heavy Helm)
+item:83127 rdfs:label "Ardent Glorious Pauldrons"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Pauldrons (Heavy Shoulders)
+item:83348 rdfs:label "Ardent Glorious Breastplate"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Breastplate (Heavy Chest)
+item:82465 rdfs:label "Ardent Glorious Gauntlets"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Gauntlets (Heavy Gloves)
+item:83323 rdfs:label "Ardent Glorious Legplates"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Legplates (Heavy Legs)
+item:84655 rdfs:label "Ardent Glorious Wargreaves"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Wargreaves (Heavy Boots)
+item:84643 rdfs:label "Ardent Glorious Cap"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Cap (Medium Helm)
+item:83929 rdfs:label "Ardent Glorious Shoulderguards"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Shoulderguards (Medium Shoulders)
+item:82670 rdfs:label "Ardent Glorious Brigandine"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Brigandine (Medium Chest)
+item:82245 rdfs:label "Ardent Glorious Wristplates"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Wristplates (Medium Gloves)
+item:82512 rdfs:label "Ardent Glorious Legguards"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Legguards (Medium Legs)
+item:82214 rdfs:label "Ardent Glorious Shinplates"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Shinplates (Medium Boots)
+item:84633 rdfs:label "Ardent Glorious Crown"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Crown (Light Helm)
+item:83595 rdfs:label "Ardent Glorious Epaulets"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Epaulets (Light Shoulders)
+item:83113 rdfs:label "Ardent Glorious Raiment"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Raiment (Light Chest)
+item:83162 rdfs:label "Ardent Glorious Armguards"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Armguards (Light Gloves)
+item:84546 rdfs:label "Ardent Glorious Leggings"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Leggings (Light Legs)
+item:82519 rdfs:label "Ardent Glorious Footgear"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Ardent Glorious Footgear (Light Boots)
 
 # Mistforged Glorious Hero's (Tier 2)
-item:89117 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Plate Helm (Heavy Helm)
-item:89209 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Pauldrons (Heavy Shoulders)
-item:89152 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Breastplate (Heavy Chest)
-item:89093 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Gauntlets (Heavy Gloves)
-item:89266 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Legplates (Heavy Legs)
-item:89252 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Wargreaves (Heavy Boots)
-item:89126 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Cap (Medium Helm)
-item:89234 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Shoulderguards (Medium Shoulders)
-item:89183 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Brigandine (Medium Chest)
-item:89134 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Wristplates (Medium Gloves)
-item:89094 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Legguards (Medium Legs)
-item:89235 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Shinplates (Medium Boots)
-item:89260 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Crown (Light Helm)
-item:89158 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Epaulets (Light Shoulders)
-item:89174 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Raiment (Light Chest)
-item:89167 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Armguards (Light Gloves)
-item:89101 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Leggings (Light Legs)
-item:89245 priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Footgear (Light Boots)
+item:89117 rdfs:label "Mistforged Glorious Hero's Plate Helm"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Plate Helm (Heavy Helm)
+item:89209 rdfs:label "Mistforged Glorious Hero's Pauldrons"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Pauldrons (Heavy Shoulders)
+item:89152 rdfs:label "Mistforged Glorious Hero's Breastplate"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Breastplate (Heavy Chest)
+item:89093 rdfs:label "Mistforged Glorious Hero's Gauntlets"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Gauntlets (Heavy Gloves)
+item:89266 rdfs:label "Mistforged Glorious Hero's Legplates"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Legplates (Heavy Legs)
+item:89252 rdfs:label "Mistforged Glorious Hero's Wargreaves"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Wargreaves (Heavy Boots)
+item:89126 rdfs:label "Mistforged Glorious Hero's Cap"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Cap (Medium Helm)
+item:89234 rdfs:label "Mistforged Glorious Hero's Shoulderguards"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Shoulderguards (Medium Shoulders)
+item:89183 rdfs:label "Mistforged Glorious Hero's Brigandine"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Brigandine (Medium Chest)
+item:89134 rdfs:label "Mistforged Glorious Hero's Wristplates"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Wristplates (Medium Gloves)
+item:89094 rdfs:label "Mistforged Glorious Hero's Legguards"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Legguards (Medium Legs)
+item:89235 rdfs:label "Mistforged Glorious Hero's Shinplates"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Shinplates (Medium Boots)
+item:89260 rdfs:label "Mistforged Glorious Hero's Crown"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Crown (Light Helm)
+item:89158 rdfs:label "Mistforged Glorious Hero's Epaulets"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Epaulets (Light Shoulders)
+item:89174 rdfs:label "Mistforged Glorious Hero's Raiment"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Raiment (Light Chest)
+item:89167 rdfs:label "Mistforged Glorious Hero's Armguards"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Armguards (Light Gloves)
+item:89101 rdfs:label "Mistforged Glorious Hero's Leggings"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Leggings (Light Legs)
+item:89245 rdfs:label "Mistforged Glorious Hero's Footgear"@en ; priory:hasPrecursorType priory:PvPRankPrecursor . # Mistforged Glorious Hero's Footgear (Light Boots)

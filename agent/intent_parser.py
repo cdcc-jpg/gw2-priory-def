@@ -203,8 +203,15 @@ class IntentParser:
     ) -> ResolvedGoal:
         """Parses player natural language prompt and resolves goal to Knowledge Graph entities or ranking facets."""
         full_prompt = user_prompt
+        context_blocks: List[str] = []
+        if previous_goal and previous_goal.resolved_item_name:
+            context_blocks.append(
+                f"Previous active goal: {previous_goal.resolved_item_name} (qty={previous_goal.target_quantity})"
+            )
         if conversation_context:
-            full_prompt = f"Previous conversation context:\n{conversation_context}\n\nNew user message:\n{user_prompt}"
+            context_blocks.append(f"Previous conversation context:\n{conversation_context}")
+        if context_blocks:
+            full_prompt = "\n\n".join(context_blocks) + f"\n\nNew user message:\n{user_prompt}"
 
         # 1. Top LLM structured extraction
         intent: PlayerGoalIntent = self.llm.generate_structured(
@@ -526,9 +533,16 @@ class IntentParser:
 
         # Handle SPECIFIC_ITEM resolution
         item_query = intent.target_item_name
+        is_defaulted_twilight = (
+            bool(item_query)
+            and item_query.lower() == "twilight"
+            and "twilight" not in p_lower
+            and not has_indirect_twilight
+        )
         is_referencing_previous = (
             previous_goal is not None and (
                 not item_query
+                or is_defaulted_twilight
                 or item_query.lower() in ["it", "that", "this", "upgrade", "weapon", "sigil", "legendary sigil", "legendary rune"]
                 or (previous_goal.resolved_item_name and item_query.lower() == previous_goal.resolved_item_name.lower())
                 or (previous_goal.resolved_item_name and any(w in item_query.lower() for w in ["upgrade", "sigil", "weapon"]))

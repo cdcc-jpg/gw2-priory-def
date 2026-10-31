@@ -234,6 +234,45 @@ class TestCalendarProjector(unittest.TestCase):
         self.assertEqual(itinerary.total_scheduled_minutes, 45)
         self.assertEqual(itinerary.time_utilization_pct, 75.0)
 
+    def test_schedule_daily_session_prunes_owned_quartz_and_ascended_refinements(self):
+        """Verifies that accounts owning heaps of Charged Quartz and Ascended Refinements do not get scheduled for Quartz/Refinement on Twilight."""
+        account = AccountState(
+            materials={
+                43772: 115,   # Quartz Crystal
+                43773: 3470,  # Charged Quartz Crystal
+                46742: 46,    # Lump of Mithrillium
+                46744: 45,    # Glob of Elder Spirit Residue
+                46740: 196,   # Spool of Thick Elonian Cord
+                19976: 207,   # Mystic Coin
+                19675: 10,    # Mystic Clover
+                19721: 137,   # Glob of Ectoplasm
+                19925: 357,   # Obsidian Shard
+                24304: 48,    # Onyx Core
+                24305: 18,    # Onyx Lodestone
+            },
+            bank={
+                19677: 1,     # Gift of Exploration
+                19678: 16,    # Gift of Battle
+            },
+            wallet={
+                23: 500,      # Spirit Shards
+                45: 12583,    # Volatile Magic
+                3: 499,       # Laurels
+            },
+        )
+        itinerary = self.solver.schedule_daily_session_itinerary(
+            goal_item_id=30704,
+            time_budget_minutes=20,
+            account_state=account,
+        )
+        categories = [t.category for t in itinerary.tasks]
+        self.assertNotIn("QUARTZ_CHARGING", categories)
+        self.assertNotIn("DAILY_REFINEMENT", categories)
+        self.assertIn("FORGE_GIFT_OF_MASTERY", categories)
+        self.assertIn("DAILY_CLOVER_EXCHANGE", categories)
+        self.assertIn("LODESTONE_PROMOTION", categories)
+        self.assertLessEqual(itinerary.total_scheduled_minutes, 20)
+
 
 if __name__ == "__main__":
     unittest.main()

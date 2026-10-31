@@ -387,14 +387,29 @@ class GuideGenerator:
             if exhausted_clover_msg not in recommendations:
                 recommendations.append(exhausted_clover_msg)
 
+        is_live_account = bool(
+            account_state and len(getattr(account_state, "materials", {}) or {}) > 50
+        )
+        wallet_dict = (getattr(account_state, "wallet", None) or {}) if account_state else {}
+        has_exploration = bool(account_state and account_state.total_item_count(19677) >= target_qty)
+        has_battle = bool(account_state and (account_state.has_gift_of_battle() or account_state.total_item_count(19678) >= target_qty))
+        has_obsidian = bool(account_state and account_state.total_item_count(19925) >= 250 * target_qty)
+        has_spirit_shards = bool(wallet_dict.get(23, 0) >= 200 * target_qty)
+        has_dungeon_tales = bool(wallet_dict.get(69, 0) >= 500 * target_qty)
+
         # Cheapest Crafting Strategy comparison
         if goal.resolved_item_id == 30704:
+            obs_line = (
+                f"   • **Obsidian Shards:** ✅ {account_state.total_item_count(19925)}/250 already owned in storage (0g needed)."
+                if (is_live_account and has_obsidian)
+                else "   • **Obsidian:** 0g via Temple of Balthazar Karma."
+            )
             cheap_strat = [
                 "💰 **Cheapest Crafting Strategy:**",
                 "   • **Dusk:** TP buy (~141g) vs Hobbs (~210g materials) -> TP buy saves ~69g.",
                 "   • **Onyx Lodestones:** Forge promotion of 196 Cores saves ~19.6g.",
                 "   • **Clovers:** BUY-2046 saves ~170g over direct forge rolls.",
-                "   • **Obsidian:** 0g via Temple of Balthazar Karma."
+                obs_line,
             ]
             for line in cheap_strat:
                 if line not in recommendations:
@@ -508,12 +523,55 @@ class GuideGenerator:
         if optimal_plan and getattr(optimal_plan, "chapters", None):
             for ch in optimal_plan.chapters:
                 status = getattr(ch, "completion_status", "IN_PROGRESS")
-                readiness = getattr(ch, "readiness_pct", 0.0)
-                status_str = f" [{status} - {readiness:.1f}%]"
+                ch_readiness = getattr(ch, "readiness_pct", 0.0)
+                if is_live_account and status == "COMPLETED":
+                    master_roadmap_formatted.append(
+                        f"✅ **{ch.chapter_title} [SKIPPED — 100.0% Complete]**\n"
+                        f"   -> All requirements for this chapter are already in your account storage "
+                        f"({ch.chapter_summary or '100% satisfied'}). Zero steps required."
+                    )
+                    continue
+
+                status_str = f" [{status} - {ch_readiness:.1f}%]"
                 master_roadmap_formatted.append(f"**{ch.chapter_title}**{status_str}")
-                if getattr(ch, "chapter_summary", None):
+                if getattr(ch, "chapter_summary", None) and not is_live_account:
                     master_roadmap_formatted.append(f"   💡 *{ch.chapter_summary}*")
-                for s_idx, action in enumerate(getattr(ch, "actions", []), 1):
+
+                raw_actions = list(getattr(ch, "actions", []))
+                if is_live_account:
+                    pruned_Action_titles = []
+                    filtered_actions = []
+                    for act in raw_actions:
+                        t_str = getattr(act, "action_title", "")
+                        if any(
+                            done_marker in t_str
+                            for done_marker in ("(Completed / Ready)", "(Crafted / Ready)", "(Owned / Ready)")
+                        ):
+                            clean_t = t_str.split(":", 1)[-1].replace("(Completed / Ready)", "").replace("(Crafted / Ready)", "").strip()
+                            pruned_Action_titles.append(clean_t)
+                            continue
+                        if any(
+                            aux_prefix in t_str
+                            for aux_prefix in (
+                                "🚀 Booster & Gobbler Telemetry",
+                                "🌟 Daily Converter Checklist",
+                                "🌟 VIP Lounge Pass Detected",
+                                "🌟 Permanent Contracts Detected",
+                                "🛡️ Material Staging",
+                                "🔀 Post-Forge Decision Fork",
+                                "🔮 Post-Forge Decision Fork",
+                                "📋 4-Pillar Inventory Staging Checklist",
+                            )
+                        ):
+                            continue
+                        filtered_actions.append(act)
+                    if pruned_Action_titles:
+                        master_roadmap_formatted.append(
+                            f"   ✅ *Auto-Pruned (Already Owned on Account): {', '.join(pruned_Action_titles)}*"
+                        )
+                    raw_actions = filtered_actions
+
+                for s_idx, action in enumerate(raw_actions, 1):
                     wp = getattr(action, "waypoint_code", None) or getattr(action, "waypoint", None)
                     if wp and wp not in getattr(action, "action_description", ""):
                         wp_clean = wp if wp.startswith("[") else f"[{wp}]"
@@ -560,7 +618,48 @@ class GuideGenerator:
                     master_roadmap_formatted.append(f"   [{j}] **{s.action_title}**{npc_str}{char_str}{wp_str}: {s.action_description}")
 
         if optimal_plan and getattr(optimal_plan, "chapters", None):
-            if goal.resolved_item_id == 30704:
+            if is_live_account:
+                owned_highlights = []
+                if has_exploration:
+                    owned_highlights.append(f"{account_state.total_item_count(19677)}x Gift of Exploration (Core Tyria World Tour 100% skipped)")
+                if has_battle:
+                    owned_highlights.append(f"{account_state.total_item_count(19678)}x Gift of Battle (WvW track skipped)")
+                if has_obsidian:
+                    owned_highlights.append(f"{account_state.total_item_count(19925)}/250 Obsidian Shards")
+                if has_spirit_shards:
+                    owned_highlights.append(f"{wallet_dict.get(23, 0):,} Spirit Shards (ready for Bloodstone Shard)")
+                if has_dungeon_tales:
+                    owned_highlights.append(f"{wallet_dict.get(69, 0):,}/500 Tales of Dungeon Delving (ready for Dungeon Gift)")
+
+                delta_highlights = []
+                prec_label = getattr(optimal_plan, "precursor_name", "Dusk")
+                if missing_mats.get(prec_label, 0) > 0:
+                    delta_highlights.append(f"1x {prec_label}")
+                if missing_mats.get("Bloodstone Shard", 0) > 0:
+                    delta_highlights.append("1x Bloodstone Shard (instant buy at Miyani)")
+                if missing_mats.get("Mystic Clover", 0) > 0:
+                    delta_highlights.append(f"{missing_mats['Mystic Clover']}x Mystic Clovers")
+                if missing_mats.get("Onyx Lodestone", 0) > 0:
+                    cores_owned = account_state.total_item_count(24309)
+                    promotable = cores_owned // 2
+                    if promotable > 0:
+                        delta_highlights.append(f"{missing_mats['Onyx Lodestone']}x Onyx Lodestones ({promotable} promotable now from your {cores_owned} Onyx Cores)")
+                    else:
+                        delta_highlights.append(f"{missing_mats['Onyx Lodestone']}x Onyx Lodestones")
+                if missing_mats.get("Icy Runestone", 0) > 0:
+                    delta_highlights.append(f"{missing_mats['Icy Runestone']}x Icy Runestones (100g)")
+                if missing_mats.get("Glob of Ectoplasm", 0) > 0:
+                    delta_highlights.append(f"{missing_mats['Glob of Ectoplasm']}x Globs of Ectoplasm")
+
+                owned_str = "; ".join(owned_highlights) if owned_highlights else "baseline materials"
+                delta_str = ", ".join(delta_highlights) if delta_highlights else "final Mystic Forge assembly"
+                summary = (
+                    f"**Surgical Account Delta Plan for {goal_display} ({readiness}% Account Readiness):** "
+                    f"Completed chapters and satisfied grind tracks have been automatically pruned from your roadmap "
+                    f"(**Already Owned:** {owned_str}). "
+                    f"Your remaining active delta focuses strictly on: **{delta_str}**, plus T6 trophy conversion and base metal/leather crafting."
+                )
+            elif goal.resolved_item_id == 30704:
                 summary = (
                     f"Welcome to your 4-Chapter Master Journey for **{goal_display}**. "
                     f"This progression plan is precisely tailored to your {intent.time_budget_minutes}-minute playtime, "
@@ -612,8 +711,8 @@ class GuideGenerator:
         elif is_default_roster:
             char_recs.append("👤 **Primary Crafter & Forge Master:** Kerling (Level 80 Guardian — Weaponsmith 500, Armorsmith 500) | ✅ 100% Core Map Completed")
 
-        # Exploration alt routing for Gift of Exploration / Map completion
-        if (optimal_plan and getattr(optimal_plan, "chapters", None)) or "Gift of Exploration" in missing_mats or "Gift of Mastery" in missing_mats:
+        # Exploration alt routing for Gift of Exploration / Map completion (skip for live accounts that already own Gift of Exploration)
+        if not (is_live_account and has_exploration) and ((optimal_plan and getattr(optimal_plan, "chapters", None)) or "Gift of Exploration" in missing_mats or "Gift of Mastery" in missing_mats):
             mobility_char = None
             if optimal_plan and getattr(optimal_plan, "chapters", None):
                 for ch in optimal_plan.chapters:
@@ -659,8 +758,8 @@ class GuideGenerator:
                     if getattr(s, "assigned_character", None):
                         char_recs.append(f"👤 *[Character: {s.assigned_character}]* Crafting **{s.title}**")
 
-        # Exploration & 2x Gift of Exploration guidance in strategic recommendations
-        if optimal_plan and getattr(optimal_plan, "chapters", None) and getattr(optimal_plan, "generation", "GEN1") == "GEN1":
+        # Exploration & 2x Gift of Exploration guidance in strategic recommendations (skip if live account already owns Gift of Exploration)
+        if not (is_live_account and has_exploration) and optimal_plan and getattr(optimal_plan, "chapters", None) and getattr(optimal_plan, "generation", "GEN1") == "GEN1":
             if goal.resolved_item_id == 30704:
                 map_comp_rec = (
                     "🏆 **Core Tyria Map Completion Payoff:** 100% Core Tyria map completion yields **2x Gift of Exploration** "
@@ -687,6 +786,11 @@ class GuideGenerator:
 
         # Post-Forge Decision Fork in Strategic Recommendations
         if goal.resolved_item_id in [30704, 30703, 30689] or "twilight" in (goal.resolved_item_name or "").lower() or "eternity" in (goal.resolved_item_name or "").lower():
+            if is_live_account:
+                recommendations = [
+                    r for r in recommendations
+                    if not r.startswith("🔮 **Eternity Synthesis & Commercial Arbitrage")
+                ]
             fork_rec = (
                 "🔀 **Post-Forge Decision Fork (Armory Binding vs 3,800g Eternity Arbitrage vs Direct TP Sale):**\n"
                 "   • 🛡️ **Option 1: Legendary Armory Binding (0g | Infinite Account Utility):**\n"
@@ -755,16 +859,17 @@ class GuideGenerator:
             wxp_count = account_state.wxp_boosters_count()
             karma_count = account_state.karma_boosters_count()
             heroic_exp_total = heroic_count + exp_count
-            if zhaitaffy_count > 0 or tomes_count > 0 or heroic_exp_total > 0 or wxp_count > 0 or karma_count > 0:
-                booster_rec = (
-                    f"🚀 **Live Booster & Utility Inventory:** Your account owns **{zhaitaffy_count}x Zhaitaffy Gobblers [ID: 67836]**, "
-                    f"**{tomes_count}x Tomes of Knowledge [ID: 19983]** (instant Spirit Shards), **{heroic_exp_total}x Experience/Heroic Boosters**, "
-                    f"**{wxp_count}x WXP Boosters**, and **{karma_count}x Karma Boosters**. "
-                    f"Don't forget to stack Experience + Heroic + Guild Tavern WvW buff (completes WvW Gift of Battle in ~4.5h vs 8.0h unboosted), "
-                    f"and use Karma Boosters at the Temple of Balthazar `[&BO4CAAA=]`!"
-                )
-                if booster_rec not in recommendations:
-                    recommendations.append(booster_rec)
+            if not (is_live_account and has_battle and has_obsidian and has_spirit_shards):
+                if zhaitaffy_count > 0 or tomes_count > 0 or heroic_exp_total > 0 or wxp_count > 0 or karma_count > 0:
+                    booster_rec = (
+                        f"🚀 **Live Booster & Utility Inventory:** Your account owns **{zhaitaffy_count}x Zhaitaffy Gobblers [ID: 67836]**, "
+                        f"**{tomes_count}x Tomes of Knowledge [ID: 19983]** (instant Spirit Shards), **{heroic_exp_total}x Experience/Heroic Boosters**, "
+                        f"**{wxp_count}x WXP Boosters**, and **{karma_count}x Karma Boosters**. "
+                        f"Don't forget to stack Experience + Heroic + Guild Tavern WvW buff (completes WvW Gift of Battle in ~4.5h vs 8.0h unboosted), "
+                        f"and use Karma Boosters at the Temple of Balthazar `[&BO4CAAA=]`!"
+                    )
+                    if booster_rec not in recommendations:
+                        recommendations.append(booster_rec)
         elif wvw_karma_found or (optimal_plan and getattr(optimal_plan, "chapters", None)):
             booster_rec = "🚀 **Booster Acceleration:** Don't forget to stack Experience Booster + Heroic Booster + Guild Tavern WvW Reward Track buff (completes WvW Gift of Battle in ~4.5h vs 8.0h unboosted), and use Karma Boosters at the Temple of Balthazar!"
             if booster_rec not in recommendations:
@@ -1178,7 +1283,8 @@ class GuideGenerator:
         itinerary: Any,
         goal: Optional[ResolvedGoal] = None,
         user_prompt: Optional[str] = None,
-        account_state: Optional[Any] = None
+        account_state: Optional[Any] = None,
+        diff_report: Optional[Any] = None,
     ) -> PersonalizedGuide:
         """Synthesizes a time-budgeted daily knapsack session itinerary guide with spatial navigation."""
         goal_name = getattr(itinerary, "goal_name", None) or (goal.resolved_item_name if goal else None) or "Daily Session Itinerary"
@@ -1214,21 +1320,47 @@ class GuideGenerator:
             for idx, t in enumerate(tasks)
         ]
 
-        chat_code = tasks[0].waypoint_code if tasks else (goal.chat_code if goal else None)
-        tip = f"💡 **Session Planning Tip:** Knapsack optimization scheduled {scheduled_mins} minutes of high-priority time-gated activities for {goal_name}, achieving {utilization}% playtime efficiency."
+        chat_code = (goal.chat_code if (goal and goal.chat_code) else None) or (tasks[0].waypoint_code if tasks else None)
+        has_live_inventory = bool(
+            account_state and (
+                len(getattr(account_state, "materials", {}) or {}) > 1
+                or bool(getattr(account_state, "wallet", {}) or {})
+                or bool(getattr(account_state, "bank", {}) or {})
+            )
+        )
+        readiness = (
+            round(float(diff_report.overall_readiness_pct), 1)
+            if (diff_report is not None and has_live_inventory and hasattr(diff_report, "overall_readiness_pct"))
+            else utilization
+        )
+        missing_mats = (
+            dict(diff_report.summary_missing_materials)
+            if (diff_report is not None and hasattr(diff_report, "summary_missing_materials"))
+            else {}
+        )
+        missing_discs = [
+            f"{d.get('discipline', 'Discipline')} {d.get('required_rating', 400)}"
+            for d in (getattr(diff_report, "missing_disciplines", []) or [])
+            if isinstance(d, dict)
+        ]
+        tip = (
+            f"💡 **Session Planning Tip:** Knapsack optimization scheduled {scheduled_mins} minutes of "
+            f"account-pruned BOM tasks for {goal_name} ({utilization}% of your {time_budget}m session budget; "
+            f"overall {goal_name} readiness: {readiness}%)."
+        )
 
         return PersonalizedGuide(
             goal_name=goal_name,
             target_quantity=getattr(goal, "target_quantity", 1),
             chat_code=chat_code,
-            readiness_percentage=utilization,
+            readiness_percentage=readiness,
             executive_summary=summary,
             strategic_recommendations=recs,
             character_recommendations=char_recs,
             master_roadmap_phases=roadmap,
             session_checklist=checklist,
-            missing_materials_summary={},
-            missing_disciplines_summary=[],
+            missing_materials_summary=missing_mats,
+            missing_disciplines_summary=missing_discs,
             motivational_tip=tip
         )
 

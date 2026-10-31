@@ -198,34 +198,56 @@ class RuleBasedMockLLMClient(BaseLLMClient):
         has_specific_item = False
 
         # Relational / descriptive disambiguation (e.g. "legendary greatsword made from Dusk", "dark shadowy Gen 1 legendary greatsword")
-        if re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dusk\b", p_lower) or (
-            "greatsword" in p_lower and ("dark" in p_lower or "shadow" in p_lower or ("legendary" in p_lower and "dusk" in p_lower))
+        if re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dusk\b", p_user) or (
+            "greatsword" in p_user and ("dark" in p_user or "shadow" in p_user or ("legendary" in p_user and "dusk" in p_user))
         ):
             goal_item = "Twilight"
             has_specific_item = True
-        elif re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dawn\b", p_lower) or (
-            "greatsword" in p_lower and "legendary" in p_lower and "dawn" in p_lower
+        elif re.search(r"(?:made|forged|crafted|built|upgraded)\s+from\s+dawn\b", p_user) or (
+            "greatsword" in p_user and "legendary" in p_user and "dawn" in p_user
         ):
             goal_item = "Sunrise"
             has_specific_item = True
 
+        # 1. First match against the new user message (p_user) so assistant history doesn't hijack the target item
         if not goal_item:
             for pattern, canon_name in specific_item_matches:
-                if re.search(r"\b" + re.escape(pattern) + r"\b", p_lower):
+                if re.search(r"\b" + re.escape(pattern) + r"\b", p_user):
                     goal_item = canon_name
                     has_specific_item = True
                     break
 
         if not goal_item:
-            if re.search(r"\bsigils?\b", p_lower):
+            if re.search(r"\bsigils?\b", p_user):
                 goal_item = "Legendary Sigil"
                 has_specific_item = True
-            elif re.search(r"\brunes?\b", p_lower):
+            elif re.search(r"\brunes?\b", p_user):
                 goal_item = "Legendary Rune"
                 has_specific_item = True
-            elif re.search(r"\bclovers?\b", p_lower):
+            elif re.search(r"\bclovers?\b", p_user):
                 goal_item = "Mystic Clover"
                 has_specific_item = True
+
+        # 2. If the new user message did not name a specific item, check "Previous active goal: <ItemName>" in prompt
+        if not goal_item:
+            prev_goal_m = re.search(r"previous active goal:\s*([^\(\n]+)", p_lower)
+            if prev_goal_m:
+                prev_goal_str = prev_goal_m.group(1).strip()
+                for pattern, canon_name in specific_item_matches:
+                    if re.search(r"\b" + re.escape(pattern) + r"\b", prev_goal_str):
+                        goal_item = canon_name
+                        has_specific_item = True
+                        break
+                if not goal_item:
+                    if re.search(r"\bsigils?\b", prev_goal_str):
+                        goal_item = "Legendary Sigil"
+                        has_specific_item = True
+                    elif re.search(r"\brunes?\b", prev_goal_str):
+                        goal_item = "Legendary Rune"
+                        has_specific_item = True
+                    elif re.search(r"\bclovers?\b", prev_goal_str):
+                        goal_item = "Mystic Clover"
+                        has_specific_item = True
 
         # Extract currency
         currency_name = None

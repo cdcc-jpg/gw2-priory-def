@@ -1343,10 +1343,16 @@ class TwilightJourneySolver:
             ))
         else:
             prereq, has_bit_progress, missing_bits_summary = self._get_precursor_collection_bit_status(target_id, account)
-            if has_bit_progress and prereq and prereq.precursor_collection_bits_total > 0:
+            if (
+                has_bit_progress
+                and prereq
+                and prereq.precursor_collection_bits_total > 0
+                and prereq.precursor_collection_step != "COMPLETED"
+                and missing_bits_summary
+            ):
                 bit_ratio = prereq.precursor_collection_bits_done / float(prereq.precursor_collection_bits_total)
-                readiness_pct = round(bit_ratio * 100.0, 1)
-                status = "IN_PROGRESS" if readiness_pct < 100.0 else "COMPLETED"
+                readiness_pct = min(95.0, round(bit_ratio * 100.0, 1))
+                status = "IN_PROGRESS" if readiness_pct > 0.0 else "NOT_STARTED"
                 sub_components[f"{prec_name} (Precursor)"] = readiness_pct
             else:
                 readiness_pct = 0.0
@@ -1885,16 +1891,35 @@ class TwilightJourneySolver:
 
         if lodestone_pct < 100.0:
             needed_lodes = 100 - lodestone_count
+            owned_cores = account.total_item_count(self.ONYX_CORE_ID)
             blockers.append(f"Need {needed_lodes} more Onyx Lodestones.")
-            actions.append(JourneyAction(
-                action_title="Farm Onyx Cores for Mystic Forge Promotion (Arbitrage)",
-                action_description="Run Twilight Arbor Aetherpath `[&BEEFAAA=]` or Crucible of Eternity `[&BDoCAAA=]` for Onyx Cores, then promote in Mystic Forge (2x Cores + 1x Dust + 1x Crystal/Powder + 1x Wine) to save ~50% gold over buying Onyx Lodestones directly.",
-                estimated_minutes=40,
-                priority="HIGH",
-                zone_name="Caledon Forest",
-                waypoint="[&BEEFAAA=]",
-                game_mode="Dungeon"
-            ))
+            if owned_cores >= 2:
+                promotable = min(needed_lodes, owned_cores // 2)
+                rem_lodes = max(0, needed_lodes - promotable)
+                actions.append(JourneyAction(
+                    action_title=f"Promote {owned_cores}x Owned Onyx Cores -> {promotable}x Onyx Lodestones",
+                    action_description=(
+                        f"You already have {owned_cores}x Onyx Cores in material storage! "
+                        f"Promote them at the Mystic Forge `[&BBAEAAA=]` (2x Onyx Cores + 1x Pile of Crystalline Dust + 1x Bottle of Elonian Wine + 1x Mystic Crystal) "
+                        f"to immediately yield {promotable}x Onyx Lodestones"
+                        + (f", then acquire or promote {rem_lodes}x more." if rem_lodes > 0 else ".")
+                    ),
+                    estimated_minutes=10,
+                    priority="HIGH",
+                    zone_name="Lion's Arch",
+                    waypoint="[&BBAEAAA=]",
+                    game_mode="Crafting"
+                ))
+            else:
+                actions.append(JourneyAction(
+                    action_title="Farm Onyx Cores for Mystic Forge Promotion (Arbitrage)",
+                    action_description="Run Twilight Arbor Aetherpath `[&BEEFAAA=]` or Crucible of Eternity `[&BDoCAAA=]` for Onyx Cores, then promote in Mystic Forge (2x Cores + 1x Dust + 1x Crystal/Powder + 1x Wine) to save ~50% gold over buying Onyx Lodestones directly.",
+                    estimated_minutes=40,
+                    priority="HIGH",
+                    zone_name="Caledon Forest",
+                    waypoint="[&BEEFAAA=]",
+                    game_mode="Dungeon"
+                ))
 
         status = "COMPLETED" if readiness_pct >= 100.0 else ("IN_PROGRESS" if readiness_pct > 0 else "NOT_STARTED")
 

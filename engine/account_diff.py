@@ -527,8 +527,15 @@ class AccountState:
         return mount_name in self.mount_types
 
     def has_expansion(self, expansion_name: str) -> bool:
-        """Returns True if the specified expansion is owned."""
-        return expansion_name in self.expansion_access
+        """Returns True if the specified expansion or Living World season is owned."""
+        if expansion_name in self.expansion_access:
+            return True
+        if expansion_name == "LivingWorldSeason4":
+            if "PathOfFire" in self.expansion_access and (
+                self.wallet.get(45, 0) > 0 or "skyscale" in self.mount_types
+            ):
+                return True
+        return False
 
     def is_character_map_completed(self, character_name: str) -> bool:
         """Returns True if the specified character has completed 100% Core Tyria map exploration."""

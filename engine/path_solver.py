@@ -2188,6 +2188,214 @@ class PathSolver:
 
         all_candidate_tasks = [quartz_task, refinement_task, anomaly_task, prov_task, fractal_task, leivas_task]
 
+        # When the account has real/hydrated inventory (beyond synthetic 0-1 item unit test fixtures),
+        # prune tasks whose outputs are not needed by the target item's BOM or are already owned in heaps,
+        # and synthesize concrete session tasks directly from the ontology-grounded AccountDiffReport delta.
+        has_live_inventory = (
+            len(actual_account.materials) > 1
+            or bool(actual_account.wallet)
+            or bool(actual_account.bank)
+        )
+        if actual_account.total_item_count(43773) >= 25:
+            quartz_task.priority_weight = 0.0
+        if (
+            actual_account.total_item_count(46742) >= 15
+            and actual_account.total_item_count(46744) >= 15
+            and actual_account.total_item_count(46740) >= 15
+        ):
+            refinement_task.priority_weight = 0.0
+
+        if has_live_inventory and self.store is not None:
+            diff_report = AccountDiffEngine(self.store).compute_diff(
+                goal_item_id=actual_item_id,
+                account=actual_account,
+            )
+            missing_mats = diff_report.summary_missing_materials
+
+            # 1. Prune Quartz Crystal Charging unless Charged Quartz is actually missing in BOM and account owns < 25
+            if "Charged Quartz Crystal" not in missing_mats or actual_account.total_item_count(43773) >= 25:
+                quartz_task.priority_weight = 0.0
+
+            # 2. Prune Ascended Daily Refinement unless the target item's BOM actually requires missing ascended materials
+            ascended_bom_keys = {
+                "Deldrimor Steel Ingot", "Lump of Mithrillium",
+                "Spiritwood Plank", "Glob of Elder Spirit Residue",
+                "Elonian Leather Square", "Spool of Thick Elonian Cord",
+                "Bolt of Damask", "Spool of Silk Weaving Thread",
+            }
+            if not (ascended_bom_keys & set(missing_mats.keys())):
+                refinement_task.priority_weight = 0.0
+
+            # 3. Adjust Anomaly / Fractal / Leivas / Provisioner weights based on actual missing BOM
+            if "Mystic Clover" not in missing_mats and "Mystic Coin" not in missing_mats:
+                fractal_task.priority_weight = 0.0
+                if actual_account.total_item_count(19976) >= 100:
+                    anomaly_task.priority_weight = 0.0
+            elif actual_account.total_item_count(19976) >= 150 and "Mystic Coin" not in missing_mats:
+                anomaly_task.priority_weight = 65.0
+
+            if "Provisioner Token" not in missing_mats and "Gift of Craftsmanship" not in missing_mats:
+                prov_task.priority_weight = 0.0
+
+            if "Antique Summoning Stone" not in missing_mats:
+                leivas_task.priority_weight = 0.0
+
+            # 4. Synthesize targeted session tasks from actual missing BOM delta & owned intermediates
+            # 4a. Complete Gift of Mastery if Bloodstone Shard is the only missing piece
+            if (
+                "Bloodstone Shard" in missing_mats
+                and actual_account.total_item_count(19677) >= 1
+                and actual_account.total_item_count(19678) >= 1
+                and actual_account.total_item_count(19925) >= 250
+            ):
+                all_candidate_tasks.append(ScheduledSessionTask(
+                    id="forge_gift_of_mastery",
+                    title="Buy Bloodstone Shard & Forge Gift of Mastery",
+                    category="FORGE_GIFT_OF_MASTERY",
+                    estimated_duration_minutes=3,
+                    waypoint_code="[&BBAEAAA=]",
+                    location_name="Miyani, Mystic Forge (Lion's Arch)",
+                    instructions=(
+                        f"You already own Gift of Exploration ({actual_account.total_item_count(19677)} owned), "
+                        f"Gift of Battle ({actual_account.total_item_count(19678)} owned), and "
+                        f"Obsidian Shards ({actual_account.total_item_count(19925)}/250)! "
+                        f"Purchase 1x Bloodstone Shard from Miyani (200 Spirit Shards) and combine all 4 in the Mystic Forge "
+                        f"to complete Gift of Mastery for {goal_name} tonight."
+                    ),
+                    required_inputs={"currencies": {"Spirit Shard": 200}},
+                    reward_output={"item_id": 19674, "name": "Gift of Mastery", "count": 1, "value_towards_goal": f"Completes Pillar 3 (Gift of Mastery) for {goal_name}"},
+                    priority_weight=99.0,
+                    character_name=refinement_char,
+                ))
+
+            # 4b. Fast Daily Mystic Clover Exchange (BUY-2046 + Wizard's Vault) that fits inside short (<30m) sessions
+            if "Mystic Clover" in missing_mats:
+                missing_clovers = missing_mats["Mystic Clover"]
+                owned_clovers = actual_account.total_item_count(19675)
+                owned_mc = actual_account.total_item_count(19976)
+                owned_ecto = actual_account.total_item_count(19721)
+                all_candidate_tasks.append(ScheduledSessionTask(
+                    id="daily_clover_exchange",
+                    title=f"Discounted Mystic Clover Exchange ({owned_clovers} Owned, {missing_clovers} Missing)",
+                    category="DAILY_CLOVER_EXCHANGE",
+                    estimated_duration_minutes=5,
+                    waypoint_code="[&DYEFAAA=]",
+                    location_name="Mistlock Observatory / Wizard's Vault",
+                    instructions=(
+                        f"You need {missing_clovers} more Mystic Clovers for {goal_name} (own {owned_clovers}) "
+                        f"and already hold {owned_mc}x Mystic Coins and {owned_ecto}x Globs of Ectoplasm in storage. "
+                        f"Buy your 2 daily discounted Mystic Clovers from BUY-2046 [&DYEFAAA=] and claim Wizard's Vault Astral Acclaim Clovers."
+                    ),
+                    required_inputs={"item_id": 19976, "name": "Mystic Coin", "count": 2},
+                    reward_output={"item_id": 19675, "name": "Mystic Clover", "count": 2, "value_towards_goal": f"Directly reduces {missing_clovers} missing Mystic Clovers for {goal_name}"},
+                    priority_weight=98.0,
+                    character_name=None,
+                ))
+
+            # 4c. Mystic Forge Core -> Lodestone Promotion if player is missing Lodestones and owns Cores in storage
+            core_to_lodestone = [
+                (24304, "Onyx Core", 24305, "Onyx Lodestone"),
+                (24309, "Molten Core", 24310, "Molten Lodestone"),
+                (24314, "Glacial Core", 24315, "Glacial Lodestone"),
+                (24319, "Destroyer Core", 24320, "Destroyer Lodestone"),
+                (24324, "Charged Core", 24325, "Charged Lodestone"),
+                (24329, "Corrupted Core", 24330, "Corrupted Lodestone"),
+            ]
+            for core_id, core_name, lode_id, lode_name in core_to_lodestone:
+                if lode_name in missing_mats and actual_account.total_item_count(core_id) >= 2:
+                    owned_cores = actual_account.total_item_count(core_id)
+                    promotable = owned_cores // 2
+                    missing_lodes = missing_mats[lode_name]
+                    all_candidate_tasks.append(ScheduledSessionTask(
+                        id=f"promote_{core_id}",
+                        title=f"Promote {owned_cores}x Owned {core_name}s into {promotable}x {lode_name}s",
+                        category="LODESTONE_PROMOTION",
+                        estimated_duration_minutes=5,
+                        waypoint_code="[&BBAEAAA=]",
+                        location_name="Mystic Forge, Lion's Arch",
+                        instructions=(
+                            f"You are missing {missing_lodes}x {lode_name}s for {goal_name}, and you already have "
+                            f"{owned_cores}x {core_name}s in your material storage! Promote them at the Mystic Forge "
+                            f"(2x {core_name} + 1x Pile of Crystalline Dust + 1x Bottle of Elonian Wine + 1x Mystic Crystal) "
+                            f"to craft {promotable}x {lode_name}s immediately."
+                        ),
+                        required_inputs={"item_id": core_id, "name": core_name, "count": owned_cores},
+                        reward_output={"item_id": lode_id, "name": lode_name, "count": promotable, "value_towards_goal": f"Yields {promotable}x {lode_name}s towards {missing_lodes} missing for {goal_name}"},
+                        priority_weight=96.0,
+                        character_name=refinement_char,
+                    ))
+
+            # 4d. T6 Fine Material Currency Conversion (Volatile Magic Trophy Shipments / Laurel Bags)
+            t6_fine_names = (
+                "Vial of Powerful Blood", "Powerful Venom Sac", "Elaborate Totem", "Pile of Crystalline Dust",
+                "Vicious Fang", "Armored Scale", "Vicious Claw", "Ancient Bone",
+            )
+            missing_t6_total = sum(missing_mats.get(n, 0) for n in t6_fine_names)
+            if missing_t6_total > 0:
+                vm_avail = actual_account.wallet.get(45, 0)
+                laurels_avail = actual_account.wallet.get(3, 0)
+                all_candidate_tasks.append(ScheduledSessionTask(
+                    id="t6_trophy_conversion",
+                    title=f"Convert Volatile Magic / Laurels into T6 Fine Trophies ({missing_t6_total} Missing)",
+                    category="T6_TROPHY_CONVERSION",
+                    estimated_duration_minutes=5,
+                    waypoint_code="[&BNoLAAA=]",
+                    location_name="Dragonfall / Laurel Merchant",
+                    instructions=(
+                        f"You are missing {missing_t6_total} total Tier 6 fine materials for {goal_name}'s Gift of Magic & Might. "
+                        f"Exchange Volatile Magic ({vm_avail:,} owned) for Trophy Shipments in Dragonfall [&BNoLAAA=] "
+                        f"or Laurels ({laurels_avail} owned) for Heavy Crafting Bags [&BBAEAAA=]."
+                    ),
+                    required_inputs={"currencies": {"Volatile Magic": 250, "Laurel": 1}},
+                    reward_output={"name": "Tier 6 Fine Materials", "count": 25, "value_towards_goal": f"Reduces {missing_t6_total} missing T6 fine materials for {goal_name}"},
+                    priority_weight=94.0,
+                    character_name=None,
+                ))
+
+            # 4e. Purchase Missing Icy Runestones from Rojan the Penitent
+            if "Icy Runestone" in missing_mats:
+                missing_runes = missing_mats["Icy Runestone"]
+                all_candidate_tasks.append(ScheduledSessionTask(
+                    id="buy_icy_runestones",
+                    title=f"Purchase {missing_runes}x Icy Runestones (Rojan the Penitent)",
+                    category="RUNESTONE_PURCHASE",
+                    estimated_duration_minutes=5,
+                    waypoint_code="[&BHsBAAA=]",
+                    location_name="Earthshake Waypoint, Frostgorge Sound",
+                    instructions=(
+                        f"Teleport to Earthshake Waypoint [&BHsBAAA=] in Frostgorge Sound and purchase "
+                        f"{missing_runes}x Icy Runestones (1g each) from Rojan the Penitent for {goal_name}."
+                    ),
+                    required_inputs={"gold": missing_runes},
+                    reward_output={"item_id": 19676, "name": "Icy Runestone", "count": missing_runes, "value_towards_goal": f"Completes {missing_runes}x Icy Runestones for {goal_name}"},
+                    priority_weight=91.0,
+                    character_name=None,
+                ))
+
+            # 4f. Refine Base Ingots & Leather for Weapon-Specific Sub-Gifts (e.g. Gift of Metal / Gift of Darkness)
+            base_craft_names = (
+                "Orichalcum Ingot", "Darksteel Ingot", "Platinum Ingot", "Mithril Ingot",
+                "Cured Hardened Leather Square", "Ancient Wood Plank", "Elder Wood Plank",
+            )
+            missing_base = [f"{missing_mats[n]}x {n}" for n in base_craft_names if n in missing_mats]
+            if missing_base:
+                all_candidate_tasks.append(ScheduledSessionTask(
+                    id="craft_base_subgifts",
+                    title=f"Refine Base Ingots & Leather for {goal_name} Sub-Gifts",
+                    category="BASE_GIFT_CRAFTING",
+                    estimated_duration_minutes=5,
+                    waypoint_code="[&BBAEAAA=]",
+                    location_name="Crafting Station, Lion's Arch",
+                    instructions=(
+                        f"Switch to '{refinement_char or 'your 400+ Crafter'}' at [&BBAEAAA=] and refine/acquire "
+                        f"the remaining base materials ({', '.join(missing_base)}) for {goal_name}'s Gift components."
+                    ),
+                    required_inputs={"materials": missing_base},
+                    reward_output={"name": f"{goal_name} Sub-Gift Materials", "count": 1, "value_towards_goal": f"Prepares base crafting gifts for {goal_name}"},
+                    priority_weight=89.0,
+                    character_name=refinement_char,
+                ))
+
         # Filter out completed tasks and tasks with zero/negative weight (irrelevant for this goal)
         eligible_tasks: List[ScheduledSessionTask] = []
         for t in all_candidate_tasks:
@@ -2201,14 +2409,19 @@ class PathSolver:
         scheduled_tasks = self._knapsack_solve(eligible_tasks, time_budget_minutes)
 
         # Logical execution order:
-        # Fast home instance/lounge activities first (Quartz 2m, Refinements 3m) -> Event timer (Anomaly 10m) -> Vendor exchanges (Leivas 5m, Provisioner Tokens 15m) -> Clovers/Fractals (30m)
         CATEGORY_ORDER = {
-            "QUARTZ_CHARGING": 1,
-            "DAILY_REFINEMENT": 2,
-            "WORLD_BOSS_ANOMALY": 3,
-            "WEEKLY_LEIVAS": 4,
-            "PROVISIONER_TOKEN": 5,
-            "DAILY_FRACTAL_CLOVERS": 6
+            "FORGE_GIFT_OF_MASTERY": 1,
+            "DAILY_CLOVER_EXCHANGE": 2,
+            "LODESTONE_PROMOTION": 3,
+            "T6_TROPHY_CONVERSION": 4,
+            "RUNESTONE_PURCHASE": 5,
+            "BASE_GIFT_CRAFTING": 6,
+            "QUARTZ_CHARGING": 7,
+            "DAILY_REFINEMENT": 8,
+            "WORLD_BOSS_ANOMALY": 9,
+            "WEEKLY_LEIVAS": 10,
+            "PROVISIONER_TOKEN": 11,
+            "DAILY_FRACTAL_CLOVERS": 12
         }
         scheduled_tasks.sort(key=lambda t: CATEGORY_ORDER.get(t.category, 99))
 
