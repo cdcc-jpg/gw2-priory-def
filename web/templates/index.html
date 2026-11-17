@@ -1,213 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Priory Grimoire — Guild Wars 2 Legendary Tome</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;800&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priory Grimoire — Guild Wars 2 Legendary Workbench</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body class="gw2-desk-env">
-
-    <!-- Ambient Floating Arcane Particles -->
-    <canvas id="particles"></canvas>
-
-    <!-- Scholar's Alchemical Desk Ambient Glows -->
-    <div class="candle-glow candle-left"></div>
-    <div class="candle-glow candle-right"></div>
-
-    <!-- Floating Drawer Toggle Button -->
-    <button id="btn-toggle-drawer" class="drawer-toggle-btn" title="Account Essence & Diagnostics">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <span>Account &amp; Diagnostics</span>
-    </button>
-
-    <!-- Slide-out Side Drawer Container -->
-    <aside id="priory-side-drawer" class="priory-side-drawer hidden">
-      <div class="drawer-header">
-        <div class="drawer-title">
-          <span class="drawer-glyph">⚜</span>
-          <span>Account & System Telemetry</span>
-        </div>
-        <button id="btn-close-drawer" class="btn-drawer-close" title="Close Drawer" aria-label="Close Drawer">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+  <div class="wb-shell" id="wb-shell">
+    <!-- Top Workbench Toolbar (34px) -->
+    <header class="wb-toolbar">
+      <div class="wb-brand">
+        <span class="priory-sigil priory-sigil--gdc" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.4L10.6 6L6 10.6L1.4 6Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/><circle cx="6" cy="6" r="1.4" fill="currentColor"/></svg>
+        </span>
+        <span class="wb-brand-title">Priory Grimoire</span>
       </div>
-      <div class="drawer-content">
-        <div class="drawer-section">
-          <div class="drawer-section-title">Active GW2 Account &amp; API Key</div>
-          <div class="api-key-panel">
-            <div class="api-key-current-row">
-              <span class="api-key-lbl">Current Account:</span>
-              <span class="api-key-val" id="drawer-account-name">Loading...</span>
-            </div>
-            <div class="api-key-current-row">
-              <span class="api-key-lbl">Active Key:</span>
-              <span class="api-key-val" id="drawer-api-key-masked">None</span>
-            </div>
-            <label class="drawer-input-lbl" for="drawer-api-key-input">Switch API Key:</label>
-            <div class="api-key-input-wrap">
-              <input type="password" id="drawer-api-key-input" class="drawer-key-input" placeholder="Paste GW2 API Key (72 chars)..." spellcheck="false" autocomplete="off" />
-              <button type="button" id="btn-toggle-key-visibility" class="btn-toggle-key" title="Show / Hide Key" aria-label="Show or hide API key">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-            <div class="api-key-actions-row">
-              <button type="button" id="btn-apply-api-key" class="btn-drawer-action btn-apply-key">
-                <span id="btn-apply-key-text">Sync Account</span>
-                <span id="btn-apply-key-spinner" class="spinner-ink hidden"></span>
-              </button>
-              <button type="button" id="btn-reset-api-key" class="btn-drawer-action btn-reset-key" title="Reset to default API key">Reset</button>
-            </div>
-            <div id="drawer-api-key-feedback" class="api-key-feedback hidden"></div>
-            <div class="api-key-hint">
-              Required permissions: <em>account, inventories, characters, wallet, unlocks</em>. Generated at <a href="https://account.arena.net/applications" target="_blank" rel="noopener">account.arena.net</a>.
-            </div>
-          </div>
+
+      <nav class="tome-tabs" id="tome-tabs" aria-label="Grimoire Views">
+        <button class="tome-tab active" data-spread-index="0" id="tab-library" type="button" title="Library &amp; Query Search">
+          <span class="tab-label">Library</span>
+        </button>
+        <button class="tome-tab" data-spread-index="1" id="tab-guide" type="button" title="Inquiry Guide &amp; Comparative Rankings">
+          <span class="tab-label">Guide</span>
+        </button>
+        <button class="tome-tab" data-spread-index="2" id="tab-recipe" type="button" title="Recipe Tree &amp; Market Arbitrage">
+          <span class="tab-label">Recipe</span>
+        </button>
+        <button class="tome-tab" data-spread-index="3" id="tab-plan" type="button" title="Prerequisites &amp; 0/1 Knapsack Session Plan">
+          <span class="tab-label">Plan</span>
+        </button>
+      </nav>
+
+      <div class="wb-toolbar-right">
+        <div class="spread-pager">
+          <button class="wb-btn" id="btn-prev-page" type="button" title="Previous Spread (Left Arrow)">Prev</button>
+          <span class="page-counter-badge tabular-nums" id="page-counter-display">Library · Spread 1 of 4</span>
+          <button class="wb-btn" id="btn-next-page" type="button" title="Next Spread (Right Arrow)">Next</button>
         </div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">Live Account Essence</div>
-          <div class="drawer-stats-grid" id="drawer-account-stats">
+
+        <a href="/3d" class="wb-btn" title="Open WebGL 3D Workbench View">3D View</a>
+
+        <button class="wb-btn" id="btn-theme-toggle" type="button" title="Switch Daylight / Nocturne theme">
+          <svg id="icon-theme" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span id="label-theme">Nocturne</span>
+        </button>
+
+        <button class="wb-btn" id="btn-toggle-drawer" type="button" title="Toggle Account &amp; Telemetry Inspector">Inspector</button>
+      </div>
+    </header>
+
+    <!-- Left Navigation Pane (245px) -->
+    <aside class="wb-left" aria-label="Chapters and Legendary Index">
+      <div class="guides-menu-container" id="chapters-menu-container">
+        <div class="wb-sec-hdr">
+          <button type="button" class="chapters-tab-btn" id="tab-chapters-menu" title="Toggle recent dossiers">
+            <span class="tab-label" id="chapters-tab-label">Recent Chapters</span>
+          </button>
+          <button type="button" id="btn-clear-all-chapters" class="btn-clear-guides" title="Clear recent chapter history">Clear</button>
+        </div>
+        <div class="guides-dropdown-card" id="chapters-dropdown-card">
+          <div class="guides-list" id="chapters-dropdown-list">
             <!-- Dynamically populated -->
           </div>
         </div>
-        <div class="drawer-section">
-          <div class="drawer-section-title">System Diagnostics</div>
-          <div class="diagnostics-panel" id="drawer-diagnostics-panel">
-            <!-- Dynamically populated -->
-          </div>
-          <button id="btn-reload-telemetry" class="btn-drawer-action">Refresh Telemetry & Cache</button>
-        </div>
+      </div>
+
+      <div class="wb-sec-hdr">
+        <span>Legendary Index</span>
+        <span class="tabular-nums" id="legendary-index-count">0</span>
+      </div>
+      <div class="legendary-nav-list" id="legendary-nav-list">
+        <!-- Dynamically populated in app.js -->
       </div>
     </aside>
 
-    <!-- Arcane Aura behind the Tome -->
-    <div class="book-aura" id="book-aura"></div>
+    <!-- Central Workspace (1fr, two-pane spread) -->
+    <main class="wb-center" id="book-stage">
+      <div class="pages-spread" id="pages-spread">
+        <section class="page-sheet page-left" id="page-left-content" aria-label="Primary Workspace Pane">
+          <div class="page-inner" id="left-page-body">
+            <!-- Injected dynamically -->
+          </div>
+        </section>
 
-    <!-- THE GW2 LEGENDARY GRIMOIRE -->
-    <main class="book-stage" id="book-stage">
-        
-        <!-- Top Bookmark Ribbon Tabs -->
-        <div class="tome-tabs" id="tome-tabs">
-            <button class="tome-tab active" data-spread-index="0" id="tab-library" title="Library & Search"><span class="tab-label">Library</span></button>
-            <button class="tome-tab" data-spread-index="1" id="tab-guide" title="Custom Query Guide"><span class="tab-label">Guide</span></button>
-            <button class="tome-tab" data-spread-index="2" id="tab-recipe" title="Part I: Recipe & Market Economics"><span class="tab-label">Recipe</span></button>
-            <button class="tome-tab" data-spread-index="3" id="tab-plan" title="Part II: Readiness & Daily Session Plan"><span class="tab-label">Plan</span></button>
-            <div class="guides-menu-container" id="chapters-menu-container">
-                <button type="button" class="tome-tab chapters-tab-btn" id="tab-chapters-menu" title="Recent Dossiers">
-                    <span class="tab-label" id="chapters-tab-label">Chapters ▾</span>
-                </button>
-                <div class="guides-dropdown-card hidden" id="chapters-dropdown-card">
-                    <div class="guides-dropdown-header">
-                        <span>Recent Chapters</span>
-                        <button type="button" id="btn-clear-all-chapters" class="btn-clear-guides" title="Clear all recent chapters">Clear All</button>
-                    </div>
-                    <div class="guides-list" id="chapters-dropdown-list">
-                        <!-- Dynamically populated -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The 2D Grimoire Tome -->
-        <div class="grimoire-tome" id="grimoire-tome">
-            
-            <!-- Bottom Hanging Crimson Silk Ribbon Bookmarks -->
-            <div class="hanging-ribbon ribbon-1"></div>
-            <div class="hanging-ribbon ribbon-2"></div>
-            <div class="hanging-ribbon ribbon-3"></div>
-
-            <!-- Cordovan Leather Casing & Filigree -->
-            <div class="cover cover-left">
-                <div class="leather-face">
-                    <div class="leather-filigree"></div>
-                    <!-- 4 Corner Clasps -->
-                    <div class="corner-clasp top-left"></div>
-                    <div class="corner-clasp top-right"></div>
-                    <div class="corner-clasp bottom-left"></div>
-                    <div class="corner-clasp bottom-right"></div>
-                </div>
-            </div>
-            <div class="cover cover-right">
-                <div class="leather-face">
-                    <div class="leather-filigree"></div>
-                    <!-- 4 Corner Clasps -->
-                    <div class="corner-clasp top-left"></div>
-                    <div class="corner-clasp top-right"></div>
-                    <div class="corner-clasp bottom-left"></div>
-                    <div class="corner-clasp bottom-right"></div>
-                </div>
-            </div>
-
-            <!-- Page Stacks (Visible paper edge depth) -->
-            <div class="stack-left"></div>
-            <div class="stack-right"></div>
-
-            <!-- Central Binding Spine with Leather Ribs & Priory Key Emblem -->
-            <div class="spine-binding">
-                <svg class="priory-key-emblem" width="24" height="50" viewBox="0 0 24 50" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="12" cy="10" rx="8" ry="6" fill="none" stroke="#c8963e" stroke-width="2" />
-                    <line x1="12" y1="16" x2="12" y2="44" stroke="#c8963e" stroke-width="2" />
-                    <path d="M 12 36 L 18 36 L 18 40 L 12 40 M 12 40 L 18 40 L 18 44 L 12 44" fill="none" stroke="#c8963e" stroke-width="2" />
-                </svg>
-                <div class="spine-crease"></div>
-                <div class="spine-rib"></div>
-                <div class="spine-rib"></div>
-                <div class="spine-rib"></div>
-                <div class="spine-rib"></div>
-            </div>
-
-            <!-- DYNAMIC TWO-PAGE SPREAD -->
-            <div class="pages-spread" id="pages-spread">
-                
-                <!-- LEFT PAGE CONTAINER -->
-                <div class="page-sheet page-left" id="page-left-content">
-                    <div class="parchment-grain"></div>
-                    <div class="ink-vignette"></div>
-                    <div class="spine-shadow spine-shadow-left"></div>
-                    <div class="coffee-stain"></div>
-                    <div class="page-inner" id="left-page-body">
-                        <!-- Injected dynamically based on active page -->
-                    </div>
-                </div>
-
-                <!-- RIGHT PAGE CONTAINER -->
-                <div class="page-sheet page-right" id="page-right-content">
-                    <div class="parchment-grain"></div>
-                    <div class="ink-vignette"></div>
-                    <div class="spine-shadow spine-shadow-right"></div>
-                    <div class="coffee-stain"></div>
-                    <div class="page-inner" id="right-page-body">
-                        <!-- Injected dynamically based on active page -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- BOTTOM PAGE NAVIGATION BAR -->
-            <div class="tome-nav-footer">
-                <button class="btn-page-nav" id="btn-prev-page" title="Previous Page">
-                    <span class="nav-arrow">⮜</span> Previous Page
-                </button>
-                <div class="page-counter-badge" id="page-counter-display">
-                    Chapter I • Page 1 of 1
-                </div>
-                <div class="tome-nav-actions-right">
-                    <button class="btn-page-nav" id="btn-next-page" title="Next Page">
-                        Next Page <span class="nav-arrow">⮞</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="kb-hint">Use ← → arrow keys to turn pages</div>
-
-        </div>
+        <section class="page-sheet page-right" id="page-right-content" aria-label="Secondary Workspace Pane">
+          <div class="page-inner" id="right-page-body">
+            <!-- Injected dynamically -->
+          </div>
+        </section>
+      </div>
     </main>
 
-    <script src="/static/js/app.js"></script>
+    <!-- Docked Right Inspector Pane (320px) -->
+    <aside id="priory-side-drawer" class="wb-right priory-side-drawer" aria-label="Account and System Telemetry">
+      <div class="wb-sec-hdr">
+        <span>Account &amp; Telemetry</span>
+        <button id="btn-close-drawer" class="btn-drawer-close" type="button" title="Collapse Inspector Pane" aria-label="Collapse Inspector">Hide</button>
+      </div>
 
-    <div class="gw2-tooltip hidden" id="gw2-tooltip"></div>
+      <div class="drawer-content">
+        <section class="drawer-section">
+          <div class="wb-sec-hdr drawer-subhdr">
+            <span>GW2 Account &amp; API Key</span>
+          </div>
+          <dl class="wb-dl">
+            <div class="wb-prop-row">
+              <dt class="wb-prop-key">Account</dt>
+              <dd class="wb-prop-val" id="drawer-account-name">Loading...</dd>
+            </div>
+            <div class="wb-prop-row">
+              <dt class="wb-prop-key">Active Key</dt>
+              <dd class="wb-prop-val"><code id="drawer-api-key-masked">None</code></dd>
+            </div>
+          </dl>
+
+          <div class="api-key-form">
+            <label class="drawer-input-lbl" for="drawer-api-key-input">Switch API Key</label>
+            <div class="api-key-input-wrap">
+              <input type="password" id="drawer-api-key-input" class="drawer-key-input" placeholder="Paste GW2 API Key…" spellcheck="false" autocomplete="off" />
+              <button type="button" id="btn-toggle-key-visibility" class="wb-icon-btn" title="Show / Hide Key" aria-label="Show or hide API key">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="api-key-actions-row">
+              <button type="button" id="btn-apply-api-key" class="wb-btn wb-btn-primary">
+                <span id="btn-apply-key-text">Sync Account</span>
+                <span id="btn-apply-key-spinner" class="spinner-ink hidden"></span>
+              </button>
+              <button type="button" id="btn-reset-api-key" class="wb-btn" title="Reset to default API key">Reset</button>
+            </div>
+            <div id="drawer-api-key-feedback" class="api-key-feedback hidden"></div>
+            <div class="api-key-hint">
+              Permissions: <code>account</code>, <code>inventories</code>, <code>characters</code>, <code>wallet</code>, <code>unlocks</code> via <a href="https://account.arena.net/applications" target="_blank" rel="noopener">account.arena.net</a>.
+            </div>
+          </div>
+        </section>
+
+        <section class="drawer-section">
+          <div class="wb-sec-hdr drawer-subhdr">
+            <span>Account Essence</span>
+            <span class="tabular-nums">Wallet &amp; Vault</span>
+          </div>
+          <div class="drawer-stats-grid" id="drawer-account-stats">
+            <div class="wb-prop-row"><span class="wb-prop-key">Status</span><span class="wb-prop-val">Syncing…</span></div>
+          </div>
+        </section>
+
+        <section class="drawer-section">
+          <div class="wb-sec-hdr drawer-subhdr">
+            <span>System Diagnostics</span>
+            <button id="btn-reload-telemetry" class="btn-inline-action" type="button" title="Refresh Telemetry &amp; Cache">Refresh</button>
+          </div>
+          <div class="diagnostics-panel" id="drawer-diagnostics-panel">
+            <div class="wb-prop-row"><span class="wb-prop-key">Gateway</span><span class="wb-prop-val">Connecting…</span></div>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <!-- Bottom Status Bar (23px) -->
+    <footer class="wb-statusbar">
+      <div class="status-left">
+        <span id="status-bar-account">Account: Loading…</span>
+        <span class="status-sep" aria-hidden="true"></span>
+        <span id="status-bar-triples">Triples: —</span>
+        <span class="status-sep" aria-hidden="true"></span>
+        <span id="status-bar-dossier">Dossier: Twilight</span>
+      </div>
+      <div class="status-right">
+        <span id="status-bar-budget">Budget: 60m</span>
+        <span class="status-sep" aria-hidden="true"></span>
+        <span>TP Tax: 15%</span>
+        <span class="status-sep" aria-hidden="true"></span>
+        <span>Arrows: Switch Spread</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="gw2-tooltip hidden" id="gw2-tooltip"></div>
+  <script src="/static/js/app.js"></script>
 </body>
 </html>
